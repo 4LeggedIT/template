@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+
+# Sitemap origin is generated from src/config/site.ts (siteConfig.siteUrl) during build.
+Sitemap: https://template.4leggedit.com/sitemap.xml

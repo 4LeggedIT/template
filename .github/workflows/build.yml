@@ -1,0 +1,52 @@
+name: Build
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout (attempt 1)
+        id: checkout_primary
+        continue-on-error: true
+        uses: actions/checkout@v4
+
+      - name: Checkout (attempt 2 on transient failure)
+        if: steps.checkout_primary.outcome == 'failure'
+        uses: actions/checkout@v4
+
+      - name: Verify checkout
+        run: git rev-parse --is-inside-work-tree
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: |
+          for attempt in 1 2 3; do
+            npm clean-install --progress=false && break
+            if [ "$attempt" -eq 3 ]; then
+              echo "npm clean-install failed after ${attempt} attempts."
+              exit 1
+            fi
+            sleep $((attempt * 10))
+          done
+
+      - name: Lint
+        run: npm run lint --silent
+
+      - name: Links Check
+        run: npm run links:check --silent
+
+      - name: Build
+        run: npm run build --silent
+
+      - name: No-JS Smoke (build + smoke)
+        run: npm run qa:smoke:nojs:build --silent

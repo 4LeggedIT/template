@@ -1,0 +1,5 @@
+Contact: mailto:woof@4leggedit.com
+Expires: 2027-02-28T00:00:00.000Z
+Canonical: https://www.4leggedit.com/.well-known/security.txt
+Policy: https://www.4leggedit.com/privacy
+Preferred-Languages: en
