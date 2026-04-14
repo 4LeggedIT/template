@@ -42,6 +42,7 @@ type PetCardProps = {
   className?: string;
   imageHref?: string;
   imageFit?: "cover" | "contain";
+  adoptableDescriptionSummaryLabel?: string;
   isExpired?: boolean;
   defaultExpiryMonths?: number;
 };
@@ -55,6 +56,7 @@ const PetCard = ({
   className,
   imageHref,
   imageFit = "contain",
+  adoptableDescriptionSummaryLabel = "About",
   isExpired = false,
   defaultExpiryMonths = 3,
 }: PetCardProps) => {
@@ -149,7 +151,7 @@ const PetCard = ({
               {pet.description ? (
                 <details className="group rounded-lg border border-border px-3 py-2">
                   <summary className="cursor-pointer list-none text-sm font-medium text-foreground">
-                    About {pet.name ?? "this pet"}
+                    {adoptableDescriptionSummaryLabel} {pet.name ?? "this pet"}
                     <span className="ml-2 text-xs text-muted-foreground group-open:hidden">(expand)</span>
                     <span className="ml-2 hidden text-xs text-muted-foreground group-open:inline">(collapse)</span>
                   </summary>

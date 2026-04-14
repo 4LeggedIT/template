@@ -20,6 +20,7 @@ type AdoptablePetsSectionProps = {
   localPets?: AdoptablePetLocalItem[];
   localSort?: "name_asc" | "none";
   localImageFit?: "cover" | "contain";
+  localDescriptionSummaryLabel?: string;
   petfinder?: {
     organizationIds: string[];
     title?: string;
@@ -67,6 +68,7 @@ const AdoptablePetsSection = ({
   localPets = [],
   localSort = "name_asc",
   localImageFit = "contain",
+  localDescriptionSummaryLabel = "About",
   petfinder,
   adoptAPet,
   getBuddy,
@@ -130,6 +132,7 @@ const AdoptablePetsSection = ({
                     pet={pet}
                     variant="adoptable"
                     imageFit={localImageFit}
+                    adoptableDescriptionSummaryLabel={localDescriptionSummaryLabel}
                   />
                 ))}
               </div>

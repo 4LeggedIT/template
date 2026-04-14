@@ -41,6 +41,27 @@ describe("AdoptablePetsSection local listings", () => {
     expect(coverImage).toHaveClass("object-cover");
   });
 
+  it("defaults description summaries to About and allows an override label", () => {
+    const { rerender } = render(
+      <AdoptablePetsSection
+        mode="local"
+        localPets={[{ id: "1", name: "Nora", imageSrc: "https://example.org/nora.jpg", description: "Friendly dog" }]}
+      />,
+    );
+
+    expect(screen.getByText("About Nora")).toBeInTheDocument();
+
+    rerender(
+      <AdoptablePetsSection
+        mode="local"
+        localPets={[{ id: "1", name: "Nora", imageSrc: "https://example.org/nora.jpg", description: "Friendly dog" }]}
+        localDescriptionSummaryLabel="Meet"
+      />,
+    );
+
+    expect(screen.getByText("Meet Nora")).toBeInTheDocument();
+  });
+
   it("renders section-level footer CTA and does not render per-card apply buttons", () => {
     render(
       <AdoptablePetsSection
