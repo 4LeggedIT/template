@@ -15,6 +15,11 @@ const docSections = [
     description: "Unified event/news feed with archive behavior, recurrence support, and banner guidance.",
   },
   {
+    title: "News Highlight Pattern",
+    href: "/docs/standards/news-highlight",
+    description: "Homepage card that surfaces a single editor-flagged event or news entry.",
+  },
+  {
     title: "FAQ / Disclosure Standard",
     href: "/docs/standards/faq-disclosure",
     description: "Native `<details>/<summary>` requirement for public FAQ/disclosure content.",

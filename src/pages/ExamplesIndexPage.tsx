@@ -15,6 +15,11 @@ const examplePages = [
     description: "Unified event/news feed with archive and calendar ordering.",
   },
   {
+    title: "News Highlight",
+    href: "/examples/news-highlight",
+    description: "Homepage card that surfaces a single editor-flagged event or news entry.",
+  },
+  {
     title: "Form Embed Modal",
     href: "/examples/form-embed-modal",
     description: "Provider-agnostic modal embeds (JotForm, Google Forms) with no-JS-safe fallbacks.",

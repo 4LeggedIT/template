@@ -8,6 +8,7 @@ import BuildValidationPage from "@/pages/docs/BuildValidationPage";
 import CiBuildWorkflowPage from "@/pages/docs/CiBuildWorkflowPage";
 import AdoptablePetsStandardPage from "@/pages/docs/AdoptablePetsStandardPage";
 import EventsNewsStandardPage from "@/pages/docs/EventsNewsStandardPage";
+import NewsHighlightStandardPage from "@/pages/docs/NewsHighlightStandardPage";
 import FaqDisclosureStandardPage from "@/pages/docs/FaqDisclosureStandardPage";
 import FoundStandardPage from "@/pages/docs/FoundStandardPage";
 import FormEmbedModalStandardPage from "@/pages/docs/FormEmbedModalStandardPage";
@@ -19,6 +20,7 @@ import TemplateDocsHomePage from "@/pages/docs/TemplateDocsHomePage";
 import TestimonialsStandardPage from "@/pages/docs/TestimonialsStandardPage";
 import FaqDisclosureExamplePage from "@/pages/examples/FaqDisclosureExamplePage";
 import EventsNewsExamplePage from "@/pages/examples/EventsNewsExamplePage";
+import NewsHighlightExamplePage from "@/pages/examples/NewsHighlightExamplePage";
 import AdoptablePetsExamplePage from "@/pages/examples/AdoptablePetsExamplePage";
 import FormEmbedModalExamplePage from "@/pages/examples/FormEmbedModalExamplePage";
 import FoundExamplePage from "@/pages/examples/FoundExamplePage";
@@ -60,6 +62,7 @@ const AppRoutes = () => {
           path="/examples/events-news/events/event-yard-sale-2026-02-21"
           element={<EventsNewsExampleEventDetailPage eventSlug="event-yard-sale-2026-02-21" />}
         />
+        <Route path="/examples/news-highlight" element={<NewsHighlightExamplePage />} />
         <Route path="/examples/form-embed-modal" element={<FormEmbedModalExamplePage />} />
         <Route path="/examples/found" element={<FoundExamplePage />} />
         <Route path="/examples/faq-disclosure" element={<FaqDisclosureExamplePage />} />
@@ -73,6 +76,7 @@ const AppRoutes = () => {
         <Route path="/docs" element={<TemplateDocsHomePage />} />
         <Route path="/docs/standards/adoptable-pets" element={<AdoptablePetsStandardPage />} />
         <Route path="/docs/standards/events-news" element={<EventsNewsStandardPage />} />
+        <Route path="/docs/standards/news-highlight" element={<NewsHighlightStandardPage />} />
         <Route path="/docs/standards/faq-disclosure" element={<FaqDisclosureStandardPage />} />
         <Route path="/docs/standards/found" element={<FoundStandardPage />} />
         <Route path="/docs/standards/form-embed-modal" element={<FormEmbedModalStandardPage />} />

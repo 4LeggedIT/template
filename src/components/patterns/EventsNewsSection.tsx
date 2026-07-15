@@ -76,6 +76,7 @@ type EventsNewsBaseEntry = {
   images?: EventsNewsImage[];
   dateLabel?: string;
   highlights?: string[];
+  highlightOnHome?: boolean;
 };
 
 export type EventsNewsEventEntry = EventsNewsBaseEntry & {
@@ -276,7 +277,7 @@ const getRenderableEntries = (entries: EventsNewsEntry[]): EventsNewsRenderableE
   });
 };
 
-const getSortMs = (entry: EventsNewsRenderableEntry) => {
+export const getSortMs = (entry: EventsNewsRenderableEntry) => {
   if (entry.kind === "news") {
     const ms = Date.parse(`${entry.publishedAt}T12:00:00Z`);
     return Number.isFinite(ms) ? ms : 0;
@@ -415,7 +416,7 @@ const getEventSeriesKey = (entry: EventsNewsRenderableEventEntry) => entry.sourc
 const isRecurringEventEntry = (entry: EventsNewsRenderableEventEntry) =>
   Boolean(entry.recurrence || entry.recurrenceInstance || entry.sourceEventId);
 
-const byNewestFirst = (left: EventsNewsRenderableEntry, right: EventsNewsRenderableEntry) =>
+export const byNewestFirst = (left: EventsNewsRenderableEntry, right: EventsNewsRenderableEntry) =>
   getSortMs(right) - getSortMs(left);
 
 const bySoonestFirst = (left: EventsNewsRenderableEventEntry, right: EventsNewsRenderableEventEntry) =>
