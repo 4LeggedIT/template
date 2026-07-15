@@ -35,6 +35,11 @@ const docSections = [
     description: "Provider-agnostic form modal pattern with helper and no-JS fallbacks.",
   },
   {
+    title: "Flyer Library Pattern",
+    href: "/docs/standards/flyer-library",
+    description: "Timeless, undated awareness flyer library with category filtering — distinct from dated events/news.",
+  },
+  {
     title: "Media Gallery Pattern",
     href: "/docs/standards/media-gallery",
     description: "Unified photo/video gallery with optional filtering and no-JS-safe rendering.",

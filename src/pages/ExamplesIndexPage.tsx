@@ -35,6 +35,11 @@ const examplePages = [
     description: "Native `<details>/<summary>` FAQ patterns and validation expectations.",
   },
   {
+    title: "Flyer Library",
+    href: "/examples/flyer-library",
+    description: "Timeless, undated awareness flyer library with category filtering and download links.",
+  },
+  {
     title: "Media Gallery",
     href: "/examples/media-gallery",
     description: "Unified photo/video gallery with optional category filters.",

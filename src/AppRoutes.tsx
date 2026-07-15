@@ -12,6 +12,7 @@ import NewsHighlightStandardPage from "@/pages/docs/NewsHighlightStandardPage";
 import FaqDisclosureStandardPage from "@/pages/docs/FaqDisclosureStandardPage";
 import FoundStandardPage from "@/pages/docs/FoundStandardPage";
 import FormEmbedModalStandardPage from "@/pages/docs/FormEmbedModalStandardPage";
+import FlyerLibraryStandardPage from "@/pages/docs/FlyerLibraryStandardPage";
 import MediaGalleryStandardPage from "@/pages/docs/MediaGalleryStandardPage";
 import PayPalDonatePatternPage from "@/pages/docs/PayPalDonatePatternPage";
 import PlacementHelpStandardPage from "@/pages/docs/PlacementHelpStandardPage";
@@ -24,6 +25,7 @@ import NewsHighlightExamplePage from "@/pages/examples/NewsHighlightExamplePage"
 import AdoptablePetsExamplePage from "@/pages/examples/AdoptablePetsExamplePage";
 import FormEmbedModalExamplePage from "@/pages/examples/FormEmbedModalExamplePage";
 import FoundExamplePage from "@/pages/examples/FoundExamplePage";
+import FlyerLibraryExamplePage from "@/pages/examples/FlyerLibraryExamplePage";
 import MediaGalleryExamplePage from "@/pages/examples/MediaGalleryExamplePage";
 import NoJsFallbacksExamplePage from "@/pages/examples/NoJsFallbacksExamplePage";
 import PayPalDonateExamplePage from "@/pages/examples/PayPalDonateExamplePage";
@@ -66,6 +68,7 @@ const AppRoutes = () => {
         <Route path="/examples/form-embed-modal" element={<FormEmbedModalExamplePage />} />
         <Route path="/examples/found" element={<FoundExamplePage />} />
         <Route path="/examples/faq-disclosure" element={<FaqDisclosureExamplePage />} />
+        <Route path="/examples/flyer-library" element={<FlyerLibraryExamplePage />} />
         <Route path="/examples/media-gallery" element={<MediaGalleryExamplePage />} />
         <Route path="/examples/placement-help" element={<PlacementHelpExamplePage />} />
         <Route path="/examples/paypal-donate" element={<PayPalDonateExamplePage />} />
@@ -80,6 +83,7 @@ const AppRoutes = () => {
         <Route path="/docs/standards/faq-disclosure" element={<FaqDisclosureStandardPage />} />
         <Route path="/docs/standards/found" element={<FoundStandardPage />} />
         <Route path="/docs/standards/form-embed-modal" element={<FormEmbedModalStandardPage />} />
+        <Route path="/docs/standards/flyer-library" element={<FlyerLibraryStandardPage />} />
         <Route path="/docs/standards/media-gallery" element={<MediaGalleryStandardPage />} />
         <Route path="/docs/standards/paypal-donate" element={<PayPalDonatePatternPage />} />
         <Route path="/docs/standards/placement-help" element={<PlacementHelpStandardPage />} />
