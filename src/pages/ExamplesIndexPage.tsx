@@ -20,6 +20,11 @@ const examplePages = [
     description: "Homepage card that surfaces a single editor-flagged event or news entry.",
   },
   {
+    title: "Dog Spotlight",
+    href: "/examples/dog-spotlight",
+    description: "Homepage grid highlighting a hand-curated set of dogs, four across on desktop.",
+  },
+  {
     title: "Form Embed Modal",
     href: "/examples/form-embed-modal",
     description: "Provider-agnostic modal embeds (JotForm, Google Forms) with no-JS-safe fallbacks.",

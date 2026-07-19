@@ -20,6 +20,11 @@ const docSections = [
     description: "Homepage card that surfaces a single editor-flagged event or news entry.",
   },
   {
+    title: "Dog Spotlight Pattern",
+    href: "/docs/standards/dog-spotlight",
+    description: "Homepage grid highlighting a hand-curated set of dogs, four across on desktop.",
+  },
+  {
     title: "FAQ / Disclosure Standard",
     href: "/docs/standards/faq-disclosure",
     description: "Native `<details>/<summary>` requirement for public FAQ/disclosure content.",
