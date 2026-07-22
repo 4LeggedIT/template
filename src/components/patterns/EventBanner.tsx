@@ -29,11 +29,13 @@ type EventBannerProps = {
   storageKeyPrefix?: string;
   maxVisible?: number;
   timeZone?: string;
+  locale?: string;
   className?: string;
   labels?: EventBannerLabels;
 };
 
 const DEFAULT_TIME_ZONE = "America/Los_Angeles";
+const DEFAULT_LOCALE = "en-US";
 
 const toMs = (iso?: string) => {
   if (!iso) return null;
@@ -56,16 +58,16 @@ const getRecurringEffectiveEvent = (event: EventBannerItem, nowMs: number): Even
   };
 };
 
-const formatDate = (iso: string, timeZone: string) =>
-  new Intl.DateTimeFormat("en-US", {
+const formatDate = (iso: string, timeZone: string, locale: string) =>
+  new Intl.DateTimeFormat(locale, {
     timeZone,
     weekday: "short",
     month: "short",
     day: "numeric",
   }).format(new Date(iso));
 
-const formatTime = (iso: string, timeZone: string) =>
-  new Intl.DateTimeFormat("en-US", {
+const formatTime = (iso: string, timeZone: string, locale: string) =>
+  new Intl.DateTimeFormat(locale, {
     timeZone,
     hour: "numeric",
     minute: "2-digit",
@@ -92,6 +94,7 @@ const EventBanner = ({
   storageKeyPrefix = "template_event_banner_dismissed_until",
   maxVisible = 2,
   timeZone = DEFAULT_TIME_ZONE,
+  locale = DEFAULT_LOCALE,
   className,
   labels = {},
 }: EventBannerProps) => {
@@ -185,13 +188,13 @@ const EventBanner = ({
                     {event.startsAtIso ? (
                       <span className="inline-flex items-center gap-1">
                         <Calendar className="h-4 w-4" />
-                        {formatDate(event.startsAtIso, timeZone)}
+                        {formatDate(event.startsAtIso, timeZone, locale)}
                       </span>
                     ) : null}
                     {hasTime ? (
                       <span className="inline-flex items-center gap-1">
                         <Clock className="h-4 w-4" />
-                        {formatTime(event.startsAtIso!, timeZone)}–{formatTime(event.endsAtIso!, timeZone)}
+                        {formatTime(event.startsAtIso!, timeZone, locale)}–{formatTime(event.endsAtIso!, timeZone, locale)}
                       </span>
                     ) : null}
                     {event.locationLabel ? <span>{event.locationLabel}</span> : null}

@@ -52,6 +52,18 @@ const EventsNewsStandardPage = () => {
         </Card>
         <Card>
           <CardHeader>
+            <CardTitle>Localization (bilingual sites)</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-2 text-sm text-muted-foreground">
+            <p>- `EventsNewsSection`/`EventBanner` themselves stay plain-`string` and single-language — do not add localized fields to the shared components.</p>
+            <p>- For a bilingual (EN/ES-toggle) site's real event/news content, author each translatable field as `LocalizedText` (from `lib/localized-content.ts`): a plain string, or an en/es record.</p>
+            <p>- Keep a `resolve*Entry(entry, locale)` mapper in the site's own `data/events.ts`/`data/news-items.ts` that resolves `LocalizedText` fields down to the plain-`string` `EventsNewsEventEntry`/`EventsNewsArticleEntry` shape via `resolveText(value, locale)` — call it from the page component with `toContentLocale(i18n.resolvedLanguage)` before handing `entries` to `EventsNewsSection`.</p>
+            <p>- `EventBanner` takes an optional `locale` prop (string, default `&quot;en-US&quot;`) for its `Intl.DateTimeFormat` date/time display. On a bilingual site, pass it `toIntlLocaleTag(toContentLocale(i18n.resolvedLanguage))` — otherwise the banner's date/time stays English-formatted even when the rest of the page is in Spanish.</p>
+            <p>- Real reference implementations: `the-comeback-pack` and `feedingperrisstrays` (`src/data/events.ts`, `src/pages/Home.tsx`/`src/components/HomeEventBanner.tsx`).</p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader>
             <CardTitle>Reference</CardTitle>
           </CardHeader>
           <CardContent className="space-y-2 text-sm text-muted-foreground">
@@ -68,6 +80,7 @@ const EventsNewsStandardPage = () => {
               </Link>
             </p>
             <p>- Component: `template/src/components/patterns/EventsNewsSection.tsx`</p>
+            <p>- Localization lib: `template/src/lib/localized-content.ts`</p>
           </CardContent>
         </Card>
         <Card>

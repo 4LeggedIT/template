@@ -1,5 +1,16 @@
 import { type EventsNewsEntry, type EventsNewsEventEntry } from "@/components/patterns/EventsNewsSection";
 
+// This example site has no i18n toggle, so every entry below authors plain-string fields
+// directly. A bilingual site instead authors translatable fields as LocalizedText (see
+// src/lib/localized-content.ts) and resolves to plain strings per render, e.g.:
+//
+//   title: { en: "Friday Adoption Meet-and-Greet", es: "Encuentro de Adopción los Viernes" }
+//   // ...at the page component:
+//   const locale = toContentLocale(i18n.resolvedLanguage);
+//   const entries = rawEntries.map((entry) => resolveEventEntry(entry, locale));
+//
+// See /docs/standards/events-news's "Localization (bilingual sites)" section for the full
+// pattern, and the-comeback-pack's / feedingperrisstrays' src/data/events.ts for real usage.
 export const eventsNewsExampleEntries: EventsNewsEntry[] = [
   {
     id: "event-adoption-fridays",
