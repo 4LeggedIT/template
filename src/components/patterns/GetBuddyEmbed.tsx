@@ -10,6 +10,7 @@ type GetBuddyEmbedProps = {
   labels?: {
     viewAllPrefix?: string;
     viewAllLink?: string;
+    listConjunction?: string;
   };
 };
 
@@ -27,6 +28,7 @@ const GetBuddyEmbed = ({
   const {
     viewAllPrefix = "Or view all pets on",
     viewAllLink = "GetBuddy",
+    listConjunction = " or ",
   } = labels;
 
   const openUrl = listingsUrl?.trim() || embedUrl;
@@ -38,7 +40,7 @@ const GetBuddyEmbed = ({
 
   return (
     <section className={className}>
-      <div className="space-y-4 rounded-2xl border border-border bg-card/40 p-6">
+      <div className="space-y-4">
         {showIframe ? (
           <div className="overflow-hidden rounded-xl border border-border/80">
             <iframe
@@ -63,7 +65,7 @@ const GetBuddyEmbed = ({
               >
                 {platform.name}
               </a>
-              {idx < platforms.length - 2 ? ", " : idx < platforms.length - 1 ? " or " : ""}
+              {idx < platforms.length - 2 ? ", " : idx < platforms.length - 1 ? listConjunction : ""}
             </span>
           ))}
           .

@@ -27,6 +27,7 @@ type AdoptAPetEmbedProps = {
     viewAllLink?: string;
     fallbackBadge?: string;
     viewOnLink?: string;
+    listConjunction?: string;
   };
 };
 
@@ -48,6 +49,7 @@ const AdoptAPetEmbed = ({
     viewAllLink = "Adopt-a-Pet",
     fallbackBadge = "Fallback preview",
     viewOnLink = "View on Adopt-a-Pet",
+    listConjunction = " or ",
   } = labels;
 
   const platforms = [
@@ -58,7 +60,7 @@ const AdoptAPetEmbed = ({
 
   return (
     <section className={className}>
-      <div className="space-y-4 rounded-2xl border border-border bg-card/40 p-6">
+      <div className="space-y-4">
         <div className="flex flex-wrap items-center justify-between gap-3">
           {title ? <h3 className="text-xl font-semibold tracking-tight">{title}</h3> : <span />}
           <Button asChild variant="outline" size="sm">
@@ -93,7 +95,7 @@ const AdoptAPetEmbed = ({
               >
                 {platform.name}
               </a>
-              {idx < platforms.length - 2 ? ", " : idx < platforms.length - 1 ? " or " : ""}
+              {idx < platforms.length - 2 ? ", " : idx < platforms.length - 1 ? listConjunction : ""}
             </span>
           ))}
           .

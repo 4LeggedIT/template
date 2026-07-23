@@ -31,6 +31,7 @@ type PetfinderScrollerEmbedProps = {
     viewAllLink?: string;
     availableBadge?: string;
     viewOnLink?: string;
+    listConjunction?: string;
   };
 };
 
@@ -60,6 +61,7 @@ const PetfinderScrollerEmbed = ({
     viewAllLink = "Petfinder",
     availableBadge = "Available pet",
     viewOnLink = "View on Petfinder",
+    listConjunction = " or ",
   } = labels;
 
   const organizationJson = JSON.stringify(organizationIds);
@@ -78,7 +80,7 @@ const PetfinderScrollerEmbed = ({
         </Helmet>
       ) : null}
 
-      <div className="space-y-4 rounded-2xl border border-border bg-card/40 p-6">
+      <div className="space-y-4">
         {title ? <h3 className="text-xl font-semibold tracking-tight">{title}</h3> : null}
 
         <pet-scroller
@@ -104,7 +106,7 @@ const PetfinderScrollerEmbed = ({
               >
                 {platform.name}
               </a>
-              {idx < platforms.length - 2 ? ", " : idx < platforms.length - 1 ? " or " : ""}
+              {idx < platforms.length - 2 ? ", " : idx < platforms.length - 1 ? listConjunction : ""}
             </span>
           ))}
           .

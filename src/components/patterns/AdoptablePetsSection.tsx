@@ -42,6 +42,13 @@ type AdoptablePetsSectionProps = {
     petfinderUrl?: string;
     adoptAPetUrl?: string;
     getbuddyUrl?: string;
+    labels?: {
+      viewAllPrefix?: string;
+      viewAllLink?: string;
+      availableBadge?: string;
+      viewOnLink?: string;
+      listConjunction?: string;
+    };
   };
   adoptAPet?: {
     title?: string;
@@ -52,6 +59,14 @@ type AdoptablePetsSectionProps = {
     fallbackPets?: AdoptAPetFallbackPet[];
     petfinderUrl?: string;
     getbuddyUrl?: string;
+    labels?: {
+      openButton?: string;
+      viewAllPrefix?: string;
+      viewAllLink?: string;
+      fallbackBadge?: string;
+      viewOnLink?: string;
+      listConjunction?: string;
+    };
   };
   getBuddy?: {
     title?: string;
@@ -63,6 +78,11 @@ type AdoptablePetsSectionProps = {
     showIframe?: boolean;
     petfinderUrl?: string;
     adoptAPetUrl?: string;
+    labels?: {
+      viewAllPrefix?: string;
+      viewAllLink?: string;
+      listConjunction?: string;
+    };
   };
   externalRegistries?: {
     petfinderProfileUrl?: string;
@@ -244,6 +264,7 @@ const AdoptablePetsSection = ({
               adoptAPetUrl={petfinder.adoptAPetUrl}
               getbuddyUrl={petfinder.getbuddyUrl}
               petListTitle={petfinder.petListTitle}
+              labels={petfinder.labels}
             />
           </div>
         ) : null}
@@ -265,6 +286,7 @@ const AdoptablePetsSection = ({
               fallbackPets={adoptAPet.fallbackPets}
               petfinderUrl={adoptAPet.petfinderUrl}
               getbuddyUrl={adoptAPet.getbuddyUrl}
+              labels={adoptAPet.labels}
             />
           </div>
         ) : null}
@@ -278,6 +300,7 @@ const AdoptablePetsSection = ({
             showIframe={getBuddy.showIframe}
             petfinderUrl={getBuddy.petfinderUrl}
             adoptAPetUrl={getBuddy.adoptAPetUrl}
+            labels={getBuddy.labels}
           />
         ) : null}
 
