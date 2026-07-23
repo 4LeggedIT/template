@@ -9,6 +9,7 @@ import {
   getGoogleCalendarUrl,
   getMapsUrl,
   renderContentBlock,
+  renderVideoEmbed,
   type EventsNewsEntry,
 } from "@/components/patterns/EventsNewsSection";
 import { cn } from "@/lib/utils";
@@ -269,7 +270,7 @@ const EventsNewsDetail = ({
           </>
         )}
 
-        {renderImages(entry)}
+        {entry.videoEmbed ? <div className="mt-6">{renderVideoEmbed(entry.videoEmbed, entry.title)}</div> : renderImages(entry)}
 
         <Link to={backHref} className="inline-block pt-2 text-sm font-semibold text-primary hover:underline">
           {resolvedLabels.backToIndex}

@@ -63,6 +63,16 @@ export type EventsNewsImage = {
   alt?: string;
 };
 
+export type EventsNewsVideoEmbed = {
+  provider: "facebook";
+  /** Full URL to the source Facebook video or Reel post, e.g. https://www.facebook.com/reel/123... */
+  url: string;
+  /** Defaults to "portrait" for /reel/ URLs, "landscape" otherwise. */
+  aspectRatio?: "landscape" | "portrait";
+  /** Accessible iframe title; falls back to the entry's title. */
+  title?: string;
+};
+
 type EventsNewsBaseEntry = {
   id: string;
   kind: EventsNewsEntryKind;
@@ -74,6 +84,8 @@ type EventsNewsBaseEntry = {
   imageSrc?: string;
   imageAlt?: string;
   images?: EventsNewsImage[];
+  /** Renders in place of imageSrc/images in full/detail views (card thumbnails still use imageSrc). */
+  videoEmbed?: EventsNewsVideoEmbed;
   dateLabel?: string;
   highlights?: string[];
   highlightOnHome?: boolean;
@@ -587,6 +599,30 @@ export const getEntryContentBlocks = (entry: EventsNewsRenderableEntry, highligh
   return [...bodyBlocks, ...highlightBlocks];
 };
 
+export const getFacebookVideoEmbedSrc = (url: string) =>
+  `https://www.facebook.com/plugins/video.php?${new URLSearchParams({ href: url, show_text: "false" }).toString()}`;
+
+export const renderVideoEmbed = (embed: EventsNewsVideoEmbed, fallbackTitle: string) => {
+  const isPortrait = embed.aspectRatio === "portrait" || (!embed.aspectRatio && embed.url.includes("/reel/"));
+  return (
+    <div
+      className={cn(
+        "mx-auto overflow-hidden rounded-xl border border-border bg-black",
+        isPortrait ? "aspect-[9/16] max-w-[360px]" : "aspect-video max-w-full",
+      )}
+    >
+      <iframe
+        src={getFacebookVideoEmbedSrc(embed.url)}
+        title={embed.title ?? fallbackTitle}
+        className="h-full w-full border-0"
+        loading="lazy"
+        allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
+        allowFullScreen
+      />
+    </div>
+  );
+};
+
 const calloutToneClass: Record<EventsNewsCalloutTone, string> = {
   info: "border-primary/30 bg-primary/5",
   success: "border-emerald-500/30 bg-emerald-500/10",
@@ -710,7 +746,9 @@ const renderEntryCard = (
 
   return (
     <Card key={entry.id} className="overflow-hidden border-border/80">
-      {!isIndexMode && entry.imageSrc ? (
+      {!isIndexMode && entry.videoEmbed ? (
+        <div className="bg-muted p-4">{renderVideoEmbed(entry.videoEmbed, entry.title)}</div>
+      ) : !isIndexMode && entry.imageSrc ? (
         <a
           href={entry.imageSrc}
           target="_blank"

@@ -19,7 +19,7 @@ const NewsArticleExamplePage = () => {
       <PageHero
         eyebrow="News"
         title="News Article Example"
-        description="This is a local article route example. Use this pattern when a news entry should open a page hosted in the site, not an external URL. It renders through the shared EventsNewsDetail pattern, the same component used for event detail pages."
+        description="This is a local article route example. Use this pattern when a news entry should open a page hosted in the site, not an external URL. It renders through the shared EventsNewsDetail pattern, the same component used for event detail pages. This entry also demonstrates videoEmbed — the source Facebook video renders inline below in place of a static image."
         breadcrumbs={[
           { label: "Home", href: "/" },
           { label: "Examples", href: "/examples" },

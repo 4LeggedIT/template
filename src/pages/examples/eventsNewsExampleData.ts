@@ -88,8 +88,16 @@ export const eventsNewsExampleEntries: EventsNewsEntry[] = [
     publishedAt: "2026-02-24",
     articleType: "local",
     dateLabel: "February 24, 2026",
-    summary: "Example of a news entry that links to a local article page hosted inside the site.",
+    summary:
+      "Example of a news entry that links to a local article page hosted inside the site, with the source Facebook video embedded via videoEmbed instead of a static image.",
     href: "/news/example-article",
+    imageSrc: "https://images.unsplash.com/photo-1548199973-03cce0bbc87b?auto=format&fit=crop&w=800&q=60",
+    imageAlt: "Placeholder thumbnail (ignored on the detail page below since videoEmbed is set)",
+    videoEmbed: {
+      provider: "facebook",
+      // Real public Reel used as a working demo URL (The Comeback Pack's first-rescue story).
+      url: "https://www.facebook.com/reel/901691332360741",
+    },
   },
   {
     id: "event-yard-sale-2026-02-21",

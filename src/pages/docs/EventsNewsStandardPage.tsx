@@ -48,6 +48,7 @@ const EventsNewsStandardPage = () => {
             <p>- Content seeding standard: do not add fake/sample events in migrated production-like sites; start with empty entries until real events exist.</p>
             <p>- Optional featured card and archive controls are built in (`showFeatured`, archive props).</p>
             <p>- `socialCta` is a required governance default (not opt-in) for sites on the current generation — populate it from `siteConfig.social.*` so a "follow us" row renders via `SocialFollowCta`; never hand-roll a page-local version.</p>
+            <p>- Set `entry.videoEmbed` (provider `"facebook"`, plus `url`, optional `aspectRatio`, optional `title`) on a `local` news entry to embed the source Facebook video/Reel inline on the detail page (and full-mode card) instead of a static image. `aspectRatio` defaults to `"portrait"` for `/reel/` URLs, `"landscape"` otherwise. Card thumbnails (news index, homepage highlight) still use `imageSrc`/`imageAlt` — keep both set so the thumbnail looks right even though the embed wins on the full/detail view.</p>
           </CardContent>
         </Card>
         <Card>
