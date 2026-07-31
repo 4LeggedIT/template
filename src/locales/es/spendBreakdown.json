@@ -8,10 +8,6 @@
     "standalone": {
       "title": "Independiente",
       "description": "Funciona por sí solo para un sitio que solo tiene datos de gastos listos — un desglose de categorías agrupadas, un total calculado y un enlace opcional a la declaración de impuestos realmente presentada."
-    },
-    "paired": {
-      "title": "Combinado con Estadísticas de Impacto",
-      "description": "Los dos patrones se combinan en la página, no se fusionan en un solo componente — un sitio muestra ambos cuando tiene ambos datos, o solo uno cuando solo tiene uno. El indicador opcional costPerOutcome lo calcula el sitio a partir de totales del mismo período en ambos lados."
     }
   },
   "standard": {
@@ -49,13 +45,6 @@
     "fundraising": "Recaudación de Fondos",
     "periodLabel": "Año Fiscal 2026, según lo presentado",
     "totalLabel": "Total de Gastos",
-    "sourceLabel": "Ver nuestra declaración de impuestos presentada",
-    "costPerOutcomeLabel": "por animal ayudado, Año Fiscal 2026",
-    "combinedTitle": "Nuestro Impacto y Rendición de Cuentas",
-    "combinedDescription": "Esto es lo que nuestra comunidad logró este año — y exactamente cómo lo gastamos.",
-    "metrics": {
-      "adopted": "Adoptados",
-      "helped": "Animales Ayudados"
-    }
+    "sourceLabel": "Ver nuestra declaración de impuestos presentada"
   }
 }

@@ -8,10 +8,6 @@
     "standalone": {
       "title": "Standalone",
       "description": "Works on its own for a site that only has expense data ready — a rolled-up category breakdown, a computed total, and an optional link out to the actual filed tax return."
-    },
-    "paired": {
-      "title": "Paired with Impact Stats",
-      "description": "The two patterns are composed on the page, not merged into one component — a site shows both when it has both, either alone when it only has one. The optional costPerOutcome highlight is computed by the site from same-period totals on both sides."
     }
   },
   "standard": {
@@ -49,13 +45,6 @@
     "fundraising": "Fundraising",
     "periodLabel": "Fiscal Year 2026, as filed",
     "totalLabel": "Total Expenses",
-    "sourceLabel": "View our filed tax return",
-    "costPerOutcomeLabel": "per animal helped, FY2026",
-    "combinedTitle": "Our Impact & Accountability",
-    "combinedDescription": "Here's what our community made possible this year — and exactly how we spent it.",
-    "metrics": {
-      "adopted": "Adopted",
-      "helped": "Animals Helped"
-    }
+    "sourceLabel": "View our filed tax return"
   }
 }

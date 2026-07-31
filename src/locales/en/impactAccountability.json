@@ -1,0 +1,50 @@
+{
+  "hero": {
+    "title": "Impact & Accountability",
+    "description": "A worked example of composing the Impact Stats and Spend Breakdown patterns together on one page — two separate, standalone components presented as one cohesive section, never merged into a single component."
+  },
+  "breadcrumb": "Impact & Accountability",
+  "sections": {
+    "example": {
+      "title": "Combined example",
+      "description": "This is what a site shows once it has both a year's outcomes and that same year's expense breakdown ready — the outcomes lead, the spend breakdown follows immediately below with no gap in between, and the cost-per-outcome highlight ties the two together."
+    },
+    "links": {
+      "title": "Each pattern on its own"
+    }
+  },
+  "links": {
+    "impactStats": {
+      "title": "Impact Stats Pattern",
+      "description": "Full documentation for the lifetime stat tiles and optional period-by-period bar chart, on its own."
+    },
+    "spendBreakdown": {
+      "title": "Spend Breakdown Pattern",
+      "description": "Full documentation for the rolled-up spend-category tiles sourced from a filed tax return, on its own."
+    }
+  },
+  "standard": {
+    "title": "Standard",
+    "twoComponents": "Still two separate components under the hood — ImpactStatsSection and SpendBreakdownSection are composed on the page, never merged into one. A site can show this combined section, either pattern alone, or neither.",
+    "samePeriod": "Every figure on both sides must come from the same reporting period — pairing a lifetime impact total against one year's spending (or vice versa) is misleading, even if every individual number is accurate.",
+    "sharedHeading": "Give the title/description to the first component only (typically ImpactStatsSection) and leave the second title-less, so the pair reads as one section rather than two stacked demos.",
+    "costPerOutcome": "The cost-per-outcome highlight is always computed by the page from the same same-period totals shown on both sides — never estimated or computed by either component itself.",
+    "onlyWhenBothReady": "Only build this combined page for a site once it genuinely has both a real impact dataset and a real spend dataset for the same period — don't pair one real side with a placeholder on the other."
+  },
+  "sampleData": {
+    "combinedTitle": "Our Impact & Accountability",
+    "combinedDescription": "Here's what our community made possible this year — and exactly how we spent it.",
+    "periodLabel": "Fiscal Year 2026, as filed",
+    "totalLabel": "Total Expenses",
+    "costPerOutcomeLabel": "per animal helped, FY2026",
+    "animalCare": "Animal Care",
+    "rescueOperations": "Rescue Operations",
+    "marketingOutreach": "Marketing & Outreach",
+    "administrative": "Administrative",
+    "fundraising": "Fundraising",
+    "metrics": {
+      "adopted": "Adopted",
+      "helped": "Animals Helped"
+    }
+  }
+}

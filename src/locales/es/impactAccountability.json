@@ -1,0 +1,50 @@
+{
+  "hero": {
+    "title": "Impacto y Rendición de Cuentas",
+    "description": "Un ejemplo práctico de cómo combinar los patrones de Estadísticas de Impacto y Desglose de Gastos en una sola página — dos componentes separados e independientes, presentados como una sección cohesiva, nunca fusionados en un solo componente."
+  },
+  "breadcrumb": "Impacto y Rendición de Cuentas",
+  "sections": {
+    "example": {
+      "title": "Ejemplo combinado",
+      "description": "Esto es lo que muestra un sitio una vez que tiene listos tanto los resultados de un año como el desglose de gastos de ese mismo año — los resultados van primero, el desglose de gastos continúa justo debajo sin ningún espacio entre ambos, y el indicador de costo por resultado une a los dos."
+    },
+    "links": {
+      "title": "Cada patrón por separado"
+    }
+  },
+  "links": {
+    "impactStats": {
+      "title": "Patrón de Estadísticas de Impacto",
+      "description": "Documentación completa de los recuadros de estadísticas de por vida y la gráfica de barras opcional por período, por sí solo."
+    },
+    "spendBreakdown": {
+      "title": "Patrón de Desglose de Gastos",
+      "description": "Documentación completa de los recuadros de categorías de gastos agrupados, provenientes de una declaración de impuestos presentada, por sí solo."
+    }
+  },
+  "standard": {
+    "title": "Estándar",
+    "twoComponents": "Siguen siendo dos componentes separados por debajo — ImpactStatsSection y SpendBreakdownSection se combinan en la página, nunca se fusionan en uno solo. Un sitio puede mostrar esta sección combinada, cualquiera de los dos patrones por separado, o ninguno.",
+    "samePeriod": "Cada cifra en ambos lados debe provenir del mismo período de reporte — combinar un total de impacto de por vida con el gasto de un solo año (o viceversa) resulta engañoso, incluso si cada cifra individual es correcta.",
+    "sharedHeading": "Asigne el título/descripción únicamente al primer componente (normalmente ImpactStatsSection) y deje el segundo sin título, para que el conjunto se lea como una sola sección en lugar de dos demostraciones apiladas.",
+    "costPerOutcome": "El indicador de costo por resultado siempre lo calcula la página a partir de los mismos totales del mismo período mostrados en ambos lados — nunca lo estima ni lo calcula ninguno de los componentes por sí mismo.",
+    "onlyWhenBothReady": "Construya esta página combinada para un sitio solo cuando realmente tenga tanto un conjunto de datos de impacto real como un conjunto de datos de gastos real para el mismo período — no combine un lado real con un marcador de posición en el otro."
+  },
+  "sampleData": {
+    "combinedTitle": "Nuestro Impacto y Rendición de Cuentas",
+    "combinedDescription": "Esto es lo que nuestra comunidad logró este año — y exactamente cómo lo gastamos.",
+    "periodLabel": "Año Fiscal 2026, según lo presentado",
+    "totalLabel": "Total de Gastos",
+    "costPerOutcomeLabel": "por animal ayudado, Año Fiscal 2026",
+    "animalCare": "Cuidado Animal",
+    "rescueOperations": "Operaciones de Rescate",
+    "marketingOutreach": "Marketing y Difusión",
+    "administrative": "Administrativo",
+    "fundraising": "Recaudación de Fondos",
+    "metrics": {
+      "adopted": "Adoptados",
+      "helped": "Animales Ayudados"
+    }
+  }
+}

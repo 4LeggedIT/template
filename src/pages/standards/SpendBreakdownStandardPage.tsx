@@ -3,7 +3,6 @@ import { Briefcase, HandCoins, Megaphone, Stethoscope, Truck } from "lucide-reac
 import SpendBreakdownSection, {
   type SpendCategory,
 } from "@/components/patterns/SpendBreakdownSection";
-import ImpactStatsSection, { type ImpactStatsPeriod } from "@/components/patterns/ImpactStatsSection";
 import PageHero from "@/components/patterns/PageHero";
 import SEOHead from "@/components/patterns/SEOHead";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -32,10 +31,6 @@ const SpendBreakdownStandardPage = () => {
       icon: Briefcase,
     },
     { id: "fundraising", label: t("spendBreakdown:sampleData.fundraising"), amount: 3100, icon: HandCoins },
-  ];
-
-  const pairedPeriods: ImpactStatsPeriod[] = [
-    { id: "fy2026", label: "FY2026", metrics: { adopted: 480, helped: 610 } },
   ];
 
   return (
@@ -69,32 +64,6 @@ const SpendBreakdownStandardPage = () => {
               sourceLabel: t("spendBreakdown:sampleData.sourceLabel"),
             }}
           />
-        </div>
-
-        <div className="space-y-3">
-          <h2 className="text-lg font-semibold">{t("spendBreakdown:sections.paired.title")}</h2>
-          <p className="text-sm text-muted-foreground">{t("spendBreakdown:sections.paired.description")}</p>
-          <div className="space-y-8">
-            <ImpactStatsSection
-              title={t("spendBreakdown:sampleData.combinedTitle")}
-              description={t("spendBreakdown:sampleData.combinedDescription")}
-              lifetimeStats={[]}
-              periods={pairedPeriods}
-              periodMetrics={{
-                adopted: { label: t("spendBreakdown:sampleData.metrics.adopted") },
-                helped: { label: t("spendBreakdown:sampleData.metrics.helped") },
-              }}
-            />
-            <SpendBreakdownSection
-              categories={categories}
-              periodLabel={t("spendBreakdown:sampleData.periodLabel")}
-              costPerOutcome={{
-                amountLabel: "$84",
-                outcomeLabel: t("spendBreakdown:sampleData.costPerOutcomeLabel"),
-              }}
-              labels={{ totalLabel: t("spendBreakdown:sampleData.totalLabel") }}
-            />
-          </div>
         </div>
 
         <Card>
