@@ -29,7 +29,7 @@
       "Las imágenes de las tarjetas locales se muestran en foto completa de forma predeterminada (`object-contain`); use `localImageFit`/`imageFit` para anularlo.",
       "Las tarjetas locales admiten alias opcionales (`nombre (aka alias)`) y galerías multi-foto (arreglo `images`).",
       "Use `loadLocalAdoptablePets` + `mapLocalAdoptableManifest` para manifiestos JSON locales con la forma del scrape de Petfinder.",
-      "Use `gender` en los metadatos de mascotas locales (nunca `sex`).",
+      "Use `gender` en los metadatos de mascotas locales.",
       "`showExpiredListings`/`defaultExpiryMonths` reflejan el patrón de colocación: los listados locales vencidos se ocultan de forma predeterminada (ventana de 3 meses) a menos que `showExpiredListings=true`.",
       "`externalRegistries` agrega enlaces de perfil de Petfinder/Adopt-a-Pet junto a las tarjetas locales sin cambiar el modo de proveedor.",
       "Componente: `template/src/components/patterns/AdoptablePetsSection.tsx`",

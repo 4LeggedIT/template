@@ -71,7 +71,7 @@
       "Use neutral styling defaults (no site-specific color branding in shared standards).",
       "Use `statusFilter` plus `showReunited`/`showArchived` (both default `false`) to control found-notice lifecycle visibility — active notices show by default; reunited/archived are opt-in.",
       "Cards render from normalized `FoundListing` metadata (`pet`, `location`, `status`, `source`); image and source links open safely in a new tab; internal support links use `Link` components and remain no-JS readable as anchors.",
-      "Use `gender` on the pet profile (never `sex`) — matches the field name used across every other pattern (`AdoptablePetsSection`, kennel-display tools).",
+      "Use `gender` on the pet profile — matches the field name used across every other pattern (`AdoptablePetsSection`, kennel-display tools).",
       "Component: `template/src/components/patterns/FoundListingsSection.tsx`"
     ]
   }

@@ -29,7 +29,7 @@
       "Local card images default to full-photo display (`object-contain`); use `localImageFit`/`imageFit` to override.",
       "Local cards support optional aliases (`name (aka alias)`) and multi-photo galleries (`images` array).",
       "Use `loadLocalAdoptablePets` + `mapLocalAdoptableManifest` for local JSON manifests shaped like Petfinder scrape output.",
-      "Use `gender` in local pet metadata (never `sex`).",
+      "Use `gender` in local pet metadata.",
       "`showExpiredListings`/`defaultExpiryMonths` mirror the placement pattern: expired local listings are hidden by default (3-month window) unless `showExpiredListings=true`.",
       "`externalRegistries` adds Petfinder/Adopt-a-Pet profile links alongside local cards without switching provider mode.",
       "Component: `template/src/components/patterns/AdoptablePetsSection.tsx`",

@@ -71,7 +71,7 @@
       "Use estilos neutros predeterminados (sin marca de color específica del sitio en los estándares compartidos).",
       "Use `statusFilter` junto con `showReunited`/`showArchived` (ambos predeterminados en `false`) para controlar la visibilidad del ciclo de vida de los avisos — los avisos activos se muestran de forma predeterminada; los reunificados/archivados son opcionales.",
       "Las tarjetas se renderizan a partir de metadatos normalizados de `FoundListing` (`pet`, `location`, `status`, `source`); los enlaces de imagen y de fuente se abren de forma segura en una pestaña nueva; los enlaces de soporte internos usan componentes `Link` y siguen siendo legibles como anclas sin JS.",
-      "Use `gender` en el perfil de la mascota (nunca `sex`) — coincide con el nombre de campo usado en todos los demás patrones (`AdoptablePetsSection`, herramientas de exhibición de perreras).",
+      "Use `gender` en el perfil de la mascota — coincide con el nombre de campo usado en todos los demás patrones (`AdoptablePetsSection`, herramientas de exhibición de perreras).",
       "Componente: `template/src/components/patterns/FoundListingsSection.tsx`"
     ]
   }
