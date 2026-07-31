@@ -1,0 +1,21 @@
+{
+  "nav": {
+    "home": "Home",
+    "standards": "Standards"
+  },
+  "footer": {
+    "ctaTitle": "Curious how tech can serve your rescue?",
+    "ctaDescription": "This site is the living reference for 4leggedIT's shared website platform — free technology support for rescue organizations.",
+    "ctaButton": "Visit 4leggedIT",
+    "builtOn": "Built on the {{brand}} platform",
+    "description": "Standardized patterns for animal-rescue websites — this site is the living reference.",
+    "linkWebsite": "4leggedit.com",
+    "linkRepo": "github.com/4LeggedIT/template",
+    "copyright": "© {{year}} 4leggedIT."
+  },
+  "language": {
+    "en": "EN",
+    "es": "ES",
+    "toggleLabel": "Language"
+  }
+}

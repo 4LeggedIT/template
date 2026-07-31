@@ -1,0 +1,7 @@
+{
+  "eyebrow": "Hello World",
+  "title": "Standardized website template baseline",
+  "description": "This home page intentionally stays minimal. Use the standards section to validate shared patterns before propagating changes to client sites.",
+  "cta": "Open Standards",
+  "bodyText": "Keep org-specific copy, data, and branding out of this repo. Add shared patterns here and verify them on their dedicated standards pages first."
+}

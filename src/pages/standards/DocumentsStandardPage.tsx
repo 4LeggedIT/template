@@ -1,0 +1,83 @@
+import { Link } from "react-router-dom";
+import PageHero from "@/components/patterns/PageHero";
+import SEOHead from "@/components/patterns/SEOHead";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+
+const tools = [
+  {
+    title: "Documents Index",
+    href: "/tools/documents-index",
+    component: "DocumentsIndexSection.tsx",
+    description: "The `/documents` landing page — grouped links out to every printable document on the site.",
+  },
+  {
+    title: "Certificate of Adoption",
+    href: "/tools/adoption-certificate",
+    component: "AdoptionCertificateSection.tsx",
+    description: "A dedicated, ready-to-print certificate — required on every animal-rescue site per governance.",
+  },
+  {
+    title: "Pet Medical Record",
+    href: "/tools/pet-medical-record",
+    component: "PetMedicalRecordSection.tsx",
+    description: "A dedicated, ready-to-print medical record — required on every animal-rescue site per governance.",
+  },
+];
+
+const DocumentsStandardPage = () => {
+  return (
+    <>
+      <SEOHead
+        title="Documents / Printable Material Pattern"
+        canonicalPath="/standards/documents"
+        description="Standalone, full-viewport print-ready documents for animal-rescue sites — adoption certificate, medical record, and a generic document wrapper."
+      />
+      <PageHero
+        eyebrow="Standards"
+        title="Documents / Printable Material pattern"
+        description="Print-ready documents (adoption certificate, medical record, and any other org document), plus the /documents index that lists them — not embedded in a page like other patterns."
+        breadcrumbs={[
+          { label: "Home", href: "/" },
+          { label: "Standards" },
+          { label: "Documents Pattern" },
+        ]}
+      />
+
+      <section className="container space-y-6 px-4 py-10">
+        <div className="grid gap-4 md:grid-cols-2">
+          {tools.map((tool) => (
+            <Card key={tool.href}>
+              <CardHeader>
+                <CardTitle className="text-lg">{tool.title}</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                <p className="text-sm text-muted-foreground">{tool.description}</p>
+                <Link className="text-sm underline underline-offset-4" to={tool.href}>
+                  Open live example
+                </Link>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Standard</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-2 text-sm text-muted-foreground">
+            <p>- Every site must have a `/documents` index (`DocumentsIndexSection`, or a site-local page using the same `.doc-page` markup) plus, at minimum, a Certificate of Adoption and a Pet Medical Record — required on every animal-rescue site per governance, even if empty groups are shown for document types not yet available.</p>
+            <p>- `AdoptionCertificateSection` and `PetMedicalRecordSection` are dedicated, purpose-built components — use them instead of hand-rolling a document layout for these two required document types.</p>
+            <p>- For any other printable document (foster agreement, volunteer agreement, educational guide, etc.), use `DocumentLayout` as a generic wrapper (`title`, `orgName`, `logoSrc`, `children`) rather than duplicating the print page shell — no live example above, since it renders whatever content a site passes as children, but the component exists and follows the same conventions as the two dedicated ones.</p>
+            <p>- All of these components render a self-contained, full-viewport `.doc-body`/`.doc-page` layout with its own `@page` print-size rule — like the Kennel & Display Tools, these are not meant to be embedded inside a normal page layout, and their routes are mounted outside the shared `SiteLayout`/`AppShell` wrapper so no site header or footer prints alongside the document.</p>
+            <p>- Every config comes from one shared `PrintableDocConfig` shape (`printable-doc-config.ts`): `orgName`, `orgTagline`, `logoSrc`, `adoptUrl`, `fosterUrl`, `contact`, optional `donation`, optional `social`. Build one config per site and reuse it across every document page — never duplicate org details per document.</p>
+            <p>- `src/styles/documents.css` holds the shared print-optimized styling; sites override its CSS variables (`--doc-primary`, `--doc-accent`, etc.) for brand colors, never the layout rules themselves.</p>
+            <p>- Document routes must be excluded from prerender/sitemap discovery via the `/documents` prefix in `PRERENDER_EXCLUDE_PREFIXES`/`SITEMAP_EXCLUDE_PREFIXES` on a real site (this template's own `/tools/*` documents examples are excluded the same way its other `/tools/*` routes are, for the same self-contained-page reason).</p>
+            <p>- Components: `template/src/components/patterns/DocumentsIndexSection.tsx`, `AdoptionCertificateSection.tsx`, `PetMedicalRecordSection.tsx`, `DocumentLayout.tsx`, `printable-doc-config.ts`</p>
+          </CardContent>
+        </Card>
+      </section>
+    </>
+  );
+};
+
+export default DocumentsStandardPage;

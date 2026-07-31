@@ -1,0 +1,81 @@
+<svg viewBox="0 0 850 1100" xmlns="http://www.w3.org/2000/svg" font-family="'Nunito','Segoe UI',system-ui,sans-serif">
+  <defs>
+    <linearGradient id="raffleGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#7cb518" />
+      <stop offset="100%" stop-color="#1a6ef4" />
+    </linearGradient>
+  </defs>
+
+  <rect width="850" height="1100" fill="#ffffff" />
+
+  <!-- Header band -->
+  <rect width="850" height="330" fill="url(#raffleGrad)" />
+  <circle cx="90" cy="80" r="26" fill="#ffffff" opacity="0.12" />
+  <circle cx="65" cy="45" r="9" fill="#ffffff" opacity="0.12" />
+  <circle cx="118" cy="45" r="9" fill="#ffffff" opacity="0.12" />
+  <circle cx="55" cy="95" r="7" fill="#ffffff" opacity="0.12" />
+  <circle cx="128" cy="95" r="7" fill="#ffffff" opacity="0.12" />
+
+  <circle cx="760" cy="260" r="34" fill="#ffffff" opacity="0.1" />
+  <circle cx="725" cy="215" r="12" fill="#ffffff" opacity="0.1" />
+  <circle cx="795" cy="215" r="12" fill="#ffffff" opacity="0.1" />
+  <circle cx="710" cy="270" r="9" fill="#ffffff" opacity="0.1" />
+  <circle cx="810" cy="270" r="9" fill="#ffffff" opacity="0.1" />
+
+  <text x="425" y="110" text-anchor="middle" fill="#ffffff" font-size="24" font-weight="700" letter-spacing="3">FUNDRAISER</text>
+
+  <!-- Gift basket illustration -->
+  <g transform="translate(425,215)">
+    <path d="M -85 20 L -70 90 L 70 90 L 85 20 Z" fill="#ffffff" opacity="0.95" />
+    <path d="M -85 20 L 85 20 L 78 -2 L -78 -2 Z" fill="#ffffff" />
+    <path d="M -45 -2 C -45 -55 45 -55 45 -2" fill="none" stroke="#ffffff" stroke-width="7" />
+    <!-- woven texture lines -->
+    <line x1="-70" y1="30" x2="-58" y2="90" stroke="#7cb518" stroke-width="3" opacity="0.5" />
+    <line x1="-35" y1="20" x2="-30" y2="90" stroke="#7cb518" stroke-width="3" opacity="0.5" />
+    <line x1="0" y1="20" x2="0" y2="90" stroke="#7cb518" stroke-width="3" opacity="0.5" />
+    <line x1="35" y1="20" x2="30" y2="90" stroke="#7cb518" stroke-width="3" opacity="0.5" />
+    <line x1="70" y1="30" x2="58" y2="90" stroke="#7cb518" stroke-width="3" opacity="0.5" />
+    <!-- bow -->
+    <circle cx="0" cy="-2" r="10" fill="#1f2937" opacity="0.15" />
+    <path d="M 0 -2 C -22 -18 -30 -2 0 -2 C 22 -18 30 -2 0 -2" fill="#ffffff" stroke="#1a6ef4" stroke-width="3" />
+    <!-- paw print peeking out -->
+    <g transform="translate(-3,-30)" fill="#1a6ef4">
+      <circle cx="0" cy="6" r="7" />
+      <circle cx="-9" cy="-4" r="4" />
+      <circle cx="9" cy="-4" r="4" />
+      <circle cx="-5" cy="-12" r="3.5" />
+      <circle cx="5" cy="-12" r="3.5" />
+    </g>
+  </g>
+
+  <text x="425" y="300" text-anchor="middle" fill="#ffffff" font-size="21" font-weight="600">20+ dog-themed gift baskets up for grabs</text>
+
+  <!-- Title -->
+  <text x="425" y="410" text-anchor="middle" fill="#1f2937" font-size="52" font-weight="800">Monthly Basket</text>
+  <text x="425" y="470" text-anchor="middle" fill="#1f2937" font-size="52" font-weight="800">Raffle</text>
+
+  <line x1="225" y1="510" x2="625" y2="510" stroke="#e5e7eb" stroke-width="2" />
+
+  <!-- Info block -->
+  <g font-size="24" fill="#374151" font-weight="600">
+    <text x="425" y="570" text-anchor="middle">First Saturday of every month · 11:00 AM – 3:00 PM</text>
+    <text x="425" y="608" text-anchor="middle">Community Hall, 456 Oak Ave, Example City, ST</text>
+  </g>
+
+  <!-- Highlights -->
+  <g font-size="20" fill="#4b5563">
+    <circle cx="255" cy="675" r="5" fill="#7cb518" />
+    <text x="275" y="682">Tickets: $5 each, or 5 for $20</text>
+
+    <circle cx="255" cy="715" r="5" fill="#7cb518" />
+    <text x="275" y="722">Tickets available at the door or in advance</text>
+
+    <circle cx="255" cy="755" r="5" fill="#7cb518" />
+    <text x="275" y="762">Winners drawn on-site at 3:00 PM</text>
+  </g>
+
+  <!-- Footer CTA band -->
+  <rect x="0" y="960" width="850" height="140" fill="#1a6ef4" />
+  <text x="425" y="1015" text-anchor="middle" fill="#ffffff" font-size="24" font-weight="700">You don't need to be present to win!</text>
+  <text x="425" y="1055" text-anchor="middle" fill="#ffffff" font-size="18" font-weight="500" opacity="0.9">example.org/events/basket-raffle</text>
+</svg>

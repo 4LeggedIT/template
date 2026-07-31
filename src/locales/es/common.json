@@ -1,0 +1,21 @@
+{
+  "nav": {
+    "home": "Inicio",
+    "standards": "Estándares"
+  },
+  "footer": {
+    "ctaTitle": "¿Tiene curiosidad por saber cómo la tecnología puede ayudar a su rescate?",
+    "ctaDescription": "Este sitio es la referencia viva de la plataforma web compartida de 4leggedIT — soporte tecnológico gratuito para organizaciones de rescate.",
+    "ctaButton": "Visitar 4leggedIT",
+    "builtOn": "Creado sobre la plataforma {{brand}}",
+    "description": "Patrones estandarizados para sitios web de rescate de animales — este sitio es la referencia viva.",
+    "linkWebsite": "4leggedit.com",
+    "linkRepo": "github.com/4LeggedIT/template",
+    "copyright": "© {{year}} 4leggedIT."
+  },
+  "language": {
+    "en": "EN",
+    "es": "ES",
+    "toggleLabel": "Idioma"
+  }
+}

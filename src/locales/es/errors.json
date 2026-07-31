@@ -1,0 +1,17 @@
+{
+  "eyebrow": "Patrón de Error",
+  "title": "Ups, algo salió mal",
+  "description": "Use esta página como el destino de error estandarizado (que no sea 404) para problemas recuperables y alternativas elegantes.",
+  "goHome": "Ir al Inicio",
+  "openStandards": "Abrir Estándares",
+  "whenToUseTitle": "Cuándo usar esta página",
+  "whenToUse1": "Fallos temporales de integración (API no disponible, formulario embebido bloqueado, etc.)",
+  "whenToUse2": "Alternativas de funciones donde la estructura de la página aún carga correctamente",
+  "whenToUse3": "Rutas de recuperación seguras para el usuario con una acción siguiente clara",
+  "notFound": {
+    "eyebrow": "Página no encontrada",
+    "title": "No pudimos encontrar esa página",
+    "description": "El enlace puede estar desactualizado, o la página pudo haberse movido.",
+    "backHome": "Volver al inicio"
+  }
+}

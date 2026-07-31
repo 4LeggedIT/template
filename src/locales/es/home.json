@@ -1,0 +1,7 @@
+{
+  "eyebrow": "Hola Mundo",
+  "title": "Base estándar de plantilla de sitio web",
+  "description": "Esta página de inicio se mantiene minimalista a propósito. Use la sección de estándares para validar los patrones compartidos antes de propagar cambios a los sitios de los clientes.",
+  "cta": "Abrir Estándares",
+  "bodyText": "Mantenga el contenido, los datos y la marca específicos de la organización fuera de este repositorio. Agregue patrones compartidos aquí y verifíquelos primero en sus páginas de estándares dedicadas."
+}
