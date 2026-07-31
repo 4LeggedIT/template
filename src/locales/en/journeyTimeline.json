@@ -66,7 +66,6 @@
       "mid": "that component's curated grid is the \"wall,\" this is the detail page each card's",
       "after": "points to — see the composed example above."
     },
-    "component": "Component: `template/src/components/patterns/JourneyTimeline.tsx`",
-    "firstImplementation": "First real-site implementation: `the-comeback-pack`'s \"Pack Journeys\" feature (`/pack-journeys`, `/pack-journeys/:slug`)."
+    "component": "Component: `template/src/components/patterns/JourneyTimeline.tsx`"
   }
 }

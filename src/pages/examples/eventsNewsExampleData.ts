@@ -10,7 +10,7 @@ import { type EventsNewsEntry, type EventsNewsEventEntry } from "@/components/pa
 //   const entries = rawEntries.map((entry) => resolveEventEntry(entry, locale));
 //
 // See /standards/events-news's "Localization (bilingual sites)" section for the full
-// pattern, and the-comeback-pack's / feedingperrisstrays' src/data/events.ts for real usage.
+// pattern.
 export const eventsNewsExampleEntries: EventsNewsEntry[] = [
   {
     id: "event-adoption-fridays",

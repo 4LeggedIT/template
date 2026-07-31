@@ -61,8 +61,7 @@
       "Nunca invente un socio. Cada entrada debe ser una relación real y verificable — un nombre mencionado una sola vez en una publicación de un evento no es lo mismo que una asociación permanente que merezca un listado fijo.",
       "`logoSrc` y `url` son ambos opcionales; la tarjeta se degrada correctamente a un tratamiento de solo nombre cuando aún no hay un logotipo disponible. Cuando se define `url`, el logotipo enlaza a ella (si existe un logotipo) y se omite el enlace de texto \"Visitar sitio web\" (una sola superficie de enlace es suficiente); el enlace de texto solo se renderiza como respaldo cuando hay `url` pero no `logoSrc`.",
       "`logoBackgroundClassName` es un color de fondo opcional (por ejemplo, `\"bg-slate-900\"`) para logotipos cuyo diseño necesita un fondo específico para seguir siendo legible — una marca clara o blanca desaparece en el fondo predeterminado de la tarjeta si no. Omítalo en logotipos que ya se vean bien tal cual; la mayoría no lo necesitará.",
-      "Componente: `template/src/components/patterns/CommunityPartnersSection.tsx`",
-      "Primer sitio en producción: `the-comeback-pack` (`src/pages/Partners.tsx`, `src/data/partners.ts`) — implementación de referencia para el archivo de datos por sitio y la integración de la página."
+      "Componente: `template/src/components/patterns/CommunityPartnersSection.tsx`"
     ]
   }
 }

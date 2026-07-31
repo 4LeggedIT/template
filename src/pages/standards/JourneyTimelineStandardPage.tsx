@@ -115,7 +115,6 @@ const JourneyTimelineStandardPage = () => {
               {t("journeyTimeline:standard.pairsWith.after")}
             </p>
             <p>- {t("journeyTimeline:standard.component")}</p>
-            <p>- {t("journeyTimeline:standard.firstImplementation")}</p>
           </CardContent>
         </Card>
       </section>

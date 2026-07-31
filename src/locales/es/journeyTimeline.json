@@ -66,7 +66,6 @@
       "mid": "la cuadrícula curada de ese componente es el \"muro\"; esta es la página de detalle a la que apunta el",
       "after": "de cada tarjeta — vea el ejemplo compuesto arriba."
     },
-    "component": "Componente: `template/src/components/patterns/JourneyTimeline.tsx`",
-    "firstImplementation": "Primera implementación en un sitio real: la función \"Pack Journeys\" de `the-comeback-pack` (`/pack-journeys`, `/pack-journeys/:slug`)."
+    "component": "Componente: `template/src/components/patterns/JourneyTimeline.tsx`"
   }
 }

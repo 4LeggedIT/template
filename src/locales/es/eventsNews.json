@@ -82,8 +82,7 @@
       "`EventsNewsSection`/`EventBanner` en sí mismos permanecen en `string` plano y de un solo idioma — no agregue campos localizados a los componentes compartidos.",
       "Para el contenido real de eventos/noticias de un sitio bilingüe (con alternancia EN/ES), redacte cada campo traducible como `LocalizedText` (de `lib/localized-content.ts`): una cadena simple, o un registro en/es.",
       "Mantenga un mapeador `resolve*Entry(entry, locale)` en los propios `data/events.ts`/`data/news-items.ts` del sitio que resuelva los campos `LocalizedText` a la forma `string` plana `EventsNewsEventEntry`/`EventsNewsArticleEntry` mediante `resolveText(value, locale)` — llámelo desde el componente de la página con `toContentLocale(i18n.resolvedLanguage)` antes de pasar `entries` a `EventsNewsSection`.",
-      "`EventBanner` acepta una prop opcional `locale` (string, por defecto `\"en-US\"`) para su visualización de fecha/hora con `Intl.DateTimeFormat`. En un sitio bilingüe, páselo `toIntlLocaleTag(toContentLocale(i18n.resolvedLanguage))` — de lo contrario, la fecha/hora del banner permanece formateada en inglés aunque el resto de la página esté en español.",
-      "Implementaciones de referencia reales: `the-comeback-pack` y `feedingperrisstrays` (`src/data/events.ts`, `src/pages/Home.tsx`/`src/components/HomeEventBanner.tsx`)."
+      "`EventBanner` acepta una prop opcional `locale` (string, por defecto `\"en-US\"`) para su visualización de fecha/hora con `Intl.DateTimeFormat`. En un sitio bilingüe, páselo `toIntlLocaleTag(toContentLocale(i18n.resolvedLanguage))` — de lo contrario, la fecha/hora del banner permanece formateada en inglés aunque el resto de la página esté en español."
     ]
   }
 }
