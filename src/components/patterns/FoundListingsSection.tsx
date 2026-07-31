@@ -27,7 +27,7 @@ export interface FoundListingLocation {
 export interface FoundListingPetProfile {
   name?: string;
   species?: FoundSpecies;
-  sex?: string;
+  gender?: string;
   ageEstimate?: string;
   size?: string;
   color?: string;
@@ -83,7 +83,7 @@ export type FoundListingsSectionLabels = {
   imageOpenAriaLabelPrefix?: string;
   imageFallbackAltPrefix?: string;
   noticePrefix?: string;
-  fieldSex?: string;
+  fieldGender?: string;
   fieldFoundDate?: string;
   fieldFoundLocation?: string;
   fieldCrossStreets?: string;
@@ -160,7 +160,7 @@ const FoundListingsSection = ({
     imageOpenAriaLabelPrefix = "Open full-size image for found dog notice ",
     imageFallbackAltPrefix = "Found notice ",
     noticePrefix = "Found Dog Notice #",
-    fieldSex = "Sex:",
+    fieldGender = "Gender:",
     fieldFoundDate = "Found date:",
     fieldFoundLocation = "Found location:",
     fieldCrossStreets = "Cross streets:",
@@ -276,9 +276,9 @@ const FoundListingsSection = ({
                       {listing.pet?.name ? `${listing.pet.name} (${noticePrefix}${listing.id})` : `${noticePrefix}${listing.id}`}
                     </h4>
                     <ul className="mt-3 space-y-1 text-sm text-muted-foreground">
-                      {listing.pet?.sex ? (
+                      {listing.pet?.gender ? (
                         <li>
-                          <strong className="text-foreground">{fieldSex}</strong> {listing.pet.sex}
+                          <strong className="text-foreground">{fieldGender}</strong> {listing.pet.gender}
                         </li>
                       ) : null}
                       {listing.foundAt ? (

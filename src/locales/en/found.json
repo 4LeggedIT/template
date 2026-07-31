@@ -15,16 +15,48 @@
   },
   "listings": {
     "notice1": {
-      "sex": "Male",
+      "gender": "Male",
       "microchipStatus": "Unknown",
       "notes": "Friendly tan dog found near a grocery parking lot wearing a blue collar and no tags.",
       "mediaAlt": "Sample found dog notice 1"
     },
     "notice2": {
-      "sex": "Female",
+      "gender": "Female",
       "microchipStatus": "Not Detected",
       "notes": "Small black-and-white dog found near a trailhead with a red harness and no owner nearby.",
       "mediaAlt": "Sample found dog notice 2"
+    }
+  },
+  "section": {
+    "warningTitle": "Please Keep Them Safe",
+    "warningBody": "If the dog is safely contained, keep holding them while owner matching is in progress. Do not hand a found dog to anyone unless ownership is verified.",
+    "checklistTitle": "What to Include in Your Notice",
+    "checklistItems": [
+      "Date, time, and exact location where the dog was found",
+      "Photos or short video from a safe distance",
+      "Estimated breed, size, color, and any collar/harness details",
+      "Whether the dog appears injured, frightened, or approachable",
+      "Your preferred contact details for owner outreach"
+    ],
+    "processTitle": "How Reunification Works",
+    "processSteps": [
+      "We review your found-dog details and create a local notice.",
+      "Owners contact us and provide identifying details for verification.",
+      "We coordinate the safest handoff plan for the owner and finder."
+    ],
+    "noticesTitle": "Current Found Dog Notices",
+    "emptyMessage": "No active found notices are posted right now.",
+    "labels": {
+      "imageOpenAriaLabelPrefix": "Open full-size image for found dog notice ",
+      "imageFallbackAltPrefix": "Found notice ",
+      "noticePrefix": "Found Dog Notice #",
+      "fieldGender": "Gender:",
+      "fieldFoundDate": "Found date:",
+      "fieldFoundLocation": "Found location:",
+      "fieldCrossStreets": "Cross streets:",
+      "fieldMicrochip": "Microchip:",
+      "viewSourceLabel": "View source listing",
+      "helpLinkIntro": "Need first-step guidance?"
     }
   },
   "standard": {
@@ -39,6 +71,7 @@
       "Use neutral styling defaults (no site-specific color branding in shared standards).",
       "Use `statusFilter` plus `showReunited`/`showArchived` (both default `false`) to control found-notice lifecycle visibility — active notices show by default; reunited/archived are opt-in.",
       "Cards render from normalized `FoundListing` metadata (`pet`, `location`, `status`, `source`); image and source links open safely in a new tab; internal support links use `Link` components and remain no-JS readable as anchors.",
+      "Use `gender` on the pet profile (never `sex`) — matches the field name used across every other pattern (`AdoptablePetsSection`, kennel-display tools).",
       "Component: `template/src/components/patterns/FoundListingsSection.tsx`"
     ]
   }

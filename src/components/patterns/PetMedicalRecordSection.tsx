@@ -329,7 +329,7 @@ const PetMedicalRecordSection = ({ config, revisionDate }: PetMedicalRecordSecti
             <Field label="Color / markings" wide />
             <Field label="DOB / age" />
             <Field label="Weight" />
-            <Field label="Sex" />
+            <Field label="Gender" />
             <Field label="License / tag #" />
             <Field label="Microchip #" wide />
           </div>

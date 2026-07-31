@@ -180,7 +180,7 @@ const KennelBinderCustomSection = ({
               <input style={fieldStyle} value={form.breed} onChange={(e) => setValue("breed", e.target.value)} />
             </label>
             <label style={labelStyle}>
-              Sex
+              Gender
               <input style={fieldStyle} value={form.gender} onChange={(e) => setValue("gender", e.target.value)} />
             </label>
             <label style={labelStyle}>

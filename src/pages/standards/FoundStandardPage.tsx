@@ -23,7 +23,7 @@ const FoundStandardPage = () => {
       pet: {
         name: "Buddy",
         species: "dog",
-        sex: t("found:listings.notice1.sex"),
+        gender: t("found:listings.notice1.gender"),
         microchipStatus: t("found:listings.notice1.microchipStatus"),
       },
       notes: t("found:listings.notice1.notes"),
@@ -51,7 +51,7 @@ const FoundStandardPage = () => {
       pet: {
         name: "Luna",
         species: "dog",
-        sex: t("found:listings.notice2.sex"),
+        gender: t("found:listings.notice2.gender"),
         microchipStatus: t("found:listings.notice2.microchipStatus"),
       },
       notes: t("found:listings.notice2.notes"),
@@ -94,6 +94,14 @@ const FoundStandardPage = () => {
           <FoundListingsSection
             mode="hybrid"
             listings={foundNotices}
+            warningTitle={t("found:section.warningTitle")}
+            warningBody={t("found:section.warningBody")}
+            checklistTitle={t("found:section.checklistTitle")}
+            checklistItems={t("found:section.checklistItems", { returnObjects: true }) as string[]}
+            processTitle={t("found:section.processTitle")}
+            processSteps={t("found:section.processSteps", { returnObjects: true }) as string[]}
+            noticesTitle={t("found:section.noticesTitle")}
+            emptyMessage={t("found:section.emptyMessage")}
             ctaTitle={t("found:example.ctaTitle")}
             ctaDescription={t("found:example.ctaDescription")}
             phoneCta={{ label: "(555) 010-0000", href: "tel:+15550100000" }}
@@ -102,6 +110,18 @@ const FoundStandardPage = () => {
               href: "mailto:hello@example.org?subject=Found%20Notice",
             }}
             helpLink={{ label: t("found:example.helpLinkLabel"), href: "/standards/found" }}
+            labels={{
+              imageOpenAriaLabelPrefix: t("found:section.labels.imageOpenAriaLabelPrefix"),
+              imageFallbackAltPrefix: t("found:section.labels.imageFallbackAltPrefix"),
+              noticePrefix: t("found:section.labels.noticePrefix"),
+              fieldGender: t("found:section.labels.fieldGender"),
+              fieldFoundDate: t("found:section.labels.fieldFoundDate"),
+              fieldFoundLocation: t("found:section.labels.fieldFoundLocation"),
+              fieldCrossStreets: t("found:section.labels.fieldCrossStreets"),
+              fieldMicrochip: t("found:section.labels.fieldMicrochip"),
+              viewSourceLabel: t("found:section.labels.viewSourceLabel"),
+              helpLinkIntro: t("found:section.labels.helpLinkIntro"),
+            }}
           />
         </div>
 

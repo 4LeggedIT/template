@@ -15,16 +15,48 @@
   },
   "listings": {
     "notice1": {
-      "sex": "Macho",
+      "gender": "Macho",
       "microchipStatus": "Desconocido",
       "notes": "Perro amigable de color canela encontrado cerca del estacionamiento de un supermercado, con collar azul y sin placas.",
       "mediaAlt": "Aviso de ejemplo de perro encontrado 1"
     },
     "notice2": {
-      "sex": "Hembra",
+      "gender": "Hembra",
       "microchipStatus": "No detectado",
       "notes": "Perro pequeño blanco y negro encontrado cerca de un sendero, con arnés rojo y sin dueño cerca.",
       "mediaAlt": "Aviso de ejemplo de perro encontrado 2"
+    }
+  },
+  "section": {
+    "warningTitle": "Por favor, manténgalo a salvo",
+    "warningBody": "Si el perro está contenido de forma segura, siga cuidándolo mientras se busca a su dueño. No entregue un perro encontrado a nadie hasta verificar la propiedad.",
+    "checklistTitle": "Qué incluir en su aviso",
+    "checklistItems": [
+      "Fecha, hora y ubicación exacta donde se encontró al perro",
+      "Fotos o un video breve desde una distancia segura",
+      "Raza, tamaño y color estimados, y detalles del collar/arnés si tiene",
+      "Si el perro parece lesionado, asustado o accesible",
+      "Sus datos de contacto preferidos para localizar al dueño"
+    ],
+    "processTitle": "Cómo funciona la reunificación",
+    "processSteps": [
+      "Revisamos los detalles del perro encontrado y creamos un aviso local.",
+      "Los dueños se comunican con nosotros y proporcionan datos identificativos para su verificación.",
+      "Coordinamos el plan de entrega más seguro para el dueño y quien lo encontró."
+    ],
+    "noticesTitle": "Avisos actuales de perros encontrados",
+    "emptyMessage": "No hay avisos activos de animales encontrados en este momento.",
+    "labels": {
+      "imageOpenAriaLabelPrefix": "Abrir imagen a tamaño completo del aviso de perro encontrado ",
+      "imageFallbackAltPrefix": "Aviso encontrado ",
+      "noticePrefix": "Aviso de Perro Encontrado #",
+      "fieldGender": "Género:",
+      "fieldFoundDate": "Fecha en que se encontró:",
+      "fieldFoundLocation": "Lugar donde se encontró:",
+      "fieldCrossStreets": "Calles cercanas:",
+      "fieldMicrochip": "Microchip:",
+      "viewSourceLabel": "Ver listado de origen",
+      "helpLinkIntro": "¿Necesita orientación sobre los primeros pasos?"
     }
   },
   "standard": {
@@ -39,6 +71,7 @@
       "Use estilos neutros predeterminados (sin marca de color específica del sitio en los estándares compartidos).",
       "Use `statusFilter` junto con `showReunited`/`showArchived` (ambos predeterminados en `false`) para controlar la visibilidad del ciclo de vida de los avisos — los avisos activos se muestran de forma predeterminada; los reunificados/archivados son opcionales.",
       "Las tarjetas se renderizan a partir de metadatos normalizados de `FoundListing` (`pet`, `location`, `status`, `source`); los enlaces de imagen y de fuente se abren de forma segura en una pestaña nueva; los enlaces de soporte internos usan componentes `Link` y siguen siendo legibles como anclas sin JS.",
+      "Use `gender` en el perfil de la mascota (nunca `sex`) — coincide con el nombre de campo usado en todos los demás patrones (`AdoptablePetsSection`, herramientas de exhibición de perreras).",
       "Componente: `template/src/components/patterns/FoundListingsSection.tsx`"
     ]
   }
