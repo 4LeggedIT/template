@@ -115,13 +115,13 @@ const ImpactStatsSection = ({
       ) : null}
 
       {lifetimeStats.length ? (
-        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">
+        <div className="flex flex-wrap justify-center gap-4">
           {lifetimeStats.map((stat) => {
             const Icon = stat.icon;
             return (
               <div
                 key={stat.id}
-                className="flex flex-col items-center gap-2 rounded-xl border border-border bg-card p-4 text-center"
+                className="flex w-[calc(50%-0.5rem)] flex-col items-center gap-2 rounded-xl border border-border bg-card p-4 text-center sm:w-[calc(33.333%-0.667rem)] lg:w-[calc(16.666%-0.833rem)]"
               >
                 {Icon ? <Icon className="h-6 w-6 text-primary" aria-hidden="true" /> : null}
                 <span className="text-3xl font-bold tabular-nums">{stat.value}</span>
