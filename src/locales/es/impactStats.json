@@ -35,12 +35,16 @@
       "spayNeuter": "Cirugías de Esterilización/Castración",
       "transferred": "Transferidos a Rescates Aliados",
       "straysFed": "Callejeros Alimentados",
-      "volunteers": "Voluntarios"
+      "volunteers": "Voluntarios",
+      "donations": "Donaciones Recibidas",
+      "grants": "Subvenciones Recibidas"
     },
     "metrics": {
       "adopted": "Adoptados",
       "fostered": "En Hogar Temporal"
-    }
+    },
+    "introSentence": "Este es el impacto que nuestra comunidad ha logrado hasta ahora.",
+    "timeframeNote": "Desde 2024"
   },
   "standard": {
     "title": "Estándar",
@@ -49,8 +53,19 @@
       "after": "es simplemente un arreglo de {id, value, label, icon?}. Elija las categorías que su rescate realmente registra."
     },
     "lifetimeAlwaysOn": "Los recuadros de por vida se muestran siempre que la lista de estadísticas de por vida no esté vacía. Esto es intencional: la investigación sobre rescates reales y reconocidos basados en hogares temporales muestra que reportan totales simples de por vida con mucha más frecuencia que paneles por período.",
+    "whenToShow": "Muestre esta sección solo cuando tenga al menos una o dos cifras de por vida significativas que pueda respaldar — un rescate muy nuevo no debería sentir la presión de publicar ceros o datos incompletos solo para tener la sección presente. El componente ya no muestra nada en absoluto hasta que lifetimeStats (o periods) tenga contenido real, así que no hay ningún estado de relleno que se pueda publicar por accidente.",
     "chartThreshold": "La gráfica de barras solo se muestra con 2 o más períodos — un solo período se muestra como una simple lista de valores, ya que una sola barra no puede mostrar una tendencia.",
     "noInventedNumbers": "Nunca invente ni estime un número para este componente. Si un conteo real aún no está disponible, omita esa estadística por completo en lugar de mostrar un cero de relleno.",
+    "labelVocabulary": "Para mantener la coherencia en toda la plataforma, prefiera etiquetas simples y concretas en lugar de abstractas — por ejemplo, \"Perros Adoptados\" en vez de \"Adopciones\", \"Perros en Hogar Temporal\" en vez de \"Fosters\". Vocabulario recomendado como punto de partida: Perros Adoptados, Perros en Hogar Temporal, Animales Ayudados, Cirugías de Esterilización/Castración, Transferidos a Rescates Aliados, Callejeros Alimentados, Voluntarios, Donaciones Recibidas, Subvenciones Recibidas. Los sitios no están obligados a usar exactamente estas cadenas, pero reutilizarlas cuando corresponda mantiene la sensación de un programa cohesivo en toda la red.",
+    "timeframeNote": {
+      "before": "Una",
+      "after": "opcional (por ejemplo, \"Desde 2024\" o \"Al 31 de julio de 2026\") se muestra junto a granularityLabel — texto simple, no se usa para ningún cálculo de fechas. Útil para que organizaciones más nuevas den contexto y credibilidad a sus cifras."
+    },
+    "introSentence": {
+      "before": "Una",
+      "after": "opcional de una sola oración sobre los recuadros (por ejemplo, \"Este es el impacto que nuestra comunidad ha logrado hasta ahora.\") suaviza las cifras con un poco de carga emocional — para esto sirve exactamente la prop description ya existente, no es un espacio aparte."
+    },
+    "mobileGrid": "La cuadrícula de recuadros es de 2 columnas en móvil, sube a 3 columnas en el punto de quiebre sm y a 6 columnas en lg — se apila correctamente sin importar cuántas estadísticas proporcione un sitio, incluyendo el ejemplo anterior.",
     "chartImplementation": {
       "before": "La implementación de la gráfica reutiliza la dependencia",
       "mid": "ya existente en la plataforma mediante el envoltorio compartido",

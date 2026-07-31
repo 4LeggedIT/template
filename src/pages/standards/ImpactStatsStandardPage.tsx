@@ -1,5 +1,15 @@
 import { useTranslation } from "react-i18next";
-import { ArrowLeftRight, Heart, HeartHandshake, Home, Syringe, Users, Utensils } from "lucide-react";
+import {
+  ArrowLeftRight,
+  DollarSign,
+  Heart,
+  HeartHandshake,
+  Home,
+  Landmark,
+  Syringe,
+  Users,
+  Utensils,
+} from "lucide-react";
 import ImpactStatsSection, {
   type ImpactStat,
   type ImpactStatsPeriod,
@@ -24,6 +34,13 @@ const ImpactStatsStandardPage = () => {
     },
     { id: "straysFed", value: "6,400", label: t("impactStats:sampleData.lifetime.straysFed"), icon: Utensils },
     { id: "volunteers", value: "85", label: t("impactStats:sampleData.lifetime.volunteers"), icon: Users },
+    {
+      id: "donations",
+      value: "$48,500",
+      label: t("impactStats:sampleData.lifetime.donations"),
+      icon: DollarSign,
+    },
+    { id: "grants", value: "$25,000", label: t("impactStats:sampleData.lifetime.grants"), icon: Landmark },
   ];
 
   const periodMetrics = {
@@ -60,7 +77,11 @@ const ImpactStatsStandardPage = () => {
         <div className="space-y-3">
           <h2 className="text-lg font-semibold">{t("impactStats:sections.lifetime.title")}</h2>
           <p className="text-sm text-muted-foreground">{t("impactStats:sections.lifetime.description")}</p>
-          <ImpactStatsSection lifetimeStats={lifetimeStats} />
+          <ImpactStatsSection
+            lifetimeStats={lifetimeStats}
+            description={t("impactStats:sampleData.introSentence")}
+            timeframeNote={t("impactStats:sampleData.timeframeNote")}
+          />
         </div>
 
         <div className="space-y-3">
@@ -97,8 +118,19 @@ const ImpactStatsStandardPage = () => {
               {t("impactStats:standard.metricSet.after")}
             </p>
             <p>- {t("impactStats:standard.lifetimeAlwaysOn")}</p>
+            <p>- {t("impactStats:standard.whenToShow")}</p>
             <p>- {t("impactStats:standard.chartThreshold")}</p>
             <p>- {t("impactStats:standard.noInventedNumbers")}</p>
+            <p>- {t("impactStats:standard.labelVocabulary")}</p>
+            <p>
+              - {t("impactStats:standard.timeframeNote.before")} <code>timeframeNote</code>{" "}
+              {t("impactStats:standard.timeframeNote.after")}
+            </p>
+            <p>
+              - {t("impactStats:standard.introSentence.before")} <code>description</code>{" "}
+              {t("impactStats:standard.introSentence.after")}
+            </p>
+            <p>- {t("impactStats:standard.mobileGrid")}</p>
             <p>
               - {t("impactStats:standard.chartImplementation.before")} <code>recharts</code>{" "}
               {t("impactStats:standard.chartImplementation.mid")} <code>ui/chart.tsx</code>{" "}

@@ -40,6 +40,8 @@ type ImpactStatsSectionProps = {
   periods?: ImpactStatsPeriod[];
   periodMetrics?: Record<string, ImpactStatsMetricConfig>;
   granularityLabel?: string;
+  /** Optional small context line next to granularityLabel, e.g. "Since 2024" or "As of July 2026" — plain text, not used for any date math. */
+  timeframeNote?: string;
   ctaHref?: string;
   ctaLabel?: string;
   className?: string;
@@ -67,6 +69,7 @@ const ImpactStatsSection = ({
   periods = [],
   periodMetrics = {},
   granularityLabel,
+  timeframeNote,
   ctaHref,
   ctaLabel,
   className,
@@ -94,14 +97,19 @@ const ImpactStatsSection = ({
 
   return (
     <section className={cn("space-y-8", className)}>
-      {title || description || granularityLabel ? (
+      {title || description || granularityLabel || timeframeNote ? (
         <div className="space-y-2 text-center">
           {title ? <h2 className="text-3xl font-bold tracking-tight">{title}</h2> : null}
           {description ? <p className="mx-auto max-w-2xl text-muted-foreground">{description}</p> : null}
-          {granularityLabel ? (
-            <span className="inline-block rounded-full bg-muted px-3 py-1 text-xs font-medium text-muted-foreground">
-              {granularityLabel}
-            </span>
+          {granularityLabel || timeframeNote ? (
+            <div className="flex flex-wrap items-center justify-center gap-2">
+              {granularityLabel ? (
+                <span className="inline-block rounded-full bg-muted px-3 py-1 text-xs font-medium text-muted-foreground">
+                  {granularityLabel}
+                </span>
+              ) : null}
+              {timeframeNote ? <span className="text-xs text-muted-foreground">{timeframeNote}</span> : null}
+            </div>
           ) : null}
         </div>
       ) : null}

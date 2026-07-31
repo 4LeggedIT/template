@@ -97,6 +97,19 @@ describe("ImpactStatsSection", () => {
     expect(screen.getByText("Trend over time")).toBeInTheDocument();
   });
 
+  it("renders the timeframeNote alongside the granularityLabel", () => {
+    render(
+      <ImpactStatsSection
+        lifetimeStats={lifetimeStats}
+        granularityLabel="Updated yearly"
+        timeframeNote="Since 2024"
+      />,
+    );
+
+    expect(screen.getByText("Updated yearly")).toBeInTheDocument();
+    expect(screen.getByText("Since 2024")).toBeInTheDocument();
+  });
+
   it("renders the CTA only when both ctaHref and ctaLabel are provided", () => {
     const { rerender } = render(<ImpactStatsSection lifetimeStats={lifetimeStats} />);
     expect(screen.queryByRole("link")).not.toBeInTheDocument();
