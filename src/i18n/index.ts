@@ -28,6 +28,7 @@ import enFormEmbedModal from "@/locales/en/formEmbedModal.json";
 import enPaypalDonate from "@/locales/en/paypalDonate.json";
 import enCommunityPartners from "@/locales/en/communityPartners.json";
 import enImpactStats from "@/locales/en/impactStats.json";
+import enSpendBreakdown from "@/locales/en/spendBreakdown.json";
 import enKennelDisplayTools from "@/locales/en/kennelDisplayTools.json";
 import enDocuments from "@/locales/en/documents.json";
 import enFound from "@/locales/en/found.json";
@@ -60,6 +61,7 @@ import esFormEmbedModal from "@/locales/es/formEmbedModal.json";
 import esPaypalDonate from "@/locales/es/paypalDonate.json";
 import esCommunityPartners from "@/locales/es/communityPartners.json";
 import esImpactStats from "@/locales/es/impactStats.json";
+import esSpendBreakdown from "@/locales/es/spendBreakdown.json";
 import esKennelDisplayTools from "@/locales/es/kennelDisplayTools.json";
 import esDocuments from "@/locales/es/documents.json";
 import esFound from "@/locales/es/found.json";
@@ -98,6 +100,7 @@ i18n.use(initReactI18next).init({
       paypalDonate: enPaypalDonate,
       communityPartners: enCommunityPartners,
       impactStats: enImpactStats,
+      spendBreakdown: enSpendBreakdown,
       kennelDisplayTools: enKennelDisplayTools,
       documents: enDocuments,
       found: enFound,
@@ -131,6 +134,7 @@ i18n.use(initReactI18next).init({
       paypalDonate: esPaypalDonate,
       communityPartners: esCommunityPartners,
       impactStats: esImpactStats,
+      spendBreakdown: esSpendBreakdown,
       kennelDisplayTools: esKennelDisplayTools,
       documents: esDocuments,
       found: esFound,
@@ -167,6 +171,7 @@ i18n.use(initReactI18next).init({
     "paypalDonate",
     "communityPartners",
     "impactStats",
+    "spendBreakdown",
     "kennelDisplayTools",
     "documents",
     "found",

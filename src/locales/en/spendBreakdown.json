@@ -1,0 +1,61 @@
+{
+  "hero": {
+    "title": "Spend Breakdown pattern",
+    "description": "Rolled-up spend category tiles for accountability reporting — a companion to Impact Stats, not a replacement for your filed Form 990. Composable with it, never merged into it."
+  },
+  "breadcrumb": "Spend Breakdown Pattern",
+  "sections": {
+    "standalone": {
+      "title": "Standalone",
+      "description": "Works on its own for a site that only has expense data ready — a rolled-up category breakdown, a computed total, and an optional link out to the actual filed tax return."
+    },
+    "paired": {
+      "title": "Paired with Impact Stats",
+      "description": "The two patterns are composed on the page, not merged into one component — a site shows both when it has both, either alone when it only has one. The optional costPerOutcome highlight is computed by the site from same-period totals on both sides."
+    }
+  },
+  "standard": {
+    "title": "Standard",
+    "notMerged": {
+      "before": "Deliberately a separate component from",
+      "after": "— compose the two on a page rather than merging them, so a site can show spend-only, impact-only, or both."
+    },
+    "idVsLabel": {
+      "before": "Category",
+      "mid": "is drawn from a recommended set for internal consistency, but",
+      "after": "is always freeform per site — the same id can read very differently across sites (e.g. \"rescueOperations\" as \"Dog Recovery & Trapping Supplies\" vs. \"Community Feeding Routes\")."
+    },
+    "categorySet": "Recommended starting categories: Animal Care, Rescue Operations, Marketing & Outreach, Administrative, Fundraising (optional, only if a site breaks it out separately from Administrative). Not an enforced enum — a site can add its own category id at any time without waiting for this list to change.",
+    "periodRequired": {
+      "before": "Unlike Impact Stats' optional timeframeNote, this pattern's",
+      "after": "is required — financial figures are always a snapshot of one filed period, never a \"current\" or lifetime total, and that must never be ambiguous."
+    },
+    "costPerOutcome": {
+      "before": "The optional",
+      "after": "highlight is always computed by the site's own page code from real, same-period totals on both sides — the component never guesses which spend category maps to which outcome."
+    },
+    "noInventedNumbers": "Every figure must come from the organization's actual filed tax return. Never estimate, round for effect, or invent a category that isn't real.",
+    "noDonorInfo": "Never use this pattern to list individual contributors or their gift amounts — donor identities are explicitly exempt from public disclosure under IRS rules (Form 990 Schedule B), and that boundary is absolute regardless of what a site might otherwise want to showcase.",
+    "emptyState": "Renders nothing if categories is empty — no placeholder $0 total.",
+    "component": {
+      "before": "Component:"
+    }
+  },
+  "sampleData": {
+    "animalCare": "Animal Care",
+    "rescueOperations": "Rescue Operations",
+    "marketingOutreach": "Marketing & Outreach",
+    "administrative": "Administrative",
+    "fundraising": "Fundraising",
+    "periodLabel": "Fiscal Year 2026, as filed",
+    "totalLabel": "Total Expenses",
+    "sourceLabel": "View our filed tax return",
+    "costPerOutcomeLabel": "per animal helped, FY2026",
+    "combinedTitle": "Our Impact & Accountability",
+    "combinedDescription": "Here's what our community made possible this year — and exactly how we spent it.",
+    "metrics": {
+      "adopted": "Adopted",
+      "helped": "Animals Helped"
+    }
+  }
+}

@@ -23,6 +23,7 @@ import FormEmbedModalStandardPage from "@/pages/standards/FormEmbedModalStandard
 import FlyerLibraryStandardPage from "@/pages/standards/FlyerLibraryStandardPage";
 import CommunityPartnersStandardPage from "@/pages/standards/CommunityPartnersStandardPage";
 import ImpactStatsStandardPage from "@/pages/standards/ImpactStatsStandardPage";
+import SpendBreakdownStandardPage from "@/pages/standards/SpendBreakdownStandardPage";
 import MediaGalleryStandardPage from "@/pages/standards/MediaGalleryStandardPage";
 import PayPalDonatePatternPage from "@/pages/standards/PayPalDonatePatternPage";
 import PlacementHelpStandardPage from "@/pages/standards/PlacementHelpStandardPage";
@@ -85,6 +86,7 @@ const AppRoutes = () => {
         <Route path="/standards/flyer-library" element={<FlyerLibraryStandardPage />} />
         <Route path="/standards/community-partners" element={<CommunityPartnersStandardPage />} />
         <Route path="/standards/impact-stats" element={<ImpactStatsStandardPage />} />
+        <Route path="/standards/spend-breakdown" element={<SpendBreakdownStandardPage />} />
         <Route path="/standards/media-gallery" element={<MediaGalleryStandardPage />} />
         <Route path="/standards/paypal-donate" element={<PayPalDonatePatternPage />} />
         <Route path="/standards/placement-help" element={<PlacementHelpStandardPage />} />

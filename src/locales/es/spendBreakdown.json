@@ -1,0 +1,61 @@
+{
+  "hero": {
+    "title": "Patrón de Desglose de Gastos",
+    "description": "Recuadros de categorías de gastos agrupados para el reporte de rendición de cuentas — un complemento de Estadísticas de Impacto, no un reemplazo de su Formulario 990 presentado. Se puede combinar con él, pero nunca se fusiona en él."
+  },
+  "breadcrumb": "Patrón de Desglose de Gastos",
+  "sections": {
+    "standalone": {
+      "title": "Independiente",
+      "description": "Funciona por sí solo para un sitio que solo tiene datos de gastos listos — un desglose de categorías agrupadas, un total calculado y un enlace opcional a la declaración de impuestos realmente presentada."
+    },
+    "paired": {
+      "title": "Combinado con Estadísticas de Impacto",
+      "description": "Los dos patrones se combinan en la página, no se fusionan en un solo componente — un sitio muestra ambos cuando tiene ambos datos, o solo uno cuando solo tiene uno. El indicador opcional costPerOutcome lo calcula el sitio a partir de totales del mismo período en ambos lados."
+    }
+  },
+  "standard": {
+    "title": "Estándar",
+    "notMerged": {
+      "before": "Es intencionalmente un componente separado de",
+      "after": "— combine los dos en una página en lugar de fusionarlos, para que un sitio pueda mostrar solo gastos, solo impacto, o ambos."
+    },
+    "idVsLabel": {
+      "before": "El",
+      "mid": "de la categoría proviene de un conjunto recomendado para mantener consistencia interna, pero la",
+      "after": "siempre es de forma libre por sitio — el mismo id puede leerse de forma muy distinta entre sitios (por ejemplo, \"rescueOperations\" como \"Recuperación de Perros y Suministros de Trampeo\" frente a \"Rutas de Alimentación Comunitaria\")."
+    },
+    "categorySet": "Categorías iniciales recomendadas: Cuidado Animal, Operaciones de Rescate, Marketing y Difusión, Administrativo, Recaudación de Fondos (opcional, solo si un sitio la desglosa por separado de Administrativo). No es una enumeración forzada — un sitio puede agregar su propio id de categoría en cualquier momento sin esperar a que cambie esta lista.",
+    "periodRequired": {
+      "before": "A diferencia del timeframeNote opcional de Estadísticas de Impacto, el",
+      "after": "de este patrón es obligatorio — las cifras financieras siempre son una fotografía de un período presentado, nunca un total \"actual\" o de por vida, y eso nunca debe ser ambiguo."
+    },
+    "costPerOutcome": {
+      "before": "El indicador opcional",
+      "after": "siempre lo calcula el propio código de la página del sitio a partir de totales reales del mismo período en ambos lados — el componente nunca adivina qué categoría de gasto corresponde a qué resultado."
+    },
+    "noInventedNumbers": "Cada cifra debe provenir de la declaración de impuestos realmente presentada por la organización. Nunca estime, redondee para efecto, ni invente una categoría que no sea real.",
+    "noDonorInfo": "Nunca use este patrón para listar contribuyentes individuales o los montos de sus donaciones — la identidad de los donantes está explícitamente exenta de divulgación pública bajo las reglas del IRS (Anexo B del Formulario 990), y ese límite es absoluto sin importar lo que un sitio quiera mostrar.",
+    "emptyState": "No muestra nada si categories está vacío — sin un total de relleno de $0.",
+    "component": {
+      "before": "Componente:"
+    }
+  },
+  "sampleData": {
+    "animalCare": "Cuidado Animal",
+    "rescueOperations": "Operaciones de Rescate",
+    "marketingOutreach": "Marketing y Difusión",
+    "administrative": "Administrativo",
+    "fundraising": "Recaudación de Fondos",
+    "periodLabel": "Año Fiscal 2026, según lo presentado",
+    "totalLabel": "Total de Gastos",
+    "sourceLabel": "Ver nuestra declaración de impuestos presentada",
+    "costPerOutcomeLabel": "por animal ayudado, Año Fiscal 2026",
+    "combinedTitle": "Nuestro Impacto y Rendición de Cuentas",
+    "combinedDescription": "Esto es lo que nuestra comunidad logró este año — y exactamente cómo lo gastamos.",
+    "metrics": {
+      "adopted": "Adoptados",
+      "helped": "Animales Ayudados"
+    }
+  }
+}

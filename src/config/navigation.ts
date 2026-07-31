@@ -38,6 +38,7 @@ export const templateNavItems: NavItem[] = [
       { label: "PayPal Donate", href: "/standards/paypal-donate", group: "formsPayments" },
       { label: "Community Partners", href: "/standards/community-partners", group: "community" },
       { label: "Impact Stats", href: "/standards/impact-stats", group: "community" },
+      { label: "Spend Breakdown", href: "/standards/spend-breakdown", group: "community" },
       { label: "Kennel & Display Tools", href: "/standards/kennel-display-tools", group: "tools" },
       { label: "Documents", href: "/standards/documents", group: "tools" },
       { label: "Build & Validation", href: "/standards/workflow/build-validation", group: "workflow" },

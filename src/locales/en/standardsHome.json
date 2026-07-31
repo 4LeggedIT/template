@@ -24,6 +24,7 @@
     "paypalDonate": { "title": "PayPal Donate Pattern", "description": "Donate SDK button usage and direct-link fallback helper pattern." },
     "communityPartners": { "title": "Community Partners Pattern", "description": "Thanking rescue collaborators and local business supporters without implying favoritism." },
     "impactStats": { "title": "Impact Stats Pattern", "description": "Lifetime impact stat tiles plus an optional period-by-period bar chart for rescue-organization impact reporting." },
+    "spendBreakdown": { "title": "Spend Breakdown Pattern", "description": "Rolled-up spend category tiles for accountability reporting, composable with Impact Stats without being merged into it." },
     "kennelDisplayTools": { "title": "Kennel & Display Tools Pattern", "description": "Standalone full-viewport print/kiosk tools: adoptable slideshow and 2-up kennel card/binder print sheets." },
     "documents": { "title": "Documents Pattern", "description": "Print-ready adoption certificate, medical record, and generic document wrapper, plus the /documents index." },
     "buildValidation": { "title": "Build & Validation", "description": "Build, preview, no-JS preview, and link-check commands." },
