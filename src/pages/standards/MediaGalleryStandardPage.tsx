@@ -1,45 +1,48 @@
+import { useTranslation } from "react-i18next";
 import MediaGallerySection, { type MediaGalleryItem } from "@/components/patterns/MediaGallerySection";
 import SplitMediaGallerySection from "@/components/patterns/SplitMediaGallerySection";
 import PageHero from "@/components/patterns/PageHero";
 import SEOHead from "@/components/patterns/SEOHead";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
-const sampleItems: MediaGalleryItem[] = [
-  {
-    id: "photo-1",
-    kind: "photo",
-    src: "https://images.unsplash.com/photo-1548199973-03cce0bbc87b?auto=format&fit=crop&w=1200&q=80",
-    alt: "Dog running in grass",
-    caption: "Weekend adoption event highlights.",
-    category: "Events",
-  },
-  {
-    id: "photo-2",
-    kind: "photo",
-    src: "https://images.unsplash.com/photo-1517849845537-4d257902454a?auto=format&fit=crop&w=1200&q=80",
-    alt: "Dog portrait close-up",
-    caption: "Recent intake after medical check.",
-    category: "Intake",
-  },
-  {
-    id: "video-1",
-    kind: "video",
-    src: "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4",
-    title: "Volunteer Day Recap",
-    description: "Short recap from the latest volunteer and enrichment day.",
-    category: "Events",
-  },
-  {
-    id: "video-2",
-    kind: "video",
-    src: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
-    title: "Foster Update",
-    description: "Progress update from a temporary foster placement.",
-    category: "Foster",
-  },
-];
-
 const MediaGalleryStandardPage = () => {
+  const { t } = useTranslation(["mediaGallery", "common"]);
+
+  const sampleItems: MediaGalleryItem[] = [
+    {
+      id: "photo-1",
+      kind: "photo",
+      src: "https://images.unsplash.com/photo-1548199973-03cce0bbc87b?auto=format&fit=crop&w=1200&q=80",
+      alt: t("mediaGallery:items.photo1.alt"),
+      caption: t("mediaGallery:items.photo1.caption"),
+      category: t("mediaGallery:items.photo1.category"),
+    },
+    {
+      id: "photo-2",
+      kind: "photo",
+      src: "https://images.unsplash.com/photo-1517849845537-4d257902454a?auto=format&fit=crop&w=1200&q=80",
+      alt: t("mediaGallery:items.photo2.alt"),
+      caption: t("mediaGallery:items.photo2.caption"),
+      category: t("mediaGallery:items.photo2.category"),
+    },
+    {
+      id: "video-1",
+      kind: "video",
+      src: "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4",
+      title: t("mediaGallery:items.video1.title"),
+      description: t("mediaGallery:items.video1.description"),
+      category: t("mediaGallery:items.video1.category"),
+    },
+    {
+      id: "video-2",
+      kind: "video",
+      src: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
+      title: t("mediaGallery:items.video2.title"),
+      description: t("mediaGallery:items.video2.description"),
+      category: t("mediaGallery:items.video2.category"),
+    },
+  ];
+
   return (
     <>
       <SEOHead
@@ -48,36 +51,34 @@ const MediaGalleryStandardPage = () => {
         description="Standardized media gallery pattern for mixed photo/video content."
       />
       <PageHero
-        eyebrow="Standards"
-        title="Media gallery pattern"
-        description="Use split galleries by default when photos and videos should appear in distinct sections."
+        eyebrow={t("common:nav.standards")}
+        title={t("mediaGallery:hero.title")}
+        description={t("mediaGallery:hero.description")}
         breadcrumbs={[
-          { label: "Home", href: "/" },
-          { label: "Standards" },
-          { label: "Media Gallery Pattern" },
+          { label: t("common:nav.home"), href: "/" },
+          { label: t("common:nav.standards") },
+          { label: t("mediaGallery:breadcrumb") },
         ]}
       />
 
       <section className="container space-y-10 px-4 py-10">
         <div className="space-y-3">
-          <h2 className="text-lg font-semibold">Example — split (default)</h2>
-          <p className="text-sm text-muted-foreground">
-            Photos are intentionally split from videos for parity with sites that use distinct sections.
-          </p>
+          <h2 className="text-lg font-semibold">{t("mediaGallery:sections.split.title")}</h2>
+          <p className="text-sm text-muted-foreground">{t("mediaGallery:sections.split.description")}</p>
           <SplitMediaGallerySection
             items={sampleItems}
             photosProps={{
-              title: "Photos",
+              title: t("mediaGallery:sections.split.photosTitle"),
               columns: 2,
               shuffleOnLoad: true,
               maxPhotos: 2,
               infoNotice: {
-                title: "Media note",
-                text: "Media shown here are examples and may include non-adoptable dogs. Use this optional notice for context/disclaimers.",
+                title: t("mediaGallery:sections.split.infoNoticeTitle"),
+                text: t("mediaGallery:sections.split.infoNoticeText"),
               },
               socialCta: {
-                title: "Follow updates",
-                description: "Optional social CTA block for gallery pages.",
+                title: t("mediaGallery:sections.split.socialCtaTitle"),
+                description: t("mediaGallery:sections.split.socialCtaDescription"),
                 links: [
                   { id: "social-1", label: "Instagram", href: "https://example.org/instagram", external: true },
                   { id: "social-2", label: "Facebook", href: "https://example.org/facebook", external: true },
@@ -85,8 +86,8 @@ const MediaGalleryStandardPage = () => {
               },
             }}
             videosProps={{
-              title: "Videos",
-              description: "Videos are rendered in their own gallery section.",
+              title: t("mediaGallery:sections.split.videosTitle"),
+              description: t("mediaGallery:sections.split.videosDescription"),
               columns: 2,
               shuffleOnLoad: true,
               maxVideos: 2,
@@ -95,12 +96,10 @@ const MediaGalleryStandardPage = () => {
         </div>
 
         <div className="space-y-3">
-          <h2 className="text-lg font-semibold">Unified variant</h2>
-          <p className="text-sm text-muted-foreground">
-            Use unified mode when photos and videos should appear in one section instead.
-          </p>
+          <h2 className="text-lg font-semibold">{t("mediaGallery:sections.unified.title")}</h2>
+          <p className="text-sm text-muted-foreground">{t("mediaGallery:sections.unified.description")}</p>
           <MediaGallerySection
-            title="Media gallery (unified variant)"
+            title={t("mediaGallery:sections.unified.sectionTitle")}
             items={sampleItems}
             columns={3}
             showFilters
@@ -113,20 +112,12 @@ const MediaGalleryStandardPage = () => {
 
         <Card>
           <CardHeader>
-            <CardTitle>Standard</CardTitle>
+            <CardTitle>{t("mediaGallery:standard.title")}</CardTitle>
           </CardHeader>
           <CardContent className="space-y-2 text-sm text-muted-foreground">
-            <p>- Use `SplitMediaGallerySection` when photos and videos must render in separate sections (default recommendation).</p>
-            <p>- Use `MediaGallerySection` for mixed photo and video sections when a unified gallery is desired.</p>
-            <p>- Keep media items in normalized arrays and pass them as props.</p>
-            <p>- Keep `showFilters` optional and default to user-friendly category groups.</p>
-            <p>- Core media visibility must not depend on JavaScript.</p>
-            <p>- Use optional photo lightbox as enhancement only, not as primary access path; navigation (prev/next controls + keyboard arrows) is part of the standard behavior.</p>
-            <p>- Optional page behaviors (shuffle, max photos/videos, info notice, social CTA) are module props.</p>
-            <p>- Empty-state copy is visible when no media items are provided (`items={"{[]}"}`).</p>
-            <p>- Defaults: `columns=3`, `showFilters=true`, `enablePhotoLightbox=true`, `shuffleOnLoad=false`.</p>
-            <p>- Component: `template/src/components/patterns/MediaGallerySection.tsx`</p>
-            <p>- Wrapper: `template/src/components/patterns/SplitMediaGallerySection.tsx`</p>
+            {(t("mediaGallery:standard.items", { returnObjects: true }) as string[]).map((item) => (
+              <p key={item}>- {item}</p>
+            ))}
           </CardContent>
         </Card>
       </section>

@@ -1,0 +1,44 @@
+{
+  "breadcrumb": "Patrón de Colocación",
+  "hero": {
+    "title": "Patrón de colocación",
+    "description": "Use este módulo para listados de colocación/cortesía con una ventana de vencimiento predeterminada de tres meses."
+  },
+  "needs": {
+    "need1": { "title": "Hogar temporal seguro", "description": "Acogedor o socio de traslado con disponibilidad de ingreso." },
+    "need2": { "title": "Compromiso de rescate", "description": "Contacto nombrado de la organización con tiempo de respuesta de comunicación." },
+    "need3": { "title": "Apoyo de transporte", "description": "Plan de recogida o transporte con una ventana de entrega confirmada." }
+  },
+  "example": {
+    "title": "Ejemplo",
+    "needsSummary": "Listados de cortesía compartidos tras la evaluación del equipo de rescate.",
+    "checklistItems": [
+      "Temperamento evaluado",
+      "Completamente vacunado",
+      "Esterilizado o castrado",
+      "Información de contacto del dueño/tutor proporcionada con la consulta"
+    ],
+    "primaryCtaLabel": "Enviar solicitud de colocación",
+    "secondaryCtaLabel": "Proceso de colocación"
+  },
+  "showExpired": {
+    "title": "Mostrando listados vencidos",
+    "descriptionAfter": "es opcional (opt-in) — esto es lo que activaría una cola de revisión (a diferencia de la página pública) para ver los listados que ya pasaron su ventana de vencimiento.",
+    "sectionTitle": "Listados de colocación (mostrar vencidos)",
+    "listingsTitle": "Cola de revisión"
+  },
+  "standard": {
+    "title": "Estándar",
+    "items": [
+      "Use `PlacementHelpSection` para todas las secciones de listados de colocación/cortesía.",
+      "El vencimiento predeterminado es de 3 meses cuando se define `postedAt` y se omite `expiresAt`.",
+      "`expiresAt` es opcional y sobrescribe la ventana de vencimiento predeterminada.",
+      "Mantenga los listados vencidos ocultos de forma predeterminada (`showExpiredListings=false`); los listados vencidos están ocultos a menos que se habiliten explícitamente.",
+      "Incluya metadatos opcionales de la mascota cuando estén disponibles (raza, tamaño, color, sexo, vacunación, etc.) — se renderizan sin romper las tarjetas sin datos cuando se omiten.",
+      "Use `needs`/`needsTitle`/`needsSummary`/`needsChecklistItems` para una sección separada de \"qué se necesita\" (acogedores, insumos, voluntarios) junto a los listados de cortesía.",
+      "`primaryCta`/`secondaryCta` proporcionan los enlaces de llamada a la acción a nivel de sección (por ejemplo, \"Enviar solicitud de colocación\").",
+      "`labels` sobrescribe el texto de la sección para personalización de i18n/sitio.",
+      "Componente: `template/src/components/patterns/PlacementHelpSection.tsx`"
+    ]
+  }
+}

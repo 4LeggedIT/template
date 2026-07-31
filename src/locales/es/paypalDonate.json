@@ -1,0 +1,26 @@
+{
+  "breadcrumb": "Patrón de Donación por PayPal",
+  "hero": {
+    "title": "Patrón de donación por PayPal",
+    "description": "Use el componente compartido de donación por PayPal junto con un enlace directo auxiliar para casos de fallo de la ventana emergente o del SDK."
+  },
+  "example": {
+    "title": "Ejemplo",
+    "helperLink": "¿Tiene problemas? Abra PayPal en una pestaña nueva",
+    "configNote": "Configure el ID del botón alojado mediante `hostedButtonId` o `VITE_PAYPAL_DONATE_HOSTED_BUTTON_ID`."
+  },
+  "standard": {
+    "title": "Estándar",
+    "items": [
+      "Renderice `PayPalDonateButton` como la acción principal de donación.",
+      "Agregue debajo un pequeño enlace auxiliar que abra PayPal en una pestaña nueva — debe estar siempre visible con y sin JS, y debe seguir siendo un auxiliar, no un segundo botón de respaldo de tamaño completo.",
+      "Las páginas de producción deben proporcionar un ID de botón alojado válido (prop `hostedButtonId` o `VITE_PAYPAL_DONATE_HOSTED_BUTTON_ID`).",
+      "Las páginas de plantilla/ejemplo pueden usar un ID ficticio claramente etiquetado solo para fines de documentación visual.",
+      "`env=\"sandbox\"` cambia el SDK de PayPal al modo sandbox para pruebas; el valor predeterminado es `\"production\"`.",
+      "Los callbacks `onComplete`/`onError` están disponibles como conexiones de análisis/seguimiento alrededor del flujo de donación.",
+      "`imageSrc`/`imageAlt`/`imageTitle` sobrescriben el gráfico predeterminado del botón de PayPal si se necesita una imagen de botón de donación personalizada.",
+      "Si el SDK no carga o falta configuración, el componente muestra un mensaje de respaldo no disruptivo en lugar de un área en blanco.",
+      "Componente: `template/src/components/patterns/PayPalDonateButton.tsx`"
+    ]
+  }
+}

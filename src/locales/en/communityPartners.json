@@ -1,0 +1,68 @@
+{
+  "breadcrumb": "Community Partners Pattern",
+  "hero": {
+    "title": "Community partners pattern",
+    "description": "Use CommunityPartnersSection to publicly acknowledge fellow rescues and local businesses supporting the org."
+  },
+  "categories": {
+    "rescuePartners": {
+      "title": "Rescue & Field-Based Partners",
+      "description": "Fellow rescues and animal welfare organizations we work alongside."
+    },
+    "veterinaryPartners": {
+      "title": "Veterinary & Medical Partners",
+      "description": "Trusted clinics and professionals who help keep our dogs healthy."
+    },
+    "businessPartners": {
+      "title": "Community Business Partners",
+      "description": "Local businesses generously supporting our work. Recognition here reflects our appreciation for their generosity and does not constitute an endorsement of any product or service."
+    },
+    "technologyPartners": {
+      "title": "Technology Partners",
+      "description": "The team behind this site's platform and ongoing technical support."
+    }
+  },
+  "partners": {
+    "cedarHollow": {
+      "description": "A safe haven providing lifetime care and rehabilitation, coordinating placements with us."
+    },
+    "brightMeadow": {
+      "description": "Fellow rescue we network dogs with for intake, fostering, and transport support."
+    },
+    "exampleVeterinary": {
+      "description": "Provides spay/neuter, vaccinations, and discounted emergency care for dogs in our program."
+    },
+    "exampleSandwich": {
+      "description": "Treats every newly approved foster to a free sandwich as a thank-you for opening their home."
+    },
+    "fourLeggedIt": {
+      "description": "Provides free technology support for rescue organizations — clear websites, forms, and workflow systems that reduce missed messages and manual work."
+    }
+  },
+  "example": {
+    "title": "Example",
+    "ctaTitle": "Want to Partner With Us?",
+    "ctaDescription": "If your organization or business would like to support our mission, we'd love to hear from you.",
+    "ctaLabel": "Get in Touch"
+  },
+  "oneCategoryNoCta": {
+    "title": "One category, no CTA",
+    "description": "Only partners in the <0>businessPartners</0> category, and no <1>ctaHref</1> passed. Categories with zero matching partners (<2>rescuePartners</2>, <3>veterinaryPartners</3> here) render nothing — no heading, no placeholder — and the trailing CTA card is omitted entirely rather than shown empty."
+  },
+  "standard": {
+    "title": "Standard",
+    "items": [
+      "`category` distinguishes rescue/animal-welfare collaborators (`rescuePartners`) from commercial businesses (`businessPartners`) — these are two genuinely different relationships, not a ranking. A site may define its own category keys as long as `sections` and `partners` use matching values.",
+      "`veterinaryPartners` (\"Veterinary & Medical Partners\") is a recommended third category for clinics and medical professionals — a genuinely distinct relationship from both general rescue collaboration and general commercial support, so it gets its own heading rather than being folded into `businessPartners`. It's still governed by the `businessPartners` compliance rule below when the partner is a for-profit clinic: keep the description neutral/factual.",
+      "**No favoritism, ever.** The component always sorts partners alphabetically by name within a category — never by date added, never manually. Don't add a `featured`/`order` field to work around this; if a site wants a formal tiered sponsorship program, that requires a defined objective threshold (e.g. a real dollar-value giving program) and is out of scope for this pattern.",
+      "**A category with zero matching partners renders nothing** — no heading, no \"coming soon\" placeholder. This avoids a dead subsection sitting next to real content; the section appears automatically once the site's data file gets its first entry in that category.",
+      "The trailing CTA card only renders when `ctaHref` is provided, and shows regardless of which category sections are populated.",
+      "For `businessPartners` and `veterinaryPartners` (any category naming a for-profit business) specifically: every partner's `description` must stay neutral and factual — no comparative or qualitative language (\"best,\" \"highest quality\"), no pricing, no purchase inducements. This is the actual compliance mechanism: the IRS qualified-sponsorship rule (26 U.S.C. §513(i)) turns on the acknowledgment's content, not on the presence of a disclaimer sentence — there's no magic-words requirement. A category's `sections[].description` may optionally add a \"not an endorsement\" note for extra clarity (useful mainly to keep a partner business from treating the listing as marketing copy), but it's editorial, not legally required, and can be dropped if it clashes with the page's tone. Rescue-partner collaboration doesn't need this treatment at all (mutual nonprofit aid isn't a UBIT/advertising concern).",
+      "Never invent a partner. Every entry must be a real, sourced relationship — a name mentioned once in a single event post is not the same as a standing partnership worth a permanent listing.",
+      "`logoSrc` and `url` are both optional; the card degrades gracefully to a name-only treatment when a logo isn't available yet. When `url` is set, the logo links to it (if a logo exists) and the \"Visit Website\" text link is omitted (one link surface is enough); the text link only renders as a fallback when there's a `url` but no `logoSrc`.",
+      "`logoBackgroundClassName` is an optional backing color (e.g. `\"bg-slate-900\"`) for logos whose artwork needs a specific background to stay legible — a light or white mark disappears on the card's default background otherwise. Omit it for logos that already read fine as-is; most won't need it.",
+      "Component: `template/src/components/patterns/CommunityPartnersSection.tsx`",
+      "First live site: `the-comeback-pack` (`src/pages/Partners.tsx`, `src/data/partners.ts`) — reference implementation for the per-site data file and page wiring."
+    ]
+  }
+}

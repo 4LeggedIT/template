@@ -1,0 +1,36 @@
+{
+  "breadcrumb": "Patrón de FormEmbedModal",
+  "hero": {
+    "title": "Patrón de FormEmbedModal",
+    "description": "Las llamadas a la acción principales de formularios deben usar el patrón de modal compartido en lugar de navegar directamente al formulario del proveedor."
+  },
+  "example": {
+    "title": "Ejemplo",
+    "description": "El disparador es un enlace (`<a>`) para que la navegación de respaldo sin JS también se abra en una pestaña nueva. Este componente es independiente del proveedor — puede usarse con JotForm, Google Forms o cualquier otra URL de formulario incrustable en un iframe; el ejemplo de abajo usa una URL de Google Forms solo porque es fácil de mostrar en vivo.",
+    "modalTitle": "Ejemplo de formulario incrustado",
+    "openApplication": "Abrir solicitud",
+    "helperLink": "¿Tiene problemas? Abra la solicitud en una pestaña nueva"
+  },
+  "controlled": {
+    "title": "Modo controlado",
+    "description": "Use el modo controlado cuando la lógica de la página necesite abrir o cerrar el modal de formulario desde controles de interfaz que no sean enlaces.",
+    "buttonLabel": "Abrir modal desde un disparador externo",
+    "modalTitle": "Ejemplo de formulario controlado"
+  },
+  "standard": {
+    "title": "Estándar",
+    "items": [
+      "Se requiere un enlace directo dentro del modal (\"Abrir en pestaña nueva\").",
+      "Se requiere un enlace auxiliar en la página y debe usar `js-only`.",
+      "Se requiere un enlace de respaldo directo con `<noscript>`.",
+      "Los enlaces disparadores del modal deben usar `target=\"_blank\"` + `rel=\"noopener noreferrer\"`.",
+      "Los clics con tecla modificadora (Cmd/Ctrl/Shift/Alt) en el disparador deben preservar la navegación directa en pestaña nueva.",
+      "Se requiere el modo controlado (`open` + `onOpenChange`) para casos de uso con disparadores externos.",
+      "No debe haber enlaces de respaldo duplicados en modo sin JS.",
+      "`asButton` (predeterminado `true`) renderiza el disparador como un botón con estilo; pase `false` con `children` personalizados para usar su propio elemento disparador.",
+      "`triggerVariant`/`triggerSize` (ambos predeterminados a `\"default\"`) controlan el estilo del botón cuando se usa `asButton`.",
+      "Texto auxiliar estándar: `¿Tiene problemas? Abra la solicitud en una pestaña nueva`",
+      "Componente: `template/src/components/patterns/FormEmbedModal.tsx`"
+    ]
+  }
+}

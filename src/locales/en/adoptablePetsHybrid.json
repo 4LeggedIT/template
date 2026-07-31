@@ -1,0 +1,29 @@
+{
+  "hero": {
+    "title": "Adoptable Pets — hybrid mode",
+    "description": "Local listings shown alongside one or more provider adapters at once — for a site that curates its own featured pets but also pulls a live feed."
+  },
+  "breadcrumb": {
+    "parent": "Adoptable Pets",
+    "current": "Hybrid"
+  },
+  "example": {
+    "title": "Example"
+  },
+  "disclosure": "Animal Friends of the Valleys (Wildomar, CA) is a real rescue whose public listings are used below to demonstrate this adapter with real-world data. This template and 4leggedIT are not affiliated with Animal Friends of the Valleys.",
+  "footerCta": {
+    "label": "Apply to Adopt"
+  },
+  "standard": {
+    "title": "Standard",
+    "items": [
+      "Use `mode=\"hybrid\"` when a site curates its own featured pets locally but also wants one or more live provider feeds on the same page.",
+      "Combine `localPets` with any of `petfinder`, `adoptAPet`, `getBuddy` — each renders its own section in the order: local, then Petfinder, then Adopt-a-Pet, then GetBuddy.",
+      "Every provider adapter used in hybrid mode still needs its own `listingsUrl`/sibling cross-link URLs — hybrid doesn't relax the no-JS-fallback requirement (the \"Or view all pets on...\" line) for any individual adapter.",
+      "Keep conversion actions at section level (`ctas` + `footerCta`) instead of per-card apply buttons — this applies across every mode, including hybrid's multiple sub-sections.",
+      "`headless=true` renders local listings/cards only, skipping provider embeds and the section title, for embedding inside a custom layout.",
+      "`labels` overrides section copy (empty-state text, feed names) for i18n/site customization.",
+      "Component: `template/src/components/patterns/AdoptablePetsSection.tsx`"
+    ]
+  }
+}

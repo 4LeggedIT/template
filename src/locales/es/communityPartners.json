@@ -1,0 +1,68 @@
+{
+  "breadcrumb": "Patrón de Socios Comunitarios",
+  "hero": {
+    "title": "Patrón de socios comunitarios",
+    "description": "Use CommunityPartnersSection para reconocer públicamente a otros rescates y comercios locales que apoyan a la organización."
+  },
+  "categories": {
+    "rescuePartners": {
+      "title": "Socios de Rescate y de Campo",
+      "description": "Otros rescates y organizaciones de bienestar animal con los que colaboramos."
+    },
+    "veterinaryPartners": {
+      "title": "Socios Veterinarios y Médicos",
+      "description": "Clínicas y profesionales de confianza que ayudan a mantener sanos a nuestros perros."
+    },
+    "businessPartners": {
+      "title": "Socios Comerciales de la Comunidad",
+      "description": "Comercios locales que apoyan generosamente nuestro trabajo. Este reconocimiento refleja nuestro aprecio por su generosidad y no constituye un respaldo a ningún producto o servicio."
+    },
+    "technologyPartners": {
+      "title": "Socios Tecnológicos",
+      "description": "El equipo detrás de la plataforma de este sitio y su soporte técnico continuo."
+    }
+  },
+  "partners": {
+    "cedarHollow": {
+      "description": "Un refugio seguro que brinda cuidado y rehabilitación de por vida, coordinando colocaciones con nosotros."
+    },
+    "brightMeadow": {
+      "description": "Rescate aliado con el que conectamos perros para apoyo de ingreso, acogida y transporte."
+    },
+    "exampleVeterinary": {
+      "description": "Ofrece esterilización, vacunación y atención de emergencia con descuento para los perros de nuestro programa."
+    },
+    "exampleSandwich": {
+      "description": "Obsequia un sándwich gratis a cada acogedor recién aprobado, como agradecimiento por abrir su hogar."
+    },
+    "fourLeggedIt": {
+      "description": "Brinda soporte tecnológico gratuito a organizaciones de rescate — sitios web claros, formularios y sistemas de flujo de trabajo que reducen los mensajes perdidos y el trabajo manual."
+    }
+  },
+  "example": {
+    "title": "Ejemplo",
+    "ctaTitle": "¿Quiere asociarse con nosotros?",
+    "ctaDescription": "Si su organización o comercio desea apoyar nuestra misión, nos encantaría saber de usted.",
+    "ctaLabel": "Póngase en contacto"
+  },
+  "oneCategoryNoCta": {
+    "title": "Una sola categoría, sin CTA",
+    "description": "Solo los socios de la categoría <0>businessPartners</0>, y sin pasar <1>ctaHref</1>. Las categorías sin socios coincidentes (aquí <2>rescuePartners</2> y <3>veterinaryPartners</3>) no renderizan nada — ni encabezado ni marcador de posición — y la tarjeta de CTA final se omite por completo en lugar de mostrarse vacía."
+  },
+  "standard": {
+    "title": "Estándar",
+    "items": [
+      "`category` distingue a los colaboradores de rescate/bienestar animal (`rescuePartners`) de los comercios (`businessPartners`) — son dos relaciones genuinamente distintas, no una jerarquía. Un sitio puede definir sus propias claves de categoría siempre que `sections` y `partners` usen valores coincidentes.",
+      "`veterinaryPartners` (\"Socios Veterinarios y Médicos\") es una tercera categoría recomendada para clínicas y profesionales médicos — una relación genuinamente distinta tanto de la colaboración de rescate general como del apoyo comercial general, por lo que tiene su propio encabezado en lugar de incluirse en `businessPartners`. Aun así, se rige por la regla de cumplimiento de `businessPartners` que sigue cuando el socio es una clínica con fines de lucro: mantenga la descripción neutral y factual.",
+      "**Sin favoritismo, nunca.** El componente siempre ordena a los socios alfabéticamente por nombre dentro de una categoría — nunca por fecha de alta, nunca manualmente. No agregue un campo `featured`/`order` para evitar esto; si un sitio desea un programa formal de patrocinio por niveles, eso requiere un umbral objetivo definido (por ejemplo, un programa real de donaciones por monto) y está fuera del alcance de este patrón.",
+      "**Una categoría sin socios coincidentes no renderiza nada** — ni encabezado ni marcador de posición de \"próximamente\". Esto evita una subsección muerta junto a contenido real; la sección aparece automáticamente en cuanto el archivo de datos del sitio recibe su primera entrada en esa categoría.",
+      "La tarjeta de CTA final solo se renderiza cuando se proporciona `ctaHref`, y se muestra sin importar qué secciones de categoría estén pobladas.",
+      "Para `businessPartners` y `veterinaryPartners` (cualquier categoría que nombre un comercio con fines de lucro) en particular: la `description` de cada socio debe mantenerse neutral y factual — sin lenguaje comparativo o valorativo (\"el mejor\", \"la más alta calidad\"), sin precios, sin incentivos de compra. Este es el mecanismo de cumplimiento real: la regla de patrocinio calificado del IRS (26 U.S.C. §513(i)) depende del contenido del reconocimiento, no de la presencia de una frase de descargo de responsabilidad — no hay una fórmula mágica requerida. La `sections[].description` de una categoría puede añadir opcionalmente una nota de \"esto no es un respaldo\" para mayor claridad (útil sobre todo para evitar que un socio comercial trate el listado como material publicitario), pero es editorial, no legalmente obligatoria, y puede omitirse si no encaja con el tono de la página. La colaboración entre rescates no necesita este tratamiento en absoluto (la ayuda mutua entre entidades sin fines de lucro no es un problema de UBIT/publicidad).",
+      "Nunca invente un socio. Cada entrada debe ser una relación real y verificable — un nombre mencionado una sola vez en una publicación de un evento no es lo mismo que una asociación permanente que merezca un listado fijo.",
+      "`logoSrc` y `url` son ambos opcionales; la tarjeta se degrada correctamente a un tratamiento de solo nombre cuando aún no hay un logotipo disponible. Cuando se define `url`, el logotipo enlaza a ella (si existe un logotipo) y se omite el enlace de texto \"Visitar sitio web\" (una sola superficie de enlace es suficiente); el enlace de texto solo se renderiza como respaldo cuando hay `url` pero no `logoSrc`.",
+      "`logoBackgroundClassName` es un color de fondo opcional (por ejemplo, `\"bg-slate-900\"`) para logotipos cuyo diseño necesita un fondo específico para seguir siendo legible — una marca clara o blanca desaparece en el fondo predeterminado de la tarjeta si no. Omítalo en logotipos que ya se vean bien tal cual; la mayoría no lo necesitará.",
+      "Componente: `template/src/components/patterns/CommunityPartnersSection.tsx`",
+      "Primer sitio en producción: `the-comeback-pack` (`src/pages/Partners.tsx`, `src/data/partners.ts`) — implementación de referencia para el archivo de datos por sitio y la integración de la página."
+    ]
+  }
+}

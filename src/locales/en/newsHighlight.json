@@ -1,0 +1,38 @@
+{
+  "hero": {
+    "title": "News Highlight pattern",
+    "description": "Let an editor flag one event or news entry to surface on the homepage."
+  },
+  "breadcrumb": "News Highlight Pattern",
+  "example": {
+    "imageAlt": "Volunteers and a rescued dog at a community adoption event"
+  },
+  "sections": {
+    "withImage": {
+      "title": "Example — with an image",
+      "part1": "The flagged entry (",
+      "part2": ") has an",
+      "part3": ", so the card renders it."
+    },
+    "withoutImage": {
+      "title": "Without an image",
+      "part1": "The flagged entry (",
+      "part2": ") has no",
+      "part3": "— the card renders text-only, never a broken-image placeholder."
+    }
+  },
+  "standard": {
+    "title": "Standard",
+    "items": [
+      "Set `highlightOnHome: true` on a single entry in the site's `EventsNewsEntry[]` data (event or news) to surface it on the homepage.",
+      "Pass the site's full combined `entries` array directly to `NewsHighlightSection` — do not pre-filter at the call site; selection happens inside the component.",
+      "If more than one entry is flagged at once, the component auto-resolves to the most recently dated one (never fails the build).",
+      "When no entry has `highlightOnHome: true`, the component renders nothing at all — deliberately no fallback to \"most recent entry\" and no empty-state placeholder. An editor must explicitly flag the entry they want surfaced.",
+      "Renders `imageSrc`/`imageAlt` only when present; never a broken-image placeholder for entries without one.",
+      "Distinct from `HomeEventBanner` (dismissible, time-bound event announcements) and from a full `EventsNewsSection` listing (shows everything) — this is a single curated highlight.",
+      "No dedicated site-specific wrapper file is required; a site's `Index.tsx` (or equivalent home page) imports `NewsHighlightSection` directly and passes its combined entries straight through.",
+      "Shared field: `highlightOnHome?: boolean` on `EventsNewsBaseEntry` in `EventsNewsSection.tsx`",
+      "Component: `template/src/components/patterns/NewsHighlightSection.tsx`"
+    ]
+  }
+}

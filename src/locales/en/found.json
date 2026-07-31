@@ -1,0 +1,45 @@
+{
+  "breadcrumb": "Found Pattern",
+  "hero": {
+    "title": "Found pattern",
+    "description": "Use this module for found-pet notices, intake checklist guidance, and safe reunification communication."
+  },
+  "example": {
+    "title": "Example",
+    "descriptionBefore": "The CTA title, contact details, and help link below are all page-local props passed to",
+    "descriptionAfter": "— never hardcoded in the shared component — so every real site swaps in its own intake contact info here, not by editing the module.",
+    "ctaTitle": "Submit a Found Notice",
+    "ctaDescription": "Use this example contact block to test your local intake flow and response messaging.",
+    "emailCtaLabel": "Email Notice Details",
+    "helpLinkLabel": "Visit Found a Stray guidance"
+  },
+  "listings": {
+    "notice1": {
+      "sex": "Male",
+      "microchipStatus": "Unknown",
+      "notes": "Friendly tan dog found near a grocery parking lot wearing a blue collar and no tags.",
+      "mediaAlt": "Sample found dog notice 1"
+    },
+    "notice2": {
+      "sex": "Female",
+      "microchipStatus": "Not Detected",
+      "notes": "Small black-and-white dog found near a trailhead with a red harness and no owner nearby.",
+      "mediaAlt": "Sample found dog notice 2"
+    }
+  },
+  "standard": {
+    "title": "Standard",
+    "items": [
+      "Use `FoundListingsSection` for all found-notice pages.",
+      "Keep listing data normalized in `FoundListing` objects (`pet`, `location`, `source`, `status`).",
+      "Use mode controls (`local`, `external`, `hybrid`) instead of page-local filtering logic.",
+      "Keep warnings/checklists in module props so content is reusable and no-JS readable.",
+      "Source/media links should open in a new tab with safe rel attributes.",
+      "Keep CTA contact info (title, phone, email, help link) anonymized in template/example content — real sites pass their own via props (`ctaTitle`, `phoneCta`, `emailCta`, `helpLink`), never by editing the module.",
+      "Use neutral styling defaults (no site-specific color branding in shared standards).",
+      "Use `statusFilter` plus `showReunited`/`showArchived` (both default `false`) to control found-notice lifecycle visibility — active notices show by default; reunited/archived are opt-in.",
+      "Cards render from normalized `FoundListing` metadata (`pet`, `location`, `status`, `source`); image and source links open safely in a new tab; internal support links use `Link` components and remain no-JS readable as anchors.",
+      "Component: `template/src/components/patterns/FoundListingsSection.tsx`"
+    ]
+  }
+}

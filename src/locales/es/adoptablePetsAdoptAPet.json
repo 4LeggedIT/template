@@ -1,0 +1,31 @@
+{
+  "hero": {
+    "title": "Mascotas Adoptables — Adopt-a-Pet",
+    "description": "Enlaza a la página del refugio de la organización en Adopt-a-Pet, con un widget en vivo opcional cuando hay un shelterId disponible."
+  },
+  "breadcrumb": {
+    "parent": "Mascotas Adoptables",
+    "current": "Adopt-a-Pet"
+  },
+  "example": {
+    "title": "Ejemplo"
+  },
+  "disclosure": "Animal Friends of the Valleys (Wildomar, CA) es un rescate real cuyos listados públicos se usan a continuación para demostrar este adaptador con datos del mundo real. Esta plantilla y 4leggedIT no están afiliados con Animal Friends of the Valleys.",
+  "adoptAPet": {
+    "title": "Listados de Adopt-a-Pet"
+  },
+  "footerCta": {
+    "label": "Solicitar Adopción"
+  },
+  "standard": {
+    "title": "Estándar",
+    "items": [
+      "Use `mode=\"adoptapet\"` (o el componente independiente `AdoptAPetEmbed`) para un sitio cuyos listados vivan en Adopt-a-Pet en lugar de Petfinder/GetBuddy/PawPlacer.",
+      "`listingsUrl` es la página del refugio de la organización en Adopt-a-Pet — elimine los parámetros de seguimiento (utm_*, gclid, gbraid, gad_*) antes de usarla como enlace canónico.",
+      "`shelterId` es el ID numérico en el slug de esa URL (por ejemplo, `74343` de `/shelter/74343-org-name`). Cuando se configura, renderiza el verdadero widget \"Pet Scroller\" de Adopt-a-Pet — su script define un objeto global `AAPPetScrollerSettings` y usa `document.write()`, por lo que se monta dentro de un iframe aislado (`srcDoc`) en lugar de insertarse directamente en la página, replicando el código de inserción exacto que Adopt-a-Pet emite por refugio. `scrollerWidth`/`scrollerHeight` usan sus valores predeterminados propios (450×320).",
+      "La línea de enlace cruzado \"Or view all pets on...\" es la alternativa segura sin JS — siempre se renderiza como un enlace simple, sin importar si el widget de `shelterId` carga.",
+      "La línea auxiliar estándar forma parte del adaptador (`Or view all pets on Adopt-a-Pet`) — los enlaces cruzados a `petfinderUrl`/`getbuddyUrl`/`pawPlacerUrl` se muestran junto a ella automáticamente cuando esas props están configuradas.",
+      "Componente: `template/src/components/patterns/AdoptAPetEmbed.tsx`, integrado en `AdoptablePetsSection.tsx` como el modo `\"adoptapet\"`."
+    ]
+  }
+}

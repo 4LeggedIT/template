@@ -1,0 +1,35 @@
+{
+  "breadcrumb": "Patrón de Documentos",
+  "hero": {
+    "title": "Patrón de documentos / material imprimible",
+    "description": "Documentos listos para imprimir (certificado de adopción, registro médico y cualquier otro documento de la organización), además del índice /documents que los enlista — no se incrustan en una página como otros patrones."
+  },
+  "tools": {
+    "documentsIndex": {
+      "title": "Índice de Documentos",
+      "description": "La página de inicio `/documents` — enlaces agrupados hacia cada documento imprimible del sitio."
+    },
+    "adoptionCertificate": {
+      "title": "Certificado de Adopción",
+      "description": "Un certificado dedicado y listo para imprimir — obligatorio en todo sitio de rescate animal según la gobernanza."
+    },
+    "petMedicalRecord": {
+      "title": "Registro Médico de la Mascota",
+      "description": "Un registro médico dedicado y listo para imprimir — obligatorio en todo sitio de rescate animal según la gobernanza."
+    }
+  },
+  "openLiveExample": "Abrir ejemplo en vivo",
+  "standard": {
+    "title": "Estándar",
+    "items": [
+      "Todo sitio debe tener un índice `/documents` (`DocumentsIndexSection`, o una página local del sitio que use el mismo marcado `.doc-page`) más, como mínimo, un Certificado de Adopción y un Registro Médico de la Mascota — obligatorio en todo sitio de rescate animal según la gobernanza, incluso si se muestran grupos vacíos para tipos de documento aún no disponibles.",
+      "`AdoptionCertificateSection` y `PetMedicalRecordSection` son componentes dedicados y creados a propósito — úselos en lugar de armar manualmente un diseño de documento para estos dos tipos de documento obligatorios.",
+      "Para cualquier otro documento imprimible (acuerdo de acogida, acuerdo de voluntariado, guía educativa, etc.), use `DocumentLayout` como envoltorio genérico (`title`, `orgName`, `logoSrc`, `children`) en lugar de duplicar la estructura de la página de impresión — no hay ejemplo en vivo arriba, ya que renderiza cualquier contenido que un sitio le pase como children, pero el componente existe y sigue las mismas convenciones que los dos dedicados.",
+      "Todos estos componentes renderizan un diseño `.doc-body`/`.doc-page` autónomo de pantalla completa con su propia regla de tamaño de impresión `@page` — al igual que las Herramientas de Perrera y Exhibición, no están pensados para incrustarse dentro de un diseño de página normal, y sus rutas se montan fuera del envoltorio compartido `SiteLayout`/`AppShell` para que no se imprima ningún encabezado ni pie de página del sitio junto con el documento.",
+      "Toda la configuración proviene de una única forma compartida `PrintableDocConfig` (`printable-doc-config.ts`): `orgName`, `orgTagline`, `logoSrc`, `adoptUrl`, `fosterUrl`, `contact`, `donation` opcional, `social` opcional. Construya una configuración por sitio y reutilícela en cada página de documento — nunca duplique los datos de la organización por documento.",
+      "`src/styles/documents.css` contiene el estilo compartido optimizado para impresión; los sitios sobrescriben sus variables CSS (`--doc-primary`, `--doc-accent`, etc.) para los colores de marca, nunca las reglas de diseño en sí.",
+      "Las rutas de documentos deben excluirse del descubrimiento de prerenderizado/sitemap mediante el prefijo `/documents` en `PRERENDER_EXCLUDE_PREFIXES`/`SITEMAP_EXCLUDE_PREFIXES` en un sitio real (los propios ejemplos de documentos `/tools/*` de esta plantilla se excluyen de la misma forma que sus otras rutas `/tools/*`, por la misma razón de página autónoma).",
+      "Componentes: `template/src/components/patterns/DocumentsIndexSection.tsx`, `AdoptionCertificateSection.tsx`, `PetMedicalRecordSection.tsx`, `DocumentLayout.tsx`, `printable-doc-config.ts`"
+    ]
+  }
+}

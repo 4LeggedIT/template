@@ -1,7 +1,16 @@
 {
   "nav": {
     "home": "Inicio",
-    "standards": "Estándares"
+    "standards": "Estándares",
+    "overview": "Resumen"
+  },
+  "groups": {
+    "petsAdoption": "Mascotas y Adopción",
+    "contentEngagement": "Contenido y Participación",
+    "formsPayments": "Formularios y Pagos",
+    "community": "Comunidad",
+    "tools": "Herramientas",
+    "workflow": "Flujo de Trabajo"
   },
   "footer": {
     "ctaTitle": "¿Tiene curiosidad por saber cómo la tecnología puede ayudar a su rescate?",

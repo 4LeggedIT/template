@@ -1,0 +1,72 @@
+{
+  "hero": {
+    "title": "Journey Timeline pattern",
+    "description": "A vertical timeline of real, dated stages (rescued, foster, today) for a single dog's own detail page — the page a success-story card's storyHref links out to."
+  },
+  "breadcrumb": "Journey Timeline Pattern",
+  "stages": {
+    "rescued": {
+      "label": "Rescued",
+      "date": "July 17, 2026",
+      "description": "Found at an overcrowded shelter as the longest resident with no adoption applications. Named Rickey after baseball's greatest leadoff hitter, because every great game begins with one opportunity.",
+      "imageAlt": "A volunteer greeting the dog on the day of rescue"
+    },
+    "cleanBillOfHealth": {
+      "label": "Clean Bill of Health",
+      "date": "July 22, 2026",
+      "description": "A wellness exam confirmed he's healthy and ready for the next step — finding his family."
+    },
+    "today": {
+      "label": "Today",
+      "description": "Settling into foster care and looking for the right forever home.",
+      "imageAlt": "The dog relaxing at home today"
+    }
+  },
+  "sections": {
+    "example": {
+      "title": "Example — a dog's own detail page",
+      "part1": "This is the composition, not just the bare timeline: a per-dog page pairs a short intro (name, status badge, summary — usually via",
+      "part2": ") with",
+      "part3": "for the story so far, then a foster/adopt CTA. A",
+      "part4": "card's",
+      "part5": "links straight here."
+    }
+  },
+  "example": {
+    "badge": "Looking for a Forever Home",
+    "name": "Rickey",
+    "summary": "Rickey was the shelter's longest resident with no adoption applications — now healthy, safe, and looking for his family.",
+    "journeySoFar": "Their journey so far",
+    "ctaTitle": "Want to help write the next chapter?",
+    "applyFoster": "Apply to Foster",
+    "applyAdopt": "Apply to Adopt"
+  },
+  "standard": {
+    "title": "Standard",
+    "stagesType": {
+      "after": "— plain, site-owned array. No built-in sort/filter and no fixed stage vocabulary; labels are free text (e.g. \"Rescued\", \"In Foster Care\", \"Today\")."
+    },
+    "optionalFields": {
+      "before": "Every field except",
+      "mid1": "is optional — a stage without a",
+      "mid2": "just omits the date line, and a stage without",
+      "mid3": "renders text only. Early stages of a real story often don't have media yet."
+    },
+    "videoSrc": {
+      "before": "renders a native",
+      "after": "instead of an image — for a self-hosted, real rescue-day video. Prefer this over a third-party embed: a prior fleet attempt at embedding Facebook video was reverted after hitting a rights-block on posts using licensed (non-original) audio."
+    },
+    "realContent": "Content must be real, sourced from the org's own posts/records — never invented backstory. This pattern exists specifically to hold a dog's actual rescue-to-today story.",
+    "emptyState": {
+      "before": "Renders nothing if",
+      "after": "is empty — no empty-state placeholder."
+    },
+    "pairsWith": {
+      "before": "Pairs with",
+      "mid": "that component's curated grid is the \"wall,\" this is the detail page each card's",
+      "after": "points to — see the composed example above."
+    },
+    "component": "Component: `template/src/components/patterns/JourneyTimeline.tsx`",
+    "firstImplementation": "First real-site implementation: `the-comeback-pack`'s \"Pack Journeys\" feature (`/pack-journeys`, `/pack-journeys/:slug`)."
+  }
+}

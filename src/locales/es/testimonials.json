@@ -1,0 +1,48 @@
+{
+  "hero": {
+    "title": "Patrón de testimonios",
+    "description": "Use el módulo compartido de testimonios para historias de adoptantes, familias de acogida y la comunidad."
+  },
+  "breadcrumb": "Patrón de Testimonios",
+  "items": {
+    "t1": {
+      "quote": "Ser familia de acogida con nuestro rescate ha sido una experiencia increíble. El apoyo, los suministros y la orientación hicieron que todo fuera manejable.",
+      "author": "Alex",
+      "authorMeta": "Familia de Acogida"
+    },
+    "t2": {
+      "quote": "El proceso de adopción fue claro y cuidadoso. Nos sentimos apoyados todo el tiempo y encontramos al perro adecuado para nuestro hogar.",
+      "author": "Jordan",
+      "authorMeta": "Adoptante"
+    },
+    "t3": {
+      "quote": "Nuestro equipo de voluntarios trabaja duro, pero estas historias nos mantienen motivados. Ver a los perros instalarse en hogares llenos de amor lo es todo.",
+      "author": "Equipo de Voluntarios",
+      "authorMeta": "Miembro de la Comunidad"
+    }
+  },
+  "sections": {
+    "featured": {
+      "title": "Ejemplo — destacado (predeterminado)",
+      "description": "El diseño destacado admite una sola historia resaltada con selección aleatoria opcional al cargar.",
+      "sectionTitle": "Testimonio destacado"
+    },
+    "grid": {
+      "title": "Cuadrícula",
+      "description": "El diseño en cuadrícula funciona para secciones estándar de varias tarjetas.",
+      "sectionTitle": "Testimonios en cuadrícula"
+    }
+  },
+  "standard": {
+    "title": "Estándar",
+    "items": [
+      "Use `TestimonialsSection` en lugar de marcado de testimonios local a la página.",
+      "El comportamiento predeterminado muestra un testimonio aleatorio (`layout=\"featured\"`, `featuredStrategy=\"randomOnLoad\"`) para evitar el desorden visual — simplemente pase `testimonials` y deje que se apliquen los valores predeterminados.",
+      "Opte por `layout=\"grid\"` solo cuando una página quiera mostrar intencionalmente varios testimonios a la vez.",
+      "Un arreglo `testimonials` vacío no muestra nada.",
+      "Mantenga los testimonios en archivos de datos de la página/sitio, no dentro del componente.",
+      "El contenido de texto se renderiza en el servidor sin JS — conserve el renderizado SSR, los testimonios deben permanecer legibles sin JS.",
+      "Componente: `template/src/components/patterns/TestimonialsSection.tsx`"
+    ]
+  }
+}

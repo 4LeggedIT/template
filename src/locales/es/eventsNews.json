@@ -1,0 +1,89 @@
+{
+  "hero": {
+    "title": "Patrón de Eventos y Noticias",
+    "description": "Un solo módulo para contenido de eventos y noticias, con comportamiento de últimas entradas + archivo."
+  },
+  "breadcrumb": "Patrón de Eventos y Noticias",
+  "banner": {
+    "adoptionFridays": { "title": "Encuentro de Adopción de los Viernes", "location": "123 Main St, Example City, ST" },
+    "basketRaffle": { "title": "Rifa de Canastas Mensual", "location": "Salón Comunitario, 456 Oak Ave, Example City, ST" }
+  },
+  "sections": {
+    "listing": {
+      "title": "Ejemplo — listado (página índice de Noticias/Eventos)",
+      "descriptionBefore": "Esto es lo que muestra una página índice de Noticias/Eventos — el banner de eventos futuros deliberadamente",
+      "descriptionStrong": "no",
+      "descriptionAfter": "se muestra aquí; vea el ejemplo separado de \"Banner de la página de inicio\" más abajo para saber por qué.",
+      "moduleDescription": "Las entradas más recientes se muestran primero en orden calendario; las entradas más antiguas pasan al archivo.",
+      "socialCtaTitle": "Síguenos en Redes Sociales",
+      "socialCtaDescription": "Mantente al día con nuevos ingresos, eventos e historias de rescate."
+    },
+    "homeBanner": {
+      "title": "Banner de la página de inicio (independiente del listado anterior)",
+      "part1": "muestra",
+      "part2": "— un banner de anuncio descartable para próximos eventos. Es un elemento",
+      "strong": "exclusivo de la página de inicio",
+      "part3": ", mostrado aquí de forma aislada (sin listado, sin archivo) para dejar eso claro — nunca lo active en la misma instancia usada para una página índice o de archivo de Noticias/Eventos, como se muestra arriba. En la práctica, un sitio real calcula esta misma lista de eventos a partir de sus propias entradas mediante el asistente interno",
+      "part4": "de",
+      "part5": "(pasando",
+      "part6": "en la instancia propia de la página de inicio); el arreglo de abajo se construye directamente solo para que este ejemplo pueda mostrar el banner sin nada más debajo."
+    },
+    "structuredContent": {
+      "title": "Bloques de contenido estructurado (cardMode=\"full\")",
+      "part1": "El renderizador más completo de",
+      "part2": "usado en tarjetas de estilo detalle, en lugar del modo",
+      "part3": "solo de resumen mostrado arriba."
+    }
+  },
+  "standard": {
+    "title": "Estándar",
+    "items": [
+      "Use `EventsNewsSection` con un contrato de entrada unificado `event | news`.",
+      "Conserve siempre el historial completo en los datos; muestre las últimas entradas + archivo.",
+      "Mantenga las entradas en orden calendario (más recientes primero para el feed combinado).",
+      "Muestre los enlaces exclusivos de eventos (`Open in Maps`, `Add to Google Calendar`, `Share event`) solo para eventos.",
+      "No duplique acciones de evento para elementos solo de noticias.",
+      "Regla de paridad de acciones de evento: toda implementación migrada de noticias/eventos de un sitio debe exponer estas tres acciones de evento.",
+      "Las entradas de noticias pueden enlazar a URLs externas o a rutas de artículos locales (para artículos dentro del sitio).",
+      "Para páginas de detalle de eventos, use enrutamiento de índice + detalle (por ejemplo `/events` más `/events/my-event-slug`).",
+      "Use etiquetas de metadatos ligeras para el contexto de estado/tipo en las tarjetas.",
+      "`showFutureEventsBanner` es exclusivo de la página de inicio — actívelo solo en la instancia de `EventsNewsSection` montada en la página de inicio (vea el ejemplo \"Banner de la página de inicio\" arriba), nunca en una instancia de página índice o de archivo de Noticias/Eventos.",
+      "Use `eventDetailsBasePath` cuando los eventos deban enlazar automáticamente a rutas de detalle de evento locales.",
+      "Las tarjetas de banner de eventos recurrentes deben resolver a enlaces de detalle locales cuando `eventDetailsBasePath` está configurado.",
+      "Para páginas índice, use `cardMode=\"index\"` para que las tarjetas se mantengan solo de resumen (sin cuerpo/destacados/imágenes).",
+      "Los eventos recurrentes se admiten mediante `event.recurrence` (semanal, quincenal, mensual por día, mensual por enésima semana/día).",
+      "Mantenga separados `EnvironmentBanner` y el banner de eventos (nunca fusionados en un solo banner).",
+      "Si ambos se muestran en una página, el orden debe ser `EnvironmentBanner` primero, luego el banner de eventos.",
+      "Muestre el banner de eventos solo cuando haya eventos futuros activos; si no existe ninguno, no muestre la fila del banner de eventos.",
+      "Estándar de ubicación de banners: muestre ambos en el flujo de la página directamente debajo del encabezado; no los monte globalmente en el layout compartido.",
+      "Estándar de contenido inicial: no agregue eventos falsos/de muestra en sitios migrados de tipo producción; comience con entradas vacías hasta que existan eventos reales.",
+      "Los controles opcionales de tarjeta destacada y archivo vienen incorporados (`showFeatured`, props de archivo).",
+      "`socialCta` es un valor predeterminado de gobernanza obligatorio (no opcional) para los sitios de la generación actual — complételo desde `siteConfig.social.*` para que una fila de \"síguenos\" se muestre mediante `SocialFollowCta`; nunca cree una versión local de la página a mano.",
+      "Configure `entry.videoEmbed` (proveedor `\"facebook\"`, más `url`, opcionalmente `aspectRatio`, opcionalmente `title`) en una entrada de noticias `local` para incrustar el video/Reel de Facebook de origen directamente en la página de detalle (y en la tarjeta en modo completo) en lugar de una imagen estática. `aspectRatio` usa `\"portrait\"` por defecto para URLs `/reel/`, y `\"landscape\"` en los demás casos. Las miniaturas de tarjeta (índice de noticias, destacado de inicio) siguen usando `imageSrc`/`imageAlt` — mantenga ambos definidos para que la miniatura se vea bien aunque la incrustación prevalezca en la vista completa/detalle. Prefiera un `videoSrc` alojado propio (vea `JourneyTimeline`) en lugar de esta incrustación cuando el clip de origen use audio con licencia — un intento previo en la flota de incrustar video de Facebook se revirtió tras un bloqueo de derechos en una publicación con audio no original.",
+      "Flujo de trabajo de artículo local: cree una ruta de página local (por ejemplo `/news/my-article-slug`), agréguela a `AppRoutes.tsx`, y apunte el `href` de la entrada de noticias hacia ella. El descubrimiento de rutas en tiempo de compilación (`tools/app-routes.mjs`) lo detecta para el prerenderizado + mapa del sitio; para rutas dinámicas, enumere las URLs concretas mediante `PRERENDER_EXTRA_ROUTES`. Aplique la misma regla a las rutas de detalle de evento. Valide con `npm run build` y `npm run qa:smoke:nojs`."
+    ],
+    "eventRoutesBefore": "Ejemplos de rutas de detalle de evento (para mapa del sitio + prerenderizado):",
+    "eventLinks": {
+      "adoptionFridays": "Encuentro de Adopción de los Viernes",
+      "biweeklySupplyDrive": "Colecta de Suministros Quincenal",
+      "weekendFair": "Feria de Acogida del Segundo Fin de Semana",
+      "volunteerOrientation": "Orientación de Voluntarios Mensual",
+      "communityFundraiser": "Recaudación de Fondos Comunitaria"
+    },
+    "and": "y",
+    "localArticleBefore": "Ejemplo de ruta de artículo local:",
+    "localArticleLink": "Ejemplo de Artículo de Noticias",
+    "component": "Componente: `template/src/components/patterns/EventsNewsSection.tsx`",
+    "localizationLib": "Biblioteca de localización: `template/src/lib/localized-content.ts`"
+  },
+  "localization": {
+    "title": "Localización (sitios bilingües)",
+    "items": [
+      "`EventsNewsSection`/`EventBanner` en sí mismos permanecen en `string` plano y de un solo idioma — no agregue campos localizados a los componentes compartidos.",
+      "Para el contenido real de eventos/noticias de un sitio bilingüe (con alternancia EN/ES), redacte cada campo traducible como `LocalizedText` (de `lib/localized-content.ts`): una cadena simple, o un registro en/es.",
+      "Mantenga un mapeador `resolve*Entry(entry, locale)` en los propios `data/events.ts`/`data/news-items.ts` del sitio que resuelva los campos `LocalizedText` a la forma `string` plana `EventsNewsEventEntry`/`EventsNewsArticleEntry` mediante `resolveText(value, locale)` — llámelo desde el componente de la página con `toContentLocale(i18n.resolvedLanguage)` antes de pasar `entries` a `EventsNewsSection`.",
+      "`EventBanner` acepta una prop opcional `locale` (string, por defecto `\"en-US\"`) para su visualización de fecha/hora con `Intl.DateTimeFormat`. En un sitio bilingüe, páselo `toIntlLocaleTag(toContentLocale(i18n.resolvedLanguage))` — de lo contrario, la fecha/hora del banner permanece formateada en inglés aunque el resto de la página esté en español.",
+      "Implementaciones de referencia reales: `the-comeback-pack` y `feedingperrisstrays` (`src/data/events.ts`, `src/pages/Home.tsx`/`src/components/HomeEventBanner.tsx`)."
+    ]
+  }
+}

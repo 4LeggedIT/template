@@ -1,0 +1,45 @@
+{
+  "hero": {
+    "title": "Patrón de Perros Destacados",
+    "description": "Destaque un conjunto seleccionado de perros — por ejemplo, los residentes que llevan más tiempo esperando — en una cuadrícula de cuatro por fila, cada uno con enlace a su ficha."
+  },
+  "breadcrumb": "Patrón de Perros Destacados",
+  "dogs": {
+    "molly": { "breed": "Pastor Alemán, Raza Mixta", "gender": "Hembra", "age": "1 año" },
+    "dexter": { "breed": "Pastor Alemán, Raza Mixta", "gender": "Macho", "age": "1 año" },
+    "king": { "breed": "Perro Boyero, Raza Mixta", "gender": "Macho", "age": "10 meses" },
+    "zuko": { "breed": "Pastor Belga / Malinois", "gender": "Macho", "age": "6 meses" }
+  },
+  "sections": {
+    "example": {
+      "title": "Ejemplo",
+      "descriptionMid": "acepta",
+      "descriptionRest": "— la misma forma agnóstica de origen usada por el cargador de mascotas adoptables por manifiesto local, para que los datos seleccionados a mano y una futura importación automatizada (GetBuddy, Petfinder, manifiesto local) compartan un solo tipo."
+    },
+    "withoutLink": {
+      "title": "Sin detailsUrl",
+      "descriptionBefore": "Un perro sin",
+      "descriptionAfter": "aún muestra su tarjeta (foto, nombre, raza, edad • sexo) pero sin botón de llamada a la acción — no hay nada a lo cual enlazar todavía."
+    }
+  },
+  "standard": {
+    "title": "Estándar",
+    "manifestType": {
+      "before": "es",
+      "mid1": "(de",
+      "mid2": ") — la misma forma de manifiesto usada en otras partes del ecosistema, para que estos datos puedan comenzar como un arreglo seleccionado a mano y luego cambiarse por una importación automatizada de GetBuddy/Petfinder/manifiesto local sin modificar el componente."
+    },
+    "selection": "La selección de qué perros destacar es enteramente responsabilidad de quien llama al componente — pase exactamente la lista seleccionada, en el orden en que desea mostrarla. No hay ordenamiento ni filtrado incorporado.",
+    "grid": "La cuadrícula está fija en hasta 4 por fila (`grid-cols-1 sm:grid-cols-2 lg:grid-cols-4`) — el propósito de este componente es precisamente la fila destacada de 4 tarjetas, no una galería de propósito general, por lo que deliberadamente no existe una prop `columns`.",
+    "ageGender": "La línea de edad • sexo se calcula mediante `resolvePetAgeLabel()` de `lib/pet-age.ts` (nunca escrita a mano) usando `age`/`birthDate` de cada elemento.",
+    "ctaButton": {
+      "before": "El botón de llamada a la acción (por defecto \"Meet",
+      "middle": "\", mediante `labels.ctaPrefix`) se muestra solo cuando `detailsUrl` está presente — un perro sin ese dato igual muestra su tarjeta, solo que sin botón. `ctaPrefix` es una palabra o frase simple (por ejemplo, \"Meet\", \"Adopt\"), nunca una cadena de plantilla estilo",
+      "after": "— así puede pasarse directamente a través de la función `t()` de i18next sin chocar con su propia sintaxis de interpolación."
+    },
+    "emptyState": "Si `dogs` está vacío, el componente no muestra nada — no hay estado vacío de reemplazo.",
+    "distinctFromAdoptablePets": "Es distinto de `AdoptablePetsSection` (la estructura completa de listado de mascotas adoptables con modos de proveedor Petfinder/Adopt-a-Pet/GetBuddy/manifiesto local) — este es un destacado curado pequeño y separado, no un proveedor de listado.",
+    "sharedType": "Tipo compartido: `LocalAdoptableManifestItem` en `adoptable-local-manifest.ts`",
+    "component": "Componente: `template/src/components/patterns/DogSpotlightSection.tsx`"
+  }
+}

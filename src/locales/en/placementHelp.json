@@ -1,0 +1,44 @@
+{
+  "breadcrumb": "Placement Pattern",
+  "hero": {
+    "title": "Placement pattern",
+    "description": "Use this module for placement/courtesy listings with a default three-month expiry window."
+  },
+  "needs": {
+    "need1": { "title": "Safe temporary home", "description": "Foster or transfer partner with intake availability." },
+    "need2": { "title": "Rescue commitment", "description": "Named organization contact with communication response time." },
+    "need3": { "title": "Transport support", "description": "Pickup or transport plan with a confirmed handoff window." }
+  },
+  "example": {
+    "title": "Example",
+    "needsSummary": "Courtesy listings shared after evaluation by the rescue team.",
+    "checklistItems": [
+      "Temperament evaluated",
+      "Fully vaccinated",
+      "Spayed or neutered",
+      "Owner/guardian contact information provided with inquiry"
+    ],
+    "primaryCtaLabel": "Submit placement request",
+    "secondaryCtaLabel": "Placement process"
+  },
+  "showExpired": {
+    "title": "Showing expired listings",
+    "descriptionAfter": "is opt-in — this is what a review queue (rather than the public page) would set to see listings past their expiry window.",
+    "sectionTitle": "Placement listings (show expired)",
+    "listingsTitle": "Review queue"
+  },
+  "standard": {
+    "title": "Standard",
+    "items": [
+      "Use `PlacementHelpSection` for all placement/courtesy listing sections.",
+      "Default expiry is 3 months when `postedAt` is set and `expiresAt` is omitted.",
+      "`expiresAt` is optional and overrides the default expiry window.",
+      "Keep expired listings hidden by default (`showExpiredListings=false`); expired listings are hidden unless explicitly enabled.",
+      "Include optional pet metadata when available (breed, size, color, gender, vaccination, etc.) — it renders without breaking no-data cards when omitted.",
+      "Use `needs`/`needsTitle`/`needsSummary`/`needsChecklistItems` for a separate \"what's needed\" section (fosters, supplies, volunteers) alongside the courtesy listings.",
+      "`primaryCta`/`secondaryCta` provide the section-level call-to-action links (for example, \"Submit placement request\").",
+      "`labels` overrides section copy for i18n/site customization.",
+      "Component: `template/src/components/patterns/PlacementHelpSection.tsx`"
+    ]
+  }
+}

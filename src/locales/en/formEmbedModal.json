@@ -1,0 +1,36 @@
+{
+  "breadcrumb": "FormEmbedModal Pattern",
+  "hero": {
+    "title": "FormEmbedModal pattern",
+    "description": "Primary form CTAs should use the shared modal pattern instead of navigating directly to the provider form."
+  },
+  "example": {
+    "title": "Example",
+    "description": "The trigger is an anchor so no-JS fallback navigation still opens in a new tab. This component is provider-agnostic — swap in a JotForm, Google Forms, or any other iframe-embeddable form URL; the example below happens to use a Google Forms URL only because it's an easy one to demo live.",
+    "modalTitle": "Embedded Form Example",
+    "openApplication": "Open application",
+    "helperLink": "Having trouble? Open the application in a new tab"
+  },
+  "controlled": {
+    "title": "Controlled mode",
+    "description": "Use controlled mode when page logic needs to open/close the form modal from non-anchor UI controls.",
+    "buttonLabel": "Open modal from external trigger",
+    "modalTitle": "Controlled Form Example"
+  },
+  "standard": {
+    "title": "Standard",
+    "items": [
+      "In-modal direct link (\"Open in new tab\") is required.",
+      "On-page helper link is required and must use `js-only`.",
+      "`<noscript>` direct-link fallback is required.",
+      "Modal trigger anchors must use `target=\"_blank\"` + `rel=\"noopener noreferrer\"`.",
+      "Modifier-key trigger clicks (Cmd/Ctrl/Shift/Alt) must preserve direct new-tab navigation.",
+      "Controlled mode (`open` + `onOpenChange`) is required for external trigger use cases.",
+      "No duplicate fallback links in no-JS mode.",
+      "`asButton` (default `true`) renders the trigger as a styled button; pass `false` with custom `children` to use your own trigger element.",
+      "`triggerVariant`/`triggerSize` (both default `\"default\"`) control button styling when `asButton` is used.",
+      "Standard helper text: `Having trouble? Open the application in a new tab`",
+      "Component: `template/src/components/patterns/FormEmbedModal.tsx`"
+    ]
+  }
+}

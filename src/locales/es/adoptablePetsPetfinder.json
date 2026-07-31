@@ -1,0 +1,27 @@
+{
+  "hero": {
+    "title": "Mascotas Adoptables — Petfinder",
+    "description": "El propio widget en vivo de desplazamiento de mascotas de Petfinder, incrustado mediante el ID de la organización."
+  },
+  "breadcrumb": {
+    "parent": "Mascotas Adoptables",
+    "current": "Petfinder"
+  },
+  "example": {
+    "title": "Ejemplo"
+  },
+  "disclosure": "Animal Friends of the Valleys (Wildomar, CA) es un rescate real cuyos listados públicos se usan a continuación para demostrar este adaptador con datos del mundo real. Esta plantilla y 4leggedIT no están afiliados con Animal Friends of the Valleys.",
+  "footerCta": {
+    "label": "Solicitar Adopción"
+  },
+  "standard": {
+    "title": "Estándar",
+    "items": [
+      "Use `mode=\"petfinder\"` (o el componente independiente `PetfinderScrollerEmbed`) para renderizar el propio widget `pet-scroller` de Petfinder para uno o más `organizationIds`.",
+      "`organizationIds` son el/los ID(s) de organización propios de Petfinder (por ejemplo, `CA542`) — se encuentran en el slug de la URL del perfil de Petfinder de la organización.",
+      "La línea de enlace cruzado \"Or view all pets on...\" es la alternativa segura sin JS — proporcione siempre `adoptAPetUrl`/`getbuddyUrl`/`pawPlacerUrl` para las plataformas hermanas en las que la organización realmente esté presente, de modo que el contenido siga siendo accesible si el script del widget falla o JS no está disponible.",
+      "La línea auxiliar estándar forma parte del adaptador (`Or view all pets on Petfinder`) — los enlaces cruzados a `adoptAPetUrl`/`getbuddyUrl`/`pawPlacerUrl` se muestran junto a ella automáticamente cuando esas props están configuradas.",
+      "Componente: `template/src/components/patterns/PetfinderScrollerEmbed.tsx`, integrado en `AdoptablePetsSection.tsx` como el modo `\"petfinder\"`."
+    ]
+  }
+}

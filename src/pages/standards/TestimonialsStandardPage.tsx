@@ -1,35 +1,35 @@
+import { useTranslation } from "react-i18next";
 import PageHero from "@/components/patterns/PageHero";
 import SEOHead from "@/components/patterns/SEOHead";
 import TestimonialsSection, { type TestimonialItem } from "@/components/patterns/TestimonialsSection";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
-const sampleTestimonials: TestimonialItem[] = [
-  {
-    id: "t-1",
-    quote:
-      "Fostering with our rescue has been an amazing experience. The support, supplies, and guidance made everything manageable.",
-    author: "Alex",
-    authorMeta: "Foster Family",
-    emoji: "🐾",
-  },
-  {
-    id: "t-2",
-    quote:
-      "The adoption process was clear and thoughtful. We felt supported the entire time and found the right dog for our home.",
-    author: "Jordan",
-    authorMeta: "Adopter",
-    emoji: "❤️",
-  },
-  {
-    id: "t-3",
-    quote:
-      "Our volunteer team works hard, but these stories keep us going. Seeing dogs settle into loving homes is everything.",
-    author: "Team Volunteer",
-    authorMeta: "Community Member",
-  },
-];
-
 const TestimonialsStandardPage = () => {
+  const { t } = useTranslation(["testimonials", "common"]);
+
+  const sampleTestimonials: TestimonialItem[] = [
+    {
+      id: "t-1",
+      quote: t("testimonials:items.t1.quote"),
+      author: t("testimonials:items.t1.author"),
+      authorMeta: t("testimonials:items.t1.authorMeta"),
+      emoji: "🐾",
+    },
+    {
+      id: "t-2",
+      quote: t("testimonials:items.t2.quote"),
+      author: t("testimonials:items.t2.author"),
+      authorMeta: t("testimonials:items.t2.authorMeta"),
+      emoji: "❤️",
+    },
+    {
+      id: "t-3",
+      quote: t("testimonials:items.t3.quote"),
+      author: t("testimonials:items.t3.author"),
+      authorMeta: t("testimonials:items.t3.authorMeta"),
+    },
+  ];
+
   return (
     <>
       <SEOHead
@@ -38,24 +38,22 @@ const TestimonialsStandardPage = () => {
         description="Standardized testimonials module for featured and grid content."
       />
       <PageHero
-        eyebrow="Standards"
-        title="Testimonials pattern"
-        description="Use the shared testimonials module for adopter/foster/community stories."
+        eyebrow={t("common:nav.standards")}
+        title={t("testimonials:hero.title")}
+        description={t("testimonials:hero.description")}
         breadcrumbs={[
-          { label: "Home", href: "/" },
-          { label: "Standards" },
-          { label: "Testimonials Pattern" },
+          { label: t("common:nav.home"), href: "/" },
+          { label: t("common:nav.standards") },
+          { label: t("testimonials:breadcrumb") },
         ]}
       />
 
       <section className="container space-y-10 px-4 py-10">
         <div className="space-y-3">
-          <h2 className="text-lg font-semibold">Example — featured (default)</h2>
-          <p className="text-sm text-muted-foreground">
-            Featured layout supports a single highlighted story with optional random selection on load.
-          </p>
+          <h2 className="text-lg font-semibold">{t("testimonials:sections.featured.title")}</h2>
+          <p className="text-sm text-muted-foreground">{t("testimonials:sections.featured.description")}</p>
           <TestimonialsSection
-            title="Featured testimonial"
+            title={t("testimonials:sections.featured.sectionTitle")}
             testimonials={sampleTestimonials}
             layout="featured"
             featuredStrategy="randomOnLoad"
@@ -63,10 +61,10 @@ const TestimonialsStandardPage = () => {
         </div>
 
         <div className="space-y-3">
-          <h2 className="text-lg font-semibold">Grid</h2>
-          <p className="text-sm text-muted-foreground">Grid layout works for standard multi-card sections.</p>
+          <h2 className="text-lg font-semibold">{t("testimonials:sections.grid.title")}</h2>
+          <p className="text-sm text-muted-foreground">{t("testimonials:sections.grid.description")}</p>
           <TestimonialsSection
-            title="Grid testimonials"
+            title={t("testimonials:sections.grid.sectionTitle")}
             testimonials={sampleTestimonials}
             layout="grid"
             columns={3}
@@ -75,16 +73,12 @@ const TestimonialsStandardPage = () => {
 
         <Card>
           <CardHeader>
-            <CardTitle>Standard</CardTitle>
+            <CardTitle>{t("testimonials:standard.title")}</CardTitle>
           </CardHeader>
           <CardContent className="space-y-2 text-sm text-muted-foreground">
-            <p>- Use `TestimonialsSection` instead of page-local testimonial markup.</p>
-            <p>- Default behavior shows one random testimonial (`layout=&quot;featured&quot;`, `featuredStrategy=&quot;randomOnLoad&quot;`) to avoid clutter — just pass `testimonials` and let the defaults apply.</p>
-            <p>- Opt into `layout=&quot;grid&quot;` only when a page intentionally wants multiple testimonials shown at once.</p>
-            <p>- An empty `testimonials` array renders nothing.</p>
-            <p>- Keep testimonials in page/site data files, not inline component internals.</p>
-            <p>- Text content renders server-side without JS — preserve SSR rendering, testimonials must remain readable without JS.</p>
-            <p>- Component: `template/src/components/patterns/TestimonialsSection.tsx`</p>
+            {(t("testimonials:standard.items", { returnObjects: true }) as string[]).map((item) => (
+              <p key={item}>- {item}</p>
+            ))}
           </CardContent>
         </Card>
       </section>

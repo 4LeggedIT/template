@@ -1,8 +1,13 @@
+import { useTranslation } from "react-i18next";
 import PageHero from "@/components/patterns/PageHero";
 import SEOHead from "@/components/patterns/SEOHead";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
+const SECTION_KEYS = ["baseline", "keepingInSync", "securityMaintenance"] as const;
+
 const CiBuildWorkflowPage = () => {
+  const { t } = useTranslation(["ciBuild", "common"]);
+
   return (
     <>
       <SEOHead
@@ -11,47 +16,28 @@ const CiBuildWorkflowPage = () => {
         description="Minimal GitHub Actions install/build workflow and sync guidance."
       />
       <PageHero
-        eyebrow="Standards"
-        title="CI build workflow guard"
-        description="Each repo should include a minimal GitHub Actions workflow that runs install + build to catch dependency/build drift early."
+        eyebrow={t("common:nav.standards")}
+        title={t("ciBuild:hero.title")}
+        description={t("ciBuild:hero.description")}
         breadcrumbs={[
-          { label: "Home", href: "/" },
-          { label: "Standards", href: "/standards" },
-          { label: "CI Build Workflow" },
+          { label: t("common:nav.home"), href: "/" },
+          { label: t("common:nav.standards"), href: "/standards" },
+          { label: t("ciBuild:breadcrumb") },
         ]}
       />
       <section className="container space-y-6 px-4 py-10">
-        <Card>
-          <CardHeader>
-            <CardTitle>Baseline workflow</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-2 text-sm text-muted-foreground">
-            <p>- `actions/checkout`</p>
-            <p>- `actions/setup-node` (Node 22 + npm cache)</p>
-            <p>- `npm clean-install --progress=false`</p>
-            <p>- `npm run build`</p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader>
-            <CardTitle>Keeping repos in sync</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-2 text-sm text-muted-foreground">
-            <p>- Source of truth: `template/.github/workflows/build.yml`</p>
-            <p>- Sync script: `tools/scripts/repo-maintenance/sync-build-workflow.mjs`</p>
-            <p>- Wrapper: `tools/scripts/repo-maintenance/sync-build-workflow.sh --check`</p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader>
-            <CardTitle>Security maintenance expectation</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-2 text-sm text-muted-foreground">
-            <p>- CI build guard catches breakage after lockfile security patches.</p>
-            <p>- Run periodic dependency audit + patch passes across migrated repos.</p>
-            <p>- Lockfile updates should be followed by repo-by-repo `npm run build` verification.</p>
-          </CardContent>
-        </Card>
+        {SECTION_KEYS.map((key) => (
+          <Card key={key}>
+            <CardHeader>
+              <CardTitle>{t(`ciBuild:sections.${key}.title`)}</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-2 text-sm text-muted-foreground">
+              {(t(`ciBuild:sections.${key}.items`, { returnObjects: true }) as string[]).map((item) => (
+                <p key={item}>- {item}</p>
+              ))}
+            </CardContent>
+          </Card>
+        ))}
       </section>
     </>
   );

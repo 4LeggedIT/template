@@ -1,0 +1,39 @@
+{
+  "hero": {
+    "title": "Adoptable Pets — local listings",
+    "description": "The simplest mode: pets managed directly in a site's own data file, no external provider needed."
+  },
+  "breadcrumb": {
+    "parent": "Adoptable Pets",
+    "current": "Local"
+  },
+  "example": {
+    "title": "Example",
+    "linkIntro": "See their",
+    "linkText": "full current listing",
+    "linkOutro": "for details beyond what's shown here."
+  },
+  "disclosure": "Animal Friends of the Valleys (Wildomar, CA) is a real rescue whose public listings are used below to demonstrate this adapter with real-world data. This template and 4leggedIT are not affiliated with Animal Friends of the Valleys.",
+  "localPets": {
+    "title": "Local listings"
+  },
+  "footerCta": {
+    "label": "Apply to Adopt"
+  },
+  "standard": {
+    "title": "Standard",
+    "items": [
+      "Use `mode=\"local\"` when pets are managed directly in the site's own data (no external listings provider).",
+      "For local listings, prefer `birthDate` over static age text so age can update automatically — dynamic age supports puppy/young-dog labels in weeks, then rolls into months/years. Use `ageLabel` only when a precise `birthDate` isn't available, as in the example above.",
+      "Local listings sort alphabetically by default (`localSort=\"none\"` to preserve input order).",
+      "Local card images default to full-photo display (`object-contain`); use `localImageFit`/`imageFit` to override.",
+      "Local cards support optional aliases (`name (aka alias)`) and multi-photo galleries (`images` array).",
+      "Use `loadLocalAdoptablePets` + `mapLocalAdoptableManifest` for local JSON manifests shaped like Petfinder scrape output.",
+      "Use `gender` in local pet metadata (never `sex`).",
+      "`showExpiredListings`/`defaultExpiryMonths` mirror the placement pattern: expired local listings are hidden by default (3-month window) unless `showExpiredListings=true`.",
+      "`externalRegistries` adds Petfinder/Adopt-a-Pet profile links alongside local cards without switching provider mode.",
+      "Component: `template/src/components/patterns/AdoptablePetsSection.tsx`",
+      "Data: `template/src/data/adoptable-pets.ts`"
+    ]
+  }
+}

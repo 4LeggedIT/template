@@ -1,16 +1,18 @@
+import { useTranslation } from "react-i18next";
 import AdoptablePetsSection from "@/components/patterns/AdoptablePetsSection";
 import PageHero from "@/components/patterns/PageHero";
 import SEOHead from "@/components/patterns/SEOHead";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   AFV_ADOPT_A_PET_URL,
-  AFV_DISCLOSURE,
   AFV_GETBUDDY_URL,
   AFV_PETFINDER_ORG_ID,
   AFV_PETFINDER_URL,
 } from "@/data/afv-example-org";
 
 const AdoptablePetsPetfinderStandardPage = () => {
+  const { t } = useTranslation(["adoptablePetsPetfinder", "common"]);
+
   return (
     <>
       <SEOHead
@@ -19,21 +21,21 @@ const AdoptablePetsPetfinderStandardPage = () => {
         description="AdoptablePetsSection in petfinder mode: Petfinder's own pet-scroller widget, keyed off an organization ID."
       />
       <PageHero
-        eyebrow="Standards"
-        title="Adoptable Pets — Petfinder"
-        description="Petfinder's own live pet-scroller widget, embedded via organization ID."
+        eyebrow={t("common:nav.standards")}
+        title={t("adoptablePetsPetfinder:hero.title")}
+        description={t("adoptablePetsPetfinder:hero.description")}
         breadcrumbs={[
-          { label: "Home", href: "/" },
-          { label: "Standards" },
-          { label: "Adoptable Pets", href: "/standards/adoptable-pets" },
-          { label: "Petfinder" },
+          { label: t("common:nav.home"), href: "/" },
+          { label: t("common:nav.standards") },
+          { label: t("adoptablePetsPetfinder:breadcrumb.parent"), href: "/standards/adoptable-pets" },
+          { label: t("adoptablePetsPetfinder:breadcrumb.current") },
         ]}
       />
 
       <section className="container space-y-10 px-4 py-10">
         <div className="space-y-3">
-          <h2 className="text-lg font-semibold">Example</h2>
-          <p className="text-sm text-muted-foreground">{AFV_DISCLOSURE}</p>
+          <h2 className="text-lg font-semibold">{t("adoptablePetsPetfinder:example.title")}</h2>
+          <p className="text-sm text-muted-foreground">{t("adoptablePetsPetfinder:disclosure")}</p>
           <AdoptablePetsSection
             mode="petfinder"
             petfinder={{
@@ -42,20 +44,18 @@ const AdoptablePetsPetfinderStandardPage = () => {
               adoptAPetUrl: AFV_ADOPT_A_PET_URL,
               getbuddyUrl: AFV_GETBUDDY_URL,
             }}
-            footerCta={{ label: "Apply to Adopt", href: "https://example.org/forms/adopt", external: true }}
+            footerCta={{ label: t("adoptablePetsPetfinder:footerCta.label"), href: "https://example.org/forms/adopt", external: true }}
           />
         </div>
 
         <Card>
           <CardHeader>
-            <CardTitle>Standard</CardTitle>
+            <CardTitle>{t("adoptablePetsPetfinder:standard.title")}</CardTitle>
           </CardHeader>
           <CardContent className="space-y-2 text-sm text-muted-foreground">
-            <p>- Use `mode="petfinder"` (or the standalone `PetfinderScrollerEmbed`) to render Petfinder's own `pet-scroller` widget for one or more `organizationIds`.</p>
-            <p>- `organizationIds` are Petfinder's own org ID(s) (e.g. `CA542`) — found in the org's Petfinder profile URL slug.</p>
-            <p>- The "Or view all pets on..." cross-link line is the no-JS-safe fallback — always provide `adoptAPetUrl`/`getbuddyUrl`/`pawPlacerUrl` for whichever sibling platforms the org is actually on, so content stays reachable if the widget script fails or JS is unavailable.</p>
-            <p>- Standard helper line is part of the adapter (`Or view all pets on Petfinder`) — cross-links to `adoptAPetUrl`/`getbuddyUrl`/`pawPlacerUrl` render alongside it automatically when those props are set.</p>
-            <p>- Component: `template/src/components/patterns/PetfinderScrollerEmbed.tsx`, wired into `AdoptablePetsSection.tsx` as mode `"petfinder"`.</p>
+            {(t("adoptablePetsPetfinder:standard.items", { returnObjects: true }) as string[]).map((item) => (
+              <p key={item}>- {item}</p>
+            ))}
           </CardContent>
         </Card>
       </section>

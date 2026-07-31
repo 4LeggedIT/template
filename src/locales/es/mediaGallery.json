@@ -1,0 +1,47 @@
+{
+  "hero": {
+    "title": "Patrón de galería de medios",
+    "description": "Use galerías divididas por defecto cuando las fotos y los videos deban aparecer en secciones distintas."
+  },
+  "breadcrumb": "Patrón de Galería de Medios",
+  "items": {
+    "photo1": { "alt": "Perro corriendo en el pasto", "caption": "Momentos destacados del evento de adopción de fin de semana.", "category": "Eventos" },
+    "photo2": { "alt": "Retrato de perro en primer plano", "caption": "Ingreso reciente tras revisión médica.", "category": "Ingreso" },
+    "video1": { "title": "Resumen del Día de Voluntariado", "description": "Breve resumen del más reciente día de voluntariado y enriquecimiento.", "category": "Eventos" },
+    "video2": { "title": "Actualización de Acogida", "description": "Actualización de progreso de una colocación temporal en acogida.", "category": "Acogida" }
+  },
+  "sections": {
+    "split": {
+      "title": "Ejemplo — dividida (predeterminado)",
+      "description": "Las fotos se separan intencionalmente de los videos, en paridad con sitios que usan secciones distintas.",
+      "photosTitle": "Fotos",
+      "infoNoticeTitle": "Nota sobre los medios",
+      "infoNoticeText": "Los medios mostrados aquí son ejemplos y pueden incluir perros no disponibles para adopción. Use este aviso opcional para contexto/descargos de responsabilidad.",
+      "socialCtaTitle": "Síguenos",
+      "socialCtaDescription": "Bloque opcional de llamada a la acción social para páginas de galería.",
+      "videosTitle": "Videos",
+      "videosDescription": "Los videos se muestran en su propia sección de galería."
+    },
+    "unified": {
+      "title": "Variante unificada",
+      "description": "Use el modo unificado cuando las fotos y los videos deban aparecer en una sola sección.",
+      "sectionTitle": "Galería de medios (variante unificada)"
+    }
+  },
+  "standard": {
+    "title": "Estándar",
+    "items": [
+      "Use `SplitMediaGallerySection` cuando las fotos y los videos deban mostrarse en secciones separadas (recomendación predeterminada).",
+      "Use `MediaGallerySection` para secciones mixtas de fotos y videos cuando se desee una galería unificada.",
+      "Mantenga los elementos multimedia en arreglos normalizados y páselos como props.",
+      "Mantenga `showFilters` opcional y por defecto use grupos de categoría fáciles de entender.",
+      "La visibilidad principal de los medios no debe depender de JavaScript.",
+      "Use la caja de luz de fotos opcional solo como mejora, no como vía de acceso principal; la navegación (controles anterior/siguiente + flechas del teclado) es parte del comportamiento estándar.",
+      "Los comportamientos opcionales de la página (mezclar aleatoriamente, máximo de fotos/videos, aviso informativo, llamada a la acción social) son props del módulo.",
+      "El texto de estado vacío es visible cuando no se proporcionan elementos multimedia (`items={\"{[]}\"}`).",
+      "Valores predeterminados: `columns=3`, `showFilters=true`, `enablePhotoLightbox=true`, `shuffleOnLoad=false`.",
+      "Componente: `template/src/components/patterns/MediaGallerySection.tsx`",
+      "Envoltorio: `template/src/components/patterns/SplitMediaGallerySection.tsx`"
+    ]
+  }
+}

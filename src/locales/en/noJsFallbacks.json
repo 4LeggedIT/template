@@ -1,0 +1,28 @@
+{
+  "hero": {
+    "title": "No-JS fallback validation checklist",
+    "description": "Use this page as the review checklist when migrating CTAs, disclosures, and embeds to the template standards. This is a cross-cutting review checklist, not a single component's pattern doc — see each pattern's own page for its component-level standard."
+  },
+  "breadcrumb": "No-JS Fallbacks",
+  "sections": {
+    "requiredChecks": {
+      "title": "Required checks (all migrations)",
+      "items": [
+        "Disable JavaScript, reload, and verify primary CTAs still navigate.",
+        "Modal-trigger anchors must use `target=\"_blank\"` + `rel=\"noopener noreferrer\"`.",
+        "Helper fallback links shown only in JS mode must have `className=\"js-only\"`.",
+        "<noscript> fallback links must not duplicate visible helper links in no-JS.",
+        "FAQ/disclosure content must remain interactive via native <details>/<summary>."
+      ]
+    },
+    "commonMisses": {
+      "title": "Common migration cleanup misses",
+      "items": [
+        "Helper text drift (\"Having trouble?\" wording not standardized).",
+        "Missing no-JS `.js-only` hide rule in `index.html`.",
+        "New fallback link opens in same tab when modal trigger is an anchor.",
+        "Old accordion wrapper imports left in public FAQ/disclosure pages."
+      ]
+    }
+  }
+}

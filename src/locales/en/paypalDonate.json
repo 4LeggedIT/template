@@ -1,0 +1,26 @@
+{
+  "breadcrumb": "PayPal Donate Pattern",
+  "hero": {
+    "title": "PayPal donate pattern",
+    "description": "Use the shared PayPal donate component plus a direct-link helper for popup/SDK failure cases."
+  },
+  "example": {
+    "title": "Example",
+    "helperLink": "Having trouble? Open PayPal in a new tab",
+    "configNote": "Configure the hosted button ID via `hostedButtonId` or `VITE_PAYPAL_DONATE_HOSTED_BUTTON_ID`."
+  },
+  "standard": {
+    "title": "Standard",
+    "items": [
+      "Render `PayPalDonateButton` as the primary donate action.",
+      "Add a small helper link below it that opens PayPal in a new tab — it must always be visible in JS and no-JS, and stay a helper, not a second full-size button fallback.",
+      "Production pages must provide a valid hosted button ID (`hostedButtonId` prop or `VITE_PAYPAL_DONATE_HOSTED_BUTTON_ID`).",
+      "Template/example pages may use a clearly labeled dummy ID only for visual documentation.",
+      "`env=\"sandbox\"` switches the PayPal SDK to sandbox mode for testing; default is `\"production\"`.",
+      "`onComplete`/`onError` callbacks are available for analytics/tracking hooks around the donation flow.",
+      "`imageSrc`/`imageAlt`/`imageTitle` override the default PayPal button graphic if a custom donate button image is needed.",
+      "If the SDK fails to load or config is missing, the component renders non-breaking fallback messaging rather than a blank area.",
+      "Component: `template/src/components/patterns/PayPalDonateButton.tsx`"
+    ]
+  }
+}

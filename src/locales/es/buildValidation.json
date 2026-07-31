@@ -1,0 +1,36 @@
+{
+  "hero": {
+    "title": "Flujo de compilación y validación",
+    "description": "Use estos comandos como el flujo de validación base al modificar patrones compartidos o herramientas de compilación."
+  },
+  "breadcrumb": "Compilación y Validación",
+  "sections": {
+    "coreCommands": {
+      "title": "Comandos principales",
+      "items": [
+        "`npm run build` → verificación de enlaces internos + compilación SSR/prerenderizado",
+        "`npm run preview` → vista previa estándar de Vite",
+        "`npm run preview:nojs` → sirve la salida prerenderizada para control de calidad sin JS",
+        "`npm run preview:nojs:build` → recompila y luego vista previa sin JS",
+        "`npm test` → `vitest run`"
+      ]
+    },
+    "dependencySecurity": {
+      "title": "Mantenimiento de seguridad de dependencias",
+      "items": [
+        "Ejecute `npm audit` para identificar vulnerabilidades de dependencias a nivel del lockfile.",
+        "Aplique correcciones de bajo riesgo con `npm audit fix`.",
+        "Vuelva a ejecutar `npm run build` después de actualizar el lockfile, antes de fusionar.",
+        "Trate esto como mantenimiento obligatorio en todos los repositorios basados en la plantilla."
+      ]
+    },
+    "whenToUseNoJs": {
+      "title": "Cuándo usar la vista previa sin JS",
+      "items": [
+        "Cambios en el respaldo del modal de formulario (`FormEmbedModal`, enlaces auxiliares, comportamiento `js-only`)",
+        "Migraciones de preguntas frecuentes/divulgación",
+        "Comportamiento del encabezado/menú que depende de `details/summary` o respaldos solo con CSS"
+      ]
+    }
+  }
+}

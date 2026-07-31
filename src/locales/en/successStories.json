@@ -1,0 +1,62 @@
+{
+  "hero": {
+    "title": "Success stories pattern",
+    "description": "Narrative/story-first pattern for happy tails and adopted-pet outcomes — full context and CTA on a dedicated stories page, or a compact card grid for a home-page preview."
+  },
+  "breadcrumb": "Success Stories Pattern",
+  "stories": {
+    "remi": {
+      "storyTitle": "Remi's Journey",
+      "imageAlt": "Tan rescue dog resting comfortably after adoption",
+      "petType": "Dog",
+      "breed": "Mixed Breed",
+      "summary": "From abandoned stray to forever loved family member.",
+      "storyContext": "Remi arrived underweight and fearful, then stabilized in foster care before adoption.",
+      "storyContent1": "After intake, Remi received veterinary care, nutrition support, and confidence-building routines.",
+      "storyContent2": "Once matched with an adopter, the transition plan focused on structure, decompression, and ongoing support.",
+      "storyCtaLabel": "Read full happy tail",
+      "badgeLabel": "Forever Loved"
+    },
+    "nova": {
+      "imageAlt": "Smiling black rescue dog outdoors",
+      "petType": "Dog",
+      "breed": "Labrador Mix",
+      "summary": "Medical recovery followed by a successful family placement.",
+      "storyContext": "Nova needed post-op foster support and a low-stress home match.",
+      "badgeLabel": "Adopted"
+    },
+    "peaches": {
+      "imageAlt": "Small rescue dog with pink harness",
+      "petType": "Dog",
+      "breed": "Terrier Mix",
+      "summary": "Shy intake that became a confident companion at home.",
+      "storyContent": "Peaches needed a quieter placement and did well with slow introductions and consistency.",
+      "badgeLabel": "Happy Tail"
+    }
+  },
+  "sections": {
+    "example": {
+      "title": "Example",
+      "sectionTitle": "Recent happy tails"
+    },
+    "compact": {
+      "title": "Compact variant (home-page preview)",
+      "part1": "Same",
+      "part2": "data, with context/content/CTAs turned off and",
+      "part3": "capping the grid — the settings a home page uses instead of a separate card component."
+    }
+  },
+  "standard": {
+    "title": "Standard",
+    "items": [
+      "Use `SuccessStoriesSection` for adoption outcomes and happy-tail story collections.",
+      "Store stories as normalized `SuccessStoryItem` objects and pass them through `stories`.",
+      "Use module toggles (`showSummary`, `showStoryContext`, `showStoryContent`, `showStoryCtas`) instead of page-local branching.",
+      "For home-page previews, use compact settings (`maxItems`, `columns`, and content toggles) rather than a separate card implementation — see the variant above.",
+      "Cards are no-JS readable; the portrait image and the optional story link (`storyHref`) both render as plain anchors — internal routes use `Link`, external URLs get `target=\"_blank\" rel=\"noreferrer\"`.",
+      "`contentWidth=\"contained\"` narrows the section to a centered column; default is `\"full\"` width.",
+      "`labels` overrides section copy (`adoptedLabel`, `readStoryLabel`, `adoptedPrefix`) for i18n/site customization.",
+      "Component: `template/src/components/patterns/SuccessStoriesSection.tsx`"
+    ]
+  }
+}

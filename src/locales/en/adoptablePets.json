@@ -1,0 +1,31 @@
+{
+  "hero": {
+    "title": "Adoptable pets pattern",
+    "description": "One module for local listings and provider adapters (petfinder, adoptapet, getbuddy, pawplacer) — pick a mode per site, or combine them with hybrid. Each mode has its own dedicated page with a live example."
+  },
+  "breadcrumb": "Adoptable Pets Pattern",
+  "modes": {
+    "local": { "title": "Local", "description": "Pets managed directly in a site's own data file, no external provider needed." },
+    "petfinder": { "title": "Petfinder", "description": "Petfinder's own live pet-scroller widget, embedded via organization ID." },
+    "adoptAPet": { "title": "Adopt-a-Pet", "description": "Links out to an org's Adopt-a-Pet shelter page, with fallback preview cards." },
+    "getbuddy": { "title": "GetBuddy", "description": "GetBuddy's embeddable listings iframe, keyed off an organization ID." },
+    "pawPlacer": { "title": "PawPlacer", "description": "PawPlacer's own live embed script, keyed off an organization ID — has its own dedicated pattern page." },
+    "hybrid": { "title": "Hybrid", "description": "Local listings shown alongside one or more provider adapters at once." }
+  },
+  "standard": {
+    "title": "Standard",
+    "items": [
+      "Use `AdoptablePetsSection` as the single public adoptable-pets shell.",
+      "Supported modes: `local`, `petfinder`, `adoptapet`, `getbuddy`, `pawplacer`, and `hybrid` — see the dedicated page above for each mode's own example and rules.",
+      "Keep provider configuration in adapter props, not page-local embed logic.",
+      "Always provide provider fallbacks (links/cards) so content is usable without JS.",
+      "Keep provider fallback text in the adapter component only (no page-level duplicates).",
+      "Standard helper line is part of provider adapters (`Or view all pets on ...`) — set the sibling `petfinderUrl`/`adoptAPetUrl`/`getbuddyUrl`/`pawPlacerUrl` props on whichever adapter is active so it cross-links to every platform the org is actually listed on.",
+      "Keep conversion actions at section level (`ctas` + `footerCta`) instead of per-card apply buttons.",
+      "`headless=true` renders local listings/cards only, skipping provider embeds and the section title, for embedding inside a custom layout.",
+      "`petVariant=\"placement\"` switches card styling/copy for placement (vs adoptable) listings; default is `\"adoptable\"`.",
+      "`labels` overrides section copy (empty-state text, feed names) for i18n/site customization.",
+      "Component: `template/src/components/patterns/AdoptablePetsSection.tsx`"
+    ]
+  }
+}

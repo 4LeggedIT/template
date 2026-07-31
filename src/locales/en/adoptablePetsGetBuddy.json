@@ -1,0 +1,31 @@
+{
+  "hero": {
+    "title": "Adoptable Pets — GetBuddy",
+    "description": "GetBuddy's embeddable listings iframe, keyed off an organization ID."
+  },
+  "breadcrumb": {
+    "parent": "Adoptable Pets",
+    "current": "GetBuddy"
+  },
+  "example": {
+    "title": "Example"
+  },
+  "disclosure": "Animal Friends of the Valleys (Wildomar, CA) is a real rescue whose public listings are used below to demonstrate this adapter with real-world data. This template and 4leggedIT are not affiliated with Animal Friends of the Valleys.",
+  "getBuddy": {
+    "title": "GetBuddy listings"
+  },
+  "footerCta": {
+    "label": "Apply to Adopt"
+  },
+  "standard": {
+    "title": "Standard",
+    "items": [
+      "Use `mode=\"getbuddy\"` (or the standalone `GetBuddyEmbed`) for a site whose listings are managed on GetBuddy.",
+      "`organizationId` is GetBuddy's own org ID — found in the org's GetBuddy shelter page URL.",
+      "`species` filters the embed (e.g. `\"dog\"`); `iframeHeight` controls the mounted iframe's height, `showIframe=false` renders link-out only.",
+      "`listingsUrl` (optional) is the org's own GetBuddy shelter page — used for the \"Or view all pets on GetBuddy\" link and as the no-JS fallback destination.",
+      "Standard helper line is part of the adapter (`Or view all pets on GetBuddy`) — cross-links to `petfinderUrl`/`adoptAPetUrl`/`pawPlacerUrl` render alongside it automatically when those props are set.",
+      "Component: `template/src/components/patterns/GetBuddyEmbed.tsx`, wired into `AdoptablePetsSection.tsx` as mode `\"getbuddy\"`."
+    ]
+  }
+}

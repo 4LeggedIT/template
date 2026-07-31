@@ -1,10 +1,31 @@
-import FaqAccordion from "@/components/patterns/FaqAccordion";
+import { useTranslation } from "react-i18next";
+import FaqAccordion, { type FaqAccordionItem, type FaqAccordionSection } from "@/components/patterns/FaqAccordion";
 import PageHero from "@/components/patterns/PageHero";
 import SEOHead from "@/components/patterns/SEOHead";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { flatFaqItems, sectionedFaqItems } from "@/data/faq-example";
+
+type TranslatedFaqItem = { question: string; answer: string };
+type TranslatedFaqGroup = { title: string; items: TranslatedFaqItem[] };
 
 const FaqDisclosureStandardPage = () => {
+  const { t } = useTranslation(["faqDisclosure", "common"]);
+
+  const flatFaqItems: FaqAccordionItem[] = (
+    t("faqDisclosure:sections.flat.items", { returnObjects: true }) as TranslatedFaqItem[]
+  ).map((item, index) => ({ id: `faq-${index + 1}`, question: item.question, answer: item.answer }));
+
+  const sectionedFaqItems: FaqAccordionSection[] = (
+    t("faqDisclosure:sections.sectioned.groups", { returnObjects: true }) as TranslatedFaqGroup[]
+  ).map((group, groupIndex) => ({
+    id: `faq-group-${groupIndex + 1}`,
+    title: group.title,
+    items: group.items.map((item, itemIndex) => ({
+      id: `faq-group-${groupIndex + 1}-${itemIndex + 1}`,
+      question: item.question,
+      answer: item.answer,
+    })),
+  }));
+
   return (
     <>
       <SEOHead
@@ -13,40 +34,37 @@ const FaqDisclosureStandardPage = () => {
         description="Native details/summary standard for public FAQ and disclosure content."
       />
       <PageHero
-        eyebrow="Standards"
-        title="FAQ pattern"
-        description="Use native `<details>/<summary>` for FAQ and expandable public content by default."
+        eyebrow={t("common:nav.standards")}
+        title={t("faqDisclosure:hero.title")}
+        description={t("faqDisclosure:hero.description")}
         breadcrumbs={[
-          { label: "Home", href: "/" },
-          { label: "Standards" },
-          { label: "FAQ Pattern" },
+          { label: t("common:nav.home"), href: "/" },
+          { label: t("common:nav.standards") },
+          { label: t("faqDisclosure:breadcrumb") },
         ]}
       />
 
       <section className="container space-y-10 px-4 py-10">
         <div className="space-y-3">
-          <h2 className="text-lg font-semibold">Example — flat mode</h2>
-          <p className="text-sm text-muted-foreground">A single card holding one flat list of questions.</p>
-          <FaqAccordion items={flatFaqItems} title="FAQ example" />
+          <h2 className="text-lg font-semibold">{t("faqDisclosure:sections.flat.title")}</h2>
+          <p className="text-sm text-muted-foreground">{t("faqDisclosure:sections.flat.description")}</p>
+          <FaqAccordion items={flatFaqItems} title={t("faqDisclosure:sections.flat.cardTitle")} />
         </div>
 
         <div className="space-y-3">
-          <h2 className="text-lg font-semibold">Sectioned mode</h2>
-          <p className="text-sm text-muted-foreground">One titled card per section, for longer FAQ pages grouped by topic.</p>
+          <h2 className="text-lg font-semibold">{t("faqDisclosure:sections.sectioned.title")}</h2>
+          <p className="text-sm text-muted-foreground">{t("faqDisclosure:sections.sectioned.description")}</p>
           <FaqAccordion sections={sectionedFaqItems} />
         </div>
 
         <Card>
           <CardHeader>
-            <CardTitle>Standard</CardTitle>
+            <CardTitle>{t("faqDisclosure:standard.title")}</CardTitle>
           </CardHeader>
           <CardContent className="space-y-2 text-sm text-muted-foreground">
-            <p>- Preferred for FAQ, informational disclosures, and "learn more" content.</p>
-            <p>- Must work without JavaScript or hydration — content stays readable and expandable with JS off.</p>
-            <p>- Style directly in the page/pattern component; do not require a JS accordion wrapper.</p>
-            <p>- Use a custom accordion only with a documented exception.</p>
-            <p>- Verify keyboard support (Enter/Space on summary) and focus visibility.</p>
-            <p>- Component: `template/src/components/patterns/FaqAccordion.tsx`</p>
+            {(t("faqDisclosure:standard.items", { returnObjects: true }) as string[]).map((item) => (
+              <p key={item}>- {item}</p>
+            ))}
           </CardContent>
         </Card>
       </section>

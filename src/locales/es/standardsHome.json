@@ -1,0 +1,32 @@
+{
+  "hero": {
+    "title": "Estándares de la plantilla",
+    "description": "Estándares operativos y guía de migración para la plantilla. Cada página de patrón incluye su propio ejemplo en vivo."
+  },
+  "status": {
+    "label": "Estado:",
+    "text": "Los estándares se mantienen en este centro. Los cambios deben incluir una actualización de estándares y notas de migración."
+  },
+  "sections": {
+    "adoptablePets": { "title": "Patrón de Mascotas Adoptables", "description": "Estructura unificada de mascotas adoptables con adaptadores de proveedores y comportamiento de respaldo." },
+    "dogSpotlight": { "title": "Patrón de Perros Destacados", "description": "Cuadrícula de inicio que destaca un conjunto seleccionado de perros, cuatro por fila en escritorio." },
+    "found": { "title": "Patrón de Animales Encontrados", "description": "Módulo de avisos de animales encontrados con lista de verificación de reunificación segura, filtrado de estado y guía de llamadas a la acción." },
+    "placement": { "title": "Patrón de Colocación", "description": "Listados de colocación con vencimiento predeterminado de tres meses y metadatos opcionales de mascotas." },
+    "eventsNews": { "title": "Patrón de Eventos y Noticias", "description": "Feed unificado de eventos y noticias con comportamiento de archivo, soporte de recurrencia y guía de banners." },
+    "newsHighlight": { "title": "Patrón de Noticia Destacada", "description": "Tarjeta de inicio que muestra un solo evento o noticia marcado por el editor." },
+    "journeyTimeline": { "title": "Patrón de Línea de Tiempo del Trayecto", "description": "Línea de tiempo vertical de rescate a la actualidad para la página de detalle de un perro, una tarjeta por etapa." },
+    "successStories": { "title": "Patrón de Historias de Éxito", "description": "Módulo de tarjetas narrativas para resultados de adopción e historias felices." },
+    "testimonials": { "title": "Patrón de Testimonios", "description": "Patrones de testimonios destacados y en cuadrícula para secciones reutilizables de prueba social." },
+    "flyerLibrary": { "title": "Patrón de Biblioteca de Volantes", "description": "Biblioteca de volantes de concientización atemporales, sin fecha, con filtrado por categoría — distinta de eventos/noticias con fecha." },
+    "mediaGallery": { "title": "Patrón de Galería de Medios", "description": "Galería unificada de fotos y videos con filtrado opcional y renderizado seguro sin JS." },
+    "faq": { "title": "Patrón de Preguntas Frecuentes", "description": "Requisito nativo `<details>/<summary>` para contenido público de preguntas frecuentes." },
+    "formEmbedModal": { "title": "Estándar de FormEmbedModal", "description": "Patrón de modal de formulario independiente del proveedor con ayuda y respaldo sin JS." },
+    "paypalDonate": { "title": "Patrón de Donación por PayPal", "description": "Uso del botón SDK de donación y patrón de enlace directo de respaldo." },
+    "communityPartners": { "title": "Patrón de Socios Comunitarios", "description": "Agradecimiento a colaboradores de rescate y comercios locales sin implicar favoritismo." },
+    "kennelDisplayTools": { "title": "Patrón de Herramientas de Perrera y Exhibición", "description": "Herramientas independientes de pantalla completa para imprimir/kiosco: presentación de mascotas adoptables y hojas de impresión de tarjetas/carpetas de perrera de 2 por página." },
+    "documents": { "title": "Patrón de Documentos", "description": "Certificado de adopción, registro médico y envoltorio de documento genérico listos para imprimir, además del índice de /documents." },
+    "buildValidation": { "title": "Compilación y Validación", "description": "Comandos de compilación, vista previa, vista previa sin JS y verificación de enlaces." },
+    "ciBuild": { "title": "Flujo de Trabajo de CI", "description": "Protección mínima de instalación/compilación de GitHub Actions y enfoque de sincronización." },
+    "noJsFallbacks": { "title": "Alternativas sin JS", "description": "Lista de verificación de revisión para `js-only`, `<noscript>` y limpieza de alternativas duplicadas." }
+  }
+}

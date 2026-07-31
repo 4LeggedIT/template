@@ -1,0 +1,72 @@
+{
+  "hero": {
+    "title": "Patrón de Línea de Tiempo del Trayecto",
+    "description": "Una línea de tiempo vertical de etapas reales y fechadas (rescate, acogida, hoy) para la página de detalle propia de un perro — la página a la que enlaza el storyHref de una tarjeta de historia de éxito."
+  },
+  "breadcrumb": "Patrón de Línea de Tiempo del Trayecto",
+  "stages": {
+    "rescued": {
+      "label": "Rescatado",
+      "date": "17 de julio de 2026",
+      "description": "Encontrado en un refugio superpoblado como el residente que llevaba más tiempo esperando, sin solicitudes de adopción. Llamado Rickey en honor al mejor bateador líder de la historia del béisbol, porque todo gran partido comienza con una oportunidad.",
+      "imageAlt": "Un voluntario saludando al perro el día del rescate"
+    },
+    "cleanBillOfHealth": {
+      "label": "Certificado de Buena Salud",
+      "date": "22 de julio de 2026",
+      "description": "Un examen de bienestar confirmó que está sano y listo para el siguiente paso — encontrar a su familia."
+    },
+    "today": {
+      "label": "Hoy",
+      "description": "Adaptándose a la vida en acogida y buscando el hogar definitivo adecuado.",
+      "imageAlt": "El perro descansando en casa hoy"
+    }
+  },
+  "sections": {
+    "example": {
+      "title": "Ejemplo — la página de detalle propia de un perro",
+      "part1": "Esta es la composición, no solo la línea de tiempo sola: una página por perro combina una breve introducción (nombre, insignia de estado, resumen — generalmente mediante",
+      "part2": ") con",
+      "part3": "para la historia hasta el momento, seguida de una llamada a la acción de acogida/adopción. Un",
+      "part4": "de una tarjeta de",
+      "part5": "enlaza directamente aquí."
+    }
+  },
+  "example": {
+    "badge": "Buscando un Hogar Definitivo",
+    "name": "Rickey",
+    "summary": "Rickey era el residente del refugio que llevaba más tiempo esperando, sin solicitudes de adopción — ahora está sano, a salvo y buscando a su familia.",
+    "journeySoFar": "Su trayecto hasta ahora",
+    "ctaTitle": "¿Quieres ayudar a escribir el próximo capítulo?",
+    "applyFoster": "Solicitar Acogida",
+    "applyAdopt": "Solicitar Adopción"
+  },
+  "standard": {
+    "title": "Estándar",
+    "stagesType": {
+      "after": "— un arreglo simple, propio del sitio. No hay ordenamiento ni filtrado incorporado ni un vocabulario fijo de etapas; las etiquetas son texto libre (por ejemplo, \"Rescatado\", \"En Acogida\", \"Hoy\")."
+    },
+    "optionalFields": {
+      "before": "Todos los campos excepto",
+      "mid1": "son opcionales — una etapa sin",
+      "mid2": "simplemente omite la línea de fecha, y una etapa sin",
+      "mid3": "se muestra solo con texto. Las primeras etapas de una historia real a menudo aún no tienen contenido multimedia."
+    },
+    "videoSrc": {
+      "before": "muestra un",
+      "after": "nativo en lugar de una imagen — para un video real del día del rescate, alojado propio. Prefiera esto sobre una incrustación de terceros: un intento previo en la flota de incrustar video de Facebook se revirtió tras un bloqueo de derechos en publicaciones con audio con licencia (no original)."
+    },
+    "realContent": "El contenido debe ser real, obtenido de las propias publicaciones/registros de la organización — nunca una historia inventada. Este patrón existe específicamente para contener la historia real de un perro, desde el rescate hasta hoy.",
+    "emptyState": {
+      "before": "No muestra nada si",
+      "after": "está vacío — no hay estado vacío de reemplazo."
+    },
+    "pairsWith": {
+      "before": "Se combina con",
+      "mid": "la cuadrícula curada de ese componente es el \"muro\"; esta es la página de detalle a la que apunta el",
+      "after": "de cada tarjeta — vea el ejemplo compuesto arriba."
+    },
+    "component": "Componente: `template/src/components/patterns/JourneyTimeline.tsx`",
+    "firstImplementation": "Primera implementación en un sitio real: la función \"Pack Journeys\" de `the-comeback-pack` (`/pack-journeys`, `/pack-journeys/:slug`)."
+  }
+}

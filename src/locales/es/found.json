@@ -1,0 +1,45 @@
+{
+  "breadcrumb": "Patrón de Animales Encontrados",
+  "hero": {
+    "title": "Patrón de animales encontrados",
+    "description": "Use este módulo para avisos de mascotas encontradas, guía de lista de verificación de ingreso y comunicación de reunificación segura."
+  },
+  "example": {
+    "title": "Ejemplo",
+    "descriptionBefore": "El título del CTA, los datos de contacto y el enlace de ayuda de abajo son todos props locales de la página que se pasan a",
+    "descriptionAfter": "— nunca están fijos en el componente compartido — de modo que cada sitio real coloca aquí su propia información de contacto de ingreso, sin editar el módulo.",
+    "ctaTitle": "Enviar un Aviso de Animal Encontrado",
+    "ctaDescription": "Use este bloque de contacto de ejemplo para probar su flujo local de ingreso y sus mensajes de respuesta.",
+    "emailCtaLabel": "Enviar detalles del aviso por correo",
+    "helpLinkLabel": "Ver guía de Animal Encontrado"
+  },
+  "listings": {
+    "notice1": {
+      "sex": "Macho",
+      "microchipStatus": "Desconocido",
+      "notes": "Perro amigable de color canela encontrado cerca del estacionamiento de un supermercado, con collar azul y sin placas.",
+      "mediaAlt": "Aviso de ejemplo de perro encontrado 1"
+    },
+    "notice2": {
+      "sex": "Hembra",
+      "microchipStatus": "No detectado",
+      "notes": "Perro pequeño blanco y negro encontrado cerca de un sendero, con arnés rojo y sin dueño cerca.",
+      "mediaAlt": "Aviso de ejemplo de perro encontrado 2"
+    }
+  },
+  "standard": {
+    "title": "Estándar",
+    "items": [
+      "Use `FoundListingsSection` en todas las páginas de avisos de animales encontrados.",
+      "Mantenga los datos de los avisos normalizados en objetos `FoundListing` (`pet`, `location`, `source`, `status`).",
+      "Use los controles de modo (`local`, `external`, `hybrid`) en lugar de lógica de filtrado local a la página.",
+      "Mantenga las advertencias y listas de verificación en las props del módulo, para que el contenido sea reutilizable y legible sin JS.",
+      "Los enlaces de fuente/medios deben abrirse en una pestaña nueva con atributos `rel` seguros.",
+      "Mantenga la información de contacto del CTA (título, teléfono, correo, enlace de ayuda) anonimizada en el contenido de plantilla/ejemplo — los sitios reales pasan la suya propia mediante props (`ctaTitle`, `phoneCta`, `emailCta`, `helpLink`), nunca editando el módulo.",
+      "Use estilos neutros predeterminados (sin marca de color específica del sitio en los estándares compartidos).",
+      "Use `statusFilter` junto con `showReunited`/`showArchived` (ambos predeterminados en `false`) para controlar la visibilidad del ciclo de vida de los avisos — los avisos activos se muestran de forma predeterminada; los reunificados/archivados son opcionales.",
+      "Las tarjetas se renderizan a partir de metadatos normalizados de `FoundListing` (`pet`, `location`, `status`, `source`); los enlaces de imagen y de fuente se abren de forma segura en una pestaña nueva; los enlaces de soporte internos usan componentes `Link` y siguen siendo legibles como anclas sin JS.",
+      "Componente: `template/src/components/patterns/FoundListingsSection.tsx`"
+    ]
+  }
+}

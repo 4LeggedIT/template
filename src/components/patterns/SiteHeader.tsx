@@ -162,7 +162,7 @@ const SiteHeader = ({ sticky = true, className }: SiteHeaderProps) => {
                         <div key={subItem.href}>
                           {subItem.group && subItem.group !== item.dropdown![subIndex - 1]?.group ? (
                             <p className="mt-2 px-3 pb-1 pt-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground/70 first:mt-0">
-                              {subItem.group}
+                              {t(`groups.${subItem.group}`)}
                             </p>
                           ) : null}
                           <NavLink
@@ -176,7 +176,7 @@ const SiteHeader = ({ sticky = true, className }: SiteHeaderProps) => {
                               )
                             }
                           >
-                            {subItem.label}
+                            {subItem.labelKey ? t(subItem.labelKey) : subItem.label}
                           </NavLink>
                         </div>
                       ))}

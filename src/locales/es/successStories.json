@@ -1,0 +1,62 @@
+{
+  "hero": {
+    "title": "Patrón de historias de éxito",
+    "description": "Patrón narrativo, centrado en la historia, para historias felices y resultados de mascotas adoptadas — contexto completo y llamada a la acción en una página dedicada de historias, o una cuadrícula compacta de tarjetas para una vista previa en la página de inicio."
+  },
+  "breadcrumb": "Patrón de Historias de Éxito",
+  "stories": {
+    "remi": {
+      "storyTitle": "El Camino de Remi",
+      "imageAlt": "Perro rescatado color canela descansando cómodamente tras la adopción",
+      "petType": "Perro",
+      "breed": "Raza Mixta",
+      "summary": "De perro callejero abandonado a miembro de la familia amado para siempre.",
+      "storyContext": "Remi llegó con bajo peso y temeroso, y luego se estabilizó en acogida antes de la adopción.",
+      "storyContent1": "Tras el ingreso, Remi recibió atención veterinaria, apoyo nutricional y rutinas para desarrollar confianza.",
+      "storyContent2": "Una vez emparejado con un adoptante, el plan de transición se centró en estructura, descompresión y apoyo continuo.",
+      "storyCtaLabel": "Leer la historia completa",
+      "badgeLabel": "Amado para Siempre"
+    },
+    "nova": {
+      "imageAlt": "Perro rescatado negro sonriente al aire libre",
+      "petType": "Perro",
+      "breed": "Mestizo de Labrador",
+      "summary": "Recuperación médica seguida de una colocación familiar exitosa.",
+      "storyContext": "Nova necesitó apoyo de acogida postoperatoria y un hogar de bajo estrés.",
+      "badgeLabel": "Adoptada"
+    },
+    "peaches": {
+      "imageAlt": "Perro rescatado pequeño con arnés rosado",
+      "petType": "Perro",
+      "breed": "Mestizo de Terrier",
+      "summary": "Un ingreso tímido que se convirtió en una compañera segura en casa.",
+      "storyContent": "Peaches necesitó una colocación más tranquila y le fue bien con presentaciones lentas y constancia.",
+      "badgeLabel": "Historia Feliz"
+    }
+  },
+  "sections": {
+    "example": {
+      "title": "Ejemplo",
+      "sectionTitle": "Historias felices recientes"
+    },
+    "compact": {
+      "title": "Variante compacta (vista previa de la página de inicio)",
+      "part1": "Los mismos datos de",
+      "part2": "con contexto/contenido/llamadas a la acción desactivados y",
+      "part3": "limitando la cuadrícula — la configuración que usa una página de inicio en lugar de un componente de tarjeta separado."
+    }
+  },
+  "standard": {
+    "title": "Estándar",
+    "items": [
+      "Use `SuccessStoriesSection` para resultados de adopción y colecciones de historias felices.",
+      "Guarde las historias como objetos `SuccessStoryItem` normalizados y páselos mediante `stories`.",
+      "Use los interruptores del módulo (`showSummary`, `showStoryContext`, `showStoryContent`, `showStoryCtas`) en lugar de ramificaciones locales en la página.",
+      "Para vistas previas en la página de inicio, use una configuración compacta (`maxItems`, `columns` y los interruptores de contenido) en lugar de una implementación de tarjeta separada — vea la variante anterior.",
+      "Las tarjetas son legibles sin JS; tanto la imagen vertical como el enlace opcional de la historia (`storyHref`) se muestran como anclas simples — las rutas internas usan `Link`, y las URLs externas obtienen `target=\"_blank\" rel=\"noreferrer\"`.",
+      "`contentWidth=\"contained\"` estrecha la sección a una columna centrada; el valor predeterminado es un ancho `\"full\"`.",
+      "`labels` reemplaza el texto de la sección (`adoptedLabel`, `readStoryLabel`, `adoptedPrefix`) para i18n/personalización del sitio.",
+      "Componente: `template/src/components/patterns/SuccessStoriesSection.tsx`"
+    ]
+  }
+}

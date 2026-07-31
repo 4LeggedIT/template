@@ -1,7 +1,16 @@
 {
   "nav": {
     "home": "Home",
-    "standards": "Standards"
+    "standards": "Standards",
+    "overview": "Overview"
+  },
+  "groups": {
+    "petsAdoption": "Pets & Adoption",
+    "contentEngagement": "Content & Engagement",
+    "formsPayments": "Forms & Payments",
+    "community": "Community",
+    "tools": "Tools",
+    "workflow": "Workflow"
   },
   "footer": {
     "ctaTitle": "Curious how tech can serve your rescue?",
