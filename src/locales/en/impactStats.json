@@ -1,0 +1,62 @@
+{
+  "hero": {
+    "title": "Impact Stats pattern",
+    "description": "Publish lifetime rescue impact numbers as big-number tiles, with an optional bar chart once a site has two or more reporting periods to compare."
+  },
+  "breadcrumb": "Impact Stats Pattern",
+  "sections": {
+    "lifetime": {
+      "title": "Lifetime totals",
+      "description": "The always-on section — a flexible list of stat tiles. Each site supplies whichever categories actually apply to it (adopted, fostered, spayed/neutered, transferred, strays fed, or anything else); nothing is hard-coded."
+    },
+    "trend": {
+      "title": "Period-by-period trend",
+      "description": "Optional. Supply 2+ periods (monthly, quarterly, every 6 months, or yearly — the period label is freeform) and a bar chart renders automatically."
+    },
+    "singlePeriod": {
+      "title": "A single period",
+      "description": "With only one period, a bar chart couldn't show a trend, so the component falls back to a plain value list instead."
+    }
+  },
+  "chart": {
+    "caption": "Dogs adopted vs. fostered by year"
+  },
+  "granularity": {
+    "yearly": "Updated yearly"
+  },
+  "cta": {
+    "label": "Support Our Work"
+  },
+  "sampleData": {
+    "lifetime": {
+      "adopted": "Dogs Adopted",
+      "fostered": "Dogs Fostered",
+      "helped": "Animals Helped",
+      "spayNeuter": "Spay/Neuter Surgeries",
+      "transferred": "Transferred to Partner Rescues",
+      "straysFed": "Strays Fed"
+    },
+    "metrics": {
+      "adopted": "Adopted",
+      "fostered": "Fostered"
+    }
+  },
+  "standard": {
+    "title": "Standard",
+    "metricSet": {
+      "before": "The metric list is flexible, not fixed —",
+      "after": "is just an array of {id, value, label, icon?}. Pick whichever categories your rescue actually tracks."
+    },
+    "lifetimeAlwaysOn": "Lifetime tiles render whenever the lifetime stats list is non-empty. This is deliberate: research on real, reputable foster-based rescues shows they report simple lifetime totals far more often than period dashboards.",
+    "chartThreshold": "The bar chart only renders with 2+ periods — a single period renders as a plain value list instead, since one bar can't show a trend.",
+    "noInventedNumbers": "Never fabricate or estimate a number for this component. If a real count isn't available yet, omit that stat entirely rather than showing a placeholder zero.",
+    "chartImplementation": {
+      "before": "Chart implementation reuses the fleet's existing",
+      "mid": "dependency via the shared",
+      "after": "wrapper — no new dependency was added."
+    },
+    "component": {
+      "before": "Component:"
+    }
+  }
+}

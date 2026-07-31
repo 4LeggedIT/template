@@ -23,6 +23,7 @@
     "formEmbedModal": { "title": "Estándar de FormEmbedModal", "description": "Patrón de modal de formulario independiente del proveedor con ayuda y respaldo sin JS." },
     "paypalDonate": { "title": "Patrón de Donación por PayPal", "description": "Uso del botón SDK de donación y patrón de enlace directo de respaldo." },
     "communityPartners": { "title": "Patrón de Socios Comunitarios", "description": "Agradecimiento a colaboradores de rescate y comercios locales sin implicar favoritismo." },
+    "impactStats": { "title": "Patrón de Estadísticas de Impacto", "description": "Recuadros de estadísticas de impacto de por vida más una gráfica de barras opcional por período para el reporte de impacto de la organización de rescate." },
     "kennelDisplayTools": { "title": "Patrón de Herramientas de Perrera y Exhibición", "description": "Herramientas independientes de pantalla completa para imprimir/kiosco: presentación de mascotas adoptables y hojas de impresión de tarjetas/carpetas de perrera de 2 por página." },
     "documents": { "title": "Patrón de Documentos", "description": "Certificado de adopción, registro médico y envoltorio de documento genérico listos para imprimir, además del índice de /documents." },
     "buildValidation": { "title": "Compilación y Validación", "description": "Comandos de compilación, vista previa, vista previa sin JS y verificación de enlaces." },

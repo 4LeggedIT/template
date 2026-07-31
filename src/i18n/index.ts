@@ -27,6 +27,7 @@ import enNewsHighlight from "@/locales/en/newsHighlight.json";
 import enFormEmbedModal from "@/locales/en/formEmbedModal.json";
 import enPaypalDonate from "@/locales/en/paypalDonate.json";
 import enCommunityPartners from "@/locales/en/communityPartners.json";
+import enImpactStats from "@/locales/en/impactStats.json";
 import enKennelDisplayTools from "@/locales/en/kennelDisplayTools.json";
 import enDocuments from "@/locales/en/documents.json";
 import enFound from "@/locales/en/found.json";
@@ -58,6 +59,7 @@ import esNewsHighlight from "@/locales/es/newsHighlight.json";
 import esFormEmbedModal from "@/locales/es/formEmbedModal.json";
 import esPaypalDonate from "@/locales/es/paypalDonate.json";
 import esCommunityPartners from "@/locales/es/communityPartners.json";
+import esImpactStats from "@/locales/es/impactStats.json";
 import esKennelDisplayTools from "@/locales/es/kennelDisplayTools.json";
 import esDocuments from "@/locales/es/documents.json";
 import esFound from "@/locales/es/found.json";
@@ -95,6 +97,7 @@ i18n.use(initReactI18next).init({
       formEmbedModal: enFormEmbedModal,
       paypalDonate: enPaypalDonate,
       communityPartners: enCommunityPartners,
+      impactStats: enImpactStats,
       kennelDisplayTools: enKennelDisplayTools,
       documents: enDocuments,
       found: enFound,
@@ -127,6 +130,7 @@ i18n.use(initReactI18next).init({
       formEmbedModal: esFormEmbedModal,
       paypalDonate: esPaypalDonate,
       communityPartners: esCommunityPartners,
+      impactStats: esImpactStats,
       kennelDisplayTools: esKennelDisplayTools,
       documents: esDocuments,
       found: esFound,
@@ -162,6 +166,7 @@ i18n.use(initReactI18next).init({
     "formEmbedModal",
     "paypalDonate",
     "communityPartners",
+    "impactStats",
     "kennelDisplayTools",
     "documents",
     "found",

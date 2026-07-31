@@ -1,0 +1,62 @@
+{
+  "hero": {
+    "title": "Patrón de Estadísticas de Impacto",
+    "description": "Publique las cifras de impacto de por vida del rescate como recuadros de números grandes, con una gráfica de barras opcional una vez que el sitio tenga dos o más períodos de reporte para comparar."
+  },
+  "breadcrumb": "Patrón de Estadísticas de Impacto",
+  "sections": {
+    "lifetime": {
+      "title": "Totales de por vida",
+      "description": "La sección siempre activa — una lista flexible de recuadros de estadísticas. Cada sitio proporciona las categorías que realmente le apliquen (adoptados, en hogar temporal, esterilizados/castrados, transferidos, callejeros alimentados, o cualquier otra) — nada está fijado de antemano."
+    },
+    "trend": {
+      "title": "Tendencia por período",
+      "description": "Opcional. Proporcione 2 o más períodos (mensual, trimestral, cada 6 meses o anual — la etiqueta del período es de forma libre) y una gráfica de barras se genera automáticamente."
+    },
+    "singlePeriod": {
+      "title": "Un solo período",
+      "description": "Con un solo período, una gráfica de barras no podría mostrar una tendencia, así que el componente muestra en su lugar una simple lista de valores."
+    }
+  },
+  "chart": {
+    "caption": "Perros adoptados vs. en hogar temporal por año"
+  },
+  "granularity": {
+    "yearly": "Actualizado anualmente"
+  },
+  "cta": {
+    "label": "Apoye Nuestro Trabajo"
+  },
+  "sampleData": {
+    "lifetime": {
+      "adopted": "Perros Adoptados",
+      "fostered": "Perros en Hogar Temporal",
+      "helped": "Animales Ayudados",
+      "spayNeuter": "Cirugías de Esterilización/Castración",
+      "transferred": "Transferidos a Rescates Aliados",
+      "straysFed": "Callejeros Alimentados"
+    },
+    "metrics": {
+      "adopted": "Adoptados",
+      "fostered": "En Hogar Temporal"
+    }
+  },
+  "standard": {
+    "title": "Estándar",
+    "metricSet": {
+      "before": "La lista de métricas es flexible, no fija —",
+      "after": "es simplemente un arreglo de {id, value, label, icon?}. Elija las categorías que su rescate realmente registra."
+    },
+    "lifetimeAlwaysOn": "Los recuadros de por vida se muestran siempre que la lista de estadísticas de por vida no esté vacía. Esto es intencional: la investigación sobre rescates reales y reconocidos basados en hogares temporales muestra que reportan totales simples de por vida con mucha más frecuencia que paneles por período.",
+    "chartThreshold": "La gráfica de barras solo se muestra con 2 o más períodos — un solo período se muestra como una simple lista de valores, ya que una sola barra no puede mostrar una tendencia.",
+    "noInventedNumbers": "Nunca invente ni estime un número para este componente. Si un conteo real aún no está disponible, omita esa estadística por completo en lugar de mostrar un cero de relleno.",
+    "chartImplementation": {
+      "before": "La implementación de la gráfica reutiliza la dependencia",
+      "mid": "ya existente en la plataforma mediante el envoltorio compartido",
+      "after": "— no se agregó ninguna dependencia nueva."
+    },
+    "component": {
+      "before": "Componente:"
+    }
+  }
+}
