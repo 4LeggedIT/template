@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-import { ArrowLeftRight, Heart, HeartHandshake, Home, Syringe, Utensils } from "lucide-react";
+import { ArrowLeftRight, Heart, HeartHandshake, Home, Syringe, Users, Utensils } from "lucide-react";
 import ImpactStatsSection, {
   type ImpactStat,
   type ImpactStatsPeriod,
@@ -23,6 +23,7 @@ const ImpactStatsStandardPage = () => {
       icon: ArrowLeftRight,
     },
     { id: "straysFed", value: "6,400", label: t("impactStats:sampleData.lifetime.straysFed"), icon: Utensils },
+    { id: "volunteers", value: "85", label: t("impactStats:sampleData.lifetime.volunteers"), icon: Users },
   ];
 
   const periodMetrics = {
