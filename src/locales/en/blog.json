@@ -1,0 +1,43 @@
+{
+  "hero": {
+    "title": "Blog pattern",
+    "description": "A shared post list and post-detail pattern that covers both tech/how-to guides and rescue-story content with real photos."
+  },
+  "breadcrumb": "Blog Pattern",
+  "sections": {
+    "listing": {
+      "title": "Post list",
+      "description": "One post is marked featured and gets a hero card; the rest render in a filterable grid. Categories, colors, and the subscribe CTA are all site-supplied data.",
+      "subscribeCta": {
+        "title": "More posts coming soon",
+        "description": "Occasional emails only — no noise, no spam.",
+        "ctaLabel": "Subscribe for updates"
+      }
+    },
+    "detail": {
+      "title": "Post detail",
+      "description": "The full post, rendered with the same mini-markdown grammar used by every post's content: headings, lists, blockquotes, code blocks, links, and bold text.",
+      "cta": {
+        "title": "Want to talk to us?",
+        "description": "This closing CTA card is fully optional — omit the `cta` prop entirely to render nothing.",
+        "ctaLabel": "Get in touch"
+      }
+    }
+  },
+  "standard": {
+    "title": "Standard",
+    "items": [
+      "`category` is a plain, site-local string — never a fixed union. Pass a `categories` config with `{ value, label, colorClassName }` for badge/pill styling, or omit it entirely and the component auto-derives title-cased labels.",
+      "`category` is optional per post — no badge renders when it's absent.",
+      "`imageSrc`/`imageAlt` give a real photo on the card and detail header; `emoji` is a lighter-weight decorative fallback when there's no photo. Neither is required.",
+      "`readTime` is auto-computed from word count (~200wpm) via `estimateReadTime()` when omitted — set it explicitly only when a site wants an editorial override.",
+      "`showFeatured` renders a hero card for one post: an explicit `featuredPostId`, else the newest post flagged `featured: true`, else the newest post overall.",
+      "Cards only link out when `postBasePath` is set — omit it to render an unlinked teaser (e.g. a homepage preview with no dedicated blog section yet).",
+      "The content grammar (`## heading`, `> quote`, `- list`, fenced ``` code blocks, inline `code`/`[link](url)`/`**bold**`) lives entirely inside `BlogPostDetail.tsx` — same self-contained-renderer approach as `EventsNewsDetail.tsx`, not a shared `lib/` markdown utility.",
+      "`subscribeCta` (list) and `cta` (detail) are both fully optional call-outs — a site without a newsletter or a sales CTA simply omits the prop.",
+      "`getRelatedBlogPosts(posts, currentSlug, limit?)` picks the newest other posts, excluding the current slug — pass its result as `relatedPosts` rather than re-implementing the pick logic per site.",
+      "SEO (`SEOHead`/`StructuredData` — `CollectionPage` for the list, `BlogPosting` for a post) and prerender route generation stay page-level, same as every other pattern.",
+      "Component: `template/src/components/patterns/BlogSection.tsx` + `BlogPostDetail.tsx`"
+    ]
+  }
+}

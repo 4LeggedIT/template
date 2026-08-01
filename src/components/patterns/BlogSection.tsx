@@ -1,0 +1,363 @@
+import { useMemo, useState } from "react";
+import { Link } from "react-router-dom";
+import { ArrowRight, Clock } from "lucide-react";
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
+
+export type BlogPostEntry = {
+  id: string;
+  slug: string;
+  title: string;
+  excerpt: string;
+  /** YYYY-MM-DD */
+  publishedAt: string;
+  /** Mini-markdown body — see BlogPostDetail's content grammar. */
+  content: string;
+  author?: string;
+  authorRole?: string;
+  /** Site-local category key. No badge renders when omitted. */
+  category?: string;
+  imageSrc?: string;
+  imageAlt?: string;
+  /** Decorative fallback when no imageSrc is set. */
+  emoji?: string;
+  /** Auto-computed from word count (~200wpm) when omitted. */
+  readTime?: string;
+  /** Preferred pick for showFeatured's hero card when featuredPostId isn't set. */
+  featured?: boolean;
+};
+
+export type BlogCategoryConfig = {
+  value: string;
+  label: string;
+  colorClassName?: string;
+};
+
+export type BlogSubscribeCta = {
+  title?: string;
+  description?: string;
+  ctaLabel: string;
+  href: string;
+  /** Defaults to true (external link, opens in a new tab). Set false for an internal route. */
+  external?: boolean;
+};
+
+export type BlogSectionLabels = {
+  filterAllLabel?: string;
+  readMoreLabel?: string;
+  featuredLabel?: string;
+  byLabel?: string;
+  emptyMessage?: string;
+};
+
+type BlogSectionProps = {
+  title?: string;
+  description?: string;
+  posts: BlogPostEntry[];
+  /** Display labels/colors for category pills and badges; auto-derived (title-cased) from `posts` when omitted. */
+  categories?: BlogCategoryConfig[];
+  /** Locks the section to a single category and hides the filter pills — for embedding a filtered teaser elsewhere. */
+  categoryFilter?: string;
+  showFilters?: boolean;
+  maxPosts?: number;
+  showFeatured?: boolean;
+  featuredPostId?: string;
+  /** Cards link to `${postBasePath}/${slug}`; titles render unlinked when omitted. */
+  postBasePath?: string;
+  /** Optional "more posts coming / subscribe" block, rendered after the grid. */
+  subscribeCta?: BlogSubscribeCta;
+  className?: string;
+  labels?: BlogSectionLabels;
+};
+
+const WORDS_PER_MINUTE = 200;
+
+const stripMarkdown = (content: string) =>
+  content
+    .replace(/```[\s\S]*?```/g, " ")
+    .replace(/`[^`]+`/g, " ")
+    .replace(/\[([^\]]+)\]\([^)]+\)/g, "$1")
+    .replace(/[#>*-]/g, " ");
+
+export const estimateReadTime = (content: string) => {
+  const words = stripMarkdown(content).trim().split(/\s+/).filter(Boolean).length;
+  const minutes = Math.max(1, Math.round(words / WORDS_PER_MINUTE));
+  return `${minutes} min read`;
+};
+
+export const byNewestFirst = (a: BlogPostEntry, b: BlogPostEntry) =>
+  a.publishedAt < b.publishedAt ? 1 : a.publishedAt > b.publishedAt ? -1 : 0;
+
+export const getRelatedBlogPosts = (posts: BlogPostEntry[], currentSlug: string, limit = 2) =>
+  posts
+    .filter((post) => post.slug !== currentSlug)
+    .sort(byNewestFirst)
+    .slice(0, limit);
+
+export const formatCategoryLabel = (value: string) =>
+  value
+    .split("-")
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(" ");
+
+export const resolveCategoryLabel = (categories: BlogCategoryConfig[] | undefined, value: string) =>
+  categories?.find((option) => option.value === value)?.label ?? formatCategoryLabel(value);
+
+export const resolveCategoryColor = (categories: BlogCategoryConfig[] | undefined, value: string) =>
+  categories?.find((option) => option.value === value)?.colorClassName ?? "bg-primary/10 text-primary";
+
+export const CategoryBadge = ({
+  value,
+  categories,
+}: {
+  value: string;
+  categories?: BlogCategoryConfig[];
+}) => (
+  <span
+    className={cn(
+      "inline-flex w-fit items-center rounded-full px-3 py-1 text-xs font-medium",
+      resolveCategoryColor(categories, value),
+    )}
+  >
+    {resolveCategoryLabel(categories, value)}
+  </span>
+);
+
+export const PostThumb = ({ post, className }: { post: BlogPostEntry; className?: string }) => {
+  if (post.imageSrc) {
+    return (
+      <img
+        src={post.imageSrc}
+        alt={post.imageAlt ?? post.title}
+        loading="lazy"
+        decoding="async"
+        className={cn("h-full w-full object-cover", className)}
+      />
+    );
+  }
+  if (post.emoji) {
+    return (
+      <div className={cn("flex h-full w-full items-center justify-center bg-muted text-4xl", className)}>
+        {post.emoji}
+      </div>
+    );
+  }
+  return null;
+};
+
+const BlogSection = ({
+  title,
+  description,
+  posts,
+  categories,
+  categoryFilter,
+  showFilters = true,
+  maxPosts,
+  showFeatured = false,
+  featuredPostId,
+  postBasePath,
+  subscribeCta,
+  className,
+  labels = {},
+}: BlogSectionProps) => {
+  const {
+    filterAllLabel = "All",
+    readMoreLabel = "Read article",
+    featuredLabel = "Featured",
+    byLabel = "By",
+    emptyMessage = "New posts are on the way.",
+  } = labels;
+
+  const distinctCategories = useMemo(
+    () => [...new Set(posts.map((post) => post.category).filter((value): value is string => Boolean(value)))],
+    [posts],
+  );
+
+  const categoryOptions = useMemo(() => {
+    if (categories) {
+      return categories.filter((option) => distinctCategories.includes(option.value));
+    }
+    return [...distinctCategories]
+      .sort((a, b) => a.localeCompare(b))
+      .map((value) => ({ value, label: formatCategoryLabel(value) }));
+  }, [categories, distinctCategories]);
+
+  const [activeFilter, setActiveFilter] = useState<string>("all");
+
+  const sortedPosts = useMemo(() => [...posts].sort(byNewestFirst), [posts]);
+
+  const featured = showFeatured
+    ? (featuredPostId
+        ? sortedPosts.find((post) => post.id === featuredPostId)
+        : (sortedPosts.find((post) => post.featured) ?? sortedPosts[0])) ?? null
+    : null;
+
+  const nonFeatured = featured ? sortedPosts.filter((post) => post.id !== featured.id) : sortedPosts;
+
+  const filtered = useMemo(() => {
+    const effectiveFilter = categoryFilter ?? (activeFilter === "all" ? undefined : activeFilter);
+    const base = effectiveFilter ? nonFeatured.filter((post) => post.category === effectiveFilter) : nonFeatured;
+    return typeof maxPosts === "number" ? base.slice(0, maxPosts) : base;
+  }, [nonFeatured, categoryFilter, activeFilter, maxPosts]);
+
+  const showPills = !categoryFilter && showFilters && categoryOptions.length > 1;
+
+  const renderMeta = (post: BlogPostEntry) => (
+    <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
+      <span>{post.publishedAt}</span>
+      <span aria-hidden="true">&middot;</span>
+      <span className="inline-flex items-center gap-1">
+        <Clock className="h-3 w-3" />
+        {post.readTime ?? estimateReadTime(post.content)}
+      </span>
+      {post.author ? (
+        <>
+          <span aria-hidden="true">&middot;</span>
+          <span>
+            {byLabel} {post.author}
+          </span>
+        </>
+      ) : null}
+    </div>
+  );
+
+  return (
+    <section className={cn("rounded-2xl border border-border bg-card/40 p-6", className)}>
+      {title || description ? (
+        <div className="mb-6">
+          {title ? <h3 className="text-xl font-semibold tracking-tight">{title}</h3> : null}
+          {description ? <p className="mt-2 text-sm text-muted-foreground">{description}</p> : null}
+        </div>
+      ) : null}
+
+      {showPills ? (
+        <div className="mb-6 flex flex-wrap gap-2">
+          <Button
+            type="button"
+            size="sm"
+            variant={activeFilter === "all" ? "default" : "outline"}
+            onClick={() => setActiveFilter("all")}
+          >
+            {filterAllLabel}
+          </Button>
+          {categoryOptions.map((option) => (
+            <Button
+              key={option.value}
+              type="button"
+              size="sm"
+              variant={activeFilter === option.value ? "default" : "outline"}
+              onClick={() => setActiveFilter(option.value)}
+            >
+              {option.label}
+            </Button>
+          ))}
+        </div>
+      ) : null}
+
+      {featured ? (
+        <div className="mb-8">
+          <p className="mb-2 text-xs font-medium uppercase tracking-wide text-muted-foreground">{featuredLabel}</p>
+          <Card className="overflow-hidden border-border/80">
+            <div
+              className={cn(
+                "grid gap-0",
+                featured.imageSrc || featured.emoji ? "sm:grid-cols-[280px_1fr]" : undefined,
+              )}
+            >
+              {featured.imageSrc || featured.emoji ? (
+                <div className="h-48 sm:h-full">
+                  <PostThumb post={featured} />
+                </div>
+              ) : null}
+              <CardContent className="flex flex-col gap-3 p-6">
+                {featured.category ? <CategoryBadge value={featured.category} categories={categories} /> : null}
+                <h3 className="text-2xl font-bold tracking-tight">
+                  {postBasePath ? (
+                    <Link to={`${postBasePath}/${featured.slug}`} className="hover:underline">
+                      {featured.title}
+                    </Link>
+                  ) : (
+                    featured.title
+                  )}
+                </h3>
+                <p className="text-muted-foreground">{featured.excerpt}</p>
+                {renderMeta(featured)}
+                {postBasePath ? (
+                  <Button asChild variant="link" className="w-fit px-0">
+                    <Link to={`${postBasePath}/${featured.slug}`} className="gap-2">
+                      {readMoreLabel}
+                      <ArrowRight className="h-4 w-4" />
+                    </Link>
+                  </Button>
+                ) : null}
+              </CardContent>
+            </div>
+          </Card>
+        </div>
+      ) : null}
+
+      {filtered.length ? (
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+          {filtered.map((post) => (
+            <Card key={post.id} className="group flex flex-col overflow-hidden border-border/80">
+              {post.imageSrc || post.emoji ? (
+                <div className="h-40 overflow-hidden">
+                  <PostThumb post={post} className="transition-transform duration-300 group-hover:scale-[1.03]" />
+                </div>
+              ) : null}
+              <CardContent className="flex flex-1 flex-col gap-3 p-6">
+                {post.category ? <CategoryBadge value={post.category} categories={categories} /> : null}
+                <h3 className="text-lg font-semibold leading-snug tracking-tight">
+                  {postBasePath ? (
+                    <Link to={`${postBasePath}/${post.slug}`} className="hover:underline">
+                      {post.title}
+                    </Link>
+                  ) : (
+                    post.title
+                  )}
+                </h3>
+                <p className="flex-1 text-sm text-muted-foreground">{post.excerpt}</p>
+                {renderMeta(post)}
+                {postBasePath ? (
+                  <Button asChild variant="link" className="w-fit px-0">
+                    <Link to={`${postBasePath}/${post.slug}`} className="gap-2">
+                      {readMoreLabel}
+                      <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+                    </Link>
+                  </Button>
+                ) : null}
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      ) : (
+        <Card className="border-dashed">
+          <CardContent className="py-6 text-sm text-muted-foreground">{emptyMessage}</CardContent>
+        </Card>
+      )}
+
+      {subscribeCta ? (
+        <Card className="mt-8 border-border/80 bg-background/60 text-center">
+          <CardContent className="flex flex-col items-center gap-3 py-8">
+            {subscribeCta.title ? <h3 className="text-xl font-bold tracking-tight">{subscribeCta.title}</h3> : null}
+            {subscribeCta.description ? (
+              <p className="max-w-md text-sm text-muted-foreground">{subscribeCta.description}</p>
+            ) : null}
+            <Button asChild>
+              {subscribeCta.external === false ? (
+                <Link to={subscribeCta.href}>{subscribeCta.ctaLabel}</Link>
+              ) : (
+                <a href={subscribeCta.href} target="_blank" rel="noopener noreferrer">
+                  {subscribeCta.ctaLabel}
+                </a>
+              )}
+            </Button>
+          </CardContent>
+        </Card>
+      ) : null}
+    </section>
+  );
+};
+
+export default BlogSection;

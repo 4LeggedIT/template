@@ -1,0 +1,43 @@
+{
+  "hero": {
+    "title": "Patrón de Blog",
+    "description": "Un patrón compartido de lista de publicaciones y detalle de publicación que cubre tanto guías técnicas como contenido de historias de rescate con fotos reales."
+  },
+  "breadcrumb": "Patrón de Blog",
+  "sections": {
+    "listing": {
+      "title": "Lista de publicaciones",
+      "description": "Una publicación se marca como destacada y recibe una tarjeta principal; el resto se muestra en una cuadrícula filtrable. Las categorías, los colores y el llamado a suscribirse son datos suministrados por el sitio.",
+      "subscribeCta": {
+        "title": "Más publicaciones próximamente",
+        "description": "Solo correos ocasionales — sin ruido, sin spam.",
+        "ctaLabel": "Suscribirse para recibir actualizaciones"
+      }
+    },
+    "detail": {
+      "title": "Detalle de la publicación",
+      "description": "La publicación completa, mostrada con la misma gramática de mini-markdown que usa el contenido de cada publicación: encabezados, listas, citas, bloques de código, enlaces y texto en negrita.",
+      "cta": {
+        "title": "¿Quiere hablar con nosotros?",
+        "description": "Esta tarjeta final de llamado a la acción es totalmente opcional — omita la propiedad `cta` por completo para no mostrar nada.",
+        "ctaLabel": "Póngase en contacto"
+      }
+    }
+  },
+  "standard": {
+    "title": "Estándar",
+    "items": [
+      "`category` es una cadena simple y local del sitio — nunca una unión fija. Pase una configuración `categories` con `{ value, label, colorClassName }` para el estilo de las insignias/píldoras, u omítala por completo y el componente deriva automáticamente etiquetas con mayúscula inicial.",
+      "`category` es opcional en cada publicación — no se muestra ninguna insignia cuando está ausente.",
+      "`imageSrc`/`imageAlt` dan una foto real en la tarjeta y el encabezado de detalle; `emoji` es un respaldo decorativo más ligero cuando no hay foto. Ninguno de los dos es obligatorio.",
+      "`readTime` se calcula automáticamente según el conteo de palabras (~200 ppm) mediante `estimateReadTime()` cuando se omite — configúrelo explícitamente solo cuando el sitio quiera un valor editorial fijo.",
+      "`showFeatured` muestra una tarjeta principal para una publicación: un `featuredPostId` explícito, o si no, la publicación más reciente marcada `featured: true`, o si no, la publicación más reciente en general.",
+      "Las tarjetas solo enlazan cuando se define `postBasePath` — omítalo para mostrar una vista previa sin enlace (por ejemplo, una vista previa en la página de inicio sin una sección de blog dedicada todavía).",
+      "La gramática de contenido (`## encabezado`, `> cita`, `- lista`, bloques de código con ```` ``` ````, `código` en línea, `[enlace](url)` y `**negrita**`) vive por completo dentro de `BlogPostDetail.tsx` — el mismo enfoque de renderizador autónomo que `EventsNewsDetail.tsx`, no una utilidad `lib/` compartida de markdown.",
+      "`subscribeCta` (lista) y `cta` (detalle) son ambos llamados a la acción totalmente opcionales — un sitio sin boletín informativo o sin llamado comercial simplemente omite la propiedad.",
+      "`getRelatedBlogPosts(posts, currentSlug, limit?)` elige las publicaciones más recientes, excluyendo el slug actual — pase su resultado como `relatedPosts` en lugar de reimplementar la lógica de selección en cada sitio.",
+      "El SEO (`SEOHead`/`StructuredData` — `CollectionPage` para la lista, `BlogPosting` para una publicación) y la generación de rutas de prerenderizado permanecen a nivel de página, igual que en cualquier otro patrón.",
+      "Componente: `template/src/components/patterns/BlogSection.tsx` + `BlogPostDetail.tsx`"
+    ]
+  }
+}

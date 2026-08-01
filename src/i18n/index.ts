@@ -34,6 +34,7 @@ import enKennelDisplayTools from "@/locales/en/kennelDisplayTools.json";
 import enDocuments from "@/locales/en/documents.json";
 import enFound from "@/locales/en/found.json";
 import enPlacementHelp from "@/locales/en/placementHelp.json";
+import enBlog from "@/locales/en/blog.json";
 
 import esCommon from "@/locales/es/common.json";
 import esHome from "@/locales/es/home.json";
@@ -68,6 +69,7 @@ import esKennelDisplayTools from "@/locales/es/kennelDisplayTools.json";
 import esDocuments from "@/locales/es/documents.json";
 import esFound from "@/locales/es/found.json";
 import esPlacementHelp from "@/locales/es/placementHelp.json";
+import esBlog from "@/locales/es/blog.json";
 
 const isBrowser = typeof window !== "undefined";
 const savedLanguage = isBrowser ? (localStorage.getItem("language") ?? "en") : "en";
@@ -108,6 +110,7 @@ i18n.use(initReactI18next).init({
       documents: enDocuments,
       found: enFound,
       placementHelp: enPlacementHelp,
+      blog: enBlog,
     },
     es: {
       common: esCommon,
@@ -143,6 +146,7 @@ i18n.use(initReactI18next).init({
       documents: esDocuments,
       found: esFound,
       placementHelp: esPlacementHelp,
+      blog: esBlog,
     },
   },
   lng: savedLanguage,

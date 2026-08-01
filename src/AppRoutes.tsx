@@ -33,7 +33,9 @@ import TemplateStandardsHomePage from "@/pages/standards/TemplateStandardsHomePa
 import TestimonialsStandardPage from "@/pages/standards/TestimonialsStandardPage";
 import KennelDisplayToolsStandardPage from "@/pages/standards/KennelDisplayToolsStandardPage";
 import DocumentsStandardPage from "@/pages/standards/DocumentsStandardPage";
+import BlogStandardPage from "@/pages/standards/BlogStandardPage";
 import EventsNewsExampleEventDetailPage from "@/pages/examples/EventsNewsExampleEventDetailPage";
+import BlogExamplePostPage from "@/pages/examples/BlogExamplePostPage";
 import NewsArticleExamplePage from "@/pages/news/NewsArticleExamplePage";
 import AdoptableSlideshowPage from "@/pages/tools/AdoptableSlideshowPage";
 import KennelBinder2UpPage from "@/pages/tools/KennelBinder2UpPage";
@@ -69,6 +71,7 @@ const AppRoutes = () => {
           element={<EventsNewsExampleEventDetailPage eventSlug="event-yard-sale-2026-02-21" />}
         />
         <Route path="/news/example-article" element={<NewsArticleExamplePage />} />
+        <Route path="/examples/blog/:slug" element={<BlogExamplePostPage />} />
         <Route path="/standards" element={<TemplateStandardsHomePage />} />
         <Route path="/standards/adoptable-pets" element={<AdoptablePetsStandardPage />} />
         <Route path="/standards/adoptable-pets/local" element={<AdoptablePetsLocalStandardPage />} />
@@ -99,6 +102,7 @@ const AppRoutes = () => {
         <Route path="/standards/workflow/no-js-fallbacks" element={<NoJsFallbacksWorkflowPage />} />
         <Route path="/standards/kennel-display-tools" element={<KennelDisplayToolsStandardPage />} />
         <Route path="/standards/documents" element={<DocumentsStandardPage />} />
+        <Route path="/standards/blog" element={<BlogStandardPage />} />
         <Route path="*" element={<NotFound />} />
       </Route>
       <Route path="/tools/adoptable-slideshow" element={<AdoptableSlideshowPage />} />

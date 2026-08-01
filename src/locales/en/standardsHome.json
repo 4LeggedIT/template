@@ -14,6 +14,7 @@
     "placement": { "title": "Placement Pattern", "description": "Placement listings with default three-month expiry and optional pet metadata." },
     "eventsNews": { "title": "Events & News Pattern", "description": "Unified event/news feed with archive behavior, recurrence support, and banner guidance." },
     "newsHighlight": { "title": "News Highlight Pattern", "description": "Homepage card that surfaces a single editor-flagged event or news entry." },
+    "blog": { "title": "Blog Pattern", "description": "Shared post list and post-detail pattern covering both tech guides and rescue-story content with real photos." },
     "journeyTimeline": { "title": "Journey Timeline Pattern", "description": "Vertical rescue-to-today timeline for an individual dog's detail page, one card per stage." },
     "successStories": { "title": "Success Stories Pattern", "description": "Narrative story-card module for adoption outcomes and happy tails." },
     "testimonials": { "title": "Testimonials Pattern", "description": "Featured and grid testimonial patterns for reusable social-proof sections." },

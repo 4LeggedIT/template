@@ -17,6 +17,7 @@ const docSections: DocSection[] = [
   { key: "placement", href: "/standards/placement-help", group: "petsAdoption" },
   { key: "eventsNews", href: "/standards/events-news", group: "contentEngagement" },
   { key: "newsHighlight", href: "/standards/news-highlight", group: "contentEngagement" },
+  { key: "blog", href: "/standards/blog", group: "contentEngagement" },
   { key: "journeyTimeline", href: "/standards/journey-timeline", group: "contentEngagement" },
   { key: "successStories", href: "/standards/success-stories", group: "contentEngagement" },
   { key: "testimonials", href: "/standards/testimonials", group: "contentEngagement" },
