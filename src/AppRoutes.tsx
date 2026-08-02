@@ -22,6 +22,7 @@ import FoundStandardPage from "@/pages/standards/FoundStandardPage";
 import FormEmbedModalStandardPage from "@/pages/standards/FormEmbedModalStandardPage";
 import FlyerLibraryStandardPage from "@/pages/standards/FlyerLibraryStandardPage";
 import CommunityPartnersStandardPage from "@/pages/standards/CommunityPartnersStandardPage";
+import SupporterRecognitionStandardPage from "@/pages/standards/SupporterRecognitionStandardPage";
 import ImpactStatsStandardPage from "@/pages/standards/ImpactStatsStandardPage";
 import SpendBreakdownStandardPage from "@/pages/standards/SpendBreakdownStandardPage";
 import ImpactAccountabilityStandardPage from "@/pages/standards/ImpactAccountabilityStandardPage";
@@ -89,6 +90,7 @@ const AppRoutes = () => {
         <Route path="/standards/form-embed-modal" element={<FormEmbedModalStandardPage />} />
         <Route path="/standards/flyer-library" element={<FlyerLibraryStandardPage />} />
         <Route path="/standards/community-partners" element={<CommunityPartnersStandardPage />} />
+        <Route path="/standards/supporter-recognition" element={<SupporterRecognitionStandardPage />} />
         <Route path="/standards/impact-stats" element={<ImpactStatsStandardPage />} />
         <Route path="/standards/spend-breakdown" element={<SpendBreakdownStandardPage />} />
         <Route path="/standards/impact-accountability" element={<ImpactAccountabilityStandardPage />} />

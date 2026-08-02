@@ -38,6 +38,7 @@ export const templateNavItems: NavItem[] = [
       { label: "FormEmbedModal", href: "/standards/form-embed-modal", group: "formsPayments" },
       { label: "PayPal Donate", href: "/standards/paypal-donate", group: "formsPayments" },
       { label: "Community Partners", href: "/standards/community-partners", group: "community" },
+      { label: "Supporter Recognition", href: "/standards/supporter-recognition", group: "community" },
       { label: "Impact Stats", href: "/standards/impact-stats", group: "community" },
       { label: "Spend Breakdown", href: "/standards/spend-breakdown", group: "community" },
       { label: "Impact & Accountability", href: "/standards/impact-accountability", group: "community" },

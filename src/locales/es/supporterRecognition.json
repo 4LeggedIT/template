@@ -1,0 +1,32 @@
+{
+  "breadcrumb": "Patrón de Reconocimiento de Colaboradores",
+  "hero": {
+    "title": "Patrón de reconocimiento de colaboradores",
+    "description": "Use SupporterRecognitionSection para agradecer públicamente a donantes y colaboradores individuales — una lista plana y sin jerarquía, distinta de las tarjetas de organizaciones de CommunityPartnersSection."
+  },
+  "categories": {
+    "supporters": {
+      "title": "Nuestros Colaboradores",
+      "description": "Personas cuya generosidad nos ayuda a brindar cuidado, amor y segundas oportunidades."
+    }
+  },
+  "example": {
+    "title": "Ejemplo",
+    "ctaTitle": "Conviértase en Colaborador",
+    "ctaDescription": "Su generosidad nos ayuda a brindar el cuidado que nuestros animales merecen.",
+    "ctaLabel": "Done Hoy"
+  },
+  "standard": {
+    "title": "Estándar",
+    "items": [
+      "Una lista plana y sin jerarquía — los colaboradores siempre se ordenan alfabéticamente por nombre dentro de una categoría, nunca por el monto de la donación ni por fecha. No existe un campo de nivel/rango; un muro de donantes por niveles es un diseño deliberadamente distinto y fuera del alcance de este patrón.",
+      "Sin logotipo, sin `url`, sin monto en dólares. A diferencia de las organizaciones de `CommunityPartnersSection` (que publican su propia marca), cada entrada aquí nombra a una persona privada real.",
+      "**Cada nombre requiere el consentimiento explícito de esa persona antes de publicarse** — que un comercio publique su propio logotipo no es lo mismo que nombrar a un colaborador privado. Use como valor predeterminado el nombre de pila, o el nombre de pila más la inicial del apellido, en lugar del nombre legal completo, a menos que el colaborador haya aceptado específicamente lo contrario.",
+      "`note` es opcional — una línea breve bajo el nombre (por ejemplo, \"Colaborador mensual\", \"En memoria de Bella\"). Manténgala breve y factual; este no es un lugar para una etiqueta de nivel de donación.",
+      "Una categoría sin colaboradores coincidentes no renderiza nada — ni encabezado ni marcador de posición — misma regla que `CommunityPartnersSection`.",
+      "Este es un patrón complementario de `CommunityPartnersSection`, no una fusión — combine ambos en la misma página (por ejemplo, la página `/partners` de un sitio) cuando un sitio tenga tanto socios organizacionales como colaboradores individuales que agradecer.",
+      "Nunca invente un colaborador. Cada entrada debe ser una persona real que haya aceptado ser nombrada.",
+      "Componente: `template/src/components/patterns/SupporterRecognitionSection.tsx`"
+    ]
+  }
+}

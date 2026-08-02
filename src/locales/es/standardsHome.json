@@ -24,6 +24,7 @@
     "formEmbedModal": { "title": "Estándar de FormEmbedModal", "description": "Patrón de modal de formulario independiente del proveedor con ayuda y respaldo sin JS." },
     "paypalDonate": { "title": "Patrón de Donación por PayPal", "description": "Uso del botón SDK de donación y patrón de enlace directo de respaldo." },
     "communityPartners": { "title": "Patrón de Socios Comunitarios", "description": "Agradecimiento a colaboradores de rescate y comercios locales sin implicar favoritismo." },
+    "supporterRecognition": { "title": "Patrón de Reconocimiento de Colaboradores", "description": "Una lista plana y sin jerarquía para agradecer a donantes y colaboradores individuales." },
     "impactStats": { "title": "Patrón de Estadísticas de Impacto", "description": "Recuadros de estadísticas de impacto de por vida más una gráfica de barras opcional por período para el reporte de impacto de la organización de rescate." },
     "spendBreakdown": { "title": "Patrón de Desglose de Gastos", "description": "Recuadros de categorías de gastos agrupados para el reporte de rendición de cuentas, combinable con Estadísticas de Impacto sin fusionarse en él." },
     "impactAccountability": { "title": "Impacto y Rendición de Cuentas", "description": "Ejemplo práctico que combina Estadísticas de Impacto y Desglose de Gastos en una sola página, además de enlaces a cada patrón por separado." },

@@ -27,6 +27,7 @@ import enNewsHighlight from "@/locales/en/newsHighlight.json";
 import enFormEmbedModal from "@/locales/en/formEmbedModal.json";
 import enPaypalDonate from "@/locales/en/paypalDonate.json";
 import enCommunityPartners from "@/locales/en/communityPartners.json";
+import enSupporterRecognition from "@/locales/en/supporterRecognition.json";
 import enImpactStats from "@/locales/en/impactStats.json";
 import enSpendBreakdown from "@/locales/en/spendBreakdown.json";
 import enImpactAccountability from "@/locales/en/impactAccountability.json";
@@ -62,6 +63,7 @@ import esNewsHighlight from "@/locales/es/newsHighlight.json";
 import esFormEmbedModal from "@/locales/es/formEmbedModal.json";
 import esPaypalDonate from "@/locales/es/paypalDonate.json";
 import esCommunityPartners from "@/locales/es/communityPartners.json";
+import esSupporterRecognition from "@/locales/es/supporterRecognition.json";
 import esImpactStats from "@/locales/es/impactStats.json";
 import esSpendBreakdown from "@/locales/es/spendBreakdown.json";
 import esImpactAccountability from "@/locales/es/impactAccountability.json";
@@ -103,6 +105,7 @@ i18n.use(initReactI18next).init({
       formEmbedModal: enFormEmbedModal,
       paypalDonate: enPaypalDonate,
       communityPartners: enCommunityPartners,
+      supporterRecognition: enSupporterRecognition,
       impactStats: enImpactStats,
       spendBreakdown: enSpendBreakdown,
       impactAccountability: enImpactAccountability,
@@ -139,6 +142,7 @@ i18n.use(initReactI18next).init({
       formEmbedModal: esFormEmbedModal,
       paypalDonate: esPaypalDonate,
       communityPartners: esCommunityPartners,
+      supporterRecognition: esSupporterRecognition,
       impactStats: esImpactStats,
       spendBreakdown: esSpendBreakdown,
       impactAccountability: esImpactAccountability,
@@ -178,6 +182,7 @@ i18n.use(initReactI18next).init({
     "formEmbedModal",
     "paypalDonate",
     "communityPartners",
+    "supporterRecognition",
     "impactStats",
     "spendBreakdown",
     "impactAccountability",

@@ -1,0 +1,32 @@
+{
+  "breadcrumb": "Supporter Recognition Pattern",
+  "hero": {
+    "title": "Supporter recognition pattern",
+    "description": "Use SupporterRecognitionSection to publicly thank individual donors and supporters — a flat, unranked thank-you list, distinct from CommunityPartnersSection's organization-focused cards."
+  },
+  "categories": {
+    "supporters": {
+      "title": "Our Supporters",
+      "description": "Individuals whose generosity helps us provide care, love, and second chances."
+    }
+  },
+  "example": {
+    "title": "Example",
+    "ctaTitle": "Become a Supporter",
+    "ctaDescription": "Your generosity helps us provide the care our animals deserve.",
+    "ctaLabel": "Donate Today"
+  },
+  "standard": {
+    "title": "Standard",
+    "items": [
+      "A flat, unranked thank-you list — supporters are always sorted alphabetically by name within a category, never by gift size or date. There is no tier/rank field; a giving-tier donor wall is a deliberately different, out-of-scope design.",
+      "No logo, no `url`, no dollar amount. Unlike `CommunityPartnersSection`'s organizations (which self-publish their own brand), every entry here names a real private individual.",
+      "**Every name requires that person's explicit opt-in consent before publishing** — a business publishing its own logo is not the same as naming a private supporter. Default to a first name, or first name plus last initial, rather than a full legal name unless the supporter has specifically agreed otherwise.",
+      "`note` is optional — a short line under the name (e.g. \"Monthly supporter,\" \"In memory of Bella\"). Keep it brief and factual; this is not a place for a giving-tier label.",
+      "A category with zero matching supporters renders nothing — no heading, no placeholder — same rule as `CommunityPartnersSection`.",
+      "This is a companion pattern to `CommunityPartnersSection`, not a merge — compose the two on the same page (e.g. a site's `/partners` page) when a site has both organizational partners and individual supporters to thank.",
+      "Never invent a supporter. Every entry must be a real person who has agreed to be named.",
+      "Component: `template/src/components/patterns/SupporterRecognitionSection.tsx`"
+    ]
+  }
+}

@@ -27,6 +27,7 @@ const docSections: DocSection[] = [
   { key: "formEmbedModal", href: "/standards/form-embed-modal", group: "formsPayments" },
   { key: "paypalDonate", href: "/standards/paypal-donate", group: "formsPayments" },
   { key: "communityPartners", href: "/standards/community-partners", group: "community" },
+  { key: "supporterRecognition", href: "/standards/supporter-recognition", group: "community" },
   { key: "impactStats", href: "/standards/impact-stats", group: "community" },
   { key: "spendBreakdown", href: "/standards/spend-breakdown", group: "community" },
   { key: "impactAccountability", href: "/standards/impact-accountability", group: "community" },

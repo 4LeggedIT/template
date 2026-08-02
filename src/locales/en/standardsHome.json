@@ -24,6 +24,7 @@
     "formEmbedModal": { "title": "FormEmbedModal Standard", "description": "Provider-agnostic form modal pattern with helper and no-JS fallbacks." },
     "paypalDonate": { "title": "PayPal Donate Pattern", "description": "Donate SDK button usage and direct-link fallback helper pattern." },
     "communityPartners": { "title": "Community Partners Pattern", "description": "Thanking rescue collaborators and local business supporters without implying favoritism." },
+    "supporterRecognition": { "title": "Supporter Recognition Pattern", "description": "A flat, unranked thank-you list for individual donors and supporters." },
     "impactStats": { "title": "Impact Stats Pattern", "description": "Lifetime impact stat tiles plus an optional period-by-period bar chart for rescue-organization impact reporting." },
     "spendBreakdown": { "title": "Spend Breakdown Pattern", "description": "Rolled-up spend category tiles for accountability reporting, composable with Impact Stats without being merged into it." },
     "impactAccountability": { "title": "Impact & Accountability", "description": "Worked example composing Impact Stats and Spend Breakdown together on one page, plus links to each pattern on its own." },
