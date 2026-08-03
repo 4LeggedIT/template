@@ -22,6 +22,10 @@ type SupporterRecognitionSectionProps = {
   ctaDescription?: string;
   ctaLabel?: string;
   ctaHref?: string;
+  /** Quiet fine-print line acknowledging a name may have been left off the list, e.g. "Don't see your name here? We may have simply missed it." Renders only when all three `omissionNote*` props are set. */
+  omissionNoteText?: string;
+  omissionNoteLinkLabel?: string;
+  omissionNoteHref?: string;
   className?: string;
 };
 
@@ -39,6 +43,9 @@ const SupporterRecognitionSection = ({
   ctaDescription,
   ctaLabel,
   ctaHref,
+  omissionNoteText,
+  omissionNoteLinkLabel,
+  omissionNoteHref,
   className,
 }: SupporterRecognitionSectionProps) => {
   const groups = sections
@@ -50,7 +57,9 @@ const SupporterRecognitionSection = ({
     }))
     .filter((group) => group.items.length > 0);
 
-  if (!groups.length && !ctaHref) return null;
+  const showOmissionNote = Boolean(omissionNoteText && omissionNoteLinkLabel && omissionNoteHref);
+
+  if (!groups.length && !ctaHref && !showOmissionNote) return null;
 
   return (
     <div className={cn("space-y-16", className)}>
@@ -75,6 +84,18 @@ const SupporterRecognitionSection = ({
           </div>
         </section>
       ))}
+
+      {showOmissionNote ? (
+        <p className="text-center text-sm text-muted-foreground">
+          {omissionNoteText}{" "}
+          <a
+            href={omissionNoteHref}
+            className="font-medium text-primary underline-offset-4 hover:underline"
+          >
+            {omissionNoteLinkLabel}
+          </a>
+        </p>
+      ) : null}
 
       {ctaHref ? (
         <div className="rounded-2xl border border-dashed border-border bg-card/40 p-8 text-center">

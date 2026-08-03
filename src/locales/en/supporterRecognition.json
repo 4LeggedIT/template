@@ -14,12 +14,15 @@
     "title": "Example",
     "ctaTitle": "Become a Supporter",
     "ctaDescription": "Your generosity helps us provide the care our animals deserve.",
-    "ctaLabel": "Donate Today"
+    "ctaLabel": "Donate Today",
+    "omissionNoteText": "Don't see your name here? We may have simply missed it.",
+    "omissionNoteLinkLabel": "Let us know"
   },
   "standard": {
     "title": "Standard",
     "items": [
       "A flat, unranked thank-you list — supporters are always sorted alphabetically by name within a category, never by gift size or date. There is no tier/rank field; a giving-tier donor wall is a deliberately different, out-of-scope design.",
+      "Optional `omissionNoteText`/`omissionNoteLinkLabel`/`omissionNoteHref` render a quiet fine-print line beneath the list acknowledging a name may have been missed, linking to the site's `/contact` page. All three must be set for it to render; omit all three to leave it off entirely.",
       "No logo, no `url`, no dollar amount. Unlike `CommunityPartnersSection`'s organizations (which self-publish their own brand), every entry here names a real private individual.",
       "**Every name requires that person's explicit opt-in consent before publishing** — a business publishing its own logo is not the same as naming a private supporter. Default to a first name, or first name plus last initial, rather than a full legal name unless the supporter has specifically agreed otherwise.",
       "`note` is optional — a short line under the name (e.g. \"Monthly supporter,\" \"In memory of Bella\"). Keep it brief and factual; this is not a place for a giving-tier label.",

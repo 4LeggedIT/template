@@ -98,6 +98,9 @@ const CommunityPartnersStandardPage = () => {
             ctaDescription={t("communityPartners:example.ctaDescription")}
             ctaLabel={t("communityPartners:example.ctaLabel")}
             ctaHref="/contact"
+            omissionNoteText={t("communityPartners:example.omissionNoteText")}
+            omissionNoteLinkLabel={t("communityPartners:example.omissionNoteLinkLabel")}
+            omissionNoteHref="/contact"
           />
         </div>
 

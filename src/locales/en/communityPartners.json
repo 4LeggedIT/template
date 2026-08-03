@@ -43,7 +43,9 @@
     "title": "Example",
     "ctaTitle": "Want to Partner With Us?",
     "ctaDescription": "If your organization or business would like to support our mission, we'd love to hear from you.",
-    "ctaLabel": "Get in Touch"
+    "ctaLabel": "Get in Touch",
+    "omissionNoteText": "Missing from this list, or something out of date?",
+    "omissionNoteLinkLabel": "Let us know"
   },
   "oneCategoryNoCta": {
     "title": "One category, no CTA",
@@ -57,6 +59,7 @@
       "**No favoritism, ever.** The component always sorts partners alphabetically by name within a category — never by date added, never manually. Don't add a `featured`/`order` field to work around this; if a site wants a formal tiered sponsorship program, that requires a defined objective threshold (e.g. a real dollar-value giving program) and is out of scope for this pattern.",
       "**A category with zero matching partners renders nothing** — no heading, no \"coming soon\" placeholder. This avoids a dead subsection sitting next to real content; the section appears automatically once the site's data file gets its first entry in that category.",
       "The trailing CTA card only renders when `ctaHref` is provided, and shows regardless of which category sections are populated.",
+      "Optional `omissionNoteText`/`omissionNoteLinkLabel`/`omissionNoteHref` render a quiet fine-print line beneath the list acknowledging a partner may have been missed or a detail is stale, linking to the site's `/contact` page. All three must be set for it to render. This is intentionally lighter-weight than the CTA card above — it's about existing partners, not soliciting new ones — so keep the wording brief and skip it if a site's partner list is small/curated enough that this rarely happens.",
       "For `businessPartners` and `veterinaryPartners` (any category naming a for-profit business) specifically: every partner's `description` must stay neutral and factual — no comparative or qualitative language (\"best,\" \"highest quality\"), no pricing, no purchase inducements. This is the actual compliance mechanism: the IRS qualified-sponsorship rule (26 U.S.C. §513(i)) turns on the acknowledgment's content, not on the presence of a disclaimer sentence — there's no magic-words requirement. A category's `sections[].description` may optionally add a \"not an endorsement\" note for extra clarity (useful mainly to keep a partner business from treating the listing as marketing copy), but it's editorial, not legally required, and can be dropped if it clashes with the page's tone. Rescue-partner collaboration doesn't need this treatment at all (mutual nonprofit aid isn't a UBIT/advertising concern).",
       "Never invent a partner. Every entry must be a real, sourced relationship — a name mentioned once in a single event post is not the same as a standing partnership worth a permanent listing.",
       "`logoSrc` and `url` are both optional; the card degrades gracefully to a name-only treatment when a logo isn't available yet. When `url` is set, the logo links to it (if a logo exists) and the \"Visit Website\" text link is omitted (one link surface is enough); the text link only renders as a fallback when there's a `url` but no `logoSrc`.",

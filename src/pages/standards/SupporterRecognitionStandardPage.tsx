@@ -54,6 +54,9 @@ const SupporterRecognitionStandardPage = () => {
             ctaDescription={t("supporterRecognition:example.ctaDescription")}
             ctaLabel={t("supporterRecognition:example.ctaLabel")}
             ctaHref="/donate"
+            omissionNoteText={t("supporterRecognition:example.omissionNoteText")}
+            omissionNoteLinkLabel={t("supporterRecognition:example.omissionNoteLinkLabel")}
+            omissionNoteHref="/contact"
           />
         </div>
 

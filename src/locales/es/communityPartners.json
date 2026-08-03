@@ -43,7 +43,9 @@
     "title": "Ejemplo",
     "ctaTitle": "¿Quiere asociarse con nosotros?",
     "ctaDescription": "Si su organización o comercio desea apoyar nuestra misión, nos encantaría saber de usted.",
-    "ctaLabel": "Póngase en contacto"
+    "ctaLabel": "Póngase en contacto",
+    "omissionNoteText": "¿Falta en esta lista, o algo está desactualizado?",
+    "omissionNoteLinkLabel": "Avísenos"
   },
   "oneCategoryNoCta": {
     "title": "Una sola categoría, sin CTA",
@@ -57,6 +59,7 @@
       "**Sin favoritismo, nunca.** El componente siempre ordena a los socios alfabéticamente por nombre dentro de una categoría — nunca por fecha de alta, nunca manualmente. No agregue un campo `featured`/`order` para evitar esto; si un sitio desea un programa formal de patrocinio por niveles, eso requiere un umbral objetivo definido (por ejemplo, un programa real de donaciones por monto) y está fuera del alcance de este patrón.",
       "**Una categoría sin socios coincidentes no renderiza nada** — ni encabezado ni marcador de posición de \"próximamente\". Esto evita una subsección muerta junto a contenido real; la sección aparece automáticamente en cuanto el archivo de datos del sitio recibe su primera entrada en esa categoría.",
       "La tarjeta de CTA final solo se renderiza cuando se proporciona `ctaHref`, y se muestra sin importar qué secciones de categoría estén pobladas.",
+      "Los campos opcionales `omissionNoteText`/`omissionNoteLinkLabel`/`omissionNoteHref` muestran una línea discreta bajo la lista reconociendo que se pudo haber omitido un socio o que un dato quedó desactualizado, enlazando a la página `/contact` del sitio. Los tres deben estar definidos para que se muestre. Es intencionalmente más discreta que la tarjeta de CTA anterior — trata sobre socios existentes, no busca captar nuevos — así que mantenga el texto breve, y omítala si la lista de socios del sitio es lo bastante pequeña y curada como para que esto rara vez ocurra.",
       "Para `businessPartners` y `veterinaryPartners` (cualquier categoría que nombre un comercio con fines de lucro) en particular: la `description` de cada socio debe mantenerse neutral y factual — sin lenguaje comparativo o valorativo (\"el mejor\", \"la más alta calidad\"), sin precios, sin incentivos de compra. Este es el mecanismo de cumplimiento real: la regla de patrocinio calificado del IRS (26 U.S.C. §513(i)) depende del contenido del reconocimiento, no de la presencia de una frase de descargo de responsabilidad — no hay una fórmula mágica requerida. La `sections[].description` de una categoría puede añadir opcionalmente una nota de \"esto no es un respaldo\" para mayor claridad (útil sobre todo para evitar que un socio comercial trate el listado como material publicitario), pero es editorial, no legalmente obligatoria, y puede omitirse si no encaja con el tono de la página. La colaboración entre rescates no necesita este tratamiento en absoluto (la ayuda mutua entre entidades sin fines de lucro no es un problema de UBIT/publicidad).",
       "Nunca invente un socio. Cada entrada debe ser una relación real y verificable — un nombre mencionado una sola vez en una publicación de un evento no es lo mismo que una asociación permanente que merezca un listado fijo.",
       "`logoSrc` y `url` son ambos opcionales; la tarjeta se degrada correctamente a un tratamiento de solo nombre cuando aún no hay un logotipo disponible. Cuando se define `url`, el logotipo enlaza a ella (si existe un logotipo) y se omite el enlace de texto \"Visitar sitio web\" (una sola superficie de enlace es suficiente); el enlace de texto solo se renderiza como respaldo cuando hay `url` pero no `logoSrc`.",
