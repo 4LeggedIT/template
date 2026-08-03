@@ -15,6 +15,7 @@ type AdoptAPetEmbedProps = {
   getbuddyUrl?: string;
   petfinderUrl?: string;
   pawPlacerUrl?: string;
+  rescueMeUrl?: string;
   labels?: {
     openButton?: string;
     viewAllPrefix?: string;
@@ -61,6 +62,7 @@ const AdoptAPetEmbed = ({
   getbuddyUrl,
   petfinderUrl,
   pawPlacerUrl,
+  rescueMeUrl,
   labels = {},
 }: AdoptAPetEmbedProps) => {
   const {
@@ -74,6 +76,7 @@ const AdoptAPetEmbed = ({
     ...(petfinderUrl ? [{ name: "Petfinder", url: petfinderUrl }] : []),
     ...(getbuddyUrl ? [{ name: "GetBuddy", url: getbuddyUrl }] : []),
     ...(pawPlacerUrl ? [{ name: "PawPlacer", url: pawPlacerUrl }] : []),
+    ...(rescueMeUrl ? [{ name: "Rescue Me", url: rescueMeUrl }] : []),
   ];
 
   return (

@@ -42,6 +42,7 @@ type AdoptablePetsSectionProps = {
     adoptAPetUrl?: string;
     getbuddyUrl?: string;
     pawPlacerUrl?: string;
+    rescueMeUrl?: string;
     labels?: {
       viewAllPrefix?: string;
       viewAllLink?: string;
@@ -62,6 +63,7 @@ type AdoptablePetsSectionProps = {
     petfinderUrl?: string;
     getbuddyUrl?: string;
     pawPlacerUrl?: string;
+    rescueMeUrl?: string;
     labels?: {
       openButton?: string;
       viewAllPrefix?: string;
@@ -82,6 +84,7 @@ type AdoptablePetsSectionProps = {
     petfinderUrl?: string;
     adoptAPetUrl?: string;
     pawPlacerUrl?: string;
+    rescueMeUrl?: string;
     labels?: {
       viewAllPrefix?: string;
       viewAllLink?: string;
@@ -97,6 +100,7 @@ type AdoptablePetsSectionProps = {
     petfinderUrl?: string;
     adoptAPetUrl?: string;
     getbuddyUrl?: string;
+    rescueMeUrl?: string;
     labels?: {
       viewAllPrefix?: string;
       viewAllLink?: string;
@@ -288,6 +292,7 @@ const AdoptablePetsSection = ({
               adoptAPetUrl={petfinder.adoptAPetUrl}
               getbuddyUrl={petfinder.getbuddyUrl}
               pawPlacerUrl={petfinder.pawPlacerUrl}
+              rescueMeUrl={petfinder.rescueMeUrl}
               petListTitle={petfinder.petListTitle}
               labels={petfinder.labels}
             />
@@ -314,6 +319,7 @@ const AdoptablePetsSection = ({
               petfinderUrl={adoptAPet.petfinderUrl}
               getbuddyUrl={adoptAPet.getbuddyUrl}
               pawPlacerUrl={adoptAPet.pawPlacerUrl}
+              rescueMeUrl={adoptAPet.rescueMeUrl}
               labels={adoptAPet.labels}
             />
           </div>
@@ -329,6 +335,7 @@ const AdoptablePetsSection = ({
             petfinderUrl={getBuddy.petfinderUrl}
             adoptAPetUrl={getBuddy.adoptAPetUrl}
             pawPlacerUrl={getBuddy.pawPlacerUrl}
+            rescueMeUrl={getBuddy.rescueMeUrl}
             labels={getBuddy.labels}
           />
         ) : null}
@@ -350,6 +357,7 @@ const AdoptablePetsSection = ({
               petfinderUrl={pawPlacer.petfinderUrl}
               adoptAPetUrl={pawPlacer.adoptAPetUrl}
               getbuddyUrl={pawPlacer.getbuddyUrl}
+              rescueMeUrl={pawPlacer.rescueMeUrl}
               labels={pawPlacer.labels}
             />
           </div>

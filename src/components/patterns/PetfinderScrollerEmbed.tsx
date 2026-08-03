@@ -12,6 +12,7 @@ type PetfinderScrollerEmbedProps = {
   getbuddyUrl?: string;
   adoptAPetUrl?: string;
   pawPlacerUrl?: string;
+  rescueMeUrl?: string;
   apiBase?: string;
   s3Url?: string;
   showScriptTag?: boolean;
@@ -38,6 +39,7 @@ const PetfinderScrollerEmbed = ({
   getbuddyUrl,
   adoptAPetUrl,
   pawPlacerUrl,
+  rescueMeUrl,
   apiBase = DEFAULT_API_BASE,
   s3Url = DEFAULT_S3_URL,
   showScriptTag = true,
@@ -55,6 +57,7 @@ const PetfinderScrollerEmbed = ({
     ...(adoptAPetUrl ? [{ name: "Adopt-a-Pet", url: adoptAPetUrl }] : []),
     ...(getbuddyUrl ? [{ name: "GetBuddy", url: getbuddyUrl }] : []),
     ...(pawPlacerUrl ? [{ name: "PawPlacer", url: pawPlacerUrl }] : []),
+    ...(rescueMeUrl ? [{ name: "Rescue Me", url: rescueMeUrl }] : []),
   ];
 
   return (

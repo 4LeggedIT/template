@@ -8,6 +8,7 @@ type GetBuddyEmbedProps = {
   petfinderUrl?: string;
   adoptAPetUrl?: string;
   pawPlacerUrl?: string;
+  rescueMeUrl?: string;
   labels?: {
     viewAllPrefix?: string;
     viewAllLink?: string;
@@ -25,6 +26,7 @@ const GetBuddyEmbed = ({
   petfinderUrl,
   adoptAPetUrl,
   pawPlacerUrl,
+  rescueMeUrl,
   labels = {},
 }: GetBuddyEmbedProps) => {
   const {
@@ -39,6 +41,7 @@ const GetBuddyEmbed = ({
     ...(petfinderUrl ? [{ name: "Petfinder", url: petfinderUrl }] : []),
     ...(adoptAPetUrl ? [{ name: "Adopt-a-Pet", url: adoptAPetUrl }] : []),
     ...(pawPlacerUrl ? [{ name: "PawPlacer", url: pawPlacerUrl }] : []),
+    ...(rescueMeUrl ? [{ name: "Rescue Me", url: rescueMeUrl }] : []),
   ];
 
   return (
