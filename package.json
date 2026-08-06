@@ -19,6 +19,7 @@
     "qa:smoke:nojs:build": "npm run build && npm run qa:smoke:nojs",
     "test": "vitest run",
     "test:watch": "vitest",
+    "gen:document-pdf": "node tools/gen-document-pdf.mjs",
     "prepare": "husky"
   },
   "dependencies": {

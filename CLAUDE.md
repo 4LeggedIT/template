@@ -61,6 +61,7 @@ Generator tools synced from `internal-tools/4leggedit-websites/templates-sources
 |---|---|
 | `gen-favicon.mjs` | Reads `src/assets/logo.png` |
 | `gen-og-image.mjs` | Reads `tools/og-image-config.json` |
+| `gen-document-pdf.mjs` | Renders a print `/documents/<slug>` page to PDF and writes `public/documents/<slug>.pdf` (the Resources-page download); needs dev/preview server running |
 | `optimize-images.mjs` | WebP conversion + resize; requires `sharp` + `svgo` |
 
 **Important:** Generator tools are synced verbatim from upstream. Do not edit locally. Update in `internal-tools/` first, then propagate.
