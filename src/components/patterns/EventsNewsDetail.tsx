@@ -1,5 +1,6 @@
-import { Calendar, ChevronLeft, ChevronRight, ExternalLink, MapPin } from "lucide-react";
+import { ArrowLeft, Calendar, ChevronLeft, ChevronRight, ExternalLink, MapPin } from "lucide-react";
 import { Link } from "react-router-dom";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import EventActions from "@/components/patterns/EventActions";
 import FormEmbedModal from "@/components/patterns/FormEmbedModal";
@@ -315,9 +316,12 @@ const EventsNewsDetail = ({
           </div>
         ) : null}
 
-        <Link to={backHref} className="inline-block pt-2 text-sm font-semibold text-primary hover:underline">
-          {resolvedLabels.backToIndex}
-        </Link>
+        <Button asChild variant="outline" size="sm" className="mt-2">
+          <Link to={backHref}>
+            <ArrowLeft className="h-4 w-4" />
+            {resolvedLabels.backToIndex}
+          </Link>
+        </Button>
       </CardContent>
     </Card>
   );
