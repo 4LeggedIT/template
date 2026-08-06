@@ -522,10 +522,33 @@
   padding: 6px 4px 4px;
 }
 .doc-index-list { list-style: none; padding: 0; margin: 0; }
-.doc-index-item { border-bottom: 1px solid var(--doc-border); padding: 10px 4px; }
+.doc-index-item {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  column-gap: 10px;
+  border-bottom: 1px solid var(--doc-border);
+  padding: 10px 4px;
+}
 .doc-index-item:last-child { border-bottom: none; }
 .doc-index-link { color: var(--doc-primary); font-weight: 600; text-decoration: none; }
 .doc-index-link:hover { text-decoration: underline; }
+
+/* A document that has both a print and a digital/e-sign counterpart renders as one
+   row: the primary label links to the print version, and each variant (e.g. an
+   "E-Sign Version" link to the same content's `mode="digital"` route) appears as a
+   small secondary pill inline next to it — never as its own separate list row, and
+   never naming the e-sign vendor in the visible label (see Documents standard page). */
+.doc-index-variant {
+  font-size: 7.5pt;
+  font-weight: 600;
+  color: var(--doc-gray);
+  padding: 1px 7px;
+  border: 1px solid var(--doc-border);
+  border-radius: 10px;
+  text-decoration: none;
+}
+.doc-index-variant:hover { color: var(--doc-primary); border-color: var(--doc-primary); text-decoration: none; }
 
 /* ── Surrender form ── */
 .table-grid {
@@ -906,6 +929,50 @@
     margin-top: 6px;
     padding-top: 6px;
   }
+}
+
+/* ── Digital / e-sign mode (e-signature-platform import target, e.g. JotForm) ──
+   No printed guide-lines/boxes: the e-sign platform's own widgets are placed over
+   these blank areas, so a ruled line or bordered box would just be visual clutter
+   under the imported field. Reserve blank space only. See the Documents standard
+   page for the full rationale and field-sizing contract. */
+.doc-page--digital .field-line,
+.doc-page--digital .ifield {
+  border-bottom: none;
+  height: 34px;
+}
+.doc-page--digital .field-line.sm   { flex: 0 0 90px; min-width: 90px; }
+.doc-page--digital .field-line.half { min-width: 100px; }
+.doc-page--digital .field-line.wide { min-width: 200px; }
+
+.doc-page--digital .initial-line { border-bottom: none; width: 70px; height: 30px; }
+
+.doc-page--digital .field-open {
+  display: block;
+  border: none;
+  width: 100%;
+  min-height: 100px;
+  margin: 4px 0 10px;
+}
+
+.doc-page--digital .section,
+.doc-page--digital .clause,
+.doc-page--digital .callout,
+.doc-page--digital .sig-section,
+.doc-page--digital .two-col {
+  page-break-inside: auto;
+  break-inside: auto;
+}
+
+/* The container above is allowed to flow across pages, but no single field
+   may be split by a page break mid-field — a signature/address widget can't
+   be imported into two separate boxes straddling a page boundary. */
+.doc-page--digital .field-row,
+.doc-page--digital .field-open-group,
+.doc-page--digital .field-open,
+.doc-page--digital .clause-initials {
+  page-break-inside: avoid;
+  break-inside: avoid;
 }
 
 /* ── Print ── */
