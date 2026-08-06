@@ -115,34 +115,6 @@ export const getRelatedBlogPosts = (posts: BlogPostEntry[], currentSlug: string,
     .sort(byNewestFirst)
     .slice(0, limit);
 
-export type BlogAdjacentPost = {
-  slug: string;
-  title: string;
-  publishedAt: string;
-  href: string;
-};
-
-/** Chronological Previous/Next neighbors (oldest → newest) for `BlogPostDetail`'s `previous`/`next` props. */
-export const getAdjacentBlogPosts = (
-  posts: BlogPostEntry[],
-  currentSlug: string,
-  postBasePath: string,
-): { previous: BlogAdjacentPost | null; next: BlogAdjacentPost | null } => {
-  const timeline = [...posts].sort((a, b) => (a.publishedAt < b.publishedAt ? -1 : a.publishedAt > b.publishedAt ? 1 : 0));
-  const currentIndex = timeline.findIndex((post) => post.slug === currentSlug);
-  if (currentIndex === -1) return { previous: null, next: null };
-
-  const toAdjacent = (post: BlogPostEntry | undefined): BlogAdjacentPost | null =>
-    post
-      ? { slug: post.slug, title: post.title, publishedAt: post.publishedAt, href: `${postBasePath}/${post.slug}` }
-      : null;
-
-  return {
-    previous: toAdjacent(timeline[currentIndex - 1]),
-    next: toAdjacent(timeline[currentIndex + 1]),
-  };
-};
-
 /**
  * Selects the post flagged `highlightOnHome` (most recent if more than one) and maps it to the
  * generic shape `HomeHighlightSection` renders. Returns `null` when nothing is flagged — callers
@@ -339,9 +311,15 @@ const BlogSection = ({
               )}
             >
               {featured.imageSrc || featured.emoji ? (
-                <div className="h-48 sm:h-full">
-                  <PostThumb post={featured} />
-                </div>
+                postBasePath ? (
+                  <Link to={`${postBasePath}/${featured.slug}`} className="block h-48 sm:h-full">
+                    <PostThumb post={featured} />
+                  </Link>
+                ) : (
+                  <div className="h-48 sm:h-full">
+                    <PostThumb post={featured} />
+                  </div>
+                )
               ) : null}
               <CardContent className="flex flex-col gap-3 p-6">
                 {featured.category ? <CategoryBadge value={featured.category} categories={categories} /> : null}
@@ -375,9 +353,15 @@ const BlogSection = ({
           {filtered.map((post) => (
             <Card key={post.id} className="group flex flex-col overflow-hidden border-border/80">
               {post.imageSrc || post.emoji ? (
-                <div className="h-40 overflow-hidden">
-                  <PostThumb post={post} className="transition-transform duration-300 group-hover:scale-[1.03]" />
-                </div>
+                postBasePath ? (
+                  <Link to={`${postBasePath}/${post.slug}`} className="block h-40 overflow-hidden">
+                    <PostThumb post={post} className="transition-transform duration-300 group-hover:scale-[1.03]" />
+                  </Link>
+                ) : (
+                  <div className="h-40 overflow-hidden">
+                    <PostThumb post={post} className="transition-transform duration-300 group-hover:scale-[1.03]" />
+                  </div>
+                )
               ) : null}
               <CardContent className="flex flex-1 flex-col gap-3 p-6">
                 {post.category ? <CategoryBadge value={post.category} categories={categories} /> : null}

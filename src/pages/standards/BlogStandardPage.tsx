@@ -1,7 +1,7 @@
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import BlogPostDetail from "@/components/patterns/BlogPostDetail";
-import BlogSection, { getAdjacentBlogPosts, getRelatedBlogPosts } from "@/components/patterns/BlogSection";
+import BlogSection, { getRelatedBlogPosts } from "@/components/patterns/BlogSection";
 import PageHero from "@/components/patterns/PageHero";
 import SEOHead from "@/components/patterns/SEOHead";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -9,11 +9,6 @@ import { blogExampleCategories, blogExamplePosts } from "@/pages/examples/blogEx
 
 const fullPost = blogExamplePosts.find((post) => post.slug === "lunas-journey-home")!;
 const relatedPosts = getRelatedBlogPosts(blogExamplePosts, fullPost.slug);
-const { previous: previousPost, next: nextPost } = getAdjacentBlogPosts(
-  blogExamplePosts,
-  fullPost.slug,
-  "/examples/blog",
-);
 
 const BlogStandardPage = () => {
   const { t } = useTranslation(["blog", "common"]);
@@ -64,8 +59,6 @@ const BlogStandardPage = () => {
               categories={blogExampleCategories}
               relatedPosts={relatedPosts}
               postBasePath="/examples/blog"
-              previous={previousPost}
-              next={nextPost}
               cta={{
                 title: t("blog:sections.detail.cta.title"),
                 description: t("blog:sections.detail.cta.description"),

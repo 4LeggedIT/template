@@ -137,6 +137,7 @@ const EventsNewsStandardPage = () => {
             showFeatured={false}
             cardMode="index"
             imageLayout="alternating"
+            eventDetailsBasePath="/examples/events-news/events"
           />
         </div>
 

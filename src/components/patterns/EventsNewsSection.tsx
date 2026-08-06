@@ -851,32 +851,51 @@ const renderEntryCard = (
   const isSideLayout = resolvedImageLayout === "side" || resolvedImageLayout === "alternating";
   const imageOnRight = resolvedImageLayout === "alternating" && renderIndex % 2 === 1;
 
+  // Card thumbnails link to the entry's own detail page, same as the Details button below —
+  // internal routes use <Link>, external hrefs open in a new tab. Renders unlinked when there's
+  // no detailsHref to point to.
+  const renderImageLink = (children: ReactNode, className: string) => {
+    if (!detailsHref) return <div className={className}>{children}</div>;
+    return detailsHref.startsWith("/") ? (
+      <Link to={detailsHref} className={className}>
+        {children}
+      </Link>
+    ) : (
+      <a href={detailsHref} target="_blank" rel="noopener noreferrer" className={className}>
+        {children}
+      </a>
+    );
+  };
+
   const topImage =
     resolvedImageLayout === "top" && entry.videoEmbed ? (
       <div className="bg-muted p-4">{renderVideoEmbed(entry.videoEmbed, entry.title)}</div>
     ) : resolvedImageLayout === "top" && entry.imageSrc ? (
-      <a href={entry.imageSrc} target="_blank" rel="noopener noreferrer" className="block bg-muted">
+      renderImageLink(
         <img
           src={entry.imageSrc}
           alt={entry.imageAlt ?? entry.title}
           className="w-full max-h-[520px] object-contain"
           loading="lazy"
-        />
-      </a>
+        />,
+        "block bg-muted",
+      )
     ) : null;
 
   // Side/alternating card thumbnails always use imageSrc, never videoEmbed — same rule as
   // HomeHighlightSection's featured card thumbnail.
-  const sideImage = isSideLayout && entry.imageSrc ? (
-    <a href={entry.imageSrc} target="_blank" rel="noopener noreferrer" className="block h-40 bg-muted sm:h-full">
-      <img
-        src={entry.imageSrc}
-        alt={entry.imageAlt ?? entry.title}
-        className="h-full w-full object-cover"
-        loading="lazy"
-      />
-    </a>
-  ) : null;
+  const sideImage =
+    isSideLayout && entry.imageSrc
+      ? renderImageLink(
+          <img
+            src={entry.imageSrc}
+            alt={entry.imageAlt ?? entry.title}
+            className="h-full w-full object-cover"
+            loading="lazy"
+          />,
+          "block h-40 bg-muted sm:h-full",
+        )
+      : null;
 
   const cardBody = (
     <>

@@ -3,7 +3,6 @@ import { MemoryRouter } from "react-router-dom";
 import { describe, expect, it } from "vitest";
 import BlogSection, {
   estimateReadTime,
-  getAdjacentBlogPosts,
   getBlogHighlightItem,
   getRelatedBlogPosts,
   type BlogPostEntry,
@@ -97,6 +96,12 @@ describe("BlogSection", () => {
     expect(screen.queryByRole("link", { name: "An Adoption Story" })).not.toBeInTheDocument();
   });
 
+  it("links the card thumbnail image to the article when postBasePath is provided", () => {
+    renderWithRouter(<BlogSection posts={posts} postBasePath="/blog" />);
+    const image = screen.getByAltText("A happy adopted dog");
+    expect(image.closest("a")).toHaveAttribute("href", "/blog/story-post");
+  });
+
   it("renders the subscribe CTA only when provided", () => {
     const { rerender } = render(
       <MemoryRouter>
@@ -142,36 +147,6 @@ describe("getRelatedBlogPosts", () => {
     const related = getRelatedBlogPosts([...posts, third], "story-post", 1);
 
     expect(related).toHaveLength(1);
-  });
-});
-
-describe("getAdjacentBlogPosts", () => {
-  it("returns the chronologically earlier/later neighbors (oldest first)", () => {
-    const third: BlogPostEntry = { ...posts[0], id: "3", slug: "third-post", publishedAt: "2026-03-01" };
-    const timeline = [...posts, third]; // guide-post (01-15) < story-post (02-01) < third-post (03-01)
-
-    const result = getAdjacentBlogPosts(timeline, "story-post", "/blog");
-    expect(result.previous).toEqual({
-      slug: "guide-post",
-      title: "A Practical Guide",
-      publishedAt: "2026-01-15",
-      href: `/blog/${"guide-post"}`,
-    });
-    expect(result.next).toEqual({
-      slug: "third-post",
-      title: posts[0].title,
-      publishedAt: "2026-03-01",
-      href: `/blog/${"third-post"}`,
-    });
-  });
-
-  it("returns null on the side with no neighbor, at either end of the timeline", () => {
-    expect(getAdjacentBlogPosts(posts, "guide-post", "/blog").previous).toBeNull();
-    expect(getAdjacentBlogPosts(posts, "story-post", "/blog").next).toBeNull();
-  });
-
-  it("returns both sides null when the slug isn't found", () => {
-    expect(getAdjacentBlogPosts(posts, "missing-post", "/blog")).toEqual({ previous: null, next: null });
   });
 });
 

@@ -1,11 +1,10 @@
 import { Link } from "react-router-dom";
-import { ArrowLeft, ArrowRight, Calendar, ChevronLeft, ChevronRight, Clock, User } from "lucide-react";
+import { ArrowLeft, ArrowRight, Calendar, Clock, User } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import {
   CategoryBadge,
   estimateReadTime,
-  type BlogAdjacentPost,
   type BlogCategoryConfig,
   type BlogPostEntry,
 } from "@/components/patterns/BlogSection";
@@ -15,8 +14,6 @@ export type BlogPostDetailLabels = {
   backLabel?: string;
   keepReadingLabel?: string;
   readMoreLabel?: string;
-  previousLabel?: string;
-  nextLabel?: string;
 };
 
 type BlogPostDetailCta = {
@@ -38,9 +35,6 @@ type BlogPostDetailProps = {
   postBasePath?: string;
   /** Optional closing CTA card. Renders nothing when omitted. */
   cta?: BlogPostDetailCta;
-  /** Chronologically adjacent posts — compute via `getAdjacentBlogPosts()` from `BlogSection.tsx`. Omit or pass `null` to hide that side of the nav row. */
-  previous?: BlogAdjacentPost | null;
-  next?: BlogAdjacentPost | null;
   className?: string;
   labels?: BlogPostDetailLabels;
 };
@@ -294,8 +288,6 @@ const BlogPostDetail = ({
   relatedPosts = [],
   postBasePath,
   cta,
-  previous,
-  next,
   className,
   labels = {},
 }: BlogPostDetailProps) => {
@@ -303,8 +295,6 @@ const BlogPostDetail = ({
     backLabel = "Back to blog",
     keepReadingLabel = "Keep reading",
     readMoreLabel = "Read",
-    previousLabel = "Previous",
-    nextLabel = "Next",
   } = labels;
 
   const blocks = parseBlogContent(post.content);
@@ -388,37 +378,6 @@ const BlogPostDetail = ({
               />
             ))}
           </div>
-        </div>
-      ) : null}
-
-      {previous || next ? (
-        <div className="mt-12 grid grid-cols-1 gap-4 border-t border-border pt-6 sm:grid-cols-2">
-          {previous ? (
-            <Link
-              to={previous.href}
-              className="group flex items-center gap-3 rounded-lg border border-border p-3 text-left transition-colors hover:border-primary/40"
-            >
-              <ChevronLeft className="h-4 w-4 flex-shrink-0 text-muted-foreground transition-colors group-hover:text-primary" />
-              <span className="min-w-0">
-                <span className="block text-xs text-muted-foreground">{previousLabel}</span>
-                <span className="block truncate text-sm font-semibold text-foreground">{previous.title}</span>
-              </span>
-            </Link>
-          ) : (
-            <div />
-          )}
-          {next ? (
-            <Link
-              to={next.href}
-              className="group flex items-center justify-end gap-3 rounded-lg border border-border p-3 text-right transition-colors hover:border-primary/40 sm:col-start-2"
-            >
-              <span className="min-w-0">
-                <span className="block text-xs text-muted-foreground">{nextLabel}</span>
-                <span className="block truncate text-sm font-semibold text-foreground">{next.title}</span>
-              </span>
-              <ChevronRight className="h-4 w-4 flex-shrink-0 text-muted-foreground transition-colors group-hover:text-primary" />
-            </Link>
-          ) : null}
         </div>
       ) : null}
     </article>

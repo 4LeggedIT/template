@@ -108,27 +108,4 @@ describe("BlogPostDetail", () => {
     expect(screen.getByText("Another Post")).toBeInTheDocument();
     expect(screen.queryByRole("link", { name: /Another Post/ })).not.toBeInTheDocument();
   });
-
-  it("renders no Previous/Next row when both are omitted", () => {
-    renderWithRouter(<BlogPostDetail post={post} backHref="/blog" />);
-
-    expect(screen.queryByText("Previous")).not.toBeInTheDocument();
-    expect(screen.queryByText("Next")).not.toBeInTheDocument();
-  });
-
-  it("renders Previous/Next links when provided, and only the side that has a neighbor", () => {
-    const previousPost = {
-      slug: "earlier-post",
-      title: "Earlier Post",
-      publishedAt: "2026-01-01",
-      href: `/blog/${"earlier-post"}`,
-    };
-    renderWithRouter(
-      <BlogPostDetail post={post} backHref="/blog" previous={previousPost} next={null} />,
-    );
-
-    expect(screen.getByText("Previous")).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: /Earlier Post/ })).toHaveAttribute("href", "/blog/earlier-post");
-    expect(screen.queryByText("Next")).not.toBeInTheDocument();
-  });
 });
