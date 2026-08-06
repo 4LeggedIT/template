@@ -33,6 +33,14 @@
       "part1": "El renderizador más completo de",
       "part2": "usado en tarjetas de estilo detalle, en lugar del modo",
       "part3": "solo de resumen mostrado arriba."
+    },
+    "imageLayout": {
+      "title": "Diseño de imagen (imageLayout=\"alternating\")",
+      "part1": "independiente de",
+      "part2": ": las entradas con una",
+      "part3": "se muestran con la imagen junto al texto, alternando de lado en cada tarjeta. Una entrada sin imagen se sigue mostrando como una tarjeta de solo texto.",
+      "part4": "también está disponible para tener la imagen siempre a la izquierda, y el valor predeterminado",
+      "part5": "conserva el comportamiento original de imagen-arriba/solo-texto mostrado en las secciones anteriores."
     }
   },
   "standard": {
@@ -60,7 +68,9 @@
       "Los controles opcionales de tarjeta destacada y archivo vienen incorporados (`showFeatured`, props de archivo).",
       "`socialCta` es un valor predeterminado de gobernanza obligatorio (no opcional) para los sitios de la generación actual — complételo desde `siteConfig.social.*` para que una fila de \"síguenos\" se muestre mediante `SocialFollowCta`; nunca cree una versión local de la página a mano.",
       "Configure `entry.videoEmbed` (proveedor `\"facebook\"`, más `url`, opcionalmente `aspectRatio`, opcionalmente `title`) en una entrada de noticias `local` para incrustar el video/Reel de Facebook de origen directamente en la página de detalle (y en la tarjeta en modo completo) en lugar de una imagen estática. `aspectRatio` usa `\"portrait\"` por defecto para URLs `/reel/`, y `\"landscape\"` en los demás casos. Las miniaturas de tarjeta (índice de noticias, destacado de inicio) siguen usando `imageSrc`/`imageAlt` — mantenga ambos definidos para que la miniatura se vea bien aunque la incrustación prevalezca en la vista completa/detalle. Prefiera un `videoSrc` alojado propio (vea `JourneyTimeline`) en lugar de esta incrustación cuando el clip de origen use audio con licencia — un intento previo en la flota de incrustar video de Facebook se revirtió tras un bloqueo de derechos en una publicación con audio no original.",
-      "Flujo de trabajo de artículo local: cree una ruta de página local (por ejemplo `/news/my-article-slug`), agréguela a `AppRoutes.tsx`, y apunte el `href` de la entrada de noticias hacia ella. El descubrimiento de rutas en tiempo de compilación (`tools/app-routes.mjs`) lo detecta para el prerenderizado + mapa del sitio; para rutas dinámicas, enumere las URLs concretas mediante `PRERENDER_EXTRA_ROUTES`. Aplique la misma regla a las rutas de detalle de evento. Valide con `npm run build` y `npm run qa:smoke:nojs`."
+      "Flujo de trabajo de artículo local: cree una ruta de página local (por ejemplo `/news/my-article-slug`), agréguela a `AppRoutes.tsx`, y apunte el `href` de la entrada de noticias hacia ella. El descubrimiento de rutas en tiempo de compilación (`tools/app-routes.mjs`) lo detecta para el prerenderizado + mapa del sitio; para rutas dinámicas, enumere las URLs concretas mediante `PRERENDER_EXTRA_ROUTES`. Aplique la misma regla a las rutas de detalle de evento. Valide con `npm run build` y `npm run qa:smoke:nojs`.",
+      "`imageLayout` (`\"auto\" | \"none\" | \"top\" | \"side\" | \"alternating\"`, por defecto `\"auto\"`) controla la ubicación de la imagen en las tarjetas del listado, independientemente de `cardMode` — `\"auto\"` conserva exactamente el comportamiento original impulsado por `cardMode`, por lo que ningún sitio existente se ve afectado si se deja sin definir.",
+      "Para la navegación Anterior/Siguiente de una página de detalle, calcule ambos vecinos con `getAdjacentEntries(entries, currentId, eventDetailsBasePath)` (exportado desde `EventsNewsSection.tsx`) y pase el resultado directamente a las props `previous`/`next` de `EventsNewsDetail` — no reimplemente la lógica de adyacencia cronológica por sitio. Cualquiera de los dos lados no muestra nada cuando no hay un vecino (inicio o fin de la línea de tiempo)."
     ],
     "eventRoutesBefore": "Ejemplos de rutas de detalle de evento (para mapa del sitio + prerenderizado):",
     "eventLinks": {

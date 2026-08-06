@@ -1,6 +1,7 @@
 import { useTranslation } from "react-i18next";
+import { Link } from "react-router-dom";
 import BlogPostDetail from "@/components/patterns/BlogPostDetail";
-import BlogSection, { getRelatedBlogPosts } from "@/components/patterns/BlogSection";
+import BlogSection, { getAdjacentBlogPosts, getRelatedBlogPosts } from "@/components/patterns/BlogSection";
 import PageHero from "@/components/patterns/PageHero";
 import SEOHead from "@/components/patterns/SEOHead";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -8,6 +9,11 @@ import { blogExampleCategories, blogExamplePosts } from "@/pages/examples/blogEx
 
 const fullPost = blogExamplePosts.find((post) => post.slug === "lunas-journey-home")!;
 const relatedPosts = getRelatedBlogPosts(blogExamplePosts, fullPost.slug);
+const { previous: previousPost, next: nextPost } = getAdjacentBlogPosts(
+  blogExamplePosts,
+  fullPost.slug,
+  "/examples/blog",
+);
 
 const BlogStandardPage = () => {
   const { t } = useTranslation(["blog", "common"]);
@@ -58,6 +64,8 @@ const BlogStandardPage = () => {
               categories={blogExampleCategories}
               relatedPosts={relatedPosts}
               postBasePath="/examples/blog"
+              previous={previousPost}
+              next={nextPost}
               cta={{
                 title: t("blog:sections.detail.cta.title"),
                 description: t("blog:sections.detail.cta.description"),
@@ -66,6 +74,19 @@ const BlogStandardPage = () => {
               }}
             />
           </div>
+        </div>
+
+        <div className="space-y-3">
+          <h2 className="text-lg font-semibold">{t("blog:sections.highlight.title")}</h2>
+          <p className="text-sm text-muted-foreground">
+            {t("blog:sections.highlight.part1")} <code>highlightOnHome</code> {t("blog:sections.highlight.part2")}{" "}
+            <code>getBlogHighlightItem()</code> {t("blog:sections.highlight.part3")}{" "}
+            <code>HomeHighlightSection</code> {t("blog:sections.highlight.part4")}{" "}
+            <Link className="underline underline-offset-4" to="/standards/news-highlight">
+              {t("blog:sections.highlight.linkLabel")}
+            </Link>
+            .
+          </p>
         </div>
 
         <Card>

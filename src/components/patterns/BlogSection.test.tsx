@@ -3,6 +3,8 @@ import { MemoryRouter } from "react-router-dom";
 import { describe, expect, it } from "vitest";
 import BlogSection, {
   estimateReadTime,
+  getAdjacentBlogPosts,
+  getBlogHighlightItem,
   getRelatedBlogPosts,
   type BlogPostEntry,
 } from "@/components/patterns/BlogSection";
@@ -140,5 +142,69 @@ describe("getRelatedBlogPosts", () => {
     const related = getRelatedBlogPosts([...posts, third], "story-post", 1);
 
     expect(related).toHaveLength(1);
+  });
+});
+
+describe("getAdjacentBlogPosts", () => {
+  it("returns the chronologically earlier/later neighbors (oldest first)", () => {
+    const third: BlogPostEntry = { ...posts[0], id: "3", slug: "third-post", publishedAt: "2026-03-01" };
+    const timeline = [...posts, third]; // guide-post (01-15) < story-post (02-01) < third-post (03-01)
+
+    const result = getAdjacentBlogPosts(timeline, "story-post", "/blog");
+    expect(result.previous).toEqual({
+      slug: "guide-post",
+      title: "A Practical Guide",
+      publishedAt: "2026-01-15",
+      href: `/blog/${"guide-post"}`,
+    });
+    expect(result.next).toEqual({
+      slug: "third-post",
+      title: posts[0].title,
+      publishedAt: "2026-03-01",
+      href: `/blog/${"third-post"}`,
+    });
+  });
+
+  it("returns null on the side with no neighbor, at either end of the timeline", () => {
+    expect(getAdjacentBlogPosts(posts, "guide-post", "/blog").previous).toBeNull();
+    expect(getAdjacentBlogPosts(posts, "story-post", "/blog").next).toBeNull();
+  });
+
+  it("returns both sides null when the slug isn't found", () => {
+    expect(getAdjacentBlogPosts(posts, "missing-post", "/blog")).toEqual({ previous: null, next: null });
+  });
+});
+
+describe("getBlogHighlightItem", () => {
+  it("returns null when no post is flagged highlightOnHome", () => {
+    expect(getBlogHighlightItem(posts, "/blog")).toBeNull();
+  });
+
+  it("maps the flagged post to the generic HomeHighlightItem shape", () => {
+    const flagged: BlogPostEntry[] = [posts[0], { ...posts[1], highlightOnHome: true }];
+    const item = getBlogHighlightItem(flagged, "/blog");
+
+    expect(item).toMatchObject({
+      id: "2",
+      title: "An Adoption Story",
+      summary: "A story excerpt.",
+      href: `/blog/${"story-post"}`,
+      imageSrc: "https://example.org/dog.jpg",
+      imageAlt: "A happy adopted dog",
+      badgeLabel: "Stories",
+    });
+  });
+
+  it("auto-resolves to the most recent when more than one post is flagged", () => {
+    const flagged: BlogPostEntry[] = [
+      { ...posts[0], highlightOnHome: true },
+      { ...posts[1], highlightOnHome: true },
+    ];
+    expect(getBlogHighlightItem(flagged, "/blog")?.id).toBe("2");
+  });
+
+  it("renders no href when postBasePath is omitted", () => {
+    const flagged: BlogPostEntry[] = [{ ...posts[0], highlightOnHome: true }];
+    expect(getBlogHighlightItem(flagged)?.href).toBeUndefined();
   });
 });

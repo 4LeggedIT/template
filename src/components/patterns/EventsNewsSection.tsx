@@ -1,4 +1,4 @@
-import { Calendar, ExternalLink, Newspaper } from "lucide-react";
+import { Calendar, CalendarDays, ExternalLink, Newspaper } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -6,6 +6,7 @@ import EventBanner, { type EventBannerItem } from "@/components/patterns/EventBa
 import FormEmbedModal from "@/components/patterns/FormEmbedModal";
 import EventActions from "@/components/patterns/EventActions";
 import SocialFollowCta, { type SocialFollowCtaProps } from "@/components/patterns/SocialFollowCta";
+import type { HomeHighlightItem } from "@/components/patterns/HomeHighlightSection";
 import { cn } from "@/lib/utils";
 import { type EventRecurrence, buildRrule, getOccurrenceDates } from "@/lib/event-recurrence";
 
@@ -122,6 +123,14 @@ type EventsNewsRenderableEventEntry = EventsNewsEventEntry & {
 
 type EventsNewsRenderableEntry = EventsNewsRenderableEventEntry | EventsNewsArticleEntry;
 type EventsNewsCardMode = "full" | "index";
+export type EventsNewsImageLayout = "auto" | "none" | "top" | "side" | "alternating";
+
+export type EventsNewsAdjacentEntry = {
+  id: string;
+  title: string;
+  dateLabel: string;
+  href: string;
+};
 
 export type EventsNewsSectionLabels = {
   eventBadge?: string;
@@ -167,6 +176,14 @@ type EventsNewsSectionProps = {
   futureEventsBannerDefaultCtaHref?: string;
   eventDetailsBasePath?: string;
   cardMode?: EventsNewsCardMode;
+  /**
+   * Controls image placement on list cards, independent of `cardMode`.
+   * "auto" (default) preserves the existing contract: image on top only in `cardMode="full"`,
+   * hidden in `cardMode="index"`. "side"/"alternating" render the image beside the text
+   * (alternating flips sides every other card), matching `HomeHighlightSection`'s featured-card
+   * treatment, and work in either `cardMode`.
+   */
+  imageLayout?: EventsNewsImageLayout;
   labels?: EventsNewsSectionLabels;
   socialCta?: SocialFollowCtaProps;
 };
@@ -476,6 +493,76 @@ const toEventDisplayBuckets = (entries: EventsNewsRenderableEntry[]) => {
   };
 };
 
+/**
+ * Chronological Previous/Next neighbors for a detail page, e.g. `EventsNewsDetail`'s
+ * `previous`/`next` props. Timeline is every entry with a resolvable detail link (active
+ * events, archived/past event occurrences, and news), oldest first — `currentId` matches
+ * either the exact (possibly recurrence-expanded) entry id or its `sourceEventId`.
+ */
+export const getAdjacentEntries = (
+  entries: EventsNewsEntry[],
+  currentId: string,
+  eventDetailsBasePath?: string,
+): { previous: EventsNewsAdjacentEntry | null; next: EventsNewsAdjacentEntry | null } => {
+  const renderableEntries = getRenderableEntries(entries);
+  const { activeEvents, archivedEvents } = toEventDisplayBuckets(renderableEntries);
+  const sortedNews = renderableEntries.filter(
+    (entry): entry is EventsNewsArticleEntry => entry.kind === "news",
+  );
+
+  const timeline = [...activeEvents, ...archivedEvents, ...sortedNews]
+    .filter((entry) => Boolean(getDetailsHref(entry, eventDetailsBasePath)))
+    .sort((left, right) => getSortMs(left) - getSortMs(right));
+
+  const currentIndex = timeline.findIndex(
+    (entry) => entry.id === currentId || (entry.kind === "event" && entry.sourceEventId === currentId),
+  );
+  if (currentIndex === -1) return { previous: null, next: null };
+
+  const toAdjacent = (entry: EventsNewsRenderableEntry | undefined): EventsNewsAdjacentEntry | null => {
+    if (!entry) return null;
+    const href = getDetailsHref(entry, eventDetailsBasePath);
+    if (!href) return null;
+    return {
+      id: entry.id,
+      title: entry.kind === "event" ? entry.calendarTitle ?? entry.title : entry.title,
+      dateLabel: entry.dateLabel ?? formatFallbackDateLabel(entry),
+      href,
+    };
+  };
+
+  return {
+    previous: toAdjacent(timeline[currentIndex - 1]),
+    next: toAdjacent(timeline[currentIndex + 1]),
+  };
+};
+
+/**
+ * Selects the entry flagged `highlightOnHome` (most recent if more than one) and maps it to
+ * the generic shape `HomeHighlightSection` renders. Returns `null` when nothing is flagged —
+ * callers must not fall back to "most recent entry"; see the "no auto-pin" governance rule.
+ */
+export const getEventsNewsHighlightItem = (
+  entries: EventsNewsEntry[],
+  eventDetailsBasePath?: string,
+  labels?: { eventBadge?: string; newsBadge?: string },
+): HomeHighlightItem | null => {
+  const entry = entries.filter((candidate) => candidate.highlightOnHome).sort(byNewestFirst)[0];
+  if (!entry) return null;
+
+  return {
+    id: entry.id,
+    title: entry.title,
+    summary: entry.summary,
+    href: getDetailsHref(entry, eventDetailsBasePath) ?? undefined,
+    imageSrc: entry.imageSrc,
+    imageAlt: entry.imageAlt,
+    badgeLabel: entry.kind === "news" ? labels?.newsBadge ?? "News" : labels?.eventBadge ?? "Event",
+    badgeIcon:
+      entry.kind === "news" ? <Newspaper className="h-3.5 w-3.5" /> : <CalendarDays className="h-3.5 w-3.5" />,
+  };
+};
+
 const getBannerUpcomingEvents = (entries: EventsNewsRenderableEntry[]) => {
   const now = Date.now();
   const eventEntries = entries
@@ -701,6 +788,8 @@ const renderEntryCard = (
   entry: EventsNewsRenderableEntry,
   eventDetailsBasePath?: string,
   cardMode: EventsNewsCardMode = "index",
+  imageLayout: EventsNewsImageLayout = "auto",
+  renderIndex = 0,
   labels: Required<EventsNewsSectionLabels> = {
     eventBadge: "Event",
     newsBadge: "News",
@@ -743,26 +832,40 @@ const renderEntryCard = (
     .filter(Boolean)
     .join(" • ");
   const isIndexMode = cardMode === "index";
+  const resolvedImageLayout: EventsNewsImageLayout =
+    imageLayout === "auto" ? (isIndexMode ? "none" : "top") : imageLayout;
+  const isSideLayout = resolvedImageLayout === "side" || resolvedImageLayout === "alternating";
+  const imageOnRight = resolvedImageLayout === "alternating" && renderIndex % 2 === 1;
 
-  return (
-    <Card key={entry.id} className="overflow-hidden border-border/80">
-      {!isIndexMode && entry.videoEmbed ? (
-        <div className="bg-muted p-4">{renderVideoEmbed(entry.videoEmbed, entry.title)}</div>
-      ) : !isIndexMode && entry.imageSrc ? (
-        <a
-          href={entry.imageSrc}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="block bg-muted"
-        >
-          <img
-            src={entry.imageSrc}
-            alt={entry.imageAlt ?? entry.title}
-            className="w-full max-h-[520px] object-contain"
-            loading="lazy"
-          />
-        </a>
-      ) : null}
+  const topImage =
+    resolvedImageLayout === "top" && entry.videoEmbed ? (
+      <div className="bg-muted p-4">{renderVideoEmbed(entry.videoEmbed, entry.title)}</div>
+    ) : resolvedImageLayout === "top" && entry.imageSrc ? (
+      <a href={entry.imageSrc} target="_blank" rel="noopener noreferrer" className="block bg-muted">
+        <img
+          src={entry.imageSrc}
+          alt={entry.imageAlt ?? entry.title}
+          className="w-full max-h-[520px] object-contain"
+          loading="lazy"
+        />
+      </a>
+    ) : null;
+
+  // Side/alternating card thumbnails always use imageSrc, never videoEmbed — same rule as
+  // HomeHighlightSection's featured card thumbnail.
+  const sideImage = isSideLayout && entry.imageSrc ? (
+    <a href={entry.imageSrc} target="_blank" rel="noopener noreferrer" className="block h-40 bg-muted sm:h-full">
+      <img
+        src={entry.imageSrc}
+        alt={entry.imageAlt ?? entry.title}
+        className="h-full w-full object-cover"
+        loading="lazy"
+      />
+    </a>
+  ) : null;
+
+  const cardBody = (
+    <>
       <CardHeader className="space-y-2">
         <div className="flex flex-wrap items-center gap-2">
           <div className="inline-flex w-fit items-center gap-2 rounded-full border px-2.5 py-1 text-xs text-muted-foreground">
@@ -848,6 +951,27 @@ const renderEntryCard = (
           ) : null}
         </div>
       </CardContent>
+    </>
+  );
+
+  if (isSideLayout && sideImage) {
+    return (
+      <Card key={entry.id} className="overflow-hidden border-border/80">
+        <div
+          className={cn("grid gap-0", imageOnRight ? "sm:grid-cols-[1fr_200px]" : "sm:grid-cols-[200px_1fr]")}
+        >
+          {imageOnRight ? null : sideImage}
+          <div>{cardBody}</div>
+          {imageOnRight ? sideImage : null}
+        </div>
+      </Card>
+    );
+  }
+
+  return (
+    <Card key={entry.id} className="overflow-hidden border-border/80">
+      {topImage}
+      {cardBody}
     </Card>
   );
 };
@@ -872,6 +996,7 @@ const EventsNewsSection = ({
   futureEventsBannerDefaultCtaHref,
   eventDetailsBasePath,
   cardMode = "index",
+  imageLayout = "auto",
   labels = {},
   socialCta,
 }: EventsNewsSectionProps) => {
@@ -943,12 +1068,16 @@ const EventsNewsSection = ({
       {featured ? (
         <div className="mb-6">
           <p className="mb-2 text-xs font-medium uppercase tracking-wide text-muted-foreground">{resolvedLabels.featuredLabel}</p>
-          {renderEntryCard(featured, eventDetailsBasePath, cardMode, resolvedLabels)}
+          {renderEntryCard(featured, eventDetailsBasePath, cardMode, imageLayout, 0, resolvedLabels)}
         </div>
       ) : null}
 
       {latest.length ? (
-        <div className="space-y-6">{latest.map((entry) => renderEntryCard(entry, eventDetailsBasePath, cardMode, resolvedLabels))}</div>
+        <div className="space-y-6">
+          {latest.map((entry, index) =>
+            renderEntryCard(entry, eventDetailsBasePath, cardMode, imageLayout, index, resolvedLabels),
+          )}
+        </div>
       ) : (
         <Card className="border-dashed">
           <CardContent className="py-6 text-sm text-muted-foreground">{emptyMessage}</CardContent>
@@ -963,7 +1092,11 @@ const EventsNewsSection = ({
           <summary className="cursor-pointer list-none text-sm font-medium text-foreground [&::-webkit-details-marker]:hidden">
             {archiveTitle} ({archive.length})
           </summary>
-          <div className="mt-4 space-y-4">{archive.map((entry) => renderEntryCard(entry, eventDetailsBasePath, cardMode, resolvedLabels))}</div>
+          <div className="mt-4 space-y-4">
+            {archive.map((entry, index) =>
+              renderEntryCard(entry, eventDetailsBasePath, cardMode, imageLayout, index, resolvedLabels),
+            )}
+          </div>
         </details>
       ) : null}
 

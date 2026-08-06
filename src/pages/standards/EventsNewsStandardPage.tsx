@@ -11,6 +11,15 @@ const structuredPreviewEntries = eventsNewsExampleEntries.filter(
   (entry) => entry.id === "event-yard-sale-2026-02-21",
 );
 
+const imageLayoutPreviewEntries = eventsNewsExampleEntries.filter((entry) =>
+  [
+    "event-adoption-fridays",
+    "news-local-spotlight-2026-02-24",
+    "event-basket-raffle-monthly",
+    "news-field-rescue-2026-02-10",
+  ].includes(entry.id),
+);
+
 const EventsNewsStandardPage = () => {
   const { t } = useTranslation(["eventsNews", "common"]);
 
@@ -110,6 +119,24 @@ const EventsNewsStandardPage = () => {
             maxLatest={1}
             showFeatured={false}
             cardMode="full"
+          />
+        </div>
+
+        <div className="space-y-3">
+          <h2 className="text-lg font-semibold">{t("eventsNews:sections.imageLayout.title")}</h2>
+          <p className="text-sm text-muted-foreground">
+            <code>imageLayout</code> {t("eventsNews:sections.imageLayout.part1")} <code>cardMode</code>
+            {t("eventsNews:sections.imageLayout.part2")} <code>imageSrc</code>
+            {t("eventsNews:sections.imageLayout.part3")} <code>imageLayout="side"</code>{" "}
+            {t("eventsNews:sections.imageLayout.part4")} <code>"auto"</code>{" "}
+            {t("eventsNews:sections.imageLayout.part5")}
+          </p>
+          <EventsNewsSection
+            entries={imageLayoutPreviewEntries}
+            maxLatest={4}
+            showFeatured={false}
+            cardMode="index"
+            imageLayout="alternating"
           />
         </div>
 

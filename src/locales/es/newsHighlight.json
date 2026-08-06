@@ -1,38 +1,44 @@
 {
   "hero": {
-    "title": "Patrón de Noticia Destacada",
-    "description": "Permita que un editor marque un evento o noticia para destacarlo en la página de inicio."
+    "title": "Patrón de Destacado de Inicio",
+    "description": "Permita que un editor marque un evento, noticia o publicación de blog para destacarlo como tarjeta en la página de inicio."
   },
-  "breadcrumb": "Patrón de Noticia Destacada",
+  "breadcrumb": "Patrón de Destacado de Inicio",
   "example": {
     "imageAlt": "Voluntarios y un perro rescatado en un evento comunitario de adopción"
   },
   "sections": {
     "withImage": {
-      "title": "Ejemplo — con imagen",
+      "title": "Ejemplo — Eventos/Noticias, con imagen",
       "part1": "La entrada marcada (",
       "part2": ") tiene un",
       "part3": ", por lo que la tarjeta lo muestra."
     },
     "withoutImage": {
-      "title": "Sin imagen",
+      "title": "Eventos/Noticias, sin imagen",
       "part1": "La entrada marcada (",
       "part2": ") no tiene",
       "part3": "— la tarjeta se muestra solo con texto, nunca con un marcador de imagen rota."
+    },
+    "blog": {
+      "title": "Ejemplo — Blog",
+      "description": "El mismo componente compartido HomeHighlightSection, impulsado por una publicación de blog marcada con highlightOnHome mediante getBlogHighlightItem() en lugar de getEventsNewsHighlightItem()."
     }
   },
   "standard": {
     "title": "Estándar",
     "items": [
-      "Configure `highlightOnHome: true` en una sola entrada de los datos `EventsNewsEntry[]` del sitio (evento o noticia) para destacarla en la página de inicio.",
-      "Pase el arreglo `entries` completo y combinado del sitio directamente a `NewsHighlightSection` — no lo prefiltre en el sitio de la llamada; la selección ocurre dentro del componente.",
-      "Si se marca más de una entrada a la vez, el componente resuelve automáticamente hacia la más reciente por fecha (nunca falla la compilación).",
-      "Cuando ninguna entrada tiene `highlightOnHome: true`, el componente no muestra nada en absoluto — deliberadamente no hay respaldo hacia \"la entrada más reciente\" ni un estado vacío de reemplazo. Un editor debe marcar explícitamente la entrada que quiere destacar.",
-      "Muestra `imageSrc`/`imageAlt` solo cuando están presentes; nunca un marcador de imagen rota para entradas sin una.",
-      "Es distinto de `HomeEventBanner` (anuncios de eventos descartables y limitados en el tiempo) y de un listado completo de `EventsNewsSection` (que muestra todo) — este es un único destacado curado.",
-      "No se requiere un archivo envoltorio específico del sitio; el `Index.tsx` de un sitio (o la página de inicio equivalente) importa `NewsHighlightSection` directamente y le pasa sus entradas combinadas sin modificar.",
-      "Campo compartido: `highlightOnHome?: boolean` en `EventsNewsBaseEntry` dentro de `EventsNewsSection.tsx`",
-      "Componente: `template/src/components/patterns/NewsHighlightSection.tsx`"
+      "`HomeHighlightSection` es un renderizador genérico — recibe un `item: HomeHighlightItem | null` ya seleccionado, no un arreglo de entradas sin procesar. La selección vive en el módulo de origen, no en el componente.",
+      "Configure `highlightOnHome: true` en una sola entrada de los datos `EventsNewsEntry[]` del sitio (evento o noticia) para destacarla mediante `getEventsNewsHighlightItem(entries, eventDetailsBasePath?)`, exportado desde `EventsNewsSection.tsx`.",
+      "Para una publicación de Blog, configure `highlightOnHome: true` en la publicación dentro de los datos `BlogPostEntry[]` del sitio y selecciónela mediante `getBlogHighlightItem(posts, postBasePath?)`, exportado desde `BlogSection.tsx` — el mismo contrato de marca/respaldo, solo que en el módulo de Blog.",
+      "Si se marca más de una entrada/publicación a la vez, el selector resuelve automáticamente hacia la más reciente por fecha (nunca falla la compilación).",
+      "Cuando no hay nada marcado, el selector devuelve `null` y `HomeHighlightSection` no muestra nada en absoluto — deliberadamente no hay respaldo hacia \"la entrada más reciente\" ni un estado vacío de reemplazo. Un editor debe marcar explícitamente el elemento que quiere destacar; nunca fije automáticamente la primera/única entrada de un sitio.",
+      "Muestra `imageSrc`/`imageAlt` solo cuando están presentes; nunca un marcador de imagen rota para elementos sin una.",
+      "Es distinto de `HomeEventBanner` (anuncios de eventos descartables y limitados en el tiempo) y de un listado completo de `EventsNewsSection`/`BlogSection` (que muestra todo) — este es un único destacado curado.",
+      "No se requiere un archivo envoltorio específico del sitio; el `Index.tsx` de un sitio (o la página de inicio equivalente) llama al selector correspondiente y pasa su resultado directamente a `HomeHighlightSection`.",
+      "Campos compartidos: `highlightOnHome?: boolean` en `EventsNewsBaseEntry` (`EventsNewsSection.tsx`) y en `BlogPostEntry` (`BlogSection.tsx`).",
+      "Renombrado el 2026-08-05 desde `NewsHighlightSection` — generalizado a una forma compartida `HomeHighlightItem` para que Blog pudiera reutilizar la misma tarjeta de destacado de inicio en lugar de un componente casi duplicado.",
+      "Componente: `template/src/components/patterns/HomeHighlightSection.tsx`"
     ]
   }
 }

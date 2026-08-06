@@ -1,8 +1,9 @@
 import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import { ArrowRight, Clock } from "lucide-react";
+import { ArrowRight, BookOpen, Clock } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import type { HomeHighlightItem } from "@/components/patterns/HomeHighlightSection";
 import { cn } from "@/lib/utils";
 
 export type BlogPostEntry = {
@@ -26,6 +27,12 @@ export type BlogPostEntry = {
   readTime?: string;
   /** Preferred pick for showFeatured's hero card when featuredPostId isn't set. */
   featured?: boolean;
+  /**
+   * Flags this post for `HomeHighlightSection` via `getBlogHighlightItem()`. Optional,
+   * backward-compatible — mirrors `EventsNewsBaseEntry.highlightOnHome` exactly, including the
+   * "no auto-pin" rule: never default this to `true` just because it's a site's first/only post.
+   */
+  highlightOnHome?: boolean;
 };
 
 export type BlogCategoryConfig = {
@@ -94,6 +101,59 @@ export const getRelatedBlogPosts = (posts: BlogPostEntry[], currentSlug: string,
     .filter((post) => post.slug !== currentSlug)
     .sort(byNewestFirst)
     .slice(0, limit);
+
+export type BlogAdjacentPost = {
+  slug: string;
+  title: string;
+  publishedAt: string;
+  href: string;
+};
+
+/** Chronological Previous/Next neighbors (oldest → newest) for `BlogPostDetail`'s `previous`/`next` props. */
+export const getAdjacentBlogPosts = (
+  posts: BlogPostEntry[],
+  currentSlug: string,
+  postBasePath: string,
+): { previous: BlogAdjacentPost | null; next: BlogAdjacentPost | null } => {
+  const timeline = [...posts].sort((a, b) => (a.publishedAt < b.publishedAt ? -1 : a.publishedAt > b.publishedAt ? 1 : 0));
+  const currentIndex = timeline.findIndex((post) => post.slug === currentSlug);
+  if (currentIndex === -1) return { previous: null, next: null };
+
+  const toAdjacent = (post: BlogPostEntry | undefined): BlogAdjacentPost | null =>
+    post
+      ? { slug: post.slug, title: post.title, publishedAt: post.publishedAt, href: `${postBasePath}/${post.slug}` }
+      : null;
+
+  return {
+    previous: toAdjacent(timeline[currentIndex - 1]),
+    next: toAdjacent(timeline[currentIndex + 1]),
+  };
+};
+
+/**
+ * Selects the post flagged `highlightOnHome` (most recent if more than one) and maps it to the
+ * generic shape `HomeHighlightSection` renders. Returns `null` when nothing is flagged — callers
+ * must not fall back to "most recent post"; see the "no auto-pin" governance rule.
+ */
+export const getBlogHighlightItem = (
+  posts: BlogPostEntry[],
+  postBasePath?: string,
+  labels?: { badgeLabel?: string },
+): HomeHighlightItem | null => {
+  const post = posts.filter((candidate) => candidate.highlightOnHome).sort(byNewestFirst)[0];
+  if (!post) return null;
+
+  return {
+    id: post.id,
+    title: post.title,
+    summary: post.excerpt,
+    href: postBasePath ? `${postBasePath}/${post.slug}` : undefined,
+    imageSrc: post.imageSrc,
+    imageAlt: post.imageAlt,
+    badgeLabel: labels?.badgeLabel ?? (post.category ? formatCategoryLabel(post.category) : "Blog"),
+    badgeIcon: <BookOpen className="h-3.5 w-3.5" />,
+  };
+};
 
 export const formatCategoryLabel = (value: string) =>
   value

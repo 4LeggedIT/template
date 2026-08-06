@@ -13,7 +13,7 @@
     "found": { "title": "Patrón de Animales Encontrados", "description": "Módulo de avisos de animales encontrados con lista de verificación de reunificación segura, filtrado de estado y guía de llamadas a la acción." },
     "placement": { "title": "Patrón de Colocación", "description": "Listados de colocación con vencimiento predeterminado de tres meses y metadatos opcionales de mascotas." },
     "eventsNews": { "title": "Patrón de Eventos y Noticias", "description": "Feed unificado de eventos y noticias con comportamiento de archivo, soporte de recurrencia y guía de banners." },
-    "newsHighlight": { "title": "Patrón de Noticia Destacada", "description": "Tarjeta de inicio que muestra un solo evento o noticia marcado por el editor." },
+    "newsHighlight": { "title": "Patrón de Destacado de Inicio", "description": "Tarjeta de inicio que muestra un solo evento, noticia o publicación de blog marcado por el editor, mediante el componente compartido HomeHighlightSection." },
     "blog": { "title": "Patrón de Blog", "description": "Patrón compartido de lista de publicaciones y detalle de publicación que cubre tanto guías técnicas como contenido de historias de rescate con fotos reales." },
     "journeyTimeline": { "title": "Patrón de Línea de Tiempo del Trayecto", "description": "Línea de tiempo vertical de rescate a la actualidad para la página de detalle de un perro, una tarjeta por etapa." },
     "successStories": { "title": "Patrón de Historias de Éxito", "description": "Módulo de tarjetas narrativas para resultados de adopción e historias felices." },

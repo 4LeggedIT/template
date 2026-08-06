@@ -1,4 +1,4 @@
-import { Calendar, ExternalLink, MapPin } from "lucide-react";
+import { Calendar, ChevronLeft, ChevronRight, ExternalLink, MapPin } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Card, CardContent } from "@/components/ui/card";
 import EventActions from "@/components/patterns/EventActions";
@@ -10,6 +10,7 @@ import {
   getMapsUrl,
   renderContentBlock,
   renderVideoEmbed,
+  type EventsNewsAdjacentEntry,
   type EventsNewsEntry,
 } from "@/components/patterns/EventsNewsSection";
 import { cn } from "@/lib/utils";
@@ -31,6 +32,8 @@ export type EventsNewsDetailLabels = {
   shared?: string;
   highlightsTitle?: string;
   detailsComingSoon?: string;
+  previousLabel?: string;
+  nextLabel?: string;
 };
 
 type EventsNewsDetailProps = {
@@ -42,6 +45,9 @@ type EventsNewsDetailProps = {
   mapsUrl?: string;
   /** Overrides the calendar URL computed from the entry — use when a site needs richer calendar details (e.g. timezone, highlights, a more-info link) than `getGoogleCalendarUrl` provides. */
   calendarUrl?: string;
+  /** Chronologically adjacent entries — compute via `getAdjacentEntries()` from `EventsNewsSection.tsx`. Omit or pass `null` to hide that side of the nav row. */
+  previous?: EventsNewsAdjacentEntry | null;
+  next?: EventsNewsAdjacentEntry | null;
   className?: string;
   labels?: EventsNewsDetailLabels;
 };
@@ -149,6 +155,8 @@ const EventsNewsDetail = ({
   shareUrl,
   mapsUrl: mapsUrlOverride,
   calendarUrl: calendarUrlOverride,
+  previous,
+  next,
   className,
   labels = {},
 }: EventsNewsDetailProps) => {
@@ -169,6 +177,8 @@ const EventsNewsDetail = ({
     shared: labels.shared ?? "Shared",
     highlightsTitle: labels.highlightsTitle ?? "Highlights",
     detailsComingSoon: labels.detailsComingSoon ?? "Full details coming soon.",
+    previousLabel: labels.previousLabel ?? "Previous",
+    nextLabel: labels.nextLabel ?? "Next",
   };
 
   const isEvent = entry.kind === "event";
@@ -271,6 +281,39 @@ const EventsNewsDetail = ({
         )}
 
         {entry.videoEmbed ? <div className="mt-6">{renderVideoEmbed(entry.videoEmbed, entry.title)}</div> : renderImages(entry)}
+
+        {previous || next ? (
+          <div className="mt-6 grid grid-cols-1 gap-4 border-t border-border pt-6 sm:grid-cols-2">
+            {previous ? (
+              <Link
+                to={previous.href}
+                className="group flex items-center gap-3 rounded-lg border border-border p-3 text-left transition-colors hover:border-primary/40"
+              >
+                <ChevronLeft className="h-4 w-4 flex-shrink-0 text-muted-foreground transition-colors group-hover:text-primary" />
+                <span className="min-w-0">
+                  <span className="block text-xs text-muted-foreground">{resolvedLabels.previousLabel}</span>
+                  <span className="block truncate text-sm font-semibold text-foreground">{previous.dateLabel}</span>
+                  <span className="block truncate text-sm text-muted-foreground">{previous.title}</span>
+                </span>
+              </Link>
+            ) : (
+              <div />
+            )}
+            {next ? (
+              <Link
+                to={next.href}
+                className="group flex items-center justify-end gap-3 rounded-lg border border-border p-3 text-right transition-colors hover:border-primary/40 sm:col-start-2"
+              >
+                <span className="min-w-0">
+                  <span className="block text-xs text-muted-foreground">{resolvedLabels.nextLabel}</span>
+                  <span className="block truncate text-sm font-semibold text-foreground">{next.dateLabel}</span>
+                  <span className="block truncate text-sm text-muted-foreground">{next.title}</span>
+                </span>
+                <ChevronRight className="h-4 w-4 flex-shrink-0 text-muted-foreground transition-colors group-hover:text-primary" />
+              </Link>
+            ) : null}
+          </div>
+        ) : null}
 
         <Link to={backHref} className="inline-block pt-2 text-sm font-semibold text-primary hover:underline">
           {resolvedLabels.backToIndex}

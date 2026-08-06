@@ -22,6 +22,14 @@
         "description": "Esta tarjeta final de llamado a la acción es totalmente opcional — omita la propiedad `cta` por completo para no mostrar nada.",
         "ctaLabel": "Póngase en contacto"
       }
+    },
+    "highlight": {
+      "title": "Destacado en la página de inicio",
+      "part1": "Marque una publicación con",
+      "part2": "en sus datos, selecciónela con",
+      "part3": "(exportado desde `BlogSection.tsx`), y muéstrela mediante el mismo componente compartido",
+      "part4": "que usa Eventos/Noticias en la página de inicio — vea la explicación completa y un ejemplo de Blog en vivo en la",
+      "linkLabel": "página del patrón Destacado de Inicio"
     }
   },
   "standard": {
@@ -36,6 +44,8 @@
       "La gramática de contenido (`## encabezado`, `> cita`, `- lista`, bloques de código con ```` ``` ````, `código` en línea, `[enlace](url)` y `**negrita**`) vive por completo dentro de `BlogPostDetail.tsx` — el mismo enfoque de renderizador autónomo que `EventsNewsDetail.tsx`, no una utilidad `lib/` compartida de markdown.",
       "`subscribeCta` (lista) y `cta` (detalle) son ambos llamados a la acción totalmente opcionales — un sitio sin boletín informativo o sin llamado comercial simplemente omite la propiedad.",
       "`getRelatedBlogPosts(posts, currentSlug, limit?)` elige las publicaciones más recientes, excluyendo el slug actual — pase su resultado como `relatedPosts` en lugar de reimplementar la lógica de selección en cada sitio.",
+      "Para la navegación Anterior/Siguiente de una página de detalle de publicación, calcule ambos vecinos con `getAdjacentBlogPosts(posts, currentSlug, postBasePath)` (exportado desde `BlogSection.tsx`) y pase el resultado directamente a las propiedades `previous`/`next` de `BlogPostDetail` — no reimplemente la lógica de adyacencia cronológica por sitio. Cualquiera de los dos lados no muestra nada cuando no hay un vecino; es distinto de `relatedPosts` (selecciones temáticas de la misma categoría) y no un reemplazo de ese mecanismo — ambos pueden mostrarse juntos.",
+      "`highlightOnHome?: boolean` en `BlogPostEntry` marca una publicación para la tarjeta compartida de destacado de inicio — vea el ejemplo \"Destacado en la página de inicio\" arriba y la página del patrón Destacado de Inicio para el contrato completo.",
       "El SEO (`SEOHead`/`StructuredData` — `CollectionPage` para la lista, `BlogPosting` para una publicación) y la generación de rutas de prerenderizado permanecen a nivel de página, igual que en cualquier otro patrón.",
       "Componente: `template/src/components/patterns/BlogSection.tsx` + `BlogPostDetail.tsx`"
     ]

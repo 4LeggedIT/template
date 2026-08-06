@@ -23,6 +23,8 @@ export const eventsNewsExampleEntries: EventsNewsEntry[] = [
     registrationUrl: "https://example.org/register/adoption-fridays",
     summary: "Recurring weekly event every Friday evening.",
     highlights: ["Meet-and-greet with adoptable dogs", "Volunteer Q&A table", "Family-friendly event"],
+    imageSrc: "https://images.unsplash.com/photo-1601758228041-f3b2795255f1?auto=format&fit=crop&w=1200&q=80",
+    imageAlt: "A dog waiting to be adopted at a meet-and-greet event",
     recurrence: {
       frequency: "weekly",
       weekdays: ["fri"],
@@ -163,6 +165,8 @@ export const eventsNewsExampleEntries: EventsNewsEntry[] = [
     locationLabel: "Community Hall, 456 Oak Ave, Example City, ST",
     registrationUrl: "https://example.org/events/basket-raffle",
     summary: "First Saturday of every month — dog-themed gift baskets, tickets $5 each or 5 for $20.",
+    imageSrc: "https://images.unsplash.com/photo-1517849845537-4d257902861a?auto=format&fit=crop&w=1200&q=80",
+    imageAlt: "Gift baskets set out for a fundraiser raffle",
     highlights: [
       "20+ donated gift baskets, all dog-themed",
       "Tickets available at the door or in advance",

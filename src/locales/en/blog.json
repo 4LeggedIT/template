@@ -22,6 +22,14 @@
         "description": "This closing CTA card is fully optional — omit the `cta` prop entirely to render nothing.",
         "ctaLabel": "Get in touch"
       }
+    },
+    "highlight": {
+      "title": "Homepage highlight",
+      "part1": "Flag a post with",
+      "part2": "in its data, select it with",
+      "part3": "(exported from `BlogSection.tsx`), and render it via the same shared",
+      "part4": "component News/Events uses on the homepage — see the full write-up and a live Blog example on the",
+      "linkLabel": "Home Highlight pattern page"
     }
   },
   "standard": {
@@ -36,6 +44,8 @@
       "The content grammar (`## heading`, `> quote`, `- list`, fenced ``` code blocks, inline `code`/`[link](url)`/`**bold**`) lives entirely inside `BlogPostDetail.tsx` — same self-contained-renderer approach as `EventsNewsDetail.tsx`, not a shared `lib/` markdown utility.",
       "`subscribeCta` (list) and `cta` (detail) are both fully optional call-outs — a site without a newsletter or a sales CTA simply omits the prop.",
       "`getRelatedBlogPosts(posts, currentSlug, limit?)` picks the newest other posts, excluding the current slug — pass its result as `relatedPosts` rather than re-implementing the pick logic per site.",
+      "For a post detail page's Previous/Next navigation, compute both neighbors with `getAdjacentBlogPosts(posts, currentSlug, postBasePath)` (exported from `BlogSection.tsx`) and pass the result straight to `BlogPostDetail`'s `previous`/`next` props — do not reimplement chronological-adjacency logic per site. Either side renders nothing when there's no neighbor; distinct from `relatedPosts` (topical, same-category picks) rather than a replacement for it — both can render together.",
+      "`highlightOnHome?: boolean` on `BlogPostEntry` flags a post for the shared homepage highlight card — see the \"Homepage highlight\" example above and the Home Highlight pattern page for the full contract.",
       "SEO (`SEOHead`/`StructuredData` — `CollectionPage` for the list, `BlogPosting` for a post) and prerender route generation stay page-level, same as every other pattern.",
       "Component: `template/src/components/patterns/BlogSection.tsx` + `BlogPostDetail.tsx`"
     ]

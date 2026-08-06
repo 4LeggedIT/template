@@ -1,38 +1,44 @@
 {
   "hero": {
-    "title": "News Highlight pattern",
-    "description": "Let an editor flag one event or news entry to surface on the homepage."
+    "title": "Home Highlight pattern",
+    "description": "Let an editor flag one event, news entry, or blog post to surface as a homepage highlight card."
   },
-  "breadcrumb": "News Highlight Pattern",
+  "breadcrumb": "Home Highlight Pattern",
   "example": {
     "imageAlt": "Volunteers and a rescued dog at a community adoption event"
   },
   "sections": {
     "withImage": {
-      "title": "Example — with an image",
+      "title": "Example — Events/News, with an image",
       "part1": "The flagged entry (",
       "part2": ") has an",
       "part3": ", so the card renders it."
     },
     "withoutImage": {
-      "title": "Without an image",
+      "title": "Events/News, without an image",
       "part1": "The flagged entry (",
       "part2": ") has no",
       "part3": "— the card renders text-only, never a broken-image placeholder."
+    },
+    "blog": {
+      "title": "Example — Blog",
+      "description": "Same shared HomeHighlightSection component, driven by a Blog post flagged highlightOnHome via getBlogHighlightItem() instead of getEventsNewsHighlightItem()."
     }
   },
   "standard": {
     "title": "Standard",
     "items": [
-      "Set `highlightOnHome: true` on a single entry in the site's `EventsNewsEntry[]` data (event or news) to surface it on the homepage.",
-      "Pass the site's full combined `entries` array directly to `NewsHighlightSection` — do not pre-filter at the call site; selection happens inside the component.",
-      "If more than one entry is flagged at once, the component auto-resolves to the most recently dated one (never fails the build).",
-      "When no entry has `highlightOnHome: true`, the component renders nothing at all — deliberately no fallback to \"most recent entry\" and no empty-state placeholder. An editor must explicitly flag the entry they want surfaced.",
-      "Renders `imageSrc`/`imageAlt` only when present; never a broken-image placeholder for entries without one.",
-      "Distinct from `HomeEventBanner` (dismissible, time-bound event announcements) and from a full `EventsNewsSection` listing (shows everything) — this is a single curated highlight.",
-      "No dedicated site-specific wrapper file is required; a site's `Index.tsx` (or equivalent home page) imports `NewsHighlightSection` directly and passes its combined entries straight through.",
-      "Shared field: `highlightOnHome?: boolean` on `EventsNewsBaseEntry` in `EventsNewsSection.tsx`",
-      "Component: `template/src/components/patterns/NewsHighlightSection.tsx`"
+      "`HomeHighlightSection` is a generic renderer — it takes an already-selected `item: HomeHighlightItem | null`, not a raw entries array. Selection lives in the source module, not the component.",
+      "Set `highlightOnHome: true` on a single entry in the site's `EventsNewsEntry[]` data (event or news) to surface it via `getEventsNewsHighlightItem(entries, eventDetailsBasePath?)`, exported from `EventsNewsSection.tsx`.",
+      "For a Blog post, set `highlightOnHome: true` on the post in the site's `BlogPostEntry[]` data and select it via `getBlogHighlightItem(posts, postBasePath?)`, exported from `BlogSection.tsx` — the identical flag/fallback contract, just on the Blog module.",
+      "If more than one entry/post is flagged at once, the selector auto-resolves to the most recently dated one (never fails the build).",
+      "When nothing is flagged, the selector returns `null` and `HomeHighlightSection` renders nothing at all — deliberately no fallback to \"most recent entry\" and no empty-state placeholder. An editor must explicitly flag the item they want surfaced; never auto-pin a site's first/only entry.",
+      "Renders `imageSrc`/`imageAlt` only when present; never a broken-image placeholder for items without one.",
+      "Distinct from `HomeEventBanner` (dismissible, time-bound event announcements) and from a full `EventsNewsSection`/`BlogSection` listing (shows everything) — this is a single curated highlight.",
+      "No dedicated site-specific wrapper file is required; a site's `Index.tsx` (or equivalent home page) calls the relevant selector and passes its result straight into `HomeHighlightSection`.",
+      "Shared fields: `highlightOnHome?: boolean` on `EventsNewsBaseEntry` (`EventsNewsSection.tsx`) and on `BlogPostEntry` (`BlogSection.tsx`).",
+      "Renamed 2026-08-05 from `NewsHighlightSection` — generalized to a shared `HomeHighlightItem` shape so Blog could reuse the same homepage-highlight card instead of a near-duplicate component.",
+      "Component: `template/src/components/patterns/HomeHighlightSection.tsx`"
     ]
   }
 }

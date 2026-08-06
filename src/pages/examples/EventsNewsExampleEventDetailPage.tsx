@@ -1,8 +1,11 @@
 import PageHero from "@/components/patterns/PageHero";
 import SEOHead from "@/components/patterns/SEOHead";
 import EventsNewsDetail from "@/components/patterns/EventsNewsDetail";
-import { getEventsNewsExampleEventBySlug } from "@/pages/examples/eventsNewsExampleData";
+import { getAdjacentEntries } from "@/components/patterns/EventsNewsSection";
+import { eventsNewsExampleEntries, getEventsNewsExampleEventBySlug } from "@/pages/examples/eventsNewsExampleData";
 import { getNextOccurrence, describeRecurrence, type EventRecurrence } from "@/lib/event-recurrence";
+
+const EVENT_DETAILS_BASE_PATH = "/examples/events-news/events";
 
 type EventsNewsExampleEventDetailPageProps = {
   eventSlug: string;
@@ -81,6 +84,13 @@ const EventsNewsExampleEventDetailPage = ({ eventSlug }: EventsNewsExampleEventD
     ? dateTimeFormatter.format(new Date(nextOccurrence.startAtIso))
     : event.dateLabel ?? event.startAt;
 
+  // "event-basket-raffle-monthly" has local detail content (highlights + an image) but no
+  // registered example route (see AppRoutes.tsx) — excluded here so the Previous/Next demo
+  // never links to a 404. A real site's entries/routes stay in sync, so this exclusion is
+  // reference-example-only.
+  const adjacencyEntries = eventsNewsExampleEntries.filter((entry) => entry.id !== "event-basket-raffle-monthly");
+  const { previous, next } = getAdjacentEntries(adjacencyEntries, eventSlug, EVENT_DETAILS_BASE_PATH);
+
   // Fold the live-computed occurrence date (and recurrence summary) into the entry passed to
   // EventsNewsDetail — the shared pattern always prefers an explicit dateLabel/summary over its
   // own fallback formatter, so this is the correct extension point rather than duplicating markup.
@@ -114,6 +124,8 @@ const EventsNewsExampleEventDetailPage = ({ eventSlug }: EventsNewsExampleEventD
           entry={displayEvent}
           backHref="/standards/events-news"
           shareUrl={typeof window !== "undefined" ? window.location.href : canonicalPath}
+          previous={previous}
+          next={next}
           labels={{ backToIndex: "Back to Events & News index" }}
         />
       </section>
