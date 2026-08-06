@@ -6,9 +6,23 @@ import EventBanner, { type EventBannerItem } from "@/components/patterns/EventBa
 import FormEmbedModal from "@/components/patterns/FormEmbedModal";
 import EventActions from "@/components/patterns/EventActions";
 import SocialFollowCta, { type SocialFollowCtaProps } from "@/components/patterns/SocialFollowCta";
-import type { HomeHighlightItem } from "@/components/patterns/HomeHighlightSection";
 import { cn } from "@/lib/utils";
 import { type EventRecurrence, buildRrule, getOccurrenceDates } from "@/lib/event-recurrence";
+import type { ReactNode } from "react";
+
+// Structurally identical to HomeHighlightSection.tsx's `HomeHighlightItem` — declared locally
+// (rather than imported) so this module has no dependency on the highlight-card pattern. Sites
+// that don't carry HomeHighlightSection.tsx (e.g. 4leggedit) can still sync this file standalone.
+export type EventsNewsHighlightItem = {
+  id: string;
+  title: string;
+  summary?: string;
+  href?: string;
+  imageSrc?: string;
+  imageAlt?: string;
+  badgeLabel: string;
+  badgeIcon: ReactNode;
+};
 
 type EventsNewsEntryKind = "event" | "news";
 type EventsNewsArticleType = "external" | "local";
@@ -546,7 +560,7 @@ export const getEventsNewsHighlightItem = (
   entries: EventsNewsEntry[],
   eventDetailsBasePath?: string,
   labels?: { eventBadge?: string; newsBadge?: string },
-): HomeHighlightItem | null => {
+): EventsNewsHighlightItem | null => {
   const entry = entries.filter((candidate) => candidate.highlightOnHome).sort(byNewestFirst)[0];
   if (!entry) return null;
 

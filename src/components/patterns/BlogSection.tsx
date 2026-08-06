@@ -3,8 +3,21 @@ import { Link } from "react-router-dom";
 import { ArrowRight, BookOpen, Clock } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import type { HomeHighlightItem } from "@/components/patterns/HomeHighlightSection";
 import { cn } from "@/lib/utils";
+import type { ReactNode } from "react";
+
+// Structurally identical to HomeHighlightSection.tsx's `HomeHighlightItem` — declared locally
+// (rather than imported) so this module has no dependency on the highlight-card pattern.
+export type BlogHighlightItem = {
+  id: string;
+  title: string;
+  summary?: string;
+  href?: string;
+  imageSrc?: string;
+  imageAlt?: string;
+  badgeLabel: string;
+  badgeIcon: ReactNode;
+};
 
 export type BlogPostEntry = {
   id: string;
@@ -139,7 +152,7 @@ export const getBlogHighlightItem = (
   posts: BlogPostEntry[],
   postBasePath?: string,
   labels?: { badgeLabel?: string },
-): HomeHighlightItem | null => {
+): BlogHighlightItem | null => {
   const post = posts.filter((candidate) => candidate.highlightOnHome).sort(byNewestFirst)[0];
   if (!post) return null;
 
