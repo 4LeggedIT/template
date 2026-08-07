@@ -40,11 +40,11 @@ type BlogPostDetailProps = {
 };
 
 // Content grammar (ported from 4leggedit's original BlogArticle.tsx parser):
-// "## " headings, "> " blockquotes, "- " list items, full-line "**bold**" emphasis
-// paragraphs, plain paragraphs, fenced ``` code blocks (optional language), and inline
-// `code`, [text](url) links, and **bold**.
+// "## " headings, "### " subheadings, "> " blockquotes, "- " list items, full-line
+// "**bold**" emphasis paragraphs, plain paragraphs, fenced ``` code blocks (optional
+// language), and inline `code`, [text](url) links, and **bold**.
 
-type BlogContentBlockType = "heading" | "paragraph" | "list" | "emphasis" | "blockquote" | "codeblock";
+type BlogContentBlockType = "heading" | "subheading" | "paragraph" | "list" | "emphasis" | "blockquote" | "codeblock";
 
 type BlogContentBlock = {
   type: BlogContentBlockType;
@@ -103,7 +103,11 @@ const parseBlogContent = (content: string): BlogContentBlock[] => {
       continue;
     }
 
-    if (line.startsWith("## ")) {
+    if (line.startsWith("### ")) {
+      flushList();
+      flushBlockquote();
+      blocks.push({ type: "subheading", content: line.replace("### ", "") });
+    } else if (line.startsWith("## ")) {
       flushList();
       flushBlockquote();
       blocks.push({ type: "heading", content: line.replace("## ", "") });
@@ -193,6 +197,12 @@ const renderBlogContentBlock = (block: BlogContentBlock, index: number) => {
           <span className="h-8 w-1 flex-shrink-0 rounded-full bg-primary" />
           {block.content}
         </h2>
+      );
+    case "subheading":
+      return (
+        <h3 key={index} className="mb-3 mt-8 text-xl font-bold tracking-tight">
+          {block.content}
+        </h3>
       );
     case "list":
       return (
