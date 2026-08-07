@@ -78,6 +78,14 @@ export type EventsNewsImage = {
   alt?: string;
 };
 
+export type EventsNewsImageOverride = {
+  /** YYYY-MM-DD — matches a recurring event's generated occurrence `startAt`. */
+  date: string;
+  imageSrc?: string;
+  imageAlt?: string;
+  images?: EventsNewsImage[];
+};
+
 export type EventsNewsVideoEmbed = {
   provider: "facebook";
   /** Full URL to the source Facebook video or Reel post, e.g. https://www.facebook.com/reel/123... */
@@ -120,6 +128,8 @@ export type EventsNewsEventEntry = EventsNewsBaseEntry & {
   registrationUrl?: string;
   moreInfoUrl?: string;
   recurrence?: EventsNewsEventRecurrence;
+  /** Per-occurrence image swap for recurring events — falls back to imageSrc/imageAlt/images when no entry matches the occurrence date. */
+  imageOverrides?: EventsNewsImageOverride[];
 };
 
 export type EventsNewsArticleEntry = EventsNewsBaseEntry & {
@@ -258,6 +268,25 @@ const getTimedOccurrenceIso = (seedIso: string, occurrenceDate: Date) => {
   ).toISOString();
 };
 
+/**
+ * Resolves the image fields to render for a given occurrence date: the matching `imageOverrides`
+ * entry when one exists for that date, otherwise the source's own default imageSrc/imageAlt/images.
+ * Shared so site-local detail-page mappings can apply the same override lookup as the card list.
+ */
+export const resolveEventsNewsDateImage = <
+  T extends { imageSrc?: string; imageAlt?: string; images?: EventsNewsImage[]; imageOverrides?: EventsNewsImageOverride[] },
+>(
+  source: T,
+  dateYmd: string,
+): { imageSrc?: string; imageAlt?: string; images?: EventsNewsImage[] } => {
+  const override = source.imageOverrides?.find((entry) => entry.date === dateYmd);
+  return {
+    imageSrc: override?.imageSrc ?? source.imageSrc,
+    imageAlt: override?.imageAlt ?? source.imageAlt,
+    images: override?.images ?? source.images,
+  };
+};
+
 const expandEventEntry = (
   entry: EventsNewsEventEntry,
   rangeStart: Date,
@@ -298,6 +327,7 @@ const expandEventEntry = (
 
     return {
       ...entry,
+      ...resolveEventsNewsDateImage(entry, startAt),
       id: `${entry.id}__${startAt}`,
       sourceEventId: entry.id,
       recurrenceInstance: true,
