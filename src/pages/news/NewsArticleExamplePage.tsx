@@ -1,3 +1,5 @@
+// check-event-recurrence-ignore: fixed kind:"news" example entry — the "recurrence" field only
+// exists on the "event" variant of EventsNewsEntry, so this page can never need it.
 import PageHero from "@/components/patterns/PageHero";
 import SEOHead from "@/components/patterns/SEOHead";
 import EventsNewsDetail from "@/components/patterns/EventsNewsDetail";
