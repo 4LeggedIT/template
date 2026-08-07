@@ -1,7 +1,7 @@
 import { renderToString } from "react-dom/server";
 import { MotionConfig } from "framer-motion";
 import { HelmetProvider } from "react-helmet-async/lib/index.esm.js";
-import { StaticRouter } from "react-router-dom/server";
+import { StaticRouter } from "react-router-dom";
 import "./i18n";
 import ScrollToTop from "./components/ScrollToTop";
 import AppProviders from "./AppProviders";
