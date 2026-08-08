@@ -275,9 +275,27 @@ const getTimedOccurrenceIso = (seedIso: string, occurrenceDate: Date) => {
 };
 
 /**
+ * Resolves the single thumbnail (imageSrc/imageAlt) a card, highlight, or detail-page hero
+ * should use: the entry's own `imageSrc` when set, otherwise its first `images[]` entry.
+ * Every render site that needs exactly one thumbnail (never a gallery) must go through this —
+ * reading `.imageSrc` directly silently drops entries/overrides authored with only `images[]`.
+ */
+const resolveThumbnailImage = <T extends { imageSrc?: string; imageAlt?: string; images?: EventsNewsImage[] }>(
+  source: T,
+): { imageSrc?: string; imageAlt?: string } => ({
+  imageSrc: source.imageSrc ?? source.images?.[0]?.src,
+  imageAlt: source.imageAlt ?? source.images?.[0]?.alt,
+});
+
+/**
  * Resolves the image fields to render for a given occurrence date: the matching `imageOverrides`
  * entry when one exists for that date, otherwise the source's own default imageSrc/imageAlt/images.
  * Shared so site-local detail-page mappings can apply the same override lookup as the card list.
+ *
+ * An override that sets only `images` (no `imageSrc`) resolves its thumbnail from its own
+ * `images[0]`, never from the source's unrelated default `imageSrc` — otherwise the card-list
+ * thumbnail (which only ever reads `imageSrc`, see `resolveThumbnailImage`) would silently show
+ * every other occurrence's image on the one date that was supposed to look different.
  */
 export const resolveEventsNewsDateImage = <
   T extends { imageSrc?: string; imageAlt?: string; images?: EventsNewsImage[]; imageOverrides?: EventsNewsImageOverride[] },
@@ -286,9 +304,11 @@ export const resolveEventsNewsDateImage = <
   dateYmd: string,
 ): { imageSrc?: string; imageAlt?: string; images?: EventsNewsImage[] } => {
   const override = source.imageOverrides?.find((entry) => entry.date === dateYmd);
+  const overrideThumb = override ? resolveThumbnailImage(override) : undefined;
+  const sourceThumb = resolveThumbnailImage(source);
   return {
-    imageSrc: override?.imageSrc ?? source.imageSrc,
-    imageAlt: override?.imageAlt ?? source.imageAlt,
+    imageSrc: overrideThumb?.imageSrc ?? sourceThumb.imageSrc,
+    imageAlt: overrideThumb?.imageAlt ?? sourceThumb.imageAlt,
     images: override?.images ?? source.images,
   };
 };
@@ -668,13 +688,14 @@ export const getEventsNewsHighlightItem = (
   const entry = entries.filter((candidate) => candidate.highlightOnHome).sort(byNewestFirst)[0];
   if (!entry) return null;
 
+  const thumb = resolveThumbnailImage(entry);
   return {
     id: entry.id,
     title: entry.title,
     summary: entry.summary,
     href: getDetailsHref(entry, eventDetailsBasePath) ?? undefined,
-    imageSrc: entry.imageSrc,
-    imageAlt: entry.imageAlt,
+    imageSrc: thumb.imageSrc,
+    imageAlt: thumb.imageAlt,
     badgeLabel: entry.kind === "news" ? labels?.newsBadge ?? "News" : labels?.eventBadge ?? "Event",
     badgeIcon:
       entry.kind === "news" ? <Newspaper className="h-3.5 w-3.5" /> : <CalendarDays className="h-3.5 w-3.5" />,
@@ -971,14 +992,18 @@ const renderEntryCard = (
     );
   };
 
+  // Falls back to the entry's first `images[]` entry when `imageSrc` isn't set — see
+  // `resolveThumbnailImage`. Matters for entries/overrides authored with only a gallery.
+  const cardThumb = resolveThumbnailImage(entry);
+
   const topImage =
     resolvedImageLayout === "top" && entry.videoEmbed ? (
       <div className="bg-muted p-4">{renderVideoEmbed(entry.videoEmbed, entry.title)}</div>
-    ) : resolvedImageLayout === "top" && entry.imageSrc ? (
+    ) : resolvedImageLayout === "top" && cardThumb.imageSrc ? (
       renderImageLink(
         <img
-          src={entry.imageSrc}
-          alt={entry.imageAlt ?? entry.title}
+          src={cardThumb.imageSrc}
+          alt={cardThumb.imageAlt ?? entry.title}
           className="w-full max-h-[520px] object-contain"
           loading="lazy"
         />,
@@ -989,11 +1014,11 @@ const renderEntryCard = (
   // Side/alternating card thumbnails always use imageSrc, never videoEmbed — same rule as
   // HomeHighlightSection's featured card thumbnail.
   const sideImage =
-    isSideLayout && entry.imageSrc
+    isSideLayout && cardThumb.imageSrc
       ? renderImageLink(
           <img
-            src={entry.imageSrc}
-            alt={entry.imageAlt ?? entry.title}
+            src={cardThumb.imageSrc}
+            alt={cardThumb.imageAlt ?? entry.title}
             className="h-full w-full object-cover"
             loading="lazy"
           />,
