@@ -20,6 +20,7 @@ type FormEmbedModalProps = {
   triggerClassName?: string;
   triggerVariant?: ButtonVariant;
   triggerSize?: ButtonSize;
+  triggerAriaLabel?: string;
   asButton?: boolean;
   open?: boolean;
   onOpenChange?: (open: boolean) => void;
@@ -39,6 +40,7 @@ const FormEmbedModal = ({
   triggerClassName,
   triggerVariant = "default",
   triggerSize = "default",
+  triggerAriaLabel,
   asButton = true,
   open,
   onOpenChange,
@@ -75,7 +77,7 @@ const FormEmbedModal = ({
 
   const trigger = children ? (asButton ? (
       <Button variant={triggerVariant} size={triggerSize} className={triggerClassName} asChild>
-        <a href={formUrl} target="_blank" rel="noopener noreferrer" onClick={onTriggerClick}>
+        <a href={formUrl} target="_blank" rel="noopener noreferrer" aria-label={triggerAriaLabel} onClick={onTriggerClick}>
           {children}
         </a>
       </Button>
@@ -84,6 +86,7 @@ const FormEmbedModal = ({
         href={formUrl}
         target="_blank"
         rel="noopener noreferrer"
+        aria-label={triggerAriaLabel}
         className={cn("cursor-pointer", triggerClassName)}
         onClick={onTriggerClick}
       >
