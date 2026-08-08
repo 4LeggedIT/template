@@ -122,7 +122,6 @@ const SiteHeader = ({ sticky = true, className }: SiteHeaderProps) => {
           id="mobile-menu-toggle"
           type="checkbox"
           className="peer sr-only md:hidden"
-          aria-hidden="true"
         />
 
         <div className="flex h-16 items-center justify-between gap-4">
