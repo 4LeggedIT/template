@@ -424,7 +424,7 @@ const getEventEndMs = (entry: EventsNewsRenderableEventEntry) => {
   return Number.isFinite(endDate) ? endDate : null;
 };
 
-const getEventStatus = (entry: EventsNewsRenderableEventEntry): "upcoming" | "ongoing" | "past" => {
+export const getEventStatus = (entry: EventsNewsRenderableEventEntry): "upcoming" | "ongoing" | "past" => {
   const now = Date.now();
   const startMs = getEventStartMs(entry);
   const endMs = getEventEndMs(entry);

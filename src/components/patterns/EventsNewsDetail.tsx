@@ -7,6 +7,7 @@ import FormEmbedModal from "@/components/patterns/FormEmbedModal";
 import {
   formatFallbackDateLabel,
   getEntryContentBlocks,
+  getEventStatus,
   getGoogleCalendarUrl,
   getMapsUrl,
   renderContentBlock,
@@ -183,6 +184,9 @@ const EventsNewsDetail = ({
   };
 
   const isEvent = entry.kind === "event";
+  // Once an event is over, "Open in Maps"/"Add to Calendar"/share are no longer actionable —
+  // hide the whole action bar rather than showing controls for something that already happened.
+  const isPastEvent = isEvent && getEventStatus(entry) === "past";
   const dateLabel = entry.dateLabel ?? formatFallbackDateLabel(entry);
   const mapsUrl = isEvent ? mapsUrlOverride ?? getMapsUrl(entry) : null;
   const calendarUrl = isEvent ? calendarUrlOverride ?? getGoogleCalendarUrl(entry) : null;
@@ -237,7 +241,7 @@ const EventsNewsDetail = ({
           </a>
         ) : null}
 
-        {isEvent && shareUrl ? (
+        {isEvent && shareUrl && !isPastEvent ? (
           <EventActions
             url={shareUrl}
             title={entry.calendarTitle ?? entry.title}
