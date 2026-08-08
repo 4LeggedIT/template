@@ -1,9 +1,10 @@
+import { useSearchParams } from "react-router-dom";
 import PageHero from "@/components/patterns/PageHero";
 import SEOHead from "@/components/patterns/SEOHead";
 import EventsNewsDetail from "@/components/patterns/EventsNewsDetail";
-import { getAdjacentEntries } from "@/components/patterns/EventsNewsSection";
+import { getAdjacentEntries, resolveEventOccurrence } from "@/components/patterns/EventsNewsSection";
 import { eventsNewsExampleEntries, getEventsNewsExampleEventBySlug } from "@/pages/examples/eventsNewsExampleData";
-import { getNextOccurrence, describeRecurrence, type EventRecurrence } from "@/lib/event-recurrence";
+import { describeRecurrence, type EventRecurrence } from "@/lib/event-recurrence";
 
 const EVENT_DETAILS_BASE_PATH = "/examples/events-news/events";
 
@@ -45,8 +46,16 @@ function formatRecurrenceSummary(recurrence: EventRecurrence, seedStartIso: stri
 }
 
 const EventsNewsExampleEventDetailPage = ({ eventSlug }: EventsNewsExampleEventDetailPageProps) => {
-  const event = getEventsNewsExampleEventBySlug(eventSlug);
+  const rawEvent = getEventsNewsExampleEventBySlug(eventSlug);
   const canonicalPath = `/examples/events-news/events/${eventSlug}`;
+
+  // `resolveEventOccurrence()` is the one shared entry point every site's detail page should call
+  // for this: it resolves a recurring event to the `?date=` occurrence a list card linked to (see
+  // EventsNewsSection.tsx's expandEventEntry(), which stamps that param onto each occurrence's
+  // href), falling back to the live next occurrence when the param is absent or invalid.
+  const [searchParams] = useSearchParams();
+  const requestedDate = searchParams.get("date") ?? undefined;
+  const event = rawEvent ? resolveEventOccurrence(rawEvent, new Date(), requestedDate) : rawEvent;
 
   if (!event) {
     return (
@@ -71,17 +80,10 @@ const EventsNewsExampleEventDetailPage = ({ eventSlug }: EventsNewsExampleEventD
     );
   }
 
-  const nextOccurrence =
-    event.recurrence && event.startAtIso && event.endAtIso
-      ? getNextOccurrence(event.recurrence, event.startAtIso, event.endAtIso)
-      : null;
-  const showRecurrenceInfo = Boolean(event.recurrence) && nextOccurrence !== null;
   const recurrenceSummary =
-    showRecurrenceInfo && event.recurrence && event.startAtIso
-      ? formatRecurrenceSummary(event.recurrence, event.startAtIso)
-      : null;
-  const dateLabel = nextOccurrence
-    ? dateTimeFormatter.format(new Date(nextOccurrence.startAtIso))
+    event.recurrence && event.startAtIso ? formatRecurrenceSummary(event.recurrence, event.startAtIso) : null;
+  const dateLabel = event.startAtIso
+    ? dateTimeFormatter.format(new Date(event.startAtIso))
     : event.dateLabel ?? event.startAt;
 
   // "event-basket-raffle-monthly" has local detail content (highlights + an image) but no
@@ -89,7 +91,15 @@ const EventsNewsExampleEventDetailPage = ({ eventSlug }: EventsNewsExampleEventD
   // never links to a 404. A real site's entries/routes stay in sync, so this exclusion is
   // reference-example-only.
   const adjacencyEntries = eventsNewsExampleEntries.filter((entry) => entry.id !== "event-basket-raffle-monthly");
-  const { previous, next } = getAdjacentEntries(adjacencyEntries, eventSlug, EVENT_DETAILS_BASE_PATH);
+  // Pass the resolved event's own occurrence date so a recurring series' Previous/Next match the
+  // exact occurrence being viewed, not whichever occurrence of that series sorts first — see
+  // getAdjacentEntries()'s doc comment in EventsNewsSection.tsx.
+  const { previous, next } = getAdjacentEntries(
+    adjacencyEntries,
+    eventSlug,
+    EVENT_DETAILS_BASE_PATH,
+    event.recurrence ? event.startAt : undefined,
+  );
 
   // Fold the live-computed occurrence date (and recurrence summary) into the entry passed to
   // EventsNewsDetail — the shared pattern always prefers an explicit dateLabel/summary over its

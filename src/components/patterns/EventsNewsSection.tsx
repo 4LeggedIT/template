@@ -7,7 +7,13 @@ import FormEmbedModal from "@/components/patterns/FormEmbedModal";
 import EventActions from "@/components/patterns/EventActions";
 import SocialFollowCta, { type SocialFollowCtaProps } from "@/components/patterns/SocialFollowCta";
 import { cn } from "@/lib/utils";
-import { type EventRecurrence, buildRrule, getOccurrenceDates } from "@/lib/event-recurrence";
+import {
+  type EventRecurrence,
+  buildRrule,
+  getNextOccurrence,
+  getOccurrenceDates,
+  getOccurrenceOnDate,
+} from "@/lib/event-recurrence";
 import type { ReactNode } from "react";
 
 // Structurally identical to HomeHighlightSection.tsx's `HomeHighlightItem` — declared locally
@@ -287,6 +293,54 @@ export const resolveEventsNewsDateImage = <
   };
 };
 
+// Appends the occurrence date as a `?date=` query param to a local detail-page href, so each
+// expanded occurrence of a recurring event deep-links to itself instead of every occurrence
+// (past, ongoing, upcoming) sharing one URL that always resolves to the live occurrence.
+const withOccurrenceDateParam = (href: string | undefined, dateYmd: string): string | undefined => {
+  if (!href || !href.startsWith("/")) return href;
+  const separator = href.includes("?") ? "&" : "?";
+  return `${href}${separator}date=${dateYmd}`;
+};
+
+/**
+ * Resolves a recurring event entry to one concrete occurrence: `requestedDateYmd` when it's a
+ * real generated occurrence of the recurrence, otherwise the live occurrence relative to `now`.
+ * Returns the entry unchanged when it isn't recurring (or the requested/live lookup fails).
+ *
+ * Centralizes the occurrence-math every site's detail page used to reimplement independently
+ * (as `getEffectiveEvent()`, `resolveEntry()`, `toDetailEntry()`, ...) — sites still own building
+ * their own dateLabel/recurrence-summary sentence from `describeRecurrence()` (bilingual concerns
+ * differ per site), applied only to the single entry passed to `<EventsNewsDetail>` — never to
+ * the array passed to `getAdjacentEntries()`, or every occurrence's Previous/Next label would show
+ * this one entry's frozen date instead of its own.
+ */
+export const resolveEventOccurrence = <T extends EventsNewsEventEntry>(
+  entry: T,
+  now: Date,
+  requestedDateYmd?: string,
+): T => {
+  if (!entry.recurrence) return entry;
+
+  const seedStartIso = entry.startAtIso ?? `${entry.startAt}T12:00:00Z`;
+  const seedEndIso = entry.endAtIso ?? `${entry.endAt ?? entry.startAt}T23:59:59Z`;
+
+  const requestedOccurrence = requestedDateYmd
+    ? getOccurrenceOnDate(entry.recurrence, seedStartIso, seedEndIso, entry.startAt, requestedDateYmd)
+    : null;
+  const occurrence = requestedOccurrence ?? getNextOccurrence(entry.recurrence, seedStartIso, seedEndIso, now.getTime());
+  if (!occurrence) return entry;
+
+  const startAt = occurrence.startAtIso.slice(0, 10);
+  return {
+    ...entry,
+    ...resolveEventsNewsDateImage(entry, startAt),
+    startAt,
+    endAt: entry.endAt ? occurrence.endAtIso.slice(0, 10) : entry.endAt,
+    startAtIso: entry.startAtIso ? occurrence.startAtIso : undefined,
+    endAtIso: entry.endAtIso ? occurrence.endAtIso : undefined,
+  };
+};
+
 const expandEventEntry = (
   entry: EventsNewsEventEntry,
   rangeStart: Date,
@@ -335,6 +389,7 @@ const expandEventEntry = (
       endAt,
       startAtIso,
       endAtIso,
+      href: withOccurrenceDateParam(entry.href, startAt),
     };
   });
 };
@@ -401,8 +456,15 @@ const toDetailsPath = (id: string, basePath: string) => {
   return `${normalizedBase}/${slug}`;
 };
 
-const toEventDetailsHref = (entry: EventsNewsRenderableEventEntry, basePath: string) =>
-  toDetailsPath(entry.sourceEventId ?? entry.id, basePath);
+const toEventDetailsHref = (entry: EventsNewsRenderableEventEntry, basePath: string) => {
+  const path = toDetailsPath(entry.sourceEventId ?? entry.id, basePath);
+  if (!path) return null;
+  // A recurrence-instance entry's path is built fresh from its series id, bypassing the
+  // `?date=` param expandEventEntry() stamps onto an explicit `entry.href` — stamp it here too,
+  // so sites that rely on `eventDetailsBasePath` (rather than authoring a per-entry href) still
+  // get one addressable URL per occurrence instead of every occurrence sharing the series' URL.
+  return entry.recurrenceInstance ? withOccurrenceDateParam(path, entry.startAt) ?? path : path;
+};
 
 const hasLocalEventDetailContent = (entry: EventsNewsRenderableEventEntry) =>
   Boolean(
@@ -542,11 +604,18 @@ const toEventDisplayBuckets = (entries: EventsNewsRenderableEntry[]) => {
  * `previous`/`next` props. Timeline is every entry with a resolvable detail link (active
  * events, archived/past event occurrences, and news), oldest first — `currentId` matches
  * either the exact (possibly recurrence-expanded) entry id or its `sourceEventId`.
+ *
+ * A recurring series expands into one timeline entry per occurrence, all sharing the same
+ * `sourceEventId` — matching on `currentId` alone would always land on whichever occurrence
+ * happens to sort first, not the one actually being viewed. Pass `currentOccurrenceStartAt`
+ * (the viewed entry's own, already-resolved `startAt` — see `resolveEventOccurrence()`) to
+ * disambiguate; omit it only for non-recurring entries, where there's exactly one occurrence.
  */
 export const getAdjacentEntries = (
   entries: EventsNewsEntry[],
   currentId: string,
   eventDetailsBasePath?: string,
+  currentOccurrenceStartAt?: string,
 ): { previous: EventsNewsAdjacentEntry | null; next: EventsNewsAdjacentEntry | null } => {
   const renderableEntries = getRenderableEntries(entries);
   const { activeEvents, archivedEvents } = toEventDisplayBuckets(renderableEntries);
@@ -558,9 +627,14 @@ export const getAdjacentEntries = (
     .filter((entry) => Boolean(getDetailsHref(entry, eventDetailsBasePath)))
     .sort((left, right) => getSortMs(left) - getSortMs(right));
 
-  const currentIndex = timeline.findIndex(
-    (entry) => entry.id === currentId || (entry.kind === "event" && entry.sourceEventId === currentId),
-  );
+  const matchesCurrent = (entry: EventsNewsRenderableEntry) => {
+    const idMatches = entry.id === currentId || (entry.kind === "event" && entry.sourceEventId === currentId);
+    if (!idMatches) return false;
+    if (currentOccurrenceStartAt && entry.kind === "event") return entry.startAt === currentOccurrenceStartAt;
+    return true;
+  };
+
+  const currentIndex = timeline.findIndex(matchesCurrent);
   if (currentIndex === -1) return { previous: null, next: null };
 
   const toAdjacent = (entry: EventsNewsRenderableEntry | undefined): EventsNewsAdjacentEntry | null => {

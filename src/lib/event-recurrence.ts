@@ -255,6 +255,37 @@ export function getNextOccurrence(
 }
 
 /**
+ * Resolves one specific occurrence date to its start/end ISO timestamps, honoring the seed's
+ * time-of-day and duration — used to deep-link a specific past/future occurrence (e.g. the one a
+ * user clicked in a list of expanded occurrences) instead of always resolving to the "next live"
+ * occurrence relative to now. Returns null if `dateYmd` isn't actually a generated occurrence of
+ * this recurrence (respects `until`/`count`/`skipDates`, same as `getOccurrenceDates`).
+ */
+export function getOccurrenceOnDate(
+  recurrence: EventRecurrence,
+  seedStartIso: string,
+  seedEndIso: string,
+  seedStartYmd: string,
+  dateYmd: string,
+): EventOccurrence | null {
+  const seedStartMs = Date.parse(seedStartIso);
+  const seedEndMs = Date.parse(seedEndIso);
+  if (!Number.isFinite(seedStartMs) || !Number.isFinite(seedEndMs) || seedEndMs < seedStartMs) return null;
+
+  const requestedDate = parseYmdUtc(dateYmd);
+  if (!requestedDate) return null;
+
+  const matches = getOccurrenceDates(recurrence, seedStartYmd, requestedDate, requestedDate);
+  if (!matches.length) return null;
+
+  const seedStart = new Date(seedStartMs);
+  const durationMs = seedEndMs - seedStartMs;
+  const occurrenceStartIso = toOccurrenceIso(seedStart, requestedDate);
+  const occurrenceStartMs = Date.parse(occurrenceStartIso);
+  return { startAtIso: occurrenceStartIso, endAtIso: new Date(occurrenceStartMs + durationMs).toISOString() };
+}
+
+/**
  * Resolves a recurrence rule into plain data (frequency, interval, resolved weekdays/month-day)
  * for the caller to interpolate into its own localized sentence templates. Intentionally returns
  * no English text — sites render their own strings (some are bilingual, some aren't).

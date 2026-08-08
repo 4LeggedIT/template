@@ -1,11 +1,18 @@
 // Governance check: module-wiring-contracts.md "Recurrence display" rule (~L101) — any page
-// rendering the shared EventsNewsDetail pattern must, for recurring events, (1) resolve the live
-// next occurrence via getNextOccurrence() and (2) render a recurrence badge/summary built from
-// describeRecurrence() — both from lib/event-recurrence.ts — never just the frozen seed date.
-// Resolution may happen in the page itself (fosterpawsnetwork, roversreturndogrescue,
-// the-comeback-pack, themisfitranch) or in a src/data/*.ts accessor the page calls through
-// (feedingperrisstrays' getEffectiveEvent()) — this check follows local imports from src/data and
-// src/lib to find each function either way, so every valid pattern in the fleet passes.
+// rendering the shared EventsNewsDetail pattern must, for recurring events, (1) resolve the
+// occurrence (live next, or a requested `?date=` occurrence) via getNextOccurrence() — directly,
+// or via the shared resolveEventOccurrence() (components/patterns/EventsNewsSection.tsx), which
+// wraps it — and (2) render a recurrence badge/summary built from describeRecurrence() — both
+// from lib/event-recurrence.ts — never just the frozen seed date. Resolution may happen in the
+// page itself (calling getNextOccurrence()/resolveEventOccurrence() directly — the common case
+// since resolveEventOccurrence() was added) or in a src/data/*.ts accessor the page calls through
+// (feedingperrisstrays' getEffectiveEvent(), used for its non-detail-page listing helpers) — this
+// check follows local imports from src/data and src/lib to find getNextOccurrence() either way,
+// so every valid pattern in the fleet passes. resolveEventOccurrence() itself is checked only as
+// a direct page-level call (not followed transitively), since it lives under components/patterns/
+// alongside many unrelated exports — treating any import of that file as proof of resolution would
+// make the check pass for pages that import it for something else (e.g. getAdjacentEntries) but
+// never actually resolve an occurrence.
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -101,13 +108,18 @@ const findInResolutionChain = (pageFile, fnRe) => {
 };
 
 const GET_NEXT_OCCURRENCE_RE = /\bgetNextOccurrence\s*\(/;
+const RESOLVE_EVENT_OCCURRENCE_RE = /\bresolveEventOccurrence\s*\(/;
 const DESCRIBE_RECURRENCE_RE = /\bdescribeRecurrence\s*\(/;
 
 const dateViolations = [];
 const badgeViolations = [];
 
 for (const pageFile of detailPages) {
-  if (!findInResolutionChain(pageFile, GET_NEXT_OCCURRENCE_RE)) dateViolations.push(pageFile);
+  // resolveEventOccurrence() is checked as a direct call in the page only (not followed into
+  // src/data|src/lib transitively, since it isn't defined there) — see the file-header comment.
+  const pageSource = readSafe(pageFile);
+  const resolvesDirectly = RESOLVE_EVENT_OCCURRENCE_RE.test(pageSource);
+  if (!resolvesDirectly && !findInResolutionChain(pageFile, GET_NEXT_OCCURRENCE_RE)) dateViolations.push(pageFile);
   if (!findInResolutionChain(pageFile, DESCRIBE_RECURRENCE_RE)) badgeViolations.push(pageFile);
 }
 
