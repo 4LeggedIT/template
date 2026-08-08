@@ -70,6 +70,6 @@ Build-infrastructure tools (`build.mjs`, `app-routes.mjs`, `check-internal-links
 
 ## Notes for Contributors
 
-1. **SEO:** Every page component uses `<SEOHead>` with `title`, `description`, and `canonicalPath`.
+1. **SEO:** Every page component uses `<SEOHead>` with `title`, `description`, and `canonicalPath`. Org-identity JSON-LD (`Organization`/`NonprofitOrganization`/`LocalBusiness`, configurable via `siteConfig.organization.type`) is emitted automatically at the app-shell level via `lib/organizationJsonLd.ts` + `<StructuredData>` (wired in `App.tsx`/`entry-server.tsx`) — no per-page action needed. See `internal-tools/4leggedit-websites/docs/governance/module-wiring-contracts.md`'s `lib/organizationJsonLd.ts` contract.
 2. **Never invent facts:** any example data representing a real organization must be sourced from that organization's real, public listings, with a clear non-affiliation disclosure (see the Adoptable Pets pattern pages).
 3. **Patterns travel verbatim:** if changing a shared pattern component's behavior, change it in `internal-tools/templates-sources/patterns/` first, then sync here — never diverge this repo's copy from upstream (except the infrastructure exemptions noted above).

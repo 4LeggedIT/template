@@ -29,6 +29,7 @@ export type SiteConfig = {
   organization?: {
     type?: string;
     legalName?: string;
+    alternateName?: string;
     ein?: string;
     location?: string;
   };
@@ -52,7 +53,7 @@ export const siteConfig: SiteConfig = {
   },
   contact: {},
   organization: {
-    type: "",
+    type: "NonprofitOrganization",
     legalName: "",
     location: "",
   },

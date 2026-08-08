@@ -6,6 +6,8 @@ import "./i18n";
 import ScrollToTop from "./components/ScrollToTop";
 import AppProviders from "./AppProviders";
 import AppRoutes from "./AppRoutes";
+import StructuredData from "./components/patterns/StructuredData";
+import { organizationJsonLd } from "./lib/organizationJsonLd";
 
 type RenderResult = {
   appHtml: string;
@@ -23,6 +25,7 @@ export async function render(url: string): Promise<RenderResult> {
       <HelmetProvider context={helmetContext}>
         <AppProviders>
           <StaticRouter location={url}>
+            <StructuredData data={organizationJsonLd} />
             <ScrollToTop />
             <AppRoutes />
           </StaticRouter>
