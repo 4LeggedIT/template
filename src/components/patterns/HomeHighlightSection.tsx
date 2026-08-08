@@ -80,7 +80,9 @@ const HomeHighlightSection = ({ item, title, description, className, labels = {}
             {item.href ? (
               <CardContent className="pt-0">
                 <Button asChild variant="link" className="px-0">
-                  <Link to={item.href}>{ctaLabel}</Link>
+                  <Link to={item.href} aria-label={`${ctaLabel}: ${item.title}`}>
+                    {ctaLabel}
+                  </Link>
                 </Button>
               </CardContent>
             ) : null}

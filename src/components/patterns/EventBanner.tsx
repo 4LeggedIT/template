@@ -207,7 +207,11 @@ const EventBanner = ({
                 <div className="flex items-center gap-3">
                   {event.ctaHref ? (
                     event.ctaHref.startsWith("/") ? (
-                      <Link to={event.ctaHref} className="text-sm font-semibold text-primary hover:underline">
+                      <Link
+                        to={event.ctaHref}
+                        aria-label={`${event.ctaLabel ?? detailsFallback}: ${event.title}`}
+                        className="text-sm font-semibold text-primary hover:underline"
+                      >
                         {event.ctaLabel ?? detailsFallback}
                       </Link>
                     ) : (
@@ -215,6 +219,7 @@ const EventBanner = ({
                         href={event.ctaHref}
                         target="_blank"
                         rel="noopener noreferrer"
+                        aria-label={`${event.ctaLabel ?? detailsFallback}: ${event.title}`}
                         className="text-sm font-semibold text-primary hover:underline"
                       >
                         {event.ctaLabel ?? detailsFallback}
