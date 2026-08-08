@@ -102,15 +102,14 @@ const EventBanner = ({
     dismissAriaLabel = "Dismiss event banner",
     detailsFallback = "Details",
   } = labels;
-  const [visibleIds, setVisibleIds] = useState<string[]>(() => {
+  const [visibleEvents, setVisibleEvents] = useState<EventBannerItem[]>(() => {
     const now = Date.now();
     return getRenderableEvents(events, now)
       .filter((event) => {
         const expiresAtMs = getExpiryMs(event);
         return typeof expiresAtMs === "number" ? now < expiresAtMs : true;
       })
-      .slice(0, maxVisible)
-      .map((event) => event.id);
+      .slice(0, maxVisible);
   });
   const expiryTimeoutRef = useRef<number | null>(null);
 
@@ -141,7 +140,7 @@ const EventBanner = ({
       });
 
       const chosen = eligible.slice(0, maxVisible);
-      setVisibleIds(chosen.map((event) => event.id));
+      setVisibleEvents(chosen);
 
       const nextExpiry = chosen
         .map((event) => getExpiryMs(event))
@@ -160,10 +159,6 @@ const EventBanner = ({
     return clearTimer;
   }, [events, storageKeyPrefix, maxVisible]);
 
-  // Recomputed fresh on every render on purpose, so an event's visible/expired
-  // status stays accurate rather than freezing at first mount.
-  // eslint-disable-next-line react-hooks/purity
-  const visibleEvents = getRenderableEvents(events, Date.now()).filter((event) => visibleIds.includes(event.id));
   if (!visibleEvents.length) return null;
 
   const dismissEvent = (event: EventBannerItem) => {
@@ -171,7 +166,7 @@ const EventBanner = ({
     if (typeof expiresAtMs === "number") {
       window.localStorage.setItem(`${storageKeyPrefix}_${event.id}`, String(expiresAtMs));
     }
-    setVisibleIds((prev) => prev.filter((id) => id !== event.id));
+    setVisibleEvents((prev) => prev.filter((e) => e.id !== event.id));
   };
 
   return (
