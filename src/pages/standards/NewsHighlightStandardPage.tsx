@@ -1,10 +1,10 @@
 import { useTranslation } from "react-i18next";
-import HomeHighlightSection from "@/components/patterns/HomeHighlightSection";
+import HomeHighlightSection, { type HomeHighlightItem } from "@/components/patterns/HomeHighlightSection";
 import PageHero from "@/components/patterns/PageHero";
 import SEOHead from "@/components/patterns/SEOHead";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { getEventsNewsHighlightItem, type EventsNewsEntry } from "@/components/patterns/EventsNewsSection";
-import { getBlogHighlightItem } from "@/components/patterns/BlogSection";
+import { getEventsNewsHighlightItems, type EventsNewsEntry } from "@/components/patterns/EventsNewsSection";
+import { getBlogHighlightItems } from "@/components/patterns/BlogSection";
 import { eventsNewsExampleEntries } from "@/pages/examples/eventsNewsExampleData";
 import { blogExamplePosts } from "@/pages/examples/blogExampleData";
 
@@ -29,6 +29,21 @@ const NewsHighlightStandardPage = () => {
   const blogHighlightPosts = blogExamplePosts.map((post) =>
     post.slug === "lunas-journey-home" ? { ...post, highlightOnHome: true } : post,
   );
+
+  // Mixed showcase: flag two Events/News entries plus one Blog post, then merge both selectors'
+  // output by sortMs (newest first) before handing the combined list to a single
+  // HomeHighlightSection — the pattern a real site's Home.tsx follows to mix content types.
+  const mixedEventsNewsEntries: EventsNewsEntry[] = eventsNewsExampleEntries.map((entry) =>
+    entry.id === "news-local-spotlight-2026-02-24" || entry.id === "news-grant-2026-03-01"
+      ? { ...entry, highlightOnHome: true }
+      : entry,
+  );
+  const mixedItems: HomeHighlightItem[] = [
+    ...getEventsNewsHighlightItems(mixedEventsNewsEntries),
+    ...getBlogHighlightItems(blogHighlightPosts, "/examples/blog"),
+  ]
+    .sort((a, b) => b.sortMs - a.sortMs)
+    .slice(0, 3);
 
   return (
     <>
@@ -57,7 +72,7 @@ const NewsHighlightStandardPage = () => {
             {t("newsHighlight:sections.withImage.part2")} <code>imageSrc</code>
             {t("newsHighlight:sections.withImage.part3")}
           </p>
-          <HomeHighlightSection item={getEventsNewsHighlightItem(withImageEntries)} />
+          <HomeHighlightSection items={getEventsNewsHighlightItems(withImageEntries)} />
         </div>
 
         <div className="space-y-3">
@@ -68,13 +83,19 @@ const NewsHighlightStandardPage = () => {
             {t("newsHighlight:sections.withoutImage.part2")} <code>imageSrc</code>{" "}
             {t("newsHighlight:sections.withoutImage.part3")}
           </p>
-          <HomeHighlightSection item={getEventsNewsHighlightItem(withoutImageEntries)} />
+          <HomeHighlightSection items={getEventsNewsHighlightItems(withoutImageEntries)} />
         </div>
 
         <div className="space-y-3">
           <h2 className="text-lg font-semibold">{t("newsHighlight:sections.blog.title")}</h2>
           <p className="text-sm text-muted-foreground">{t("newsHighlight:sections.blog.description")}</p>
-          <HomeHighlightSection item={getBlogHighlightItem(blogHighlightPosts, "/examples/blog")} />
+          <HomeHighlightSection items={getBlogHighlightItems(blogHighlightPosts, "/examples/blog")} />
+        </div>
+
+        <div className="space-y-3">
+          <h2 className="text-lg font-semibold">{t("newsHighlight:sections.mixed.title")}</h2>
+          <p className="text-sm text-muted-foreground">{t("newsHighlight:sections.mixed.description")}</p>
+          <HomeHighlightSection items={mixedItems} />
         </div>
 
         <Card>

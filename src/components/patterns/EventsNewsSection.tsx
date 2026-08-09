@@ -28,6 +28,7 @@ export type EventsNewsHighlightItem = {
   imageAlt?: string;
   badgeLabel: string;
   badgeIcon: ReactNode;
+  sortMs: number;
 };
 
 type EventsNewsEntryKind = "event" | "news";
@@ -676,31 +677,36 @@ export const getAdjacentEntries = (
 };
 
 /**
- * Selects the entry flagged `highlightOnHome` (most recent if more than one) and maps it to
- * the generic shape `HomeHighlightSection` renders. Returns `null` when nothing is flagged —
- * callers must not fall back to "most recent entry"; see the "no auto-pin" governance rule.
+ * Selects every entry flagged `highlightOnHome`, newest first, and maps each to the generic
+ * shape `HomeHighlightSection` renders. Returns `[]` when nothing is flagged — callers must not
+ * fall back to "most recent entry"; see the "no auto-pin" governance rule. Uncapped: pass the
+ * result straight to `HomeHighlightSection` (it caps at `MAX_HOME_HIGHLIGHT_ITEMS`), or merge
+ * with another source module's `get*HighlightItems()` output (sort by `sortMs` descending, then
+ * slice) before passing in, when combining more than one content type on the homepage.
  */
-export const getEventsNewsHighlightItem = (
+export const getEventsNewsHighlightItems = (
   entries: EventsNewsEntry[],
   eventDetailsBasePath?: string,
   labels?: { eventBadge?: string; newsBadge?: string },
-): EventsNewsHighlightItem | null => {
-  const entry = entries.filter((candidate) => candidate.highlightOnHome).sort(byNewestFirst)[0];
-  if (!entry) return null;
-
-  const thumb = resolveThumbnailImage(entry);
-  return {
-    id: entry.id,
-    title: entry.title,
-    summary: entry.summary,
-    href: getDetailsHref(entry, eventDetailsBasePath) ?? undefined,
-    imageSrc: thumb.imageSrc,
-    imageAlt: thumb.imageAlt,
-    badgeLabel: entry.kind === "news" ? labels?.newsBadge ?? "News" : labels?.eventBadge ?? "Event",
-    badgeIcon:
-      entry.kind === "news" ? <Newspaper className="h-3.5 w-3.5" /> : <CalendarDays className="h-3.5 w-3.5" />,
-  };
-};
+): EventsNewsHighlightItem[] =>
+  entries
+    .filter((candidate) => candidate.highlightOnHome)
+    .sort(byNewestFirst)
+    .map((entry) => {
+      const thumb = resolveThumbnailImage(entry);
+      return {
+        id: entry.id,
+        title: entry.title,
+        summary: entry.summary,
+        href: getDetailsHref(entry, eventDetailsBasePath) ?? undefined,
+        imageSrc: thumb.imageSrc,
+        imageAlt: thumb.imageAlt,
+        badgeLabel: entry.kind === "news" ? labels?.newsBadge ?? "News" : labels?.eventBadge ?? "Event",
+        badgeIcon:
+          entry.kind === "news" ? <Newspaper className="h-3.5 w-3.5" /> : <CalendarDays className="h-3.5 w-3.5" />,
+        sortMs: getSortMs(entry),
+      };
+    });
 
 const getBannerUpcomingEvents = (entries: EventsNewsRenderableEntry[]) => {
   const now = Date.now();

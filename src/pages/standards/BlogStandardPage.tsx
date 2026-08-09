@@ -73,7 +73,7 @@ const BlogStandardPage = () => {
           <h2 className="text-lg font-semibold">{t("blog:sections.highlight.title")}</h2>
           <p className="text-sm text-muted-foreground">
             {t("blog:sections.highlight.part1")} <code>highlightOnHome</code> {t("blog:sections.highlight.part2")}{" "}
-            <code>getBlogHighlightItem()</code> {t("blog:sections.highlight.part3")}{" "}
+            <code>getBlogHighlightItems()</code> {t("blog:sections.highlight.part3")}{" "}
             <code>HomeHighlightSection</code> {t("blog:sections.highlight.part4")}{" "}
             <Link className="underline underline-offset-4" to="/standards/news-highlight">
               {t("blog:sections.highlight.linkLabel")}

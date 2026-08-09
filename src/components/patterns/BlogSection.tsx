@@ -17,6 +17,7 @@ export type BlogHighlightItem = {
   imageAlt?: string;
   badgeLabel: string;
   badgeIcon: ReactNode;
+  sortMs: number;
 };
 
 export type BlogPostEntry = {
@@ -41,7 +42,7 @@ export type BlogPostEntry = {
   /** Preferred pick for showFeatured's hero card when featuredPostId isn't set. */
   featured?: boolean;
   /**
-   * Flags this post for `HomeHighlightSection` via `getBlogHighlightItem()`. Optional,
+   * Flags this post for `HomeHighlightSection` via `getBlogHighlightItems()`. Optional,
    * backward-compatible — mirrors `EventsNewsBaseEntry.highlightOnHome` exactly, including the
    * "no auto-pin" rule: never default this to `true` just because it's a site's first/only post.
    */
@@ -115,30 +116,38 @@ export const getRelatedBlogPosts = (posts: BlogPostEntry[], currentSlug: string,
     .sort(byNewestFirst)
     .slice(0, limit);
 
+const getPostSortMs = (post: BlogPostEntry) => {
+  const ms = Date.parse(post.publishedAt);
+  return Number.isFinite(ms) ? ms : 0;
+};
+
 /**
- * Selects the post flagged `highlightOnHome` (most recent if more than one) and maps it to the
- * generic shape `HomeHighlightSection` renders. Returns `null` when nothing is flagged — callers
- * must not fall back to "most recent post"; see the "no auto-pin" governance rule.
+ * Selects every post flagged `highlightOnHome`, newest first, and maps each to the generic
+ * shape `HomeHighlightSection` renders. Returns `[]` when nothing is flagged — callers must not
+ * fall back to "most recent post"; see the "no auto-pin" governance rule. Uncapped: pass the
+ * result straight to `HomeHighlightSection` (it caps at `MAX_HOME_HIGHLIGHT_ITEMS`), or merge
+ * with another source module's `get*HighlightItems()` output (sort by `sortMs` descending, then
+ * slice) before passing in, when combining more than one content type on the homepage.
  */
-export const getBlogHighlightItem = (
+export const getBlogHighlightItems = (
   posts: BlogPostEntry[],
   postBasePath?: string,
   labels?: { badgeLabel?: string },
-): BlogHighlightItem | null => {
-  const post = posts.filter((candidate) => candidate.highlightOnHome).sort(byNewestFirst)[0];
-  if (!post) return null;
-
-  return {
-    id: post.id,
-    title: post.title,
-    summary: post.excerpt,
-    href: postBasePath ? `${postBasePath}/${post.slug}` : undefined,
-    imageSrc: post.imageSrc,
-    imageAlt: post.imageAlt,
-    badgeLabel: labels?.badgeLabel ?? (post.category ? formatCategoryLabel(post.category) : "Blog"),
-    badgeIcon: <BookOpen className="h-3.5 w-3.5" />,
-  };
-};
+): BlogHighlightItem[] =>
+  posts
+    .filter((candidate) => candidate.highlightOnHome)
+    .sort(byNewestFirst)
+    .map((post) => ({
+      id: post.id,
+      title: post.title,
+      summary: post.excerpt,
+      href: postBasePath ? `${postBasePath}/${post.slug}` : undefined,
+      imageSrc: post.imageSrc,
+      imageAlt: post.imageAlt,
+      badgeLabel: labels?.badgeLabel ?? (post.category ? formatCategoryLabel(post.category) : "Blog"),
+      badgeIcon: <BookOpen className="h-3.5 w-3.5" />,
+      sortMs: getPostSortMs(post),
+    }));
 
 export const formatCategoryLabel = (value: string) =>
   value

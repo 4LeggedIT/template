@@ -1,7 +1,7 @@
 {
   "hero": {
     "title": "Patrón de Destacado de Inicio",
-    "description": "Permita que un editor marque un evento, noticia o publicación de blog para destacarlo como tarjeta en la página de inicio."
+    "description": "Permita que un editor marque hasta tres eventos, noticias o publicaciones de blog para destacarlos juntos como tarjetas en la página de inicio."
   },
   "breadcrumb": "Patrón de Destacado de Inicio",
   "example": {
@@ -22,21 +22,27 @@
     },
     "blog": {
       "title": "Ejemplo — Blog",
-      "description": "El mismo componente compartido HomeHighlightSection, impulsado por una publicación de blog marcada con highlightOnHome mediante getBlogHighlightItem() en lugar de getEventsNewsHighlightItem()."
+      "description": "El mismo componente compartido HomeHighlightSection, impulsado por una publicación de blog marcada con highlightOnHome mediante getBlogHighlightItems() en lugar de getEventsNewsHighlightItems()."
+    },
+    "mixed": {
+      "title": "Ejemplo — Mixto, hasta tres elementos",
+      "description": "Tres elementos marcados provenientes de dos módulos de origen distintos — dos entradas de Eventos/Noticias más una publicación de Blog — combinados por sortMs (más reciente primero) y pasados a un único HomeHighlightSection como items. Un elemento muestra la tarjeta destacada original; dos o tres se muestran como una cuadrícula compacta."
     }
   },
   "standard": {
     "title": "Estándar",
     "items": [
-      "`HomeHighlightSection` es un renderizador genérico — recibe un `item: HomeHighlightItem | null` ya seleccionado, no un arreglo de entradas sin procesar. La selección vive en el módulo de origen, no en el componente.",
-      "Configure `highlightOnHome: true` en una sola entrada de los datos `EventsNewsEntry[]` del sitio (evento o noticia) para destacarla mediante `getEventsNewsHighlightItem(entries, eventDetailsBasePath?)`, exportado desde `EventsNewsSection.tsx`.",
-      "Para una publicación de Blog, configure `highlightOnHome: true` en la publicación dentro de los datos `BlogPostEntry[]` del sitio y selecciónela mediante `getBlogHighlightItem(posts, postBasePath?)`, exportado desde `BlogSection.tsx` — el mismo contrato de marca/respaldo, solo que en el módulo de Blog.",
-      "Si se marca más de una entrada/publicación a la vez, el selector resuelve automáticamente hacia la más reciente por fecha (nunca falla la compilación).",
-      "Cuando no hay nada marcado, el selector devuelve `null` y `HomeHighlightSection` no muestra nada en absoluto — deliberadamente no hay respaldo hacia \"la entrada más reciente\" ni un estado vacío de reemplazo. Un editor debe marcar explícitamente el elemento que quiere destacar; nunca fije automáticamente la primera/única entrada de un sitio.",
+      "`HomeHighlightSection` es un renderizador genérico — recibe un `items: HomeHighlightItem[]` ya seleccionado, no un arreglo de entradas sin procesar. La selección vive en el módulo de origen, no en el componente.",
+      "Configure `highlightOnHome: true` en hasta tres entradas de los datos `EventsNewsEntry[]` del sitio (evento o noticia) para destacarlas mediante `getEventsNewsHighlightItems(entries, eventDetailsBasePath?)`, exportado desde `EventsNewsSection.tsx` — devuelve cada entrada marcada, de más reciente a más antigua.",
+      "Para una publicación de Blog, configure `highlightOnHome: true` en la publicación dentro de los datos `BlogPostEntry[]` del sitio y selecciónela mediante `getBlogHighlightItems(posts, postBasePath?)`, exportado desde `BlogSection.tsx` — el mismo contrato de marca/respaldo, solo que en el módulo de Blog.",
+      "Para mezclar tipos de contenido (por ejemplo, eventos/noticias más blog) en una misma página de inicio, llame a ambos selectores, concatene los resultados, ordénelos por el `sortMs` de cada elemento de forma descendente, y luego tome los primeros 3 antes de pasarlos a `HomeHighlightSection`. `HomeHighlightSection` también limita de forma defensiva a `MAX_HOME_HIGHLIGHT_ITEMS` (3) por sí mismo.",
+      "Un elemento muestra la tarjeta destacada horizontal original; dos o tres se muestran como una cuadrícula responsiva de tarjetas compactas — el componente cambia de diseño automáticamente según `items.length`.",
+      "Cuando no hay nada marcado, un selector devuelve `[]` y `HomeHighlightSection` no muestra nada en absoluto — deliberadamente no hay respaldo hacia \"la entrada más reciente\" ni un estado vacío de reemplazo. Un editor debe marcar explícitamente cada elemento que quiere destacar; nunca fije automáticamente la primera/única entrada de un sitio.",
       "Muestra `imageSrc`/`imageAlt` solo cuando están presentes; nunca un marcador de imagen rota para elementos sin una.",
-      "Es distinto de `HomeEventBanner` (anuncios de eventos descartables y limitados en el tiempo) y de un listado completo de `EventsNewsSection`/`BlogSection` (que muestra todo) — este es un único destacado curado.",
-      "No se requiere un archivo envoltorio específico del sitio; el `Index.tsx` de un sitio (o la página de inicio equivalente) llama al selector correspondiente y pasa su resultado directamente a `HomeHighlightSection`.",
+      "Es distinto de `HomeEventBanner` (anuncios de eventos descartables y limitados en el tiempo) y de un listado completo de `EventsNewsSection`/`BlogSection` (que muestra todo) — esto es un pequeño conjunto de destacados curados, no un listado.",
+      "No se requiere un archivo envoltorio específico del sitio; el `Index.tsx` de un sitio (o la página de inicio equivalente) llama al/los selector(es) correspondiente(s) y pasa el resultado directamente a `HomeHighlightSection`.",
       "Campos compartidos: `highlightOnHome?: boolean` en `EventsNewsBaseEntry` (`EventsNewsSection.tsx`) y en `BlogPostEntry` (`BlogSection.tsx`).",
+      "Ampliado el 2026-08-08 de una propiedad de un solo elemento `item: HomeHighlightItem | null` a una propiedad de múltiples elementos `items: HomeHighlightItem[]` (límite 3) — los selectores se renombraron de `get*HighlightItem` a `get*HighlightItems` y ahora devuelven cada elemento marcado en lugar de resolver automáticamente solo el más reciente.",
       "Renombrado el 2026-08-05 desde `NewsHighlightSection` — generalizado a una forma compartida `HomeHighlightItem` para que Blog pudiera reutilizar la misma tarjeta de destacado de inicio en lugar de un componente casi duplicado.",
       "Componente: `template/src/components/patterns/HomeHighlightSection.tsx`"
     ]

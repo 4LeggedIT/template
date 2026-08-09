@@ -3,7 +3,7 @@ import { MemoryRouter } from "react-router-dom";
 import { describe, expect, it } from "vitest";
 import BlogSection, {
   estimateReadTime,
-  getBlogHighlightItem,
+  getBlogHighlightItems,
   getRelatedBlogPosts,
   type BlogPostEntry,
 } from "@/components/patterns/BlogSection";
@@ -150,16 +150,17 @@ describe("getRelatedBlogPosts", () => {
   });
 });
 
-describe("getBlogHighlightItem", () => {
-  it("returns null when no post is flagged highlightOnHome", () => {
-    expect(getBlogHighlightItem(posts, "/blog")).toBeNull();
+describe("getBlogHighlightItems", () => {
+  it("returns an empty array when no post is flagged highlightOnHome", () => {
+    expect(getBlogHighlightItems(posts, "/blog")).toEqual([]);
   });
 
   it("maps the flagged post to the generic HomeHighlightItem shape", () => {
     const flagged: BlogPostEntry[] = [posts[0], { ...posts[1], highlightOnHome: true }];
-    const item = getBlogHighlightItem(flagged, "/blog");
+    const items = getBlogHighlightItems(flagged, "/blog");
 
-    expect(item).toMatchObject({
+    expect(items).toHaveLength(1);
+    expect(items[0]).toMatchObject({
       id: "2",
       title: "An Adoption Story",
       summary: "A story excerpt.",
@@ -170,16 +171,16 @@ describe("getBlogHighlightItem", () => {
     });
   });
 
-  it("auto-resolves to the most recent when more than one post is flagged", () => {
+  it("returns every flagged post, newest first", () => {
     const flagged: BlogPostEntry[] = [
       { ...posts[0], highlightOnHome: true },
       { ...posts[1], highlightOnHome: true },
     ];
-    expect(getBlogHighlightItem(flagged, "/blog")?.id).toBe("2");
+    expect(getBlogHighlightItems(flagged, "/blog").map((item) => item.id)).toEqual(["2", "1"]);
   });
 
   it("renders no href when postBasePath is omitted", () => {
     const flagged: BlogPostEntry[] = [{ ...posts[0], highlightOnHome: true }];
-    expect(getBlogHighlightItem(flagged)?.href).toBeUndefined();
+    expect(getBlogHighlightItems(flagged)[0]?.href).toBeUndefined();
   });
 });
