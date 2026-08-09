@@ -9,55 +9,55 @@ const DogSpotlightStandardPage = () => {
 
   const dogs: DogSpotlightItem[] = [
     {
-      id: "molly",
-      name: "Molly",
+      id: "juniper",
+      name: "Juniper",
       rescueId: "example-rescue",
       rescueName: "Example Rescue",
-      detailsUrl: "https://www.getbuddy.com/pet/example-molly",
+      detailsUrl: "https://www.getbuddy.com/pet/example-juniper",
       image: "https://images.unsplash.com/photo-1552053831-71594a27632d?auto=format&fit=crop&w=800&q=80",
-      breed: t("dogSpotlight:dogs.molly.breed"),
-      gender: t("dogSpotlight:dogs.molly.gender"),
-      age: t("dogSpotlight:dogs.molly.age"),
+      breed: t("dogSpotlight:dogs.juniper.breed"),
+      gender: t("dogSpotlight:dogs.juniper.gender"),
+      age: t("dogSpotlight:dogs.juniper.age"),
     },
     {
-      id: "dexter",
-      name: "Dexter",
+      id: "buster",
+      name: "Buster",
       rescueId: "example-rescue",
       rescueName: "Example Rescue",
-      detailsUrl: "https://www.getbuddy.com/pet/example-dexter",
-      image: "https://images.unsplash.com/photo-1589941013453-ec89f33b5e95?auto=format&fit=crop&w=800&q=80",
-      breed: t("dogSpotlight:dogs.dexter.breed"),
-      gender: t("dogSpotlight:dogs.dexter.gender"),
-      age: t("dogSpotlight:dogs.dexter.age"),
+      detailsUrl: "https://www.getbuddy.com/pet/example-buster",
+      image: "https://images.unsplash.com/photo-1442605527737-ed62b867591f?auto=format&fit=crop&w=800&q=80",
+      breed: t("dogSpotlight:dogs.buster.breed"),
+      gender: t("dogSpotlight:dogs.buster.gender"),
+      age: t("dogSpotlight:dogs.buster.age"),
     },
     {
-      id: "king",
-      name: "King",
+      id: "willow",
+      name: "Willow",
       rescueId: "example-rescue",
       rescueName: "Example Rescue",
-      detailsUrl: "https://www.getbuddy.com/pet/example-king",
-      image: "https://images.unsplash.com/photo-1568572933382-74d440642117?auto=format&fit=crop&w=800&q=80",
-      breed: t("dogSpotlight:dogs.king.breed"),
-      gender: t("dogSpotlight:dogs.king.gender"),
-      age: t("dogSpotlight:dogs.king.age"),
+      detailsUrl: "https://www.getbuddy.com/pet/example-willow",
+      image: "https://images.unsplash.com/photo-1503256207526-0d5d80fa2f47?auto=format&fit=crop&w=800&q=80",
+      breed: t("dogSpotlight:dogs.willow.breed"),
+      gender: t("dogSpotlight:dogs.willow.gender"),
+      age: t("dogSpotlight:dogs.willow.age"),
     },
     {
-      id: "zuko",
-      name: "Zuko",
+      id: "atlas",
+      name: "Atlas",
       rescueId: "example-rescue",
       rescueName: "Example Rescue",
-      detailsUrl: "https://www.getbuddy.com/pet/example-zuko",
-      image: "https://images.unsplash.com/photo-1553882809-a4f57e59501d?auto=format&fit=crop&w=800&q=80",
-      breed: t("dogSpotlight:dogs.zuko.breed"),
-      gender: t("dogSpotlight:dogs.zuko.gender"),
-      age: t("dogSpotlight:dogs.zuko.age"),
+      detailsUrl: "https://www.getbuddy.com/pet/example-atlas",
+      image: "https://images.unsplash.com/photo-1587469889554-7b59b6365db6?auto=format&fit=crop&w=800&q=80",
+      breed: t("dogSpotlight:dogs.atlas.breed"),
+      gender: t("dogSpotlight:dogs.atlas.gender"),
+      age: t("dogSpotlight:dogs.atlas.age"),
     },
   ];
 
   const dogWithoutLink: DogSpotlightItem[] = [
     {
       ...dogs[0],
-      id: "molly-no-link",
+      id: "juniper-no-link",
       detailsUrl: undefined,
     },
   ];
@@ -88,6 +88,17 @@ const DogSpotlightStandardPage = () => {
             {t("dogSpotlight:sections.example.descriptionRest")}
           </p>
           <DogSpotlightSection dogs={dogs} />
+        </div>
+
+        <div className="space-y-3">
+          <h2 className="text-lg font-semibold">{t("dogSpotlight:sections.withHeader.title")}</h2>
+          <p className="text-sm text-muted-foreground">{t("dogSpotlight:sections.withHeader.description")}</p>
+          <DogSpotlightSection
+            dogs={dogs}
+            title={t("dogSpotlight:sections.withHeader.sectionTitle")}
+            description={t("dogSpotlight:sections.withHeader.sectionDescription")}
+            labels={{ ctaPrefix: t("dogSpotlight:sections.withHeader.ctaPrefix") }}
+          />
         </div>
 
         <div className="space-y-3">

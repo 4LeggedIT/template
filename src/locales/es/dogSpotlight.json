@@ -5,16 +5,23 @@
   },
   "breadcrumb": "Patrón de Perros Destacados",
   "dogs": {
-    "molly": { "breed": "Pastor Alemán, Raza Mixta", "gender": "Hembra", "age": "1 año" },
-    "dexter": { "breed": "Pastor Alemán, Raza Mixta", "gender": "Macho", "age": "1 año" },
-    "king": { "breed": "Perro Boyero, Raza Mixta", "gender": "Macho", "age": "10 meses" },
-    "zuko": { "breed": "Pastor Belga / Malinois", "gender": "Macho", "age": "6 meses" }
+    "juniper": { "breed": "Labrador Retriever, Raza Mixta", "gender": "Hembra", "age": "2 años" },
+    "buster": { "breed": "Bóxer, Raza Mixta", "gender": "Macho", "age": "4 años" },
+    "willow": { "breed": "Border Collie, Raza Mixta", "gender": "Hembra", "age": "8 meses" },
+    "atlas": { "breed": "Gran Pirineo, Raza Mixta", "gender": "Macho", "age": "3 años" }
   },
   "sections": {
     "example": {
       "title": "Ejemplo",
       "descriptionMid": "acepta",
       "descriptionRest": "— la misma forma agnóstica de origen usada por el cargador de mascotas adoptables por manifiesto local, para que los datos seleccionados a mano y una futura importación automatizada (GetBuddy, Petfinder, manifiesto local) compartan un solo tipo."
+    },
+    "withHeader": {
+      "title": "Los mismos perros, una presentación distinta",
+      "description": "Los mismos cuatro perros del ejemplo anterior, pasados por el mismo componente — solo cambian las props opcionales `title`/`description`/`labels.ctaPrefix`, para mostrar que los datos en sí son independientes de la presentación.",
+      "sectionTitle": "Listos para su hogar definitivo",
+      "sectionDescription": "Estos cuatro llevan más tiempo esperando — dale a uno de ellos una segunda mirada.",
+      "ctaPrefix": "Adopta a"
     },
     "withoutLink": {
       "title": "Sin detailsUrl",

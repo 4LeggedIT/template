@@ -5,16 +5,23 @@
   },
   "breadcrumb": "Dog Spotlight Pattern",
   "dogs": {
-    "molly": { "breed": "German Shepherd Dog, Mixed Breed", "gender": "Female", "age": "1 year old" },
-    "dexter": { "breed": "German Shepherd Dog, Mixed Breed", "gender": "Male", "age": "1 year old" },
-    "king": { "breed": "Cattle Dog, Mixed Breed", "gender": "Male", "age": "10 months old" },
-    "zuko": { "breed": "Belgian Shepherd / Malinois", "gender": "Male", "age": "6 months old" }
+    "juniper": { "breed": "Labrador Retriever, Mixed Breed", "gender": "Female", "age": "2 years old" },
+    "buster": { "breed": "Boxer, Mixed Breed", "gender": "Male", "age": "4 years old" },
+    "willow": { "breed": "Border Collie, Mixed Breed", "gender": "Female", "age": "8 months old" },
+    "atlas": { "breed": "Great Pyrenees, Mixed Breed", "gender": "Male", "age": "3 years old" }
   },
   "sections": {
     "example": {
       "title": "Example",
       "descriptionMid": "accepts",
       "descriptionRest": "— the same source-agnostic shape used by the local-manifest adoptable-pets loader, so hand-curated data and a future automated pull (GetBuddy, Petfinder, local manifest) share one type."
+    },
+    "withHeader": {
+      "title": "Same dogs, a different presentation",
+      "description": "The exact same four dogs from the example above, passed through the same component — only the optional `title`/`description`/`labels.ctaPrefix` props change, to show the data itself is presentation-agnostic.",
+      "sectionTitle": "Ready for their forever home",
+      "sectionDescription": "These four have been waiting the longest — give one of them a second look.",
+      "ctaPrefix": "Adopt"
     },
     "withoutLink": {
       "title": "Without a detailsUrl",
