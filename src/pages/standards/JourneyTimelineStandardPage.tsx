@@ -114,6 +114,7 @@ const JourneyTimelineStandardPage = () => {
               {t("journeyTimeline:standard.pairsWith.mid")} <code>storyHref</code>{" "}
               {t("journeyTimeline:standard.pairsWith.after")}
             </p>
+            <p>- {t("journeyTimeline:standard.rescueJourneys")}</p>
             <p>- {t("journeyTimeline:standard.component")}</p>
           </CardContent>
         </Card>

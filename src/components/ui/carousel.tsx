@@ -15,6 +15,9 @@ type CarouselProps = {
   plugins?: CarouselPlugin;
   orientation?: "horizontal" | "vertical";
   setApi?: (api: CarouselApi) => void;
+  /** Auto-advances via `scrollNext()` every `delayMs`. Pauses on hover/focus and never
+   * starts at all when the visitor has `prefers-reduced-motion: reduce` set. */
+  autoPlay?: { delayMs: number };
 };
 
 type CarouselContextProps = {
@@ -39,7 +42,7 @@ function useCarousel() {
 }
 
 const Carousel = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement> & CarouselProps>(
-  ({ orientation = "horizontal", opts, setApi, plugins, className, children, ...props }, ref) => {
+  ({ orientation = "horizontal", opts, setApi, plugins, autoPlay, className, children, ...props }, ref) => {
     const [carouselRef, api] = useEmblaCarousel(
       {
         ...opts,
@@ -49,6 +52,7 @@ const Carousel = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivEl
     );
     const [canScrollPrev, setCanScrollPrev] = React.useState(false);
     const [canScrollNext, setCanScrollNext] = React.useState(false);
+    const [isPaused, setIsPaused] = React.useState(false);
 
     const onSelect = React.useCallback((api: CarouselApi) => {
       if (!api) {
@@ -105,6 +109,27 @@ const Carousel = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivEl
       };
     }, [api, onSelect]);
 
+    const autoPlayDelayMs = autoPlay?.delayMs;
+
+    React.useEffect(() => {
+      if (!api || !autoPlayDelayMs || isPaused) {
+        return;
+      }
+
+      if (typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+        return;
+      }
+
+      const interval = window.setInterval(() => {
+        api.scrollNext();
+      }, autoPlayDelayMs);
+
+      return () => window.clearInterval(interval);
+      // Depends on the primitive delayMs, not the `autoPlay` object reference — callers
+      // routinely pass an inline object literal (`autoPlay={{ delayMs: 5000 }}`), which is a new
+      // reference every render and would otherwise clear+re-arm the interval before it ever fires.
+    }, [api, autoPlayDelayMs, isPaused]);
+
     return (
       <CarouselContext.Provider
         value={{
@@ -121,6 +146,10 @@ const Carousel = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivEl
         <div
           ref={ref}
           onKeyDownCapture={handleKeyDown}
+          onMouseEnter={autoPlay ? () => setIsPaused(true) : undefined}
+          onMouseLeave={autoPlay ? () => setIsPaused(false) : undefined}
+          onFocus={autoPlay ? () => setIsPaused(true) : undefined}
+          onBlur={autoPlay ? () => setIsPaused(false) : undefined}
           className={cn("relative", className)}
           role="region"
           aria-roledescription="carousel"

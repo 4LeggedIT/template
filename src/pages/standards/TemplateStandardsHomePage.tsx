@@ -15,15 +15,15 @@ const docSections: DocSection[] = [
   { key: "dogSpotlight", href: "/standards/dog-spotlight", group: "petsAdoption" },
   { key: "found", href: "/standards/found", group: "petsAdoption" },
   { key: "placement", href: "/standards/placement-help", group: "petsAdoption" },
+  { key: "journeyTimeline", href: "/standards/journey-timeline", group: "storiesJourneys" },
+  { key: "successStories", href: "/standards/success-stories", group: "storiesJourneys" },
+  { key: "testimonials", href: "/standards/testimonials", group: "storiesJourneys" },
   { key: "eventsNews", href: "/standards/events-news", group: "contentEngagement" },
   { key: "newsHighlight", href: "/standards/news-highlight", group: "contentEngagement" },
   { key: "blog", href: "/standards/blog", group: "contentEngagement" },
-  { key: "journeyTimeline", href: "/standards/journey-timeline", group: "contentEngagement" },
-  { key: "successStories", href: "/standards/success-stories", group: "contentEngagement" },
-  { key: "testimonials", href: "/standards/testimonials", group: "contentEngagement" },
-  { key: "flyerLibrary", href: "/standards/flyer-library", group: "contentEngagement" },
-  { key: "mediaGallery", href: "/standards/media-gallery", group: "contentEngagement" },
   { key: "faq", href: "/standards/faq-disclosure", group: "contentEngagement" },
+  { key: "flyerLibrary", href: "/standards/flyer-library", group: "mediaLibraries" },
+  { key: "mediaGallery", href: "/standards/media-gallery", group: "mediaLibraries" },
   { key: "formEmbedModal", href: "/standards/form-embed-modal", group: "formsPayments" },
   { key: "paypalDonate", href: "/standards/paypal-donate", group: "formsPayments" },
   { key: "communityPartners", href: "/standards/community-partners", group: "community" },
@@ -38,7 +38,16 @@ const docSections: DocSection[] = [
   { key: "noJsFallbacks", href: "/standards/workflow/no-js-fallbacks", group: "workflow" },
 ];
 
-const groupOrder = ["petsAdoption", "contentEngagement", "formsPayments", "community", "tools", "workflow"];
+const groupOrder = [
+  "petsAdoption",
+  "storiesJourneys",
+  "contentEngagement",
+  "mediaLibraries",
+  "formsPayments",
+  "community",
+  "tools",
+  "workflow",
+];
 
 const TemplateStandardsHomePage = () => {
   const { t } = useTranslation(["standardsHome", "common"]);

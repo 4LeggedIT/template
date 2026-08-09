@@ -66,6 +66,7 @@
       "mid": "la cuadrícula curada de ese componente es el \"muro\"; esta es la página de detalle a la que apunta el",
       "after": "de cada tarjeta — vea el ejemplo compuesto arriba."
     },
+    "rescueJourneys": "Cómo componer una página completa de historias de rescate (vista previa → lista → detalle): las páginas de lista/vista previa se construyen con `SuccessStoriesSection` (vea los ejemplos en vivo de separación por estado y vista previa con rotación automática en la página de ese patrón); la página de detalle propia de cada perro muestra este componente. Implementación de referencia: `/pack-journeys` + `/pack-journeys/:slug` de `the-comeback-pack`.",
     "component": "Componente: `template/src/components/patterns/JourneyTimeline.tsx`"
   }
 }

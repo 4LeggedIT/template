@@ -6,7 +6,9 @@
   },
   "groups": {
     "petsAdoption": "Pets & Adoption",
+    "storiesJourneys": "Stories & Journeys",
     "contentEngagement": "Content & Engagement",
+    "mediaLibraries": "Media Libraries",
     "formsPayments": "Forms & Payments",
     "community": "Community",
     "tools": "Tools",

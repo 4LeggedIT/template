@@ -32,6 +32,13 @@
       "summary": "Shy intake that became a confident companion at home.",
       "storyContent": "Peaches needed a quieter placement and did well with slow introductions and consistency.",
       "badgeLabel": "Happy Tail"
+    },
+    "buddy": {
+      "imageAlt": "Energetic tan and white dog mid-run in a grassy park",
+      "petType": "Dog",
+      "breed": "Terrier Mix",
+      "summary": "High-energy and people-focused — does best with an active family and a fenced yard.",
+      "badgeLabel": "Available Now"
     }
   },
   "sections": {
@@ -44,6 +51,20 @@
       "part1": "Same",
       "part2": "data, with context/content/CTAs turned off and",
       "part3": "capping the grid — the settings a home page uses instead of a separate card component."
+    },
+    "split": {
+      "title": "Splitting by status (e.g. available vs. adopted)",
+      "description": "A site-owned status field — not part of SuccessStoryItem — decides which bucket a story falls into. Call this component twice with two filtered arrays instead of rendering one mixed grid.",
+      "availableTitle": "Available Now",
+      "adoptedTitle": "Happy Tails"
+    },
+    "carousel": {
+      "title": "Auto-rotating teaser (home-page carousel)",
+      "description": "Built directly on components/ui/carousel.tsx's autoPlay prop, not a mode on this component — pauses on hover/focus and respects prefers-reduced-motion. Hover to pause, or use the arrows."
+    },
+    "badgeDictionary": {
+      "title": "Idea: badge-driven detail-page CTAs (illustrative, not governance)",
+      "description": "Seen on a real rescue-client site: instead of free-text badge labels, give each story a badge key into a small dictionary — the same dictionary then decides which CTA button(s) that dog's own detail page shows, in order. No fragile string-matching on translated badge text, and no component change: this lives entirely in a site's own data/page files. Not a standardized part of SuccessStoriesSection — just a pattern worth reusing if it fits."
     }
   },
   "standard": {
@@ -56,6 +77,8 @@
       "Cards are no-JS readable; the portrait image and the optional story link (`storyHref`) both render as plain anchors — internal routes use `Link`, external URLs get `target=\"_blank\" rel=\"noreferrer\"`.",
       "`contentWidth=\"contained\"` narrows the section to a centered column; default is `\"full\"` width.",
       "`labels` overrides section copy (`adoptedLabel`, `readStoryLabel`, `adoptedPrefix`) for i18n/site customization.",
+      "Composing a rescue-journeys page: pair this with `JourneyTimeline` (see that pattern's page) and a site-owned `status` field (e.g. `\"in_care\" | \"adopted\"`) on your own story type — call this component twice with two filtered arrays for an in-care/adopted split, and derive impact-stat counts from the same field. No component change needed; `status` lives on your site's own extended type. See the live \"splitting by status\" example above; piloted on `the-comeback-pack`'s `/pack-journeys`.",
+      "A home-page teaser that needs to auto-rotate once it outgrows one row: build it from `components/ui/carousel.tsx`'s `autoPlay` prop directly rather than adding a carousel mode here — keeps this component's grid simple and the rotation behavior reusable outside this pattern too. See the live \"auto-rotating teaser\" example above, or `the-comeback-pack`'s real homepage teaser.",
       "Component: `template/src/components/patterns/SuccessStoriesSection.tsx`"
     ]
   }

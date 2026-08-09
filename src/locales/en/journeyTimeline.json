@@ -66,6 +66,7 @@
       "mid": "that component's curated grid is the \"wall,\" this is the detail page each card's",
       "after": "points to — see the composed example above."
     },
+    "rescueJourneys": "Composing a full rescue-journeys page (teaser → list → detail): the list/teaser pages are built from `SuccessStoriesSection` (see that pattern's page for the live status-split and auto-rotating-teaser examples); each dog's own detail page renders this component. Reference implementation: `the-comeback-pack`'s `/pack-journeys` + `/pack-journeys/:slug`.",
     "component": "Component: `template/src/components/patterns/JourneyTimeline.tsx`"
   }
 }

@@ -32,6 +32,13 @@
       "summary": "Un ingreso tímido que se convirtió en una compañera segura en casa.",
       "storyContent": "Peaches necesitó una colocación más tranquila y le fue bien con presentaciones lentas y constancia.",
       "badgeLabel": "Historia Feliz"
+    },
+    "buddy": {
+      "imageAlt": "Perro enérgico color canela y blanco corriendo en un parque con césped",
+      "petType": "Perro",
+      "breed": "Mestizo de Terrier",
+      "summary": "Enérgico y sociable — le va mejor con una familia activa y un patio cercado.",
+      "badgeLabel": "Disponible Ahora"
     }
   },
   "sections": {
@@ -44,6 +51,20 @@
       "part1": "Los mismos datos de",
       "part2": "con contexto/contenido/llamadas a la acción desactivados y",
       "part3": "limitando la cuadrícula — la configuración que usa una página de inicio en lugar de un componente de tarjeta separado."
+    },
+    "split": {
+      "title": "Separar por estado (ej. disponible vs. adoptado)",
+      "description": "Un campo de estado propio del sitio — no forma parte de SuccessStoryItem — decide en qué grupo cae cada historia. Llame a este componente dos veces con dos arreglos filtrados en lugar de mostrar una cuadrícula mixta.",
+      "availableTitle": "Disponible Ahora",
+      "adoptedTitle": "Historias Felices"
+    },
+    "carousel": {
+      "title": "Vista previa con rotación automática (carrusel de página de inicio)",
+      "description": "Construido directamente sobre la propiedad autoPlay de components/ui/carousel.tsx, no un modo de este componente — se pausa al pasar el cursor/enfocar y respeta prefers-reduced-motion. Pase el cursor para pausar, o use las flechas."
+    },
+    "badgeDictionary": {
+      "title": "Idea: CTAs de la página de detalle guiados por insignia (ilustrativo, no es gobernanza)",
+      "description": "Visto en un sitio real de un cliente de rescate: en lugar de etiquetas de insignia de texto libre, dele a cada historia una clave badge que apunte a un pequeño diccionario — ese mismo diccionario decide qué botón(es) de llamada a la acción muestra la página de detalle de ese perro, en orden. Sin coincidencia frágil de texto sobre etiquetas traducidas, y sin cambios al componente: esto vive completamente en los archivos de datos/página propios del sitio. No es una parte estandarizada de SuccessStoriesSection — solo un patrón que vale la pena reutilizar si encaja."
     }
   },
   "standard": {
@@ -56,6 +77,8 @@
       "Las tarjetas son legibles sin JS; tanto la imagen vertical como el enlace opcional de la historia (`storyHref`) se muestran como anclas simples — las rutas internas usan `Link`, y las URLs externas obtienen `target=\"_blank\" rel=\"noreferrer\"`.",
       "`contentWidth=\"contained\"` estrecha la sección a una columna centrada; el valor predeterminado es un ancho `\"full\"`.",
       "`labels` reemplaza el texto de la sección (`adoptedLabel`, `readStoryLabel`, `adoptedPrefix`) para i18n/personalización del sitio.",
+      "Cómo componer una página de historias de rescate: combine este componente con `JourneyTimeline` (vea ese patrón) y un campo `status` propio del sitio (ej. `\"in_care\" | \"adopted\"`) en su propio tipo de historia — llame a este componente dos veces con dos arreglos filtrados para separar en-cuidado/adoptados, y derive los conteos de estadísticas de impacto del mismo campo. No requiere cambios al componente; `status` vive en el tipo extendido propio del sitio. Vea el ejemplo en vivo \"separar por estado\" arriba; implementado por primera vez en `/pack-journeys` de `the-comeback-pack`.",
+      "Para una vista previa en la página de inicio que necesite rotar automáticamente al superar una fila: constrúyala con la propiedad `autoPlay` de `components/ui/carousel.tsx` directamente, en lugar de agregar un modo carrusel aquí — mantiene este componente simple y el comportamiento de rotación reutilizable fuera de este patrón. Vea el ejemplo en vivo \"vista previa con rotación automática\" arriba, o la vista previa real de la página de inicio de `the-comeback-pack`.",
       "Componente: `template/src/components/patterns/SuccessStoriesSection.tsx`"
     ]
   }
