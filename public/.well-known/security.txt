@@ -1,2 +1,7 @@
-Contact: mailto:security@4leggedit.com
-Expires: 2027-02-28T00:00:00.000Z
+Contact: mailto:woof@4leggedit.com
+Contact: https://www.4leggedit.com/contact
+Policy: https://www.4leggedit.com/vulnerability-disclosure-policy
+Acknowledgments: https://www.4leggedit.com/security-hall-of-fame
+Preferred-Languages: en, es
+Canonical: https://template.4leggedit.com/.well-known/security.txt
+Expires: 2030-12-31T00:00:00.000Z
