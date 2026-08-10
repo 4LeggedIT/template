@@ -69,6 +69,7 @@ const SuccessStoriesStandardPage = () => {
       breed: t("successStories:stories.buddy.breed"),
       summary: t("successStories:stories.buddy.summary"),
       badgeLabel: t("successStories:stories.buddy.badgeLabel"),
+      ctaLinks: [{ label: t("successStories:stories.buddy.ctaLabel"), href: "/standards/adoptable-pets" }],
     },
   ];
 
@@ -135,7 +136,6 @@ const SuccessStoriesStandardPage = () => {
               stories={availableStories}
               showStoryContext={false}
               showStoryContent={false}
-              showStoryCtas={false}
               columns={2}
               contentWidth="contained"
             />

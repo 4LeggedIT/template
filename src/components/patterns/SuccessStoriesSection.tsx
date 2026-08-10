@@ -27,6 +27,10 @@ export type SuccessStoryItem = PetProfile & {
   badgeLabel?: string;
   adoptedDateLabel?: string;
   featured?: boolean;
+  /** Optional extra CTA button(s) rendered before the "read story" link — e.g. a badge-driven
+   * "Apply to Adopt"/"Apply to Foster" so an index card can offer the actual next step, not just
+   * a link through to the detail page. Piloted on `the-comeback-pack`'s `/pack-journeys`. */
+  ctaLinks?: { label: string; href: string; external?: boolean }[];
 };
 
 type SuccessStoriesSectionProps = {
@@ -157,18 +161,35 @@ const SuccessStoriesSection = ({
                     {story.adoptedDateLabel ? (
                       <p className="text-xs text-muted-foreground">{adoptedPrefix} {story.adoptedDateLabel}</p>
                     ) : null}
-                    {showStoryCtas && story.storyHref ? (
-                      story.storyHref.startsWith("/") ? (
-                        <Button asChild variant="outline" size="sm">
-                          <Link to={story.storyHref}>{story.storyCtaLabel ?? readStoryLabel}</Link>
-                        </Button>
-                      ) : (
-                        <Button asChild variant="outline" size="sm">
-                          <a href={story.storyHref} target="_blank" rel="noreferrer">
-                            {story.storyCtaLabel ?? readStoryLabel}
-                          </a>
-                        </Button>
-                      )
+                    {showStoryCtas && (story.ctaLinks?.length || story.storyHref) ? (
+                      <div className="flex flex-wrap gap-2">
+                        {story.ctaLinks?.map((cta) =>
+                          cta.external ? (
+                            <Button key={cta.href} asChild size="sm">
+                              <a href={cta.href} target="_blank" rel="noreferrer">
+                                {cta.label}
+                              </a>
+                            </Button>
+                          ) : (
+                            <Button key={cta.href} asChild size="sm">
+                              <Link to={cta.href}>{cta.label}</Link>
+                            </Button>
+                          ),
+                        )}
+                        {story.storyHref ? (
+                          story.storyHref.startsWith("/") ? (
+                            <Button asChild variant="outline" size="sm">
+                              <Link to={story.storyHref}>{story.storyCtaLabel ?? readStoryLabel}</Link>
+                            </Button>
+                          ) : (
+                            <Button asChild variant="outline" size="sm">
+                              <a href={story.storyHref} target="_blank" rel="noreferrer">
+                                {story.storyCtaLabel ?? readStoryLabel}
+                              </a>
+                            </Button>
+                          )
+                        ) : null}
+                      </div>
                     ) : null}
                   </CardContent>
                 ) : null}

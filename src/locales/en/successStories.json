@@ -38,7 +38,8 @@
       "petType": "Dog",
       "breed": "Terrier Mix",
       "summary": "High-energy and people-focused — does best with an active family and a fenced yard.",
-      "badgeLabel": "Available Now"
+      "badgeLabel": "Available Now",
+      "ctaLabel": "Apply to Adopt"
     }
   },
   "sections": {
@@ -54,7 +55,7 @@
     },
     "split": {
       "title": "Splitting by status (e.g. available vs. adopted)",
-      "description": "A site-owned status field — not part of SuccessStoryItem — decides which bucket a story falls into. Call this component twice with two filtered arrays instead of rendering one mixed grid.",
+      "description": "A site-owned status field — not part of SuccessStoryItem — decides which bucket a story falls into. Call this component twice with two filtered arrays instead of rendering one mixed grid. Buddy's card below also shows ctaLinks: an available dog can carry a direct \"Apply to Adopt\" button, not just a link through to the full story.",
       "availableTitle": "Available Now",
       "adoptedTitle": "Happy Tails"
     },
@@ -77,6 +78,7 @@
       "Cards are no-JS readable; the portrait image and the optional story link (`storyHref`) both render as plain anchors — internal routes use `Link`, external URLs get `target=\"_blank\" rel=\"noreferrer\"`.",
       "`contentWidth=\"contained\"` narrows the section to a centered column; default is `\"full\"` width.",
       "`labels` overrides section copy (`adoptedLabel`, `readStoryLabel`, `adoptedPrefix`) for i18n/site customization.",
+      "`ctaLinks` (optional, on `SuccessStoryItem`) renders extra button(s) before the \"read story\" link — e.g. a badge-driven \"Apply to Adopt\"/\"Apply to Foster\" so an index card can offer the actual next step, not just a link through to the detail page. See Buddy's card in the \"splitting by status\" example above. Piloted on `the-comeback-pack`'s `/pack-journeys` index.",
       "Composing a rescue-journeys page: pair this with `JourneyTimeline` (see that pattern's page) and a site-owned `status` field (e.g. `\"in_care\" | \"adopted\"`) on your own story type — call this component twice with two filtered arrays for an in-care/adopted split, and derive impact-stat counts from the same field. No component change needed; `status` lives on your site's own extended type. See the live \"splitting by status\" example above; piloted on `the-comeback-pack`'s `/pack-journeys`.",
       "A home-page teaser that needs to auto-rotate once it outgrows one row: build it from `components/ui/carousel.tsx`'s `autoPlay` prop directly rather than adding a carousel mode here — keeps this component's grid simple and the rotation behavior reusable outside this pattern too. See the live \"auto-rotating teaser\" example above, or `the-comeback-pack`'s real homepage teaser.",
       "Component: `template/src/components/patterns/SuccessStoriesSection.tsx`"
