@@ -90,7 +90,13 @@ const SuccessStoriesSection = ({
         {visibleStories.length ? (
           <div className={cn("grid gap-4", gridColumnsClass)}>
             {visibleStories.map((story) => (
-              <Card key={story.id} className={cn("overflow-hidden border-border/80", story.featured ? "ring-1 ring-primary/35" : "")}>
+              <Card
+                key={story.id}
+                className={cn(
+                  "flex h-full flex-col overflow-hidden border-border/80",
+                  story.featured ? "ring-1 ring-primary/35" : "",
+                )}
+              >
                 <div className="relative">
                   {story.storyHref ? (
                     story.storyHref.startsWith("/") ? (
@@ -140,7 +146,7 @@ const SuccessStoriesSection = ({
                   ) : null}
                 </CardHeader>
                 {(showSummary || showStoryContext || showStoryContent || showStoryCtas || story.adoptedDateLabel) ? (
-                  <CardContent className="space-y-3 pt-0">
+                  <CardContent className="flex flex-1 flex-col space-y-3 pt-0">
                     {showSummary && story.summary ? (
                       <p className="text-sm text-muted-foreground">{story.summary}</p>
                     ) : null}
@@ -162,7 +168,7 @@ const SuccessStoriesSection = ({
                       <p className="text-xs text-muted-foreground">{adoptedPrefix} {story.adoptedDateLabel}</p>
                     ) : null}
                     {showStoryCtas && (story.ctaLinks?.length || story.storyHref) ? (
-                      <div className="flex flex-wrap gap-2">
+                      <div className="mt-auto flex flex-wrap gap-2 pt-1">
                         {story.ctaLinks?.map((cta) =>
                           cta.external ? (
                             <Button key={cta.href} asChild size="sm">
