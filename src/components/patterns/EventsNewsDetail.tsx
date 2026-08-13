@@ -241,14 +241,14 @@ const EventsNewsDetail = ({
           </a>
         ) : null}
 
-        {isEvent && shareUrl && !isPastEvent ? (
+        {shareUrl && !isPastEvent ? (
           <EventActions
             url={shareUrl}
-            title={entry.calendarTitle ?? entry.title}
+            title={isEvent ? entry.calendarTitle ?? entry.title : entry.title}
             text={entry.summary}
             mapsUrl={mapsUrl ?? undefined}
             calendarUrl={calendarUrl ?? undefined}
-            eventDetails={{ date: dateLabel, location: entry.locationLabel }}
+            eventDetails={{ date: dateLabel, location: isEvent ? entry.locationLabel : undefined }}
             channels={["maps", "calendar", "whatsapp", "facebook", "copy-url", "copy-message"]}
             labels={{
               openInMaps: resolvedLabels.openInMaps,

@@ -146,29 +146,31 @@ const SuccessStoriesSection = ({
                   ) : null}
                 </CardHeader>
                 {(showSummary || showStoryContext || showStoryContent || showStoryCtas || story.adoptedDateLabel) ? (
-                  <CardContent className="flex flex-1 flex-col space-y-3 pt-0">
-                    {showSummary && story.summary ? (
-                      <p className="text-sm text-muted-foreground">{story.summary}</p>
-                    ) : null}
-                    {showStoryContext && story.storyContext ? (
-                      <p className="text-sm text-muted-foreground">{story.storyContext}</p>
-                    ) : null}
-                    {showStoryContent && story.storyContent ? (
-                      Array.isArray(story.storyContent) ? (
-                        <div className="space-y-2 text-sm text-muted-foreground">
-                          {story.storyContent.map((paragraph, index) => (
-                            <p key={`${story.id}-p-${index}`}>{paragraph}</p>
-                          ))}
-                        </div>
-                      ) : (
-                        <p className="text-sm text-muted-foreground">{story.storyContent}</p>
-                      )
-                    ) : null}
-                    {story.adoptedDateLabel ? (
-                      <p className="text-xs text-muted-foreground">{adoptedPrefix} {story.adoptedDateLabel}</p>
-                    ) : null}
+                  <CardContent className="flex flex-1 flex-col pt-0">
+                    <div className="space-y-3">
+                      {showSummary && story.summary ? (
+                        <p className="text-sm text-muted-foreground">{story.summary}</p>
+                      ) : null}
+                      {showStoryContext && story.storyContext ? (
+                        <p className="text-sm text-muted-foreground">{story.storyContext}</p>
+                      ) : null}
+                      {showStoryContent && story.storyContent ? (
+                        Array.isArray(story.storyContent) ? (
+                          <div className="space-y-2 text-sm text-muted-foreground">
+                            {story.storyContent.map((paragraph, index) => (
+                              <p key={`${story.id}-p-${index}`}>{paragraph}</p>
+                            ))}
+                          </div>
+                        ) : (
+                          <p className="text-sm text-muted-foreground">{story.storyContent}</p>
+                        )
+                      ) : null}
+                      {story.adoptedDateLabel ? (
+                        <p className="text-xs text-muted-foreground">{adoptedPrefix} {story.adoptedDateLabel}</p>
+                      ) : null}
+                    </div>
                     {showStoryCtas && (story.ctaLinks?.length || story.storyHref) ? (
-                      <div className="mt-auto flex flex-wrap gap-2 pt-1">
+                      <div className="mt-auto flex flex-wrap gap-2 pt-3">
                         {story.ctaLinks?.map((cta) =>
                           cta.external ? (
                             <Button key={cta.href} asChild size="sm">

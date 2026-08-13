@@ -22,7 +22,10 @@
     "description": "Patrones estandarizados para sitios web de rescate de animales — este sitio es la referencia viva.",
     "linkWebsite": "4leggedit.com",
     "linkRepo": "github.com/4LeggedIT/template",
-    "copyright": "© {{year}} 4leggedIT."
+    "copyright": "© {{year}} 4leggedIT.",
+    "linkTerms": "Términos de Servicio y Política de Privacidad",
+    "linkVdp": "Política de Divulgación de Vulnerabilidades",
+    "linkHallOfFame": "Salón de la Fama de Seguridad"
   },
   "language": {
     "en": "EN",

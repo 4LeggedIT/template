@@ -22,7 +22,10 @@
     "description": "Standardized patterns for animal-rescue websites — this site is the living reference.",
     "linkWebsite": "4leggedit.com",
     "linkRepo": "github.com/4LeggedIT/template",
-    "copyright": "© {{year}} 4leggedIT."
+    "copyright": "© {{year}} 4leggedIT.",
+    "linkTerms": "Terms of Service & Privacy Policy",
+    "linkVdp": "Vulnerability Disclosure Policy",
+    "linkHallOfFame": "Security Hall of Fame"
   },
   "language": {
     "en": "EN",

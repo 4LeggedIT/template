@@ -62,6 +62,34 @@ const SiteFooter = () => {
 
           <div className="mt-8 border-t border-paw-foreground/10 pt-6 text-center">
             <p className="text-xs text-paw-foreground/50">{t("footer.copyright", { year: currentYear })}</p>
+            <p className="mt-2 flex flex-wrap items-center justify-center gap-x-2 gap-y-1 text-xs text-paw-foreground/50">
+              <a
+                href="https://www.4leggedit.com/terms"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="underline underline-offset-2 transition-colors hover:text-primary hover:no-underline"
+              >
+                {t("footer.linkTerms")}
+              </a>
+              <span aria-hidden="true">·</span>
+              <a
+                href="https://www.4leggedit.com/vulnerability-disclosure-policy"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="underline underline-offset-2 transition-colors hover:text-primary hover:no-underline"
+              >
+                {t("footer.linkVdp")}
+              </a>
+              <span aria-hidden="true">·</span>
+              <a
+                href="https://www.4leggedit.com/security-hall-of-fame"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="underline underline-offset-2 transition-colors hover:text-primary hover:no-underline"
+              >
+                {t("footer.linkHallOfFame")}
+              </a>
+            </p>
           </div>
         </div>
       </div>
