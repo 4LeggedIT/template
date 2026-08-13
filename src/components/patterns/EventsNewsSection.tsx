@@ -1025,7 +1025,7 @@ const renderEntryCard = (
           <img
             src={cardThumb.imageSrc}
             alt={cardThumb.imageAlt ?? entry.title}
-            className="h-full w-full object-cover"
+            className="h-full w-full object-contain"
             loading="lazy"
           />,
           "block h-40 bg-muted sm:h-full",

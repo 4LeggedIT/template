@@ -186,7 +186,7 @@ export const PostThumb = ({ post, className }: { post: BlogPostEntry; className?
         alt={post.imageAlt ?? post.title}
         loading="lazy"
         decoding="async"
-        className={cn("h-full w-full object-cover", className)}
+        className={cn("h-full w-full bg-muted object-contain", className)}
       />
     );
   }

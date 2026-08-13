@@ -60,7 +60,7 @@ const FeaturedHighlightCard = ({
         <img
           src={item.imageSrc}
           alt={item.imageAlt ?? item.title}
-          className="h-40 w-full object-cover sm:h-full sm:max-h-48"
+          className="h-40 w-full bg-muted object-contain sm:h-full sm:max-h-48"
         />
       ) : null}
       <div>
@@ -107,7 +107,11 @@ const CompactHighlightCard = ({
 }) => (
   <Card className="flex h-full flex-col overflow-hidden border-border/80">
     {item.imageSrc ? (
-      <img src={item.imageSrc} alt={item.imageAlt ?? item.title} className="h-36 w-full object-cover" />
+      <img
+        src={item.imageSrc}
+        alt={item.imageAlt ?? item.title}
+        className="h-36 w-full bg-muted object-contain"
+      />
     ) : null}
     <CardHeader className="flex-1">
       <div className="mb-2 inline-flex w-fit items-center gap-2 rounded-full border px-2.5 py-1 text-xs text-muted-foreground">
