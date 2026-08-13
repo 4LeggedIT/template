@@ -8,6 +8,7 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+import { cn } from "@/lib/utils";
 
 type BreadcrumbEntry = {
   label: string;
@@ -20,11 +21,30 @@ type PageHeroProps = {
   description?: string;
   actions?: ReactNode;
   breadcrumbs?: BreadcrumbEntry[];
+  /** Optional class overrides for a site that needs to diverge from the default left-aligned
+   * layout (e.g. a centered hero) without forking the whole component. Piloted on
+   * fosterpawsnetwork, promoted to canonical 2026-08-13. */
+  className?: string;
+  eyebrowClassName?: string;
+  titleClassName?: string;
+  descriptionClassName?: string;
+  actionsClassName?: string;
 };
 
-const PageHero = ({ eyebrow, title, description, actions, breadcrumbs }: PageHeroProps) => {
+const PageHero = ({
+  eyebrow,
+  title,
+  description,
+  actions,
+  breadcrumbs,
+  className,
+  eyebrowClassName,
+  titleClassName,
+  descriptionClassName,
+  actionsClassName,
+}: PageHeroProps) => {
   return (
-    <section className="border-b border-border bg-gradient-to-b from-card/80 to-background">
+    <section className={cn("border-b border-border bg-gradient-to-b from-card/80 to-background", className)}>
       <div className="container px-4 py-10 sm:py-14">
         <div className="mx-auto max-w-4xl">
           {breadcrumbs?.length ? (
@@ -52,13 +72,17 @@ const PageHero = ({ eyebrow, title, description, actions, breadcrumbs }: PageHer
             </Breadcrumb>
           ) : null}
           {eyebrow ? (
-            <p className="mb-3 text-sm font-medium uppercase tracking-wide text-primary">{eyebrow}</p>
+            <p className={cn("mb-3 text-sm font-medium uppercase tracking-wide text-primary", eyebrowClassName)}>
+              {eyebrow}
+            </p>
           ) : null}
-          <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">{title}</h1>
+          <h1 className={cn("text-3xl font-semibold tracking-tight sm:text-4xl", titleClassName)}>{title}</h1>
           {description ? (
-            <p className="mt-4 max-w-3xl text-muted-foreground">{description}</p>
+            <p className={cn("mt-4 max-w-3xl text-muted-foreground", descriptionClassName)}>{description}</p>
           ) : null}
-          {actions ? <div className="mt-6 flex flex-wrap gap-3">{actions}</div> : null}
+          {actions ? (
+            <div className={cn("mt-6 flex flex-wrap gap-3", actionsClassName)}>{actions}</div>
+          ) : null}
         </div>
       </div>
     </section>
