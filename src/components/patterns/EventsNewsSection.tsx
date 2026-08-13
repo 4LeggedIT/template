@@ -114,7 +114,18 @@ type EventsNewsBaseEntry = {
   imageSrc?: string;
   imageAlt?: string;
   images?: EventsNewsImage[];
-  /** Renders in place of imageSrc/images in full/detail views (card thumbnails still use imageSrc). */
+  /**
+   * A real, self-hosted mp4 (e.g. downloaded via yt-dlp from a source Facebook Reel and placed in
+   * `public/videos/`) — renders a native `<video>` in place of imageSrc/images/videoEmbed in
+   * full/detail views (card thumbnails still use imageSrc as the video's poster). Takes priority
+   * over `videoEmbed` when both are set. Prefer this over `videoEmbed` when possible — a self-hosted
+   * file always plays, where a Facebook iframe embed can be blocked by Rights Manager depending on
+   * the source post's audio track.
+   */
+  videoSrc?: string;
+  /** Defaults to "landscape". Set "portrait" for a vertical Reel-shaped clip (e.g. 720x1280). */
+  videoAspectRatio?: "landscape" | "portrait";
+  /** Renders in place of imageSrc/images in full/detail views (card thumbnails still use imageSrc). Ignored when videoSrc is set. */
   videoEmbed?: EventsNewsVideoEmbed;
   dateLabel?: string;
   highlights?: string[];
@@ -834,6 +845,27 @@ export const getEntryContentBlocks = (entry: EventsNewsRenderableEntry, highligh
 export const getFacebookVideoEmbedSrc = (url: string) =>
   `https://www.facebook.com/plugins/video.php?${new URLSearchParams({ href: url, show_text: "false" }).toString()}`;
 
+export const renderHostedVideo = (
+  src: string,
+  posterSrc: string | undefined,
+  title: string,
+  aspectRatio: "landscape" | "portrait" = "landscape",
+) => {
+  const isPortrait = aspectRatio === "portrait";
+  return (
+    <div
+      className={cn(
+        "mx-auto overflow-hidden rounded-xl border border-border bg-black",
+        isPortrait ? "aspect-[9/16] max-w-[360px]" : "aspect-video max-w-full",
+      )}
+    >
+      <video controls playsInline preload="metadata" poster={posterSrc} title={title} className="h-full w-full object-contain">
+        <source src={src} type="video/mp4" />
+      </video>
+    </div>
+  );
+};
+
 export const renderVideoEmbed = (embed: EventsNewsVideoEmbed, fallbackTitle: string) => {
   const isPortrait = embed.aspectRatio === "portrait" || (!embed.aspectRatio && embed.url.includes("/reel/"));
   return (
@@ -1003,7 +1035,11 @@ const renderEntryCard = (
   const cardThumb = resolveThumbnailImage(entry);
 
   const topImage =
-    resolvedImageLayout === "top" && entry.videoEmbed ? (
+    resolvedImageLayout === "top" && entry.videoSrc ? (
+      <div className="bg-muted p-4">
+        {renderHostedVideo(entry.videoSrc, cardThumb.imageSrc, entry.title, entry.videoAspectRatio)}
+      </div>
+    ) : resolvedImageLayout === "top" && entry.videoEmbed ? (
       <div className="bg-muted p-4">{renderVideoEmbed(entry.videoEmbed, entry.title)}</div>
     ) : resolvedImageLayout === "top" && cardThumb.imageSrc ? (
       renderImageLink(

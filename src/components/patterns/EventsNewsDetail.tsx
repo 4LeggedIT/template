@@ -11,6 +11,7 @@ import {
   getGoogleCalendarUrl,
   getMapsUrl,
   renderContentBlock,
+  renderHostedVideo,
   renderVideoEmbed,
   type EventsNewsAdjacentEntry,
   type EventsNewsEntry,
@@ -285,7 +286,13 @@ const EventsNewsDetail = ({
           </>
         )}
 
-        {entry.videoEmbed ? <div className="mt-6">{renderVideoEmbed(entry.videoEmbed, entry.title)}</div> : renderImages(entry)}
+        {entry.videoSrc ? (
+          <div className="mt-6">{renderHostedVideo(entry.videoSrc, entry.imageSrc, entry.title, entry.videoAspectRatio)}</div>
+        ) : entry.videoEmbed ? (
+          <div className="mt-6">{renderVideoEmbed(entry.videoEmbed, entry.title)}</div>
+        ) : (
+          renderImages(entry)
+        )}
 
         {previous || next ? (
           <div className="mt-6 grid grid-cols-1 gap-4 border-t border-border pt-6 sm:grid-cols-2">

@@ -102,6 +102,21 @@ export const eventsNewsExampleEntries: EventsNewsEntry[] = [
     },
   },
   {
+    id: "news-self-hosted-video-2026-03-05",
+    kind: "news",
+    title: "Self-Hosted Video Example",
+    publishedAt: "2026-03-05",
+    articleType: "local",
+    dateLabel: "March 5, 2026",
+    summary:
+      "Example of a news entry using videoSrc (a real, self-hosted mp4) instead of videoEmbed — prefer this whenever the source clip can be downloaded, since a self-hosted file always plays.",
+    href: "/news/example-video-article",
+    // A small public-domain sample clip standing in for a real downloaded Reel/video file.
+    videoSrc: "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4",
+    imageSrc: "https://images.unsplash.com/photo-1544568100-847a948585b9?auto=format&fit=crop&w=800&q=60",
+    imageAlt: "Poster frame shown before the video plays / used for the card thumbnail",
+  },
+  {
     id: "event-yard-sale-2026-02-21",
     kind: "event",
     title: "Community Fundraiser",

@@ -38,6 +38,7 @@ import BlogStandardPage from "@/pages/standards/BlogStandardPage";
 import EventsNewsExampleEventDetailPage from "@/pages/examples/EventsNewsExampleEventDetailPage";
 import BlogExamplePostPage from "@/pages/examples/BlogExamplePostPage";
 import NewsArticleExamplePage from "@/pages/news/NewsArticleExamplePage";
+import NewsVideoArticleExamplePage from "@/pages/news/NewsVideoArticleExamplePage";
 import AdoptableSlideshowPage from "@/pages/tools/AdoptableSlideshowPage";
 import KennelBinder2UpPage from "@/pages/tools/KennelBinder2UpPage";
 import KennelCards2UpPage from "@/pages/tools/KennelCards2UpPage";
@@ -72,6 +73,7 @@ const AppRoutes = () => {
           element={<EventsNewsExampleEventDetailPage eventSlug="event-yard-sale-2026-02-21" />}
         />
         <Route path="/news/example-article" element={<NewsArticleExamplePage />} />
+        <Route path="/news/example-video-article" element={<NewsVideoArticleExamplePage />} />
         <Route path="/examples/blog/:slug" element={<BlogExamplePostPage />} />
         <Route path="/standards" element={<TemplateStandardsHomePage />} />
         <Route path="/standards/adoptable-pets" element={<AdoptablePetsStandardPage />} />
