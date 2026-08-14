@@ -823,16 +823,58 @@ export const getGoogleCalendarUrl = (entry: EventsNewsRenderableEventEntry) => {
   return `https://calendar.google.com/calendar/render?${params.toString()}`;
 };
 
+// Lightweight body grammar: "- " list items and "> " quote lines (grouped across
+// consecutive matching lines), everything else is a plain paragraph — one block per
+// non-blank line, blank lines just separate blocks. Deliberately narrower than
+// BlogPostDetail.tsx's grammar (no headings/codeblocks/emphasis-paragraphs): news/event
+// bodies are short-form, and EventsNewsContentBlock has no renderer for those types.
+type EventsNewsBodyBlock = EventsNewsParagraphBlock | EventsNewsListBlock | EventsNewsQuoteBlock;
+
+const parseNewsBody = (body: string): EventsNewsBodyBlock[] => {
+  const blocks: EventsNewsBodyBlock[] = [];
+  let currentList: string[] = [];
+  let currentQuote: string[] = [];
+
+  const flushList = () => {
+    if (currentList.length > 0) {
+      blocks.push({ type: "list", items: [...currentList] });
+      currentList = [];
+    }
+  };
+  const flushQuote = () => {
+    if (currentQuote.length > 0) {
+      blocks.push({ type: "quote", quote: currentQuote.join(" ") });
+      currentQuote = [];
+    }
+  };
+
+  for (const rawLine of body.split("\n")) {
+    const line = rawLine.trim();
+    if (line.startsWith("- ")) {
+      flushQuote();
+      currentList.push(line.slice(2).trim());
+    } else if (line.startsWith("> ")) {
+      flushList();
+      currentQuote.push(line.slice(2).trim());
+    } else if (line !== "") {
+      flushList();
+      flushQuote();
+      blocks.push({ type: "paragraph", text: line });
+    } else {
+      flushList();
+      flushQuote();
+    }
+  }
+  flushList();
+  flushQuote();
+
+  return blocks;
+};
+
 export const getEntryContentBlocks = (entry: EventsNewsRenderableEntry, highlightsTitle: string): EventsNewsContentBlock[] => {
   if (entry.contentBlocks?.length) return entry.contentBlocks;
 
-  const bodyBlocks: EventsNewsParagraphBlock[] = entry.body
-    ? entry.body
-      .split("\n\n")
-      .map((paragraph) => paragraph.trim())
-      .filter(Boolean)
-      .map((text) => ({ type: "paragraph", text }))
-    : [];
+  const bodyBlocks: EventsNewsBodyBlock[] = entry.body ? parseNewsBody(entry.body) : [];
 
   const highlightBlocks: EventsNewsListBlock[] =
     entry.highlights?.length
@@ -896,11 +938,69 @@ const calloutToneClass: Record<EventsNewsCalloutTone, string> = {
 const isExternalContentHref = (href: string, external?: boolean) =>
   typeof external === "boolean" ? external : !href.startsWith("/");
 
+// Inline "`code`", "[text](url)" (internal hrefs render as an in-app <Link>, everything
+// else as an external <a>), and "**bold**" — the same three constructs BlogPostDetail.tsx
+// supports, duplicated rather than imported so this pattern stays standalone-syncable.
+const newsInlineMarkdownRegex = /(`[^`]+`)|(\[([^\]]+)\]\(([^)]+)\))|(\*\*([^*]+)\*\*)/g;
+
+const renderNewsInlineText = (text: string): Array<string | ReactNode> => {
+  const parts: Array<string | ReactNode> = [];
+  const regex = new RegExp(newsInlineMarkdownRegex.source, "g");
+  let lastIndex = 0;
+  let match: RegExpExecArray | null;
+  let keyIndex = 0;
+
+  while ((match = regex.exec(text)) !== null) {
+    if (match.index > lastIndex) parts.push(text.slice(lastIndex, match.index));
+
+    if (match[1]) {
+      parts.push(
+        <code key={`code-${keyIndex++}`} className="rounded bg-secondary/80 px-1 py-0.5 font-mono text-[0.9em]">
+          {match[1].slice(1, -1)}
+        </code>,
+      );
+    } else if (match[2]) {
+      parts.push(
+        isExternalContentHref(match[4]) ? (
+          <a
+            key={`link-${keyIndex++}`}
+            href={match[4]}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="font-medium text-primary underline underline-offset-4 hover:text-primary/80"
+          >
+            {match[3]}
+          </a>
+        ) : (
+          <Link
+            key={`link-${keyIndex++}`}
+            to={match[4]}
+            className="font-medium text-primary underline underline-offset-4 hover:text-primary/80"
+          >
+            {match[3]}
+          </Link>
+        ),
+      );
+    } else if (match[5]) {
+      parts.push(
+        <strong key={`bold-${keyIndex++}`} className="font-semibold text-foreground">
+          {match[6]}
+        </strong>,
+      );
+    }
+
+    lastIndex = match.index + match[0].length;
+  }
+
+  if (lastIndex < text.length) parts.push(text.slice(lastIndex));
+  return parts.length > 0 ? parts : [text];
+};
+
 export const renderContentBlock = (entryId: string, block: EventsNewsContentBlock, index: number) => {
   if (block.type === "paragraph") {
     return (
       <p key={`${entryId}-paragraph-${index}`} className="text-sm leading-relaxed text-muted-foreground">
-        {block.text}
+        {renderNewsInlineText(block.text)}
       </p>
     );
   }
@@ -912,7 +1012,7 @@ export const renderContentBlock = (entryId: string, block: EventsNewsContentBloc
         {block.title ? <p className="text-sm font-medium text-foreground">{block.title}</p> : null}
         <ListTag className={cn("pl-5 text-sm text-muted-foreground space-y-1", block.ordered ? "list-decimal" : "list-disc")}>
           {block.items.map((item) => (
-            <li key={`${entryId}-list-${index}-${item}`}>{item}</li>
+            <li key={`${entryId}-list-${index}-${item}`}>{renderNewsInlineText(item)}</li>
           ))}
         </ListTag>
       </div>
@@ -922,7 +1022,7 @@ export const renderContentBlock = (entryId: string, block: EventsNewsContentBloc
   if (block.type === "quote") {
     return (
       <blockquote key={`${entryId}-quote-${index}`} className="border-l-2 border-primary/40 pl-4 text-sm italic text-muted-foreground">
-        <p>{block.quote}</p>
+        <p>{renderNewsInlineText(block.quote)}</p>
         {block.cite ? <cite className="mt-2 block text-xs not-italic text-muted-foreground/90">- {block.cite}</cite> : null}
       </blockquote>
     );
