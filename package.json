@@ -12,6 +12,7 @@
     "links:check:all": "node tools/check-internal-links.mjs --external",
     "links:check:external": "node tools/check-internal-links.mjs --external-only",
     "lint": "eslint .",
+    "csp:check": "node tools/check-csp-registry.mjs src/components/patterns",
     "typecheck": "tsc -b --force",
     "preview": "vite preview",
     "preview:nojs": "node tools/preview-static.mjs",

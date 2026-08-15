@@ -3,6 +3,7 @@ import path from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { build as viteBuild } from "vite";
 import { getAppRoutePaths } from "./app-routes.mjs";
+import { writeCspHeaders } from "./gen-csp-headers.mjs";
 import {
   PRERENDER_EXCLUDE_PREFIXES,
   PRERENDER_EXCLUDE_ROUTES,
@@ -356,6 +357,7 @@ async function main() {
   await writeIndexDefaultMeta(siteDefaults);
   await writeSitemap(prerenderRoutes, siteOrigin);
   await writeRobotsTxt(siteOrigin);
+  await writeCspHeaders(rootDir);
   const ssrEntry = await buildSsr({ mode });
 
   const mod = await import(pathToFileURL(ssrEntry).href);
