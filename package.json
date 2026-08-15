@@ -13,6 +13,8 @@
     "links:check:external": "node tools/check-internal-links.mjs --external-only",
     "lint": "eslint .",
     "csp:check": "node tools/check-csp-registry.mjs src/components/patterns",
+    "headers:check": "node tools/check-security-headers.mjs public/_headers --build-script=tools/build.mjs",
+    "security:check": "npm run csp:check --silent && npm run headers:check --silent",
     "typecheck": "tsc -b --force",
     "preview": "vite preview",
     "preview:nojs": "node tools/preview-static.mjs",
