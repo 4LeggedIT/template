@@ -63,13 +63,18 @@ Generator tools synced from `internal-tools/4leggedit-websites/templates-sources
 | `gen-og-image.mjs` | Reads `tools/og-image-config.json` |
 | `gen-document-pdf.mjs` | Renders a print `/documents/<slug>` page to PDF and writes `public/documents/<slug>.pdf` (the Resources-page download); needs dev/preview server running |
 | `optimize-images.mjs` | WebP conversion + resize; requires `sharp` + `svgo` |
+| `check-internal-links.mjs` | AST-based internal/external link checker (`links:check`); site-specific inputs: `tools/app-routes.mjs` (+ optional `tools/*-routes.mjs` data-route helpers) |
 
 **Important:** Generator tools are synced verbatim from upstream. Do not edit locally. Update in `internal-tools/` first, then propagate.
 
-Build-infrastructure tools (`build.mjs`, `app-routes.mjs`, `check-internal-links.mjs`, `preview-static.mjs`, `smoke-nojs.mjs`) are site-specific and maintained here directly.
+Build-infrastructure tools (`build.mjs`, `app-routes.mjs`, `preview-static.mjs`, `smoke-nojs.mjs`) are site-specific and maintained here directly.
 
 ## Notes for Contributors
 
 1. **SEO:** Every page component uses `<SEOHead>` with `title`, `description`, and `canonicalPath`. Org-identity JSON-LD (`Organization`/`NonprofitOrganization`/`LocalBusiness`, configurable via `siteConfig.organization.type`) is emitted automatically at the app-shell level via `lib/organizationJsonLd.ts` + `<StructuredData>` (wired in `App.tsx`/`entry-server.tsx`) — no per-page action needed. See `internal-tools/4leggedit-websites/docs/governance/module-wiring-contracts.md`'s `lib/organizationJsonLd.ts` contract.
 2. **Never invent facts:** any example data representing a real organization must be sourced from that organization's real, public listings, with a clear non-affiliation disclosure (see the Adoptable Pets pattern pages).
 3. **Patterns travel verbatim:** if changing a shared pattern component's behavior, change it in `internal-tools/templates-sources/patterns/` first, then sync here — never diverge this repo's copy from upstream (except the infrastructure exemptions noted above).
+
+## Known Open Items (not yet resolved)
+
+1. **`links:check` currently fails (found 2026-08-16, rolling out the AST-based rewrite of `check-internal-links.mjs`):** several `standards`/`examples` pages render a shared pattern with illustrative example props that point at paths this repo doesn't actually have routes for — `CommunityPartnersStandardPage.tsx`/`SupporterRecognitionStandardPage.tsx` use `ctaHref="/contact"`, `ImpactStatsStandardPage.tsx`/`SupporterRecognitionStandardPage.tsx` use `"/donate"`, and `BlogStandardPage.tsx`/`BlogExamplePostPage.tsx` link to `/examples/blog` (only `/examples/blog/:slug` exists, not the bare index). These render as real, currently-broken `<a>`/`<Link>` elements on the live pages — a genuine pre-existing bug the previous regex-based checker never had the reach to catch (it only validated literal `href=`/`to=` attribute text, not values threaded through a component prop). Needs a content decision (point at a real route, or restructure the example to not imply a real link) before `links:check`/`npm run build` will pass again.
