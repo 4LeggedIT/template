@@ -132,12 +132,31 @@ const propRefKey = (component, prop) => `${component}.${prop}`;
 const makePropRef = (component, prop) => ({ __propref: true, component, prop, key: propRefKey(component, prop) });
 const isPropRef = (atom) => atom != null && typeof atom === "object" && atom.__propref === true;
 
-// component name -> Set<propKey> known to carry a link value (href/to string)
+// component name -> Set<propKey> known to carry a link value (href/to string),
+// in *some* form -- directly or as one fragment of a larger template/concat.
+// Used to gate propValues collection, which substitutePropRefs() needs to
+// resolve fragment usages (e.g. `${postBasePath}/${post.slug}`) correctly.
 const linkCarryingProps = new Map();
 const markLinkCarrying = (componentName, propKey) => {
   if (!componentName || !propKey) return;
   if (!linkCarryingProps.has(componentName)) linkCarryingProps.set(componentName, new Set());
   linkCarryingProps.get(componentName).add(propKey);
+};
+
+// component name -> Set<propKey> that were seen used as the *complete*
+// href/to/id value at least once (e.g. `href={ctaHref}`), as opposed to only
+// ever appearing as a fragment inside a template/concat (e.g. `postBasePath`
+// in `` `${postBasePath}/${post.slug}` ``). Only direct-carrying props are
+// safe to treat a call-site literal (`ctaHref="/donate"`) as a *complete*,
+// directly-checkable URL -- a fragment-only prop's call-site literal is just
+// a base path, and checking it as if it were the whole destination produces
+// false "unknown route" reports (the real check for those already happens
+// via the dynamic-atom/wildcard matching path once substituted in place).
+const directLinkCarryingProps = new Map();
+const markDirectLinkCarrying = (componentName, propKey) => {
+  if (!componentName || !propKey) return;
+  if (!directLinkCarryingProps.has(componentName)) directLinkCarryingProps.set(componentName, new Set());
+  directLinkCarryingProps.get(componentName).add(propKey);
 };
 
 // ---------------------------------------------------------------------------
@@ -226,7 +245,16 @@ const findEnclosingComponent = (node, components) => {
   return null;
 };
 
-const resolveIdentifierValue = (name, localConsts, currentComponent) => {
+// `isFragment` is true when this identifier is being resolved as one piece of
+// a larger template/concat expression (e.g. `postBasePath` inside
+// `` `${postBasePath}/${post.slug}` ``) rather than as the complete
+// href/to/id value on its own (e.g. `href={ctaHref}`). A fragment-only prop
+// still needs `markLinkCarrying` (so propValues/substitutePropRefs can supply
+// its call-site value when resolving the *enclosing* template), but must NOT
+// be marked direct-carrying -- a literal passed into a fragment-only prop
+// (`postBasePath="/examples/blog"`) is just a path prefix, not a complete,
+// independently-checkable URL.
+const resolveIdentifierValue = (name, localConsts, currentComponent, isFragment) => {
   // The bare `undefined` keyword shows up constantly in `cond ? url : undefined`
   // -- a legitimate "no link on this branch" value, not an unresolvable reference.
   if (name === "undefined") return { kind: "none" };
@@ -234,6 +262,7 @@ const resolveIdentifierValue = (name, localConsts, currentComponent) => {
   if (currentComponent && currentComponent.propLocalNames.has(name)) {
     const { propKey, defaultLiteral } = currentComponent.propLocalNames.get(name);
     markLinkCarrying(currentComponent.name, propKey);
+    if (!isFragment) markDirectLinkCarrying(currentComponent.name, propKey);
     if (defaultLiteral != null) return { kind: "literal", value: defaultLiteral };
     return { kind: "own-prop", component: currentComponent.name, prop: propKey };
   }
@@ -241,10 +270,17 @@ const resolveIdentifierValue = (name, localConsts, currentComponent) => {
 };
 
 // Resolve an arbitrary expression node to a Resolution (see model above).
-const resolveExprNode = (node, localConsts, currentComponent) => {
-  if (ts.isParenthesizedExpression(node)) return resolveExprNode(node.expression, localConsts, currentComponent);
+// `isFragment` (default false) propagates the "am I one piece of a larger
+// template/concat" context described above -- it flips to true only for
+// template-literal spans and `+`-concat operands, and is otherwise inherited
+// unchanged (parens/as-expr/ternary-branches/??-branches don't themselves
+// combine the value with surrounding text, so they don't change the context).
+const resolveExprNode = (node, localConsts, currentComponent, isFragment = false) => {
+  if (ts.isParenthesizedExpression(node)) {
+    return resolveExprNode(node.expression, localConsts, currentComponent, isFragment);
+  }
   if (ts.isAsExpression(node) || ts.isSatisfiesExpression?.(node)) {
-    return resolveExprNode(node.expression, localConsts, currentComponent);
+    return resolveExprNode(node.expression, localConsts, currentComponent, isFragment);
   }
 
   if (ts.isStringLiteralLike(node) && !ts.isTemplateExpression(node)) {
@@ -258,14 +294,14 @@ const resolveExprNode = (node, localConsts, currentComponent) => {
   if (ts.isTemplateExpression(node)) {
     const atoms = [node.head.text];
     for (const span of node.templateSpans) {
-      const inner = resolveExprNode(span.expression, localConsts, currentComponent);
+      const inner = resolveExprNode(span.expression, localConsts, currentComponent, true);
       pushAtoms(atoms, inner);
       atoms.push(span.literal.text);
     }
     return collapseAtoms(atoms);
   }
 
-  if (ts.isIdentifier(node)) return resolveIdentifierValue(node.text, localConsts, currentComponent);
+  if (ts.isIdentifier(node)) return resolveIdentifierValue(node.text, localConsts, currentComponent, isFragment);
 
   if (ts.isPropertyAccessExpression(node)) {
     if (
@@ -276,6 +312,7 @@ const resolveExprNode = (node, localConsts, currentComponent) => {
     ) {
       const propKey = node.name.text;
       markLinkCarrying(currentComponent.name, propKey);
+      if (!isFragment) markDirectLinkCarrying(currentComponent.name, propKey);
       return { kind: "own-prop", component: currentComponent.name, prop: propKey };
     }
     return { kind: "unresolved", reason: "member access not traced" };
@@ -286,15 +323,15 @@ const resolveExprNode = (node, localConsts, currentComponent) => {
     return {
       kind: "branch",
       branches: [
-        resolveExprNode(node.whenTrue, localConsts, currentComponent),
-        resolveExprNode(node.whenFalse, localConsts, currentComponent),
+        resolveExprNode(node.whenTrue, localConsts, currentComponent, isFragment),
+        resolveExprNode(node.whenFalse, localConsts, currentComponent, isFragment),
       ],
     };
   }
 
   if (ts.isBinaryExpression(node) && node.operatorToken.kind === ts.SyntaxKind.PlusToken) {
-    const left = resolveExprNode(node.left, localConsts, currentComponent);
-    const right = resolveExprNode(node.right, localConsts, currentComponent);
+    const left = resolveExprNode(node.left, localConsts, currentComponent, true);
+    const right = resolveExprNode(node.right, localConsts, currentComponent, true);
     const atoms = [];
     pushAtoms(atoms, left);
     pushAtoms(atoms, right);
@@ -305,8 +342,8 @@ const resolveExprNode = (node, localConsts, currentComponent) => {
     return {
       kind: "branch",
       branches: [
-        resolveExprNode(node.left, localConsts, currentComponent),
-        resolveExprNode(node.right, localConsts, currentComponent),
+        resolveExprNode(node.left, localConsts, currentComponent, isFragment),
+        resolveExprNode(node.right, localConsts, currentComponent, isFragment),
       ],
     };
   }
@@ -801,7 +838,12 @@ const main = async () => {
       const key = `${pass.file}:${pass.line}:${pass.propName}`;
       if (seenCallSiteKeys.has(key)) continue;
 
-      const resolution = pass.resolution ?? resolveExprNode(pass.exprNode, pass.localConsts, pass.currentComponent);
+      // isFragment: true -- this identifier is being resolved to find out what
+      // value flows INTO another component's prop (call-site forwarding), not
+      // to check whether it's used directly as *this* component's own href/to.
+      // Forwarding a prop onward (`<Child linkProp={postBasePath} />`) must
+      // never itself mark the forwarding component's own prop direct-carrying.
+      const resolution = pass.resolution ?? resolveExprNode(pass.exprNode, pass.localConsts, pass.currentComponent, true);
       const terminal = expandResolution(resolution);
       const stillPending = terminal.some((r) => r.kind === "own-prop");
       if (stillPending && round < MAX_ROUNDS - 1) continue; // may resolve further next round
@@ -824,7 +866,7 @@ const main = async () => {
     const key = `${pass.file}:${pass.line}:${pass.propName}`;
     if (seenCallSiteKeys.has(key)) continue;
     seenCallSiteKeys.add(key);
-    const resolution = pass.resolution ?? resolveExprNode(pass.exprNode, pass.localConsts, pass.currentComponent);
+    const resolution = pass.resolution ?? resolveExprNode(pass.exprNode, pass.localConsts, pass.currentComponent, true);
     for (const r of expandResolution(resolution)) {
       resolvedCallSiteOccurrences.push({ file: pass.file, line: pass.line, resolution: r, component: pass.component, propName: pass.propName });
     }
@@ -844,11 +886,24 @@ const main = async () => {
   // ---- pass 3: combine direct occurrences (href/to found in JSX, excluding
   // bare "own-prop" ones which only exist to seed the fixpoint above) with
   // resolved call-site occurrences, then classify each ----
+  //
+  // Only call-site occurrences for *directly*-carrying props are treated as
+  // complete, independently-checkable URLs here. A fragment-only prop's
+  // call-site literal (e.g. `postBasePath="/examples/blog"`) is excluded from
+  // this list -- checking it as if it were the whole destination would be
+  // wrong, since real rendering appends more (`/${post.slug}`) before it
+  // becomes a real link. That correct check already happens via the dynamic
+  // atom-substitution path below, once `propValues` (built from the
+  // unfiltered `resolvedCallSiteOccurrences` above) fills the propref slot
+  // back into the enclosing template's own direct occurrence.
+  const directCallSiteOccurrences = resolvedCallSiteOccurrences.filter((occ) =>
+    directLinkCarryingProps.get(occ.component)?.has(occ.propName),
+  );
   const allOccurrences = [
     ...ctx.directOccurrences
       .filter((o) => o.resolution.kind !== "own-prop")
       .flatMap((o) => expandResolution(o.resolution).map((r) => ({ file: o.file, line: o.line, resolution: r }))),
-    ...resolvedCallSiteOccurrences,
+    ...directCallSiteOccurrences,
   ].filter((o) => o.resolution.kind !== "none");
 
   const internalIssues = [];

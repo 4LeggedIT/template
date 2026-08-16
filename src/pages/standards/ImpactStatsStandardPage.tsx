@@ -93,7 +93,7 @@ const ImpactStatsStandardPage = () => {
             periodMetrics={periodMetrics}
             granularityLabel={t("impactStats:granularity.yearly")}
             labels={{ chartCaption: t("impactStats:chart.caption") }}
-            ctaHref="/donate"
+            ctaHref="/standards/paypal-donate"
             ctaLabel={t("impactStats:cta.label")}
           />
         </div>

@@ -53,10 +53,10 @@ const SupporterRecognitionStandardPage = () => {
             ctaTitle={t("supporterRecognition:example.ctaTitle")}
             ctaDescription={t("supporterRecognition:example.ctaDescription")}
             ctaLabel={t("supporterRecognition:example.ctaLabel")}
-            ctaHref="/donate"
+            ctaHref="/standards/paypal-donate"
             omissionNoteText={t("supporterRecognition:example.omissionNoteText")}
             omissionNoteLinkLabel={t("supporterRecognition:example.omissionNoteLinkLabel")}
-            omissionNoteHref="/contact"
+            omissionNoteHref="/standards"
           />
         </div>
 
