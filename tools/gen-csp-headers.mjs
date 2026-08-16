@@ -4,8 +4,10 @@
  * csp-registry.mjs and which patterns this specific site actually uses,
  * then writes it into dist/_headers (Cloudflare Pages header config).
  *
- * Usage (called from tools/build.mjs, after the Vite client build has
- * already copied public/_headers -> dist/_headers):
+ * Usage (called from tools/build.mjs, AFTER prerendering has written every
+ * route's dist/<route>/index.html — this needs the final HTML output to
+ * hash inline JSON-LD scripts, see collectJsonLdHashes below, so it must
+ * run last, not right after the Vite client build):
  *
  *   import { writeCspHeaders } from "./gen-csp-headers.mjs";
  *   await writeCspHeaders(rootDir);
@@ -19,6 +21,7 @@
  */
 import fs from "node:fs/promises";
 import path from "node:path";
+import crypto from "node:crypto";
 import { cspBaseline, patternCspRequirements } from "./csp-registry.mjs";
 
 // Fixed, non-pattern-driven directives. Every site gets these regardless of
@@ -153,6 +156,49 @@ async function findUsedPatterns(srcDir, patternNames) {
   return expandTransitively(directlyUsed, compositionMap);
 }
 
+// Chrome enforces script-src against <script type="application/ld+json">
+// even though it's not executable code (confirmed live, 2026-08-15 — see
+// csp-registry-governance.md). The content is static per prerendered page
+// (title/description vary per route), so 'unsafe-inline' or a single fixed
+// hash can't cover it — but since every route's exact output already exists
+// on disk after prerendering, we can hash each one for real instead of
+// guessing. Matches this fleet's "generate, don't hand-maintain" convention.
+const JSON_LD_SCRIPT_RE = /<script\b[^>]*\btype=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi;
+
+async function collectHtmlFiles(dir) {
+  let results = [];
+  let entries;
+  try {
+    entries = await fs.readdir(dir, { withFileTypes: true });
+  } catch {
+    return results;
+  }
+  for (const entry of entries) {
+    const full = path.join(dir, entry.name);
+    if (entry.isDirectory()) {
+      results = results.concat(await collectHtmlFiles(full));
+    } else if (entry.name.endsWith(".html")) {
+      results.push(full);
+    }
+  }
+  return results;
+}
+
+// CSP hash-source is computed over the exact bytes between the script tags,
+// no trimming — must match byte-for-byte what the browser hashes.
+async function collectJsonLdHashes(distDir) {
+  const hashes = new Set();
+  const htmlFiles = await collectHtmlFiles(distDir);
+  for (const file of htmlFiles) {
+    const content = await fs.readFile(file, "utf-8");
+    for (const match of content.matchAll(JSON_LD_SCRIPT_RE)) {
+      const digest = crypto.createHash("sha256").update(match[1], "utf8").digest("base64");
+      hashes.add(`'sha256-${digest}'`);
+    }
+  }
+  return hashes;
+}
+
 function mergeRequirement(target, requirement) {
   for (const [key, values] of Object.entries(requirement)) {
     const directive = DIRECTIVE_KEY_MAP[key];
@@ -185,6 +231,13 @@ export async function generateCspHeaderLine(rootDir, options = {}) {
   }
   if (options.extraRequirements) {
     mergeRequirement(merged, options.extraRequirements);
+  }
+
+  const distDir = path.join(rootDir, "dist");
+  const jsonLdHashes = await collectJsonLdHashes(distDir);
+  if (jsonLdHashes.size) {
+    merged["script-src"] = merged["script-src"] ?? new Set();
+    for (const hash of jsonLdHashes) merged["script-src"].add(hash);
   }
 
   const parts = DIRECTIVE_ORDER

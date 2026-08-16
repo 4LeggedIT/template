@@ -32,17 +32,17 @@ export const cspBaseline = {
   connectSrc: ["https://cloudflareinsights.com", "https://static.cloudflareinsights.com"],
 };
 
-// KNOWN, TRACKED, NOT YET FIXED: the site's own <StructuredData> component
-// renders an inline <script type="application/ld+json"> block. Chrome
-// enforces script-src against it despite it not being executable code (a
-// known CSP/JSON-LD quirk) — confirmed live, logged as a Report-Only
-// violation, 2026-08-15. Not fixed here: the content differs per page (title/
-// description vary), so a single 'unsafe-inline' or fixed hash either
-// reopens the real XSS surface or can't cover every page. Needs a real fix
-// (per-page hash computed at prerender time, or moving structured data to a
-// non-script delivery) before any site switches CSP from Report-Only to
-// enforcing — until then it's harmless since nothing blocks in Report-Only
-// mode.
+// FIXED 2026-08-15 (not here — no static registry entry can cover this):
+// the site's own <StructuredData> component renders an inline
+// <script type="application/ld+json"> block, and Chrome enforces script-src
+// against it despite it not being executable code (a known CSP/JSON-LD
+// quirk). gen-csp-headers.mjs's collectJsonLdHashes() now hashes every
+// route's actual prerendered JSON-LD content after the build's prerender
+// step and adds each as a 'sha256-...' script-src source — computed fresh
+// per build, not hand-maintained, same "generate, don't hand-maintain"
+// convention as everything else in this registry. Requires
+// tools/build.mjs to call writeCspHeaders(rootDir) LAST, after prerendering
+// writes every route's HTML — not right after the Vite client build.
 
 // Keyed by pattern component name — must match the .tsx filename (minus
 // extension) in components/patterns/.

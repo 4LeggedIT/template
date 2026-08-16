@@ -357,7 +357,6 @@ async function main() {
   await writeIndexDefaultMeta(siteDefaults);
   await writeSitemap(prerenderRoutes, siteOrigin);
   await writeRobotsTxt(siteOrigin);
-  await writeCspHeaders(rootDir);
   const ssrEntry = await buildSsr({ mode });
 
   const mod = await import(pathToFileURL(ssrEntry).href);
@@ -388,6 +387,11 @@ async function main() {
     normalizeHeadTags(injectApp(injectHead(template, notFound.headHtml), notFound.appHtml)),
     "utf-8"
   );
+
+  // Runs last, not right after the Vite client build: it hashes every
+  // route's actual prerendered <script type="application/ld+json"> content
+  // for a CSP script-src allowlist, so it needs the final HTML on disk.
+  await writeCspHeaders(rootDir);
 }
 
 main().catch((err) => {
