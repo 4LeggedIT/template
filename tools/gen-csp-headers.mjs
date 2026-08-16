@@ -233,19 +233,43 @@ export async function generateCspHeaderLine(rootDir, options = {}) {
     mergeRequirement(merged, options.extraRequirements);
   }
 
+  const buildHeaderLine = () => {
+    const parts = DIRECTIVE_ORDER
+      .filter((directive) => merged[directive]?.size)
+      .map((directive) => `${directive} ${[...merged[directive]].join(" ")}`);
+    return `Content-Security-Policy-Report-Only: ${parts.join("; ")};`;
+  };
+
+  // Cloudflare Pages hard-caps an individual _headers rule at 2,000
+  // characters — exceeding it doesn't truncate the header, it silently
+  // drops the ENTIRE rule (confirmed live on 4leggedit, 2026-08-15: a
+  // site with 112 distinct prerendered pages produced a 6,638-character
+  // line and the whole CSP header vanished from production, worse than
+  // having no JSON-LD fix at all). Stay well under that with a fixed
+  // budget so this can never recur silently, on this site or a future one.
+  const HEADER_CHAR_BUDGET = 1900;
+  let danglingHashCount = 0;
   const distDir = path.join(rootDir, "dist");
-  const jsonLdHashes = await collectJsonLdHashes(distDir);
-  if (jsonLdHashes.size) {
+  const jsonLdHashes = [...(await collectJsonLdHashes(distDir))].sort();
+  if (jsonLdHashes.length) {
     merged["script-src"] = merged["script-src"] ?? new Set();
-    for (const hash of jsonLdHashes) merged["script-src"].add(hash);
+    for (const hash of jsonLdHashes) {
+      merged["script-src"].add(hash);
+      if (buildHeaderLine().length > HEADER_CHAR_BUDGET) {
+        merged["script-src"].delete(hash);
+        danglingHashCount++;
+      }
+    }
+  }
+  if (danglingHashCount > 0) {
+    console.warn(
+      `[gen-csp-headers] WARNING: ${danglingHashCount} JSON-LD hash(es) dropped to stay under Cloudflare's 2,000-char _headers rule limit (budget: ${HEADER_CHAR_BUDGET}). The routes those hashes belonged to will still show a Report-Only JSON-LD script-src violation in the browser console — harmless under Report-Only, but means JSON-LD hash coverage on this site is incomplete. Consider it before switching this site to enforcing CSP.`
+    );
   }
 
-  const parts = DIRECTIVE_ORDER
-    .filter((directive) => merged[directive]?.size)
-    .map((directive) => `${directive} ${[...merged[directive]].join(" ")}`);
-
   return {
-    headerLine: `Content-Security-Policy-Report-Only: ${parts.join("; ")};`,
+    headerLine: buildHeaderLine(),
+    danglingHashCount,
     usedPatterns: [...used],
   };
 }
