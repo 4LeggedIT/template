@@ -1106,12 +1106,16 @@ const main = async () => {
 
     if (unresolvedRefs.length) {
       console.warn(
-        `[links] Note: ${unresolvedRefs.length} link reference(s) could not be statically resolved (not counted as broken or orphaned):`,
+        `[links] Note: ${unresolvedRefs.length} link reference(s) could not be statically resolved (not counted as broken or orphaned).`,
       );
-      for (const ref of unresolvedRefs) {
-        const where = `${path.relative(projectRoot, ref.file)}:${ref.line}`;
-        const what = ref.url ? ` "${ref.url}"` : "";
-        console.warn(`- ${where}:${what} (${ref.reason})`);
+      if (verbose) {
+        for (const ref of unresolvedRefs) {
+          const where = `${path.relative(projectRoot, ref.file)}:${ref.line}`;
+          const what = ref.url ? ` "${ref.url}"` : "";
+          console.warn(`- ${where}:${what} (${ref.reason})`);
+        }
+      } else {
+        console.warn(`[links] Run \`links:check -- --verbose\` for the per-line list.`);
       }
     }
 
