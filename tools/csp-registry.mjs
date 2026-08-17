@@ -76,8 +76,10 @@ export const patternCspRequirements = {
     frameSrc: ["https://www.getbuddy.com"],
   },
   FormEmbedModal: {
-    // Provider-agnostic iframe — the two real providers in use fleet-wide today
-    frameSrc: ["https://form.jotform.com", "https://docs.google.com"],
+    // Provider-agnostic iframe — the two real providers in use fleet-wide today.
+    // accounts.google.com is required because a Google Form with sign-in-gated
+    // submission (e.g. "limit to 1 response") redirects to it inside the iframe.
+    frameSrc: ["https://form.jotform.com", "https://docs.google.com", "https://accounts.google.com"],
   },
   EventsNewsSection: {
     // getFacebookVideoEmbedSrc() -> facebook.com/plugins/video.php iframe

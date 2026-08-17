@@ -26,10 +26,12 @@ type FormEmbedModalProps = {
   onOpenChange?: (open: boolean) => void;
   isOpen?: boolean;
   onClose?: () => void;
+  requiresGoogleAccount?: boolean;
   labels?: {
     openInNewTab?: string;
     fallbackLink?: string;
     formDescription?: string;
+    googleAccountNotice?: string;
   };
 };
 
@@ -46,9 +48,15 @@ const FormEmbedModal = ({
   onOpenChange,
   isOpen,
   onClose,
+  requiresGoogleAccount = false,
   labels = {},
 }: FormEmbedModalProps) => {
-  const { openInNewTab = "Open in new tab", fallbackLink, formDescription = "Complete the form below." } = labels;
+  const {
+    openInNewTab = "Open in new tab",
+    fallbackLink,
+    formDescription = "Complete the form below.",
+    googleAccountNotice = "Some forms may require you to be signed in to a Google account to submit a response.",
+  } = labels;
   const [internalOpen, setInternalOpen] = useState(false);
   const isControlled = typeof open === "boolean" && typeof onOpenChange === "function";
   const isLegacyControlled = typeof isOpen === "boolean";
@@ -95,17 +103,20 @@ const FormEmbedModal = ({
     )) : null;
 
   const triggerWithFallback = trigger ? (
-    fallbackLink ? (
+    fallbackLink || requiresGoogleAccount ? (
       <div className="inline-flex flex-col items-start gap-1.5">
         {trigger}
-        <a
-          href={formUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-xs text-muted-foreground underline underline-offset-4 hover:text-foreground"
-        >
-          {fallbackLink}
-        </a>
+        {fallbackLink && (
+          <a
+            href={formUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-xs text-muted-foreground underline underline-offset-4 hover:text-foreground"
+          >
+            {fallbackLink}
+          </a>
+        )}
+        {requiresGoogleAccount && <p className="text-xs text-muted-foreground">{googleAccountNotice}</p>}
       </div>
     ) : trigger
   ) : null;
