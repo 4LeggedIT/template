@@ -55,7 +55,7 @@ const FormEmbedModal = ({
     openInNewTab = "Open in new tab",
     fallbackLink,
     formDescription = "Complete the form below.",
-    googleAccountNotice = "This form requires a Google account to submit. It opens in a new tab so sign-in works correctly — Google does not allow signing in inside an embedded frame.",
+    googleAccountNotice = "This form requires a Google account to submit. It opens in a new tab.",
   } = labels;
   const [internalOpen, setInternalOpen] = useState(false);
   const isControlled = typeof open === "boolean" && typeof onOpenChange === "function";
