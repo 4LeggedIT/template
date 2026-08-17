@@ -77,9 +77,11 @@ export const patternCspRequirements = {
   },
   FormEmbedModal: {
     // Provider-agnostic iframe — the two real providers in use fleet-wide today.
-    // accounts.google.com is required because a Google Form with sign-in-gated
-    // submission (e.g. "limit to 1 response") redirects to it inside the iframe.
-    frameSrc: ["https://form.jotform.com", "https://docs.google.com", "https://accounts.google.com"],
+    // Never add accounts.google.com here: Google itself refuses to complete
+    // sign-in inside a third-party iframe (an anti-phishing restriction, not a
+    // CSP/cookie issue), so sign-in-gated Google Forms use requiresGoogleAccount
+    // to bypass the iframe/modal entirely and open as a plain new-tab link instead.
+    frameSrc: ["https://form.jotform.com", "https://docs.google.com"],
   },
   EventsNewsSection: {
     // getFacebookVideoEmbedSrc() -> facebook.com/plugins/video.php iframe

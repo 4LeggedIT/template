@@ -55,7 +55,7 @@ const FormEmbedModal = ({
     openInNewTab = "Open in new tab",
     fallbackLink,
     formDescription = "Complete the form below.",
-    googleAccountNotice = "Some forms may require you to be signed in to a Google account to submit a response.",
+    googleAccountNotice = "This form requires a Google account to submit. It opens in a new tab so sign-in works correctly — Google does not allow signing in inside an embedded frame.",
   } = labels;
   const [internalOpen, setInternalOpen] = useState(false);
   const isControlled = typeof open === "boolean" && typeof onOpenChange === "function";
@@ -78,6 +78,10 @@ const FormEmbedModal = ({
   };
 
   const onTriggerClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
+    // Google refuses to complete sign-in inside a third-party iframe (an anti-phishing
+    // restriction on accounts.google.com, not something CSP/cookie settings can fix), so a
+    // form that requires a Google account must open as a normal new-tab link, never the modal.
+    if (requiresGoogleAccount) return;
     if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button !== 0) return;
     event.preventDefault();
     setOpen(true);
