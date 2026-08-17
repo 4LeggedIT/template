@@ -98,10 +98,18 @@ const MediaGallerySection = ({
     keyboardHint = "Use arrow keys or on-screen controls to browse the gallery.",
     videoFallback = "Your browser does not support the video tag.",
   } = labels;
-  const orderedItems = useMemo(
-    () => (shuffleOnLoad ? shuffleArray(items) : items),
-    [items, shuffleOnLoad],
-  );
+  const [orderedItems, setOrderedItems] = useState<MediaGalleryItem[]>(items);
+
+  useEffect(() => {
+    // Deliberately client-only shuffle, post-hydration: shuffling during render
+    // would desync the server-rendered and first client-rendered item order.
+    if (!shuffleOnLoad) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setOrderedItems(items);
+      return;
+    }
+    setOrderedItems(shuffleArray(items));
+  }, [items, shuffleOnLoad]);
 
   const categories = useMemo(
     () =>

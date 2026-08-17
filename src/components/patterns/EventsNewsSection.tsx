@@ -14,7 +14,7 @@ import {
   getOccurrenceDates,
   getOccurrenceOnDate,
 } from "@/lib/event-recurrence";
-import type { ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 
 // Structurally identical to HomeHighlightSection.tsx's `HomeHighlightItem` — declared locally
 // (rather than imported) so this module has no dependency on the highlight-card pattern. Sites
@@ -456,8 +456,10 @@ const getEventEndMs = (entry: EventsNewsRenderableEventEntry) => {
   return Number.isFinite(endDate) ? endDate : null;
 };
 
-export const getEventStatus = (entry: EventsNewsRenderableEventEntry): "upcoming" | "ongoing" | "past" => {
-  const now = Date.now();
+export const getEventStatus = (
+  entry: EventsNewsRenderableEventEntry,
+  now: number = Date.now(),
+): "upcoming" | "ongoing" | "past" => {
   const startMs = getEventStartMs(entry);
   const endMs = getEventEndMs(entry);
   if (startMs <= now && (endMs === null || endMs >= now)) return "ongoing";
@@ -589,7 +591,7 @@ export const byNewestFirst = (left: EventsNewsRenderableEntry, right: EventsNews
 const bySoonestFirst = (left: EventsNewsRenderableEventEntry, right: EventsNewsRenderableEventEntry) =>
   getEventStartMs(left) - getEventStartMs(right);
 
-const toEventDisplayBuckets = (entries: EventsNewsRenderableEntry[]) => {
+const toEventDisplayBuckets = (entries: EventsNewsRenderableEntry[], now: number = Date.now()) => {
   const eventEntries = entries.filter((entry): entry is EventsNewsRenderableEventEntry => entry.kind === "event");
   const groupedEvents = new Map<string, EventsNewsRenderableEventEntry[]>();
 
@@ -611,16 +613,16 @@ const toEventDisplayBuckets = (entries: EventsNewsRenderableEntry[]) => {
 
     if (recurringSeries) {
       const next = group
-        .filter((entry) => getEventStatus(entry) !== "past")
+        .filter((entry) => getEventStatus(entry, now) !== "past")
         .sort(bySoonestFirst)[0];
       if (next) activeEvents.push(next);
 
-      archivedEvents.push(...group.filter((entry) => getEventStatus(entry) === "past"));
+      archivedEvents.push(...group.filter((entry) => getEventStatus(entry, now) === "past"));
       continue;
     }
 
     for (const entry of group) {
-      if (getEventStatus(entry) === "past") archivedEvents.push(entry);
+      if (getEventStatus(entry, now) === "past") archivedEvents.push(entry);
       else activeEvents.push(entry);
     }
   }
@@ -719,8 +721,7 @@ export const getEventsNewsHighlightItems = (
       };
     });
 
-const getBannerUpcomingEvents = (entries: EventsNewsRenderableEntry[]) => {
-  const now = Date.now();
+const getBannerUpcomingEvents = (entries: EventsNewsRenderableEntry[], now: number = Date.now()) => {
   const eventEntries = entries
     .filter((entry): entry is EventsNewsRenderableEventEntry => entry.kind === "event")
     .filter((entry) => getEventStartMs(entry) > now);
@@ -755,8 +756,9 @@ const toBannerEvents = (
   defaultCtaHref?: string,
   eventDetailsBasePath?: string,
   detailsLabel = "Details",
+  now: number = Date.now(),
 ): EventBannerItem[] => {
-  return getBannerUpcomingEvents(entries)
+  return getBannerUpcomingEvents(entries, now)
     .map((entry) => {
       const detailsHref = getDetailsHref(entry, eventDetailsBasePath) ?? defaultCtaHref;
       return {
@@ -1090,6 +1092,7 @@ const renderEntryCard = (
     shareCopied: "Copied",
     shareShared: "Shared",
   },
+  now: number = Date.now(),
 ) => {
   const detailsHref = getDetailsHref(entry, eventDetailsBasePath);
   const mapsUrl = entry.kind === "event" ? getMapsUrl(entry) : null;
@@ -1099,7 +1102,7 @@ const renderEntryCard = (
   const shareUrl = entry.kind === "event" && detailsHref ? toAbsoluteShareUrl(detailsHref) : null;
   const contentBlocks = getEntryContentBlocks(entry, labels.highlightsTitle);
 
-  const eventStatus = entry.kind === "event" ? getEventStatus(entry) : null;
+  const eventStatus = entry.kind === "event" ? getEventStatus(entry, now) : null;
   const articleType = entry.kind === "news" ? getArticleType(entry) : null;
   const metadataLabel = [
     eventStatus ? `${labels.statusPrefix}${eventStatus}` : null,
@@ -1327,8 +1330,22 @@ const EventsNewsSection = ({
     shareCopied: labels.shareCopied ?? "Copied",
     shareShared: labels.shareShared ?? "Shared",
   };
+
+  const [now, setNow] = useState<number | null>(null);
+  useEffect(() => {
+    // Deliberately deferred to post-hydration: this page is statically
+    // prerendered, so computing event status (upcoming/ongoing/past) from
+    // Date.now() during render would compare the build-time snapshot against
+    // the client's real time at view, desyncing server and client output.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setNow(Date.now());
+  }, []);
+  // Until mounted, treat every event as not-yet-past so the first render
+  // (server and client) always agrees — real status is applied right after hydration.
+  const safeNow = now ?? Number.NEGATIVE_INFINITY;
+
   const renderableEntries = getRenderableEntries(entries);
-  const { activeEvents, archivedEvents } = toEventDisplayBuckets(renderableEntries);
+  const { activeEvents, archivedEvents } = toEventDisplayBuckets(renderableEntries, safeNow);
   const sortedNews = renderableEntries
     .filter((entry): entry is EventsNewsArticleEntry => entry.kind === "news")
     .sort(byNewestFirst);
@@ -1348,7 +1365,7 @@ const EventsNewsSection = ({
   const archiveRaw = [...archivedEvents, ...nonFeatured.slice(maxLatest)].sort(byNewestFirst);
   const archive = typeof archiveMaxItems === "number" ? archiveRaw.slice(0, Math.max(0, archiveMaxItems)) : archiveRaw;
   const bannerEvents = showFutureEventsBanner
-    ? toBannerEvents(renderableEntries, futureEventsBannerDefaultCtaHref, eventDetailsBasePath, resolvedLabels.detailsLabel)
+    ? toBannerEvents(renderableEntries, futureEventsBannerDefaultCtaHref, eventDetailsBasePath, resolvedLabels.detailsLabel, safeNow)
     : [];
 
   return (
@@ -1372,14 +1389,14 @@ const EventsNewsSection = ({
       {featured ? (
         <div className="mb-6">
           <p className="mb-2 text-xs font-medium uppercase tracking-wide text-muted-foreground">{resolvedLabels.featuredLabel}</p>
-          {renderEntryCard(featured, eventDetailsBasePath, cardMode, imageLayout, 0, resolvedLabels)}
+          {renderEntryCard(featured, eventDetailsBasePath, cardMode, imageLayout, 0, resolvedLabels, safeNow)}
         </div>
       ) : null}
 
       {latest.length ? (
         <div className="space-y-6">
           {latest.map((entry, index) =>
-            renderEntryCard(entry, eventDetailsBasePath, cardMode, imageLayout, index, resolvedLabels),
+            renderEntryCard(entry, eventDetailsBasePath, cardMode, imageLayout, index, resolvedLabels, safeNow),
           )}
         </div>
       ) : (
@@ -1398,7 +1415,7 @@ const EventsNewsSection = ({
           </summary>
           <div className="mt-4 space-y-4">
             {archive.map((entry, index) =>
-              renderEntryCard(entry, eventDetailsBasePath, cardMode, imageLayout, index, resolvedLabels),
+              renderEntryCard(entry, eventDetailsBasePath, cardMode, imageLayout, index, resolvedLabels, safeNow),
             )}
           </div>
         </details>
