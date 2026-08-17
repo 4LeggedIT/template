@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { Heart, MessageCircle } from "lucide-react";
 import { Link } from "react-router-dom";
 import AdoptAPetEmbed from "@/components/patterns/AdoptAPetEmbed";
@@ -183,10 +184,19 @@ const AdoptablePetsSection = ({
     return `https://www.getbuddy.com/adoption-center/${encodeURIComponent(orgId)}`;
   })();
 
-  // Recomputed fresh on every render on purpose, so expiry status stays accurate
-  // as the user interacts with filters, rather than freezing at first mount.
-  // eslint-disable-next-line react-hooks/purity
-  const nowMs = Date.now();
+  const [now, setNow] = useState<number | null>(null);
+  useEffect(() => {
+    // Deliberately deferred to post-hydration: this page is statically
+    // prerendered, so computing expiry from Date.now() during render would
+    // compare the build-time snapshot against the client's real time at
+    // view, desyncing server and client output.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setNow(Date.now());
+  }, []);
+  // Until mounted, treat every listing as not-yet-expired so the first
+  // render (server and client) always agrees — real expiry is applied
+  // right after hydration.
+  const nowMs = now ?? Number.NEGATIVE_INFINITY;
 
   const processedLocalPets = (() => {
     const withExpiry = localPets.map((pet) => {
