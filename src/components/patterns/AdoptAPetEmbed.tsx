@@ -16,6 +16,7 @@ type AdoptAPetEmbedProps = {
   petfinderUrl?: string;
   pawPlacerUrl?: string;
   rescueMeUrl?: string;
+  rockyKanakaUrl?: string;
   labels?: {
     openButton?: string;
     viewAllPrefix?: string;
@@ -63,6 +64,7 @@ const AdoptAPetEmbed = ({
   petfinderUrl,
   pawPlacerUrl,
   rescueMeUrl,
+  rockyKanakaUrl,
   labels = {},
 }: AdoptAPetEmbedProps) => {
   const {
@@ -77,7 +79,8 @@ const AdoptAPetEmbed = ({
     ...(getbuddyUrl ? [{ name: "GetBuddy", url: getbuddyUrl }] : []),
     ...(pawPlacerUrl ? [{ name: "PawPlacer", url: pawPlacerUrl }] : []),
     ...(rescueMeUrl ? [{ name: "Rescue Me", url: rescueMeUrl }] : []),
-  ];
+    ...(rockyKanakaUrl ? [{ name: "Rocky Kanaka", url: rockyKanakaUrl }] : []),
+  ].sort((a, b) => a.name.localeCompare(b.name));
 
   return (
     <section className={className}>

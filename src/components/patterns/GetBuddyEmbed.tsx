@@ -9,6 +9,7 @@ type GetBuddyEmbedProps = {
   adoptAPetUrl?: string;
   pawPlacerUrl?: string;
   rescueMeUrl?: string;
+  rockyKanakaUrl?: string;
   labels?: {
     viewAllPrefix?: string;
     viewAllLink?: string;
@@ -27,6 +28,7 @@ const GetBuddyEmbed = ({
   adoptAPetUrl,
   pawPlacerUrl,
   rescueMeUrl,
+  rockyKanakaUrl,
   labels = {},
 }: GetBuddyEmbedProps) => {
   const {
@@ -42,7 +44,8 @@ const GetBuddyEmbed = ({
     ...(adoptAPetUrl ? [{ name: "Adopt-a-Pet", url: adoptAPetUrl }] : []),
     ...(pawPlacerUrl ? [{ name: "PawPlacer", url: pawPlacerUrl }] : []),
     ...(rescueMeUrl ? [{ name: "Rescue Me", url: rescueMeUrl }] : []),
-  ];
+    ...(rockyKanakaUrl ? [{ name: "Rocky Kanaka", url: rockyKanakaUrl }] : []),
+  ].sort((a, b) => a.name.localeCompare(b.name));
 
   return (
     <section className={className}>

@@ -44,6 +44,7 @@ type AdoptablePetsSectionProps = {
     getbuddyUrl?: string;
     pawPlacerUrl?: string;
     rescueMeUrl?: string;
+    rockyKanakaUrl?: string;
     labels?: {
       viewAllPrefix?: string;
       viewAllLink?: string;
@@ -65,6 +66,7 @@ type AdoptablePetsSectionProps = {
     getbuddyUrl?: string;
     pawPlacerUrl?: string;
     rescueMeUrl?: string;
+    rockyKanakaUrl?: string;
     labels?: {
       openButton?: string;
       viewAllPrefix?: string;
@@ -86,6 +88,7 @@ type AdoptablePetsSectionProps = {
     adoptAPetUrl?: string;
     pawPlacerUrl?: string;
     rescueMeUrl?: string;
+    rockyKanakaUrl?: string;
     labels?: {
       viewAllPrefix?: string;
       viewAllLink?: string;
@@ -102,6 +105,7 @@ type AdoptablePetsSectionProps = {
     adoptAPetUrl?: string;
     getbuddyUrl?: string;
     rescueMeUrl?: string;
+    rockyKanakaUrl?: string;
     labels?: {
       viewAllPrefix?: string;
       viewAllLink?: string;
@@ -303,6 +307,7 @@ const AdoptablePetsSection = ({
               getbuddyUrl={petfinder.getbuddyUrl}
               pawPlacerUrl={petfinder.pawPlacerUrl}
               rescueMeUrl={petfinder.rescueMeUrl}
+              rockyKanakaUrl={petfinder.rockyKanakaUrl}
               petListTitle={petfinder.petListTitle}
               labels={petfinder.labels}
             />
@@ -330,6 +335,7 @@ const AdoptablePetsSection = ({
               getbuddyUrl={adoptAPet.getbuddyUrl}
               pawPlacerUrl={adoptAPet.pawPlacerUrl}
               rescueMeUrl={adoptAPet.rescueMeUrl}
+              rockyKanakaUrl={adoptAPet.rockyKanakaUrl}
               labels={adoptAPet.labels}
             />
           </div>
@@ -346,6 +352,7 @@ const AdoptablePetsSection = ({
             adoptAPetUrl={getBuddy.adoptAPetUrl}
             pawPlacerUrl={getBuddy.pawPlacerUrl}
             rescueMeUrl={getBuddy.rescueMeUrl}
+            rockyKanakaUrl={getBuddy.rockyKanakaUrl}
             labels={getBuddy.labels}
           />
         ) : null}
@@ -368,6 +375,7 @@ const AdoptablePetsSection = ({
               adoptAPetUrl={pawPlacer.adoptAPetUrl}
               getbuddyUrl={pawPlacer.getbuddyUrl}
               rescueMeUrl={pawPlacer.rescueMeUrl}
+              rockyKanakaUrl={pawPlacer.rockyKanakaUrl}
               labels={pawPlacer.labels}
             />
           </div>

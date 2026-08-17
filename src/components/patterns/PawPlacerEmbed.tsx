@@ -24,6 +24,7 @@ type PawPlacerEmbedProps = {
   adoptAPetUrl?: string;
   getbuddyUrl?: string;
   rescueMeUrl?: string;
+  rockyKanakaUrl?: string;
   labels?: {
     viewAllPrefix?: string;
     viewAllLink?: string;
@@ -42,6 +43,7 @@ const PawPlacerEmbed = ({
   adoptAPetUrl,
   getbuddyUrl,
   rescueMeUrl,
+  rockyKanakaUrl,
   labels = {},
 }: PawPlacerEmbedProps) => {
   const domId = useId().replace(/:/g, "");
@@ -60,7 +62,8 @@ const PawPlacerEmbed = ({
     ...(adoptAPetUrl ? [{ name: "Adopt-a-Pet", url: adoptAPetUrl }] : []),
     ...(getbuddyUrl ? [{ name: "GetBuddy", url: getbuddyUrl }] : []),
     ...(rescueMeUrl ? [{ name: "Rescue Me", url: rescueMeUrl }] : []),
-  ];
+    ...(rockyKanakaUrl ? [{ name: "Rocky Kanaka", url: rockyKanakaUrl }] : []),
+  ].sort((a, b) => a.name.localeCompare(b.name));
 
   useEffect(() => {
     if (!showEmbed) return;
