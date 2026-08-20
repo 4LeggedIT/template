@@ -127,6 +127,12 @@ type EventsNewsBaseEntry = {
   videoAspectRatio?: "landscape" | "portrait";
   /** Renders in place of imageSrc/images in full/detail views (card thumbnails still use imageSrc). Ignored when videoSrc is set. */
   videoEmbed?: EventsNewsVideoEmbed;
+  /**
+   * Internal record of where this entry's content originated — a Facebook/Instagram post URL, an
+   * external article URL, etc. Editorial reference only, never rendered on the page. Leave unset
+   * when the content has no external source (e.g. an org-authored announcement).
+   */
+  source?: string;
   dateLabel?: string;
   highlights?: string[];
   highlightOnHome?: boolean;

@@ -266,8 +266,6 @@ const EventsNewsDetail = ({
           />
         ) : null}
 
-        {entry.summary ? <p className="text-muted-foreground">{entry.summary}</p> : null}
-
         {contentBlocks ? (
           <div className="space-y-4">{contentBlocks.map((block, idx) => renderContentBlock(entry.id, block, idx))}</div>
         ) : (

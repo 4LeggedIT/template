@@ -22,7 +22,12 @@ export const eventsNewsExampleEntries: EventsNewsEntry[] = [
     locationLabel: "123 Main St, Example City, ST",
     registrationUrl: "https://example.org/register/adoption-fridays",
     summary: "Recurring weekly event every Friday evening.",
-    highlights: ["Meet-and-greet with adoptable dogs", "Volunteer Q&A table", "Family-friendly event"],
+    highlights: [
+      "Held weekly, every Friday evening",
+      "Meet-and-greet with adoptable dogs",
+      "Volunteer Q&A table",
+      "Family-friendly event",
+    ],
     imageSrc: "https://images.unsplash.com/photo-1601758228041-f3b2795255f1?auto=format&fit=crop&w=1200&q=80",
     imageAlt: "A dog waiting to be adopted at a meet-and-greet event",
     recurrence: {
@@ -39,6 +44,7 @@ export const eventsNewsExampleEntries: EventsNewsEntry[] = [
     endAtIso: "2026-01-10T12:00:00-08:00",
     locationLabel: "Warehouse Pickup Hub, Example City, ST",
     summary: "Every 2 weeks donation sorting and supply drop-off.",
+    highlights: ["Held every 2 weeks", "On-site donation sorting", "Supply drop-off available"],
     recurrence: {
       frequency: "weekly",
       intervalWeeks: 2,
@@ -53,6 +59,7 @@ export const eventsNewsExampleEntries: EventsNewsEntry[] = [
     endAtIso: "2026-01-10T16:00:00-08:00",
     locationLabel: "Riverside Park, Example City, ST",
     summary: "Runs on the second weekend each month (Saturday + Sunday).",
+    highlights: ["Held the second weekend of every month", "Runs Saturday and Sunday"],
     recurrence: {
       frequency: "monthly",
       nthWeek: 2,
@@ -68,6 +75,7 @@ export const eventsNewsExampleEntries: EventsNewsEntry[] = [
     endAtIso: "2026-01-05T19:30:00-08:00",
     locationLabel: "Rescue Office, Example City, ST",
     summary: "Occurs on the 5th day of each month.",
+    highlights: ["Held on the 5th day of every month"],
     recurrence: {
       frequency: "monthly",
       monthDay: 5,
@@ -92,6 +100,8 @@ export const eventsNewsExampleEntries: EventsNewsEntry[] = [
     dateLabel: "February 24, 2026",
     summary:
       "Example of a news entry that links to a local article page hosted inside the site, with the source Facebook video embedded via videoEmbed instead of a static image.",
+    body:
+      "This entry links to a local article page hosted inside the site rather than an external URL. Instead of a static thumbnail image, the source Facebook video is embedded directly on the page via videoEmbed.",
     href: "/news/example-article",
     imageSrc: "https://images.unsplash.com/photo-1548199973-03cce0bbc87b?auto=format&fit=crop&w=800&q=60",
     imageAlt: "Placeholder thumbnail (ignored on the detail page below since videoEmbed is set)",
@@ -100,6 +110,7 @@ export const eventsNewsExampleEntries: EventsNewsEntry[] = [
       // Real public Reel used as a working demo URL (The Comeback Pack's first-rescue story).
       url: "https://www.facebook.com/reel/901691332360741",
     },
+    source: "https://www.facebook.com/reel/901691332360741",
   },
   {
     id: "news-self-hosted-video-2026-03-05",
@@ -110,6 +121,8 @@ export const eventsNewsExampleEntries: EventsNewsEntry[] = [
     dateLabel: "March 5, 2026",
     summary:
       "Example of a news entry using videoSrc (a real, self-hosted mp4) instead of videoEmbed — prefer this whenever the source clip can be downloaded, since a self-hosted file always plays.",
+    body:
+      "This entry uses videoSrc, a real self-hosted mp4 file, instead of videoEmbed. Prefer a self-hosted video whenever the source clip can be downloaded, since a self-hosted file always plays where an embedded iframe can be rights-blocked.",
     href: "/news/example-video-article",
     // A small public-domain sample clip standing in for a real downloaded Reel/video file.
     videoSrc: "https://interactive-examples.mdn.mozilla.net/media/cc0-videos/flower.mp4",
@@ -183,8 +196,9 @@ export const eventsNewsExampleEntries: EventsNewsEntry[] = [
     imageSrc: "https://images.unsplash.com/photo-1517849845537-4d257902861a?auto=format&fit=crop&w=1200&q=80",
     imageAlt: "Gift baskets set out for a fundraiser raffle",
     highlights: [
+      "Held the first Saturday of every month",
       "20+ donated gift baskets, all dog-themed",
-      "Tickets available at the door or in advance",
+      "Tickets available at the door or in advance — $5 each or 5 for $20",
       "Winners drawn on-site at 3:00 PM",
     ],
     recurrence: {
