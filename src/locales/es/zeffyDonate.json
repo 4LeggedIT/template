@@ -1,0 +1,25 @@
+{
+  "breadcrumb": "Patrón de Donación por Zeffy",
+  "hero": {
+    "title": "Patrón de donación por Zeffy",
+    "description": "Use el componente compartido de formulario de donación de Zeffy, que muestra un formulario de respaldo funcional de forma predeterminada y solo cambia al widget en vivo una vez que el script de Zeffy confirma que se cargó."
+  },
+  "example": {
+    "title": "Ejemplo",
+    "configNote": "Configure el formulario mediante `formSlug` — el identificador del propio fragmento de inserción de Zeffy (p. ej., `help-us-save-more-animals-14`). Este ejemplo usa un slug claramente ficticio solo con fines de documentación."
+  },
+  "standard": {
+    "title": "Estándar",
+    "items": [
+      "Renderice `ZeffyDonateEmbed` como la acción principal de donación.",
+      "Las páginas de producción deben proporcionar un `formSlug` real y en vivo de la cuenta de Zeffy de la organización — nunca invente ni adivine uno.",
+      "Las páginas de plantilla/ejemplo usan solo un slug ficticio claramente etiquetado, para fines de documentación visual.",
+      "El componente usa como predeterminado su propio iframe de respaldo funcional (sin necesidad de JS) y solo cambia al widget principal después de que el script de Zeffy confirme que se cargó — este es el valor predeterminado seguro, no un respaldo activado por error, por lo que sigue siendo seguro sin JS y seguro para la hidratación.",
+      "Siempre se muestra un pequeño enlace auxiliar debajo del widget, que enlaza al formulario completo de Zeffy en una pestaña nueva — incorporado, sin necesidad de conexión adicional.",
+      "`onError` está disponible como conexión de análisis/seguimiento en caso de que falle la carga del script del widget.",
+      "`height`/`title`/`showHelperLink`/`helperLinkLabel` están disponibles para ajustar la presentación sin bifurcar el componente.",
+      "Requiere una entrada `ZeffyDonateEmbed` en `tools/csp-registry.mjs` (scriptSrc + frameSrc para `https://www.zeffy.com`).",
+      "Componente: `template/src/components/patterns/ZeffyDonateEmbed.tsx`"
+    ]
+  }
+}

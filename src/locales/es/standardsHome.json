@@ -23,6 +23,7 @@
     "faq": { "title": "Patrón de Preguntas Frecuentes", "description": "Requisito nativo `<details>/<summary>` para contenido público de preguntas frecuentes." },
     "formEmbedModal": { "title": "Estándar de FormEmbedModal", "description": "Patrón de modal de formulario independiente del proveedor con ayuda y respaldo sin JS." },
     "paypalDonate": { "title": "Patrón de Donación por PayPal", "description": "Uso del botón SDK de donación y patrón de enlace directo de respaldo." },
+    "zeffyDonate": { "title": "Patrón de Donación por Zeffy", "description": "Widget de formulario de donación de Zeffy con un respaldo funcional seguro sin JS como estado predeterminado." },
     "communityPartners": { "title": "Patrón de Socios Comunitarios", "description": "Agradecimiento a colaboradores de rescate y comercios locales sin implicar favoritismo." },
     "supporterRecognition": { "title": "Patrón de Reconocimiento de Colaboradores", "description": "Una lista plana y sin jerarquía para agradecer a donantes y colaboradores individuales." },
     "impactStats": { "title": "Patrón de Estadísticas de Impacto", "description": "Recuadros de estadísticas de impacto de por vida más una gráfica de barras opcional por período para el reporte de impacto de la organización de rescate." },

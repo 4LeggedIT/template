@@ -94,4 +94,10 @@ export const patternCspRequirements = {
     connectSrc: ["https://www.paypal.com"],
     frameSrc: ["https://www.paypal.com"],
   },
+  ZeffyDonateEmbed: {
+    // ZEFFY_EMBED_SCRIPT_SRC, populates [data-zeffy-embed]; frameSrc covers
+    // both the no-JS-safe fallback iframe and the script's own embedded form.
+    scriptSrc: ["https://www.zeffy.com"],
+    frameSrc: ["https://www.zeffy.com"],
+  },
 };

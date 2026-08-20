@@ -23,6 +23,7 @@
     "faq": { "title": "FAQ Pattern", "description": "Native `<details>/<summary>` requirement for public FAQ/disclosure content." },
     "formEmbedModal": { "title": "FormEmbedModal Standard", "description": "Provider-agnostic form modal pattern with helper and no-JS fallbacks." },
     "paypalDonate": { "title": "PayPal Donate Pattern", "description": "Donate SDK button usage and direct-link fallback helper pattern." },
+    "zeffyDonate": { "title": "Zeffy Donate Pattern", "description": "Zeffy donation form embed with a no-JS-safe working fallback as the default state." },
     "communityPartners": { "title": "Community Partners Pattern", "description": "Thanking rescue collaborators and local business supporters without implying favoritism." },
     "supporterRecognition": { "title": "Supporter Recognition Pattern", "description": "A flat, unranked thank-you list for individual donors and supporters." },
     "impactStats": { "title": "Impact Stats Pattern", "description": "Lifetime impact stat tiles plus an optional period-by-period bar chart for rescue-organization impact reporting." },

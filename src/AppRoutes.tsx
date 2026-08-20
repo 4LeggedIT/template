@@ -32,6 +32,7 @@ import PlacementHelpStandardPage from "@/pages/standards/PlacementHelpStandardPa
 import SuccessStoriesStandardPage from "@/pages/standards/SuccessStoriesStandardPage";
 import TemplateStandardsHomePage from "@/pages/standards/TemplateStandardsHomePage";
 import TestimonialsStandardPage from "@/pages/standards/TestimonialsStandardPage";
+import ZeffyDonatePatternPage from "@/pages/standards/ZeffyDonatePatternPage";
 import KennelDisplayToolsStandardPage from "@/pages/standards/KennelDisplayToolsStandardPage";
 import DocumentsStandardPage from "@/pages/standards/DocumentsStandardPage";
 import BlogStandardPage from "@/pages/standards/BlogStandardPage";
@@ -98,6 +99,7 @@ const AppRoutes = () => {
         <Route path="/standards/impact-accountability" element={<ImpactAccountabilityStandardPage />} />
         <Route path="/standards/media-gallery" element={<MediaGalleryStandardPage />} />
         <Route path="/standards/paypal-donate" element={<PayPalDonatePatternPage />} />
+        <Route path="/standards/zeffy-donate" element={<ZeffyDonatePatternPage />} />
         <Route path="/standards/placement-help" element={<PlacementHelpStandardPage />} />
         <Route path="/standards/success-stories" element={<SuccessStoriesStandardPage />} />
         <Route path="/standards/testimonials" element={<TestimonialsStandardPage />} />

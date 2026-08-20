@@ -26,6 +26,7 @@ import enFaqDisclosure from "@/locales/en/faqDisclosure.json";
 import enNewsHighlight from "@/locales/en/newsHighlight.json";
 import enFormEmbedModal from "@/locales/en/formEmbedModal.json";
 import enPaypalDonate from "@/locales/en/paypalDonate.json";
+import enZeffyDonate from "@/locales/en/zeffyDonate.json";
 import enCommunityPartners from "@/locales/en/communityPartners.json";
 import enSupporterRecognition from "@/locales/en/supporterRecognition.json";
 import enImpactStats from "@/locales/en/impactStats.json";
@@ -62,6 +63,7 @@ import esFaqDisclosure from "@/locales/es/faqDisclosure.json";
 import esNewsHighlight from "@/locales/es/newsHighlight.json";
 import esFormEmbedModal from "@/locales/es/formEmbedModal.json";
 import esPaypalDonate from "@/locales/es/paypalDonate.json";
+import esZeffyDonate from "@/locales/es/zeffyDonate.json";
 import esCommunityPartners from "@/locales/es/communityPartners.json";
 import esSupporterRecognition from "@/locales/es/supporterRecognition.json";
 import esImpactStats from "@/locales/es/impactStats.json";
@@ -104,6 +106,7 @@ i18n.use(initReactI18next).init({
       newsHighlight: enNewsHighlight,
       formEmbedModal: enFormEmbedModal,
       paypalDonate: enPaypalDonate,
+      zeffyDonate: enZeffyDonate,
       communityPartners: enCommunityPartners,
       supporterRecognition: enSupporterRecognition,
       impactStats: enImpactStats,
@@ -141,6 +144,7 @@ i18n.use(initReactI18next).init({
       newsHighlight: esNewsHighlight,
       formEmbedModal: esFormEmbedModal,
       paypalDonate: esPaypalDonate,
+      zeffyDonate: esZeffyDonate,
       communityPartners: esCommunityPartners,
       supporterRecognition: esSupporterRecognition,
       impactStats: esImpactStats,
@@ -181,6 +185,7 @@ i18n.use(initReactI18next).init({
     "newsHighlight",
     "formEmbedModal",
     "paypalDonate",
+    "zeffyDonate",
     "communityPartners",
     "supporterRecognition",
     "impactStats",
