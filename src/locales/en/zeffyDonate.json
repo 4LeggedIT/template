@@ -6,7 +6,7 @@
   },
   "example": {
     "title": "Example",
-    "configNote": "Configure the form via `formSlug` — the identifier from Zeffy's own embed snippet (e.g. `help-us-save-more-animals-14`). This example uses a clearly dummy slug for documentation purposes only."
+    "configNote": "Configure the form via `formSlug` — the identifier from Zeffy's own embed snippet (the last path segment of the form URL Zeffy gives the org). This example uses a clearly dummy slug for documentation purposes only."
   },
   "standard": {
     "title": "Standard",

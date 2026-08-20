@@ -26,10 +26,10 @@ afterEach(() => {
 
 describe("ZeffyDonateEmbed", () => {
   it("renders the fallback iframe visibly before the embed script loads", () => {
-    const { container } = render(<ZeffyDonateEmbed formSlug="help-us-save-more-animals-14" />);
+    const { container } = render(<ZeffyDonateEmbed formSlug="example-fund-slug" />);
 
     const iframe = screen.getByTitle("Donation form powered by Zeffy");
-    expect(iframe).toHaveAttribute("src", "https://www.zeffy.com/embed/donation-form/help-us-save-more-animals-14");
+    expect(iframe).toHaveAttribute("src", "https://www.zeffy.com/embed/donation-form/example-fund-slug");
 
     const primaryMount = container.querySelector("[data-zeffy-embed]");
     expect(primaryMount).toHaveStyle({ display: "none" });
@@ -38,7 +38,7 @@ describe("ZeffyDonateEmbed", () => {
   it("injects the Zeffy embed script exactly once across two instances", () => {
     render(
       <>
-        <ZeffyDonateEmbed formSlug="help-us-save-more-animals-14" />
+        <ZeffyDonateEmbed formSlug="example-fund-slug" />
         <ZeffyDonateEmbed formSlug="another-appeal-slug" />
       </>,
     );
@@ -47,7 +47,7 @@ describe("ZeffyDonateEmbed", () => {
   });
 
   it("switches to the primary embed div and hides the fallback once the script loads", async () => {
-    const { container } = render(<ZeffyDonateEmbed formSlug="help-us-save-more-animals-14" />);
+    const { container } = render(<ZeffyDonateEmbed formSlug="example-fund-slug" />);
 
     fireScriptEvent("load");
 
@@ -61,7 +61,7 @@ describe("ZeffyDonateEmbed", () => {
 
   it("keeps the fallback iframe visible and calls onError if the script fails to load", async () => {
     const onError = vi.fn();
-    render(<ZeffyDonateEmbed formSlug="help-us-save-more-animals-14" onError={onError} />);
+    render(<ZeffyDonateEmbed formSlug="example-fund-slug" onError={onError} />);
 
     fireScriptEvent("error");
 
@@ -81,11 +81,11 @@ describe("ZeffyDonateEmbed", () => {
   });
 
   it("points the helper link at the full-page form, not the /embed/ path", () => {
-    render(<ZeffyDonateEmbed formSlug="help-us-save-more-animals-14" />);
+    render(<ZeffyDonateEmbed formSlug="example-fund-slug" />);
 
     expect(screen.getByRole("link", { name: "Having trouble? Open the donation form in a new tab" })).toHaveAttribute(
       "href",
-      "https://www.zeffy.com/en-US/donation-form/help-us-save-more-animals-14",
+      "https://www.zeffy.com/en-US/donation-form/example-fund-slug",
     );
   });
 });

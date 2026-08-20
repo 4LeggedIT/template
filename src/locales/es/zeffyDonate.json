@@ -6,7 +6,7 @@
   },
   "example": {
     "title": "Ejemplo",
-    "configNote": "Configure el formulario mediante `formSlug` — el identificador del propio fragmento de inserción de Zeffy (p. ej., `help-us-save-more-animals-14`). Este ejemplo usa un slug claramente ficticio solo con fines de documentación."
+    "configNote": "Configure el formulario mediante `formSlug` — el identificador del propio fragmento de inserción de Zeffy (el último segmento de la URL del formulario que Zeffy le da a la organización). Este ejemplo usa un slug claramente ficticio solo con fines de documentación."
   },
   "standard": {
     "title": "Estándar",
