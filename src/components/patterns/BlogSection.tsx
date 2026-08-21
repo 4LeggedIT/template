@@ -29,6 +29,13 @@ export type BlogPostEntry = {
   publishedAt: string;
   /** Mini-markdown body — see BlogPostDetail's content grammar. */
   content: string;
+  /**
+   * Internal record of where this post's content originated — a Facebook/Instagram post URL, an
+   * external article URL, etc. Editorial reference only, never rendered on the page. Leave unset
+   * when the content has no external source (e.g. an org-authored announcement). Mirrors
+   * `EventsNewsEntry.source`.
+   */
+  source?: string;
   author?: string;
   authorRole?: string;
   /** Site-local category key. No badge renders when omitted. */
@@ -37,6 +44,8 @@ export type BlogPostEntry = {
   imageAlt?: string;
   /** Decorative fallback when no imageSrc is set. */
   emoji?: string;
+  /** When set, BlogPostDetail renders a native <video> (poster={imageSrc}) instead of the plain hero image. */
+  videoSrc?: string;
   /** Auto-computed from word count (~200wpm) when omitted. */
   readTime?: string;
   /** Preferred pick for showFeatured's hero card when featuredPostId isn't set. */

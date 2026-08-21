@@ -348,7 +348,13 @@ const BlogPostDetail = ({
         </div>
       </header>
 
-      {post.imageSrc ? (
+      {post.videoSrc ? (
+        <div className="mb-8 overflow-hidden rounded-2xl">
+          <video controls playsInline preload="metadata" poster={post.imageSrc} className="block h-auto w-full">
+            <source src={post.videoSrc} type="video/mp4" />
+          </video>
+        </div>
+      ) : post.imageSrc ? (
         <div className="mb-8 overflow-hidden rounded-2xl">
           <img src={post.imageSrc} alt={post.imageAlt ?? post.title} className="h-auto w-full object-cover" />
         </div>
