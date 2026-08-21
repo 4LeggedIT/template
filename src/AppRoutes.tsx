@@ -46,6 +46,9 @@ import KennelCards2UpPage from "@/pages/tools/KennelCards2UpPage";
 import DocumentsIndexPage from "@/pages/tools/DocumentsIndexPage";
 import AdoptionCertificatePage from "@/pages/tools/AdoptionCertificatePage";
 import PetMedicalRecordPage from "@/pages/tools/PetMedicalRecordPage";
+import BusinessCardSimplePage from "@/pages/tools/BusinessCardSimplePage";
+import BusinessCardGenericPage from "@/pages/tools/BusinessCardGenericPage";
+import BusinessCardTeamPage from "@/pages/tools/BusinessCardTeamPage";
 
 const AppRoutes = () => {
   return (
@@ -117,6 +120,9 @@ const AppRoutes = () => {
       <Route path="/tools/documents-index" element={<DocumentsIndexPage />} />
       <Route path="/tools/adoption-certificate" element={<AdoptionCertificatePage />} />
       <Route path="/tools/pet-medical-record" element={<PetMedicalRecordPage />} />
+      <Route path="/tools/business-card-simple" element={<BusinessCardSimplePage />} />
+      <Route path="/tools/business-card-generic" element={<BusinessCardGenericPage />} />
+      <Route path="/tools/business-card-team" element={<BusinessCardTeamPage />} />
     </Routes>
   );
 };

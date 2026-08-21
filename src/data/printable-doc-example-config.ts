@@ -18,4 +18,5 @@ export const printableDocExampleConfig: PrintableDocConfig = {
     facebook: "https://facebook.com/example",
     instagram: "https://instagram.com/example",
   },
+  businessCardCta: "Scan to visit our website!",
 };

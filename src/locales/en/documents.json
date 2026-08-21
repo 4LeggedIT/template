@@ -16,14 +16,27 @@
     "petMedicalRecord": {
       "title": "Pet Medical Record",
       "description": "A dedicated, ready-to-print medical record — required on every animal-rescue site per governance."
+    },
+    "businessCardSimple": {
+      "title": "Business Card (Simple)",
+      "description": "One minimal single-sided card — org logo as-is on one side, a QR code plus a CTA line and URL on the other. Required on every animal-rescue site per governance."
+    },
+    "businessCardGeneric": {
+      "title": "Business Card (Generic)",
+      "description": "Front-and-back cards printed as two Avery sheets — org identity on the front, a QR code and icon-only social links on the back. Required on every animal-rescue site per governance."
+    },
+    "businessCardTeam": {
+      "title": "Business Card (Team)",
+      "description": "Live-editable team-member cards — front carries the person's details, back carries a vCard QR that saves them as a contact when scanned."
     }
   },
   "openLiveExample": "Open live example",
   "standard": {
     "title": "Standard",
     "items": [
-      "Every site must have a `/documents` index (`DocumentsIndexSection`, or a site-local page using the same `.doc-page` markup) plus, at minimum, a Certificate of Adoption and a Pet Medical Record — required on every animal-rescue site per governance, even if empty groups are shown for document types not yet available.",
+      "Every site must have a `/documents` index (`DocumentsIndexSection`, or a site-local page using the same `.doc-page` markup) with a \"Printable Materials\" group that always renders first, above any other document groups — plus, at minimum and in this order: Certificate of Adoption, Pet Medical Record, Business Card (Simple), Business Card (Generic), Business Card (Team) — required on every animal-rescue site per governance, even if empty groups are shown for document types not yet available.",
       "`AdoptionCertificateSection` and `PetMedicalRecordSection` are dedicated, purpose-built components — use them instead of hand-rolling a document layout for these two required document types.",
+      "`BusinessCardGenericSection` covers two of the three required business-card documents via a `layout` prop: `\"generic\"` (default) is the front+back two-sheet card; `\"simple\"` is the minimal single-sided card, and needs `logoSrc` to be a white-background or transparent variant since the logo renders unmasked. `BusinessCardTeamSection` is the third — a live-editable form (not a static config-only render like the others) whose back side encodes a per-member vCard QR, not a website-URL QR, so scanning it saves that person as a phone contact. All three share the same `SocialIconRow` treatment: icon-only social links (never plain-text URLs), shown only on the back side, only for platforms actually configured.",
       "For any other printable document (foster agreement, volunteer agreement, educational guide, etc.), use `DocumentLayout` as a generic wrapper (`title`, `orgName`, `logoSrc`, `children`) rather than duplicating the print page shell — no live example above, since it renders whatever content a site passes as children, but the component exists and follows the same conventions as the two dedicated ones.",
       "All of these components render a self-contained, full-viewport `.doc-body`/`.doc-page` layout with its own `@page` print-size rule — like the Kennel & Display Tools, these are not meant to be embedded inside a normal page layout, and their routes are mounted outside the shared `SiteLayout`/`AppShell` wrapper so no site header or footer prints alongside the document.",
       "Every config comes from one shared `PrintableDocConfig` shape (`printable-doc-config.ts`): `orgName`, `orgTagline`, `logoSrc`, `adoptUrl`, `fosterUrl`, `contact`, optional `donation`, optional `social`. Build one config per site and reuse it across every document page — never duplicate org details per document.",
@@ -32,7 +45,7 @@
       "A document offered in both print and digital form should link both from one `/documents` index row, not two separate rows: the primary link goes to the print version, and each digital counterpart appears as a small `.doc-index-variant` pill (e.g. \"E-Sign Version\") inline next to it, wired via the item's optional `variants: { label, to }[]`.",
       "Document routes must be excluded from prerender/sitemap discovery via the `/documents` prefix in `PRERENDER_EXCLUDE_PREFIXES`/`SITEMAP_EXCLUDE_PREFIXES` on a real site (this template's own `/tools/*` documents examples are excluded the same way its other `/tools/*` routes are, for the same self-contained-page reason).",
       "When a print document's content changes, refresh its public PDF with `npm run gen:document-pdf -- <slug>` (`tools/gen-document-pdf.mjs`, requires the dev/preview server already running) instead of a manual browser Print-to-PDF — it renders the print-mode `/documents/<slug>` route (never a `-digital` variant) via a local Chrome/Chromium/Brave/Edge install's headless `--print-to-pdf` and writes straight to `public/documents/<slug>.pdf`, the exact file the Resources page (`src/pages/Resources.tsx`) links for download.",
-      "Components: `template/src/components/patterns/DocumentsIndexSection.tsx`, `AdoptionCertificateSection.tsx`, `PetMedicalRecordSection.tsx`, `DocumentLayout.tsx`, `printable-doc-config.ts`"
+      "Components: `template/src/components/patterns/DocumentsIndexSection.tsx`, `AdoptionCertificateSection.tsx`, `PetMedicalRecordSection.tsx`, `BusinessCardGenericSection.tsx`, `BusinessCardTeamSection.tsx`, `DocumentLayout.tsx`, `printable-doc-config.ts`"
     ]
   }
 }

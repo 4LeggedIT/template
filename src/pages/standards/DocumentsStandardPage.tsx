@@ -20,6 +20,21 @@ const tools = [
     href: "/tools/pet-medical-record",
     component: "PetMedicalRecordSection.tsx",
   },
+  {
+    key: "businessCardSimple",
+    href: "/tools/business-card-simple",
+    component: "BusinessCardGenericSection.tsx (layout=\"simple\")",
+  },
+  {
+    key: "businessCardGeneric",
+    href: "/tools/business-card-generic",
+    component: "BusinessCardGenericSection.tsx (layout=\"generic\")",
+  },
+  {
+    key: "businessCardTeam",
+    href: "/tools/business-card-team",
+    component: "BusinessCardTeamSection.tsx",
+  },
 ];
 
 const DocumentsStandardPage = () => {

@@ -59,6 +59,7 @@ export const patternCspRequirements = {
   KennelBinderCoverSection: { imgSrc: ["https://api.qrserver.com"] },
   KennelCards2UpSection: { imgSrc: ["https://api.qrserver.com"] },
   BusinessCardGenericSection: { imgSrc: ["https://api.qrserver.com"] },
+  BusinessCardTeamSection: { imgSrc: ["https://api.qrserver.com"] },
   AdoptAPetEmbed: {
     // buildScrollerSrcDoc()'s injected <script>/<img> — rendered inside an
     // iframe via srcDoc, which inherits the parent document's CSP

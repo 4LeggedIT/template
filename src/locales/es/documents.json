@@ -16,14 +16,27 @@
     "petMedicalRecord": {
       "title": "Registro Médico de la Mascota",
       "description": "Un registro médico dedicado y listo para imprimir — obligatorio en todo sitio de rescate animal según la gobernanza."
+    },
+    "businessCardSimple": {
+      "title": "Tarjeta de Presentación (Simple)",
+      "description": "Una tarjeta mínima de un solo lado — el logo de la organización tal cual en un lado, un código QR más una línea de llamado a la acción y la URL en el otro. Obligatoria en todo sitio de rescate animal según la gobernanza."
+    },
+    "businessCardGeneric": {
+      "title": "Tarjeta de Presentación (Genérica)",
+      "description": "Tarjetas de frente y reverso impresas como dos hojas Avery — identidad de la organización al frente, un código QR y enlaces sociales solo con íconos al reverso. Obligatoria en todo sitio de rescate animal según la gobernanza."
+    },
+    "businessCardTeam": {
+      "title": "Tarjeta de Presentación (Equipo)",
+      "description": "Tarjetas de miembros del equipo editables en vivo — el frente lleva los datos de la persona, el reverso lleva un código QR de vCard que la guarda como contacto al escanearlo."
     }
   },
   "openLiveExample": "Abrir ejemplo en vivo",
   "standard": {
     "title": "Estándar",
     "items": [
-      "Todo sitio debe tener un índice `/documents` (`DocumentsIndexSection`, o una página local del sitio que use el mismo marcado `.doc-page`) más, como mínimo, un Certificado de Adopción y un Registro Médico de la Mascota — obligatorio en todo sitio de rescate animal según la gobernanza, incluso si se muestran grupos vacíos para tipos de documento aún no disponibles.",
+      "Todo sitio debe tener un índice `/documents` (`DocumentsIndexSection`, o una página local del sitio que use el mismo marcado `.doc-page`) con un grupo \"Materiales Imprimibles\" que siempre se renderice primero, por encima de cualquier otro grupo de documentos — más, como mínimo y en este orden: Certificado de Adopción, Registro Médico de la Mascota, Tarjeta de Presentación (Simple), Tarjeta de Presentación (Genérica), Tarjeta de Presentación (Equipo) — obligatorio en todo sitio de rescate animal según la gobernanza, incluso si se muestran grupos vacíos para tipos de documento aún no disponibles.",
       "`AdoptionCertificateSection` y `PetMedicalRecordSection` son componentes dedicados y creados a propósito — úselos en lugar de armar manualmente un diseño de documento para estos dos tipos de documento obligatorios.",
+      "`BusinessCardGenericSection` cubre dos de los tres documentos de tarjeta de presentación obligatorios mediante una prop `layout`: `\"generic\"` (predeterminado) es la tarjeta de dos hojas frente+reverso; `\"simple\"` es la tarjeta mínima de un solo lado, y necesita que `logoSrc` sea una variante de fondo blanco o transparente ya que el logo se renderiza sin máscara. `BusinessCardTeamSection` es el tercero — un formulario editable en vivo (no un render de solo configuración estático como los otros) cuyo reverso codifica un código QR de vCard por miembro, no un QR de URL del sitio, para que al escanearlo se guarde a esa persona como contacto telefónico. Los tres comparten el mismo tratamiento `SocialIconRow`: enlaces sociales solo con íconos (nunca URLs en texto plano), mostrados solo en el reverso, solo para las plataformas realmente configuradas.",
       "Para cualquier otro documento imprimible (acuerdo de acogida, acuerdo de voluntariado, guía educativa, etc.), use `DocumentLayout` como envoltorio genérico (`title`, `orgName`, `logoSrc`, `children`) en lugar de duplicar la estructura de la página de impresión — no hay ejemplo en vivo arriba, ya que renderiza cualquier contenido que un sitio le pase como children, pero el componente existe y sigue las mismas convenciones que los dos dedicados.",
       "Todos estos componentes renderizan un diseño `.doc-body`/`.doc-page` autónomo de pantalla completa con su propia regla de tamaño de impresión `@page` — al igual que las Herramientas de Perrera y Exhibición, no están pensados para incrustarse dentro de un diseño de página normal, y sus rutas se montan fuera del envoltorio compartido `SiteLayout`/`AppShell` para que no se imprima ningún encabezado ni pie de página del sitio junto con el documento.",
       "Toda la configuración proviene de una única forma compartida `PrintableDocConfig` (`printable-doc-config.ts`): `orgName`, `orgTagline`, `logoSrc`, `adoptUrl`, `fosterUrl`, `contact`, `donation` opcional, `social` opcional. Construya una configuración por sitio y reutilícela en cada página de documento — nunca duplique los datos de la organización por documento.",
@@ -32,7 +45,7 @@
       "Un documento ofrecido tanto en forma impresa como digital debe enlazar ambas desde una sola fila del índice `/documents`, no dos filas separadas: el enlace principal va a la versión impresa, y cada contraparte digital aparece como una pequeña píldora `.doc-index-variant` (por ejemplo, \"Versión de Firma Electrónica\") en línea junto a él, conectada mediante el `variants: { label, to }[]` opcional del elemento.",
       "Las rutas de documentos deben excluirse del descubrimiento de prerenderizado/sitemap mediante el prefijo `/documents` en `PRERENDER_EXCLUDE_PREFIXES`/`SITEMAP_EXCLUDE_PREFIXES` en un sitio real (los propios ejemplos de documentos `/tools/*` de esta plantilla se excluyen de la misma forma que sus otras rutas `/tools/*`, por la misma razón de página autónoma).",
       "Cuando cambie el contenido de un documento impreso, actualice su PDF público con `npm run gen:document-pdf -- <slug>` (`tools/gen-document-pdf.mjs`, requiere que el servidor de desarrollo/vista previa ya esté en ejecución) en lugar de un Print-to-PDF manual del navegador — renderiza la ruta en modo impresión `/documents/<slug>` (nunca una variante `-digital`) mediante la función headless `--print-to-pdf` de una instalación local de Chrome/Chromium/Brave/Edge y escribe directamente en `public/documents/<slug>.pdf`, el archivo exacto que la página de Recursos (`src/pages/Resources.tsx`) enlaza para descarga.",
-      "Componentes: `template/src/components/patterns/DocumentsIndexSection.tsx`, `AdoptionCertificateSection.tsx`, `PetMedicalRecordSection.tsx`, `DocumentLayout.tsx`, `printable-doc-config.ts`"
+      "Componentes: `template/src/components/patterns/DocumentsIndexSection.tsx`, `AdoptionCertificateSection.tsx`, `PetMedicalRecordSection.tsx`, `BusinessCardGenericSection.tsx`, `BusinessCardTeamSection.tsx`, `DocumentLayout.tsx`, `printable-doc-config.ts`"
     ]
   }
 }
