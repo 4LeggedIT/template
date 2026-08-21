@@ -5,11 +5,15 @@ import SiteHeader from "./SiteHeader";
 const AppShell = () => {
   return (
     <div className="min-h-screen bg-background text-foreground">
-      <SiteHeader />
+      <div className="print:hidden">
+        <SiteHeader />
+      </div>
       <main>
         <Outlet />
       </main>
-      <SiteFooter />
+      <div className="print:hidden">
+        <SiteFooter />
+      </div>
     </div>
   );
 };

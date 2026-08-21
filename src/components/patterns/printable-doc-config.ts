@@ -25,4 +25,6 @@ export type PrintableDocConfig = {
     instagram?: string;
     tiktok?: string;
   };
+  /** Optional CTA copy shown on the "single" business-card layout's QR side (e.g. "Scan to visit our website!"). Freely editable per site; renders nothing if unset. */
+  businessCardCta?: string;
 };
