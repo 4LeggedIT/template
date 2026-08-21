@@ -35,7 +35,7 @@ type BusinessCardGenericSectionProps = {
 
 const BusinessCardGenericSection = ({ config, layout = "generic" }: BusinessCardGenericSectionProps) => {
   const { orgName, orgTagline, logoSrc, contact, social, businessCardCta } = config;
-  const cleanUrl = contact.website.replace(/^https?:\/\//, "");
+  const cleanUrl = contact.website.replace(/^https?:\/\//, "").replace(/^www\./, "");
   const qrWebSrc = `https://api.qrserver.com/v1/create-qr-code/?size=144x144&data=${encodeURIComponent(contact.website)}`;
 
   const cards = Array.from({ length: 10 });
@@ -53,11 +53,11 @@ const BusinessCardGenericSection = ({ config, layout = "generic" }: BusinessCard
       <div style={{ flex: 1, minWidth: 0, padding: 14, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 6 }}>
         <img src={qrWebSrc} alt={`QR code for ${cleanUrl}`} style={{ width: 76, height: 76, display: "block" }} />
         {businessCardCta ? (
-          <div style={{ fontSize: "8pt", fontWeight: 600, color: "var(--doc-primary, hsl(10,42%,58%))", textAlign: "center" }}>
+          <div style={{ width: "100%", fontSize: "8pt", fontWeight: 600, color: "var(--doc-primary, hsl(10,42%,58%))", textAlign: "center", overflowWrap: "break-word", wordBreak: "break-word" }}>
             {businessCardCta}
           </div>
         ) : null}
-        <div style={{ fontSize: "8pt", fontWeight: 600, color: "var(--doc-dark, hsl(212,30%,20%))", textAlign: "center" }}>
+        <div style={{ width: "100%", fontSize: "8pt", fontWeight: 600, color: "var(--doc-dark, hsl(212,30%,20%))", textAlign: "center", overflowWrap: "break-word", wordBreak: "break-word" }}>
           {cleanUrl}
         </div>
       </div>
@@ -79,8 +79,8 @@ const BusinessCardGenericSection = ({ config, layout = "generic" }: BusinessCard
           </div>
         </div>
         <div>
-          {contact.email ? <div style={{ fontSize: "8pt", color: "var(--doc-dark, hsl(212,30%,20%))", lineHeight: 1.6 }}>{contact.email}</div> : null}
-          <div style={{ fontSize: "8pt", color: "var(--doc-primary, hsl(10,42%,58%))", fontWeight: 600, lineHeight: 1.6 }}>{cleanUrl}</div>
+          {contact.email ? <div style={{ fontSize: "8pt", color: "var(--doc-dark, hsl(212,30%,20%))", lineHeight: 1.6, overflowWrap: "break-word", wordBreak: "break-word" }}>{contact.email}</div> : null}
+          <div style={{ fontSize: "8pt", color: "var(--doc-primary, hsl(10,42%,58%))", fontWeight: 600, lineHeight: 1.6, overflowWrap: "break-word", wordBreak: "break-word" }}>{cleanUrl}</div>
         </div>
       </div>
     </div>

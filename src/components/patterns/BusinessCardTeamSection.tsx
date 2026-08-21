@@ -72,7 +72,7 @@ const BusinessCardTeamSection = ({ config }: BusinessCardTeamSectionProps) => {
             <div style={{ fontSize: "8.5pt", color: "var(--doc-primary, hsl(10,42%,58%))", fontWeight: 600, lineHeight: 1.5 }}>{role}</div>
             {m.phone ? <div style={{ fontSize: "8pt", color: "var(--doc-dark, hsl(212,30%,20%))", lineHeight: 1.5 }}>{m.phone}</div> : null}
           </div>
-          <div style={{ fontSize: "7pt", color: "var(--doc-gray, hsl(212,15%,45%))", lineHeight: 1.6 }}>
+          <div style={{ fontSize: "7pt", color: "var(--doc-gray, hsl(212,15%,45%))", lineHeight: 1.6, overflowWrap: "break-word", wordBreak: "break-word" }}>
             {email ? <div>{email}</div> : null}
             <div style={{ color: "var(--doc-primary, hsl(10,42%,58%))", fontWeight: 600 }}>{cleanUrl}</div>
           </div>
