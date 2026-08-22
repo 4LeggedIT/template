@@ -64,6 +64,7 @@
       "Never invent a partner. Every entry must be a real, sourced relationship — a name mentioned once in a single event post is not the same as a standing partnership worth a permanent listing.",
       "`logoSrc` and `url` are both optional; the card degrades gracefully to a name-only treatment when a logo isn't available yet. When `url` is set, the logo links to it (if a logo exists) and the \"Visit Website\" text link is omitted (one link surface is enough); the text link only renders as a fallback when there's a `url` but no `logoSrc`.",
       "`logoBackgroundClassName` is an optional backing color (e.g. `\"bg-slate-900\"`) for logos whose artwork needs a specific background to stay legible — a light or white mark disappears on the card's default background otherwise. Omit it for logos that already read fine as-is; most won't need it.",
+      "**Localization (bilingual sites):** author `src/data/partners.ts` as `partnerRecords: PartnerRecord[]` (the exported `Omit<CommunityPartner, \"name\" | \"description\">` type) instead of `CommunityPartner[]` — `name`/`description` live in locale JSON, not the data file. At the page, resolve each record into a full `CommunityPartner` via `t(\"items.\" + id + \".name\")`/`t(\"items.\" + id + \".description\")` (flat key path — items are keyed directly under `items`, not nested under their category) before passing to the component. See `partners-module-wiring-contract.md` §3.",
       "Component: `template/src/components/patterns/CommunityPartnersSection.tsx`"
     ]
   }

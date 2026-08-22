@@ -13,6 +13,12 @@ export type CommunityPartner = {
   url?: string;
 };
 
+/**
+ * Authoring shape for bilingual sites: `name`/`description` are resolved via `t()` at the page
+ * (see `partners-module-wiring-contract.md`) rather than authored in the data file directly.
+ */
+export type PartnerRecord = Omit<CommunityPartner, "name" | "description">;
+
 export type CommunityPartnersCategorySection = {
   category: string;
   title: string;
