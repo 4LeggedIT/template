@@ -26,6 +26,11 @@
       "title": "Unified variant",
       "description": "Use unified mode when photos and videos should appear in one section instead.",
       "sectionTitle": "Media gallery (unified variant)"
+    },
+    "contain": {
+      "title": "Uncropped variant (`fit=\"contain\"`)",
+      "description": "Use `fit=\"contain\"` when photos must never be cropped — the grid tile shows the full image at its natural aspect ratio instead of the default fixed-ratio crop.",
+      "sectionTitle": "Media gallery (fit=\"contain\")"
     }
   },
   "standard": {
@@ -37,9 +42,10 @@
       "Keep `showFilters` optional and default to user-friendly category groups.",
       "Core media visibility must not depend on JavaScript.",
       "Use optional photo lightbox as enhancement only, not as primary access path; navigation (prev/next controls + keyboard arrows) is part of the standard behavior.",
-      "Optional page behaviors (shuffle, max photos/videos, info notice, social CTA) are module props.",
+      "Optional page behaviors (shuffle, max photos/videos, info notice, social CTA, fit) are module props.",
       "Empty-state copy is visible when no media items are provided (`items={\"{[]}\"}`).",
-      "Defaults: `columns=3`, `showFilters=true`, `enablePhotoLightbox=true`, `shuffleOnLoad=false`.",
+      "Defaults: `columns=3`, `showFilters=true`, `enablePhotoLightbox=true`, `shuffleOnLoad=false`, `fit=\"cover\"`.",
+      "Governance: gallery data lives in `src/data/gallery.ts`; caption text folds into `alt` fleet-wide (alt-only, no visible caption UI) even though `caption` remains a supported field on the type; galleries with more than ~9 photos should set `shuffleOnLoad` + `maxPhotos={9}`. Full contract: `gallery-module-wiring-contract.md`.",
       "Component: `template/src/components/patterns/MediaGallerySection.tsx`",
       "Wrapper: `template/src/components/patterns/SplitMediaGallerySection.tsx`"
     ]

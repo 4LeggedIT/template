@@ -46,6 +46,8 @@ export type MediaGallerySectionProps = {
   showFilters?: boolean;
   enablePhotoLightbox?: boolean;
   emptyMessage?: string;
+  /** Grid photo tile rendering. "cover" (default) crops to a fixed aspect ratio; "contain" shows the full uncropped image at its natural aspect ratio. Applies to the whole gallery, not per item. */
+  fit?: "cover" | "contain";
   shuffleOnLoad?: boolean;
   maxPhotos?: number;
   maxVideos?: number;
@@ -84,6 +86,7 @@ const MediaGallerySection = ({
   showFilters = true,
   enablePhotoLightbox = true,
   emptyMessage = "Media items coming soon.",
+  fit = "cover",
   shuffleOnLoad = false,
   maxPhotos,
   maxVideos,
@@ -246,14 +249,17 @@ const MediaGallerySection = ({
                         setSelectedPhotoId(item.id);
                       }}
                     >
-                      <div className="relative aspect-[4/3] overflow-hidden bg-muted">
+                      <div className={cn("relative overflow-hidden bg-muted", fit === "contain" ? "" : "aspect-[4/3]")}>
                         <img
                           src={item.src}
                           alt={item.alt}
                           loading="lazy"
                           decoding="async"
-                          style={{ objectPosition: item.objectPosition ?? "50% 50%" }}
-                          className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.03]"
+                          style={fit === "cover" ? { objectPosition: item.objectPosition ?? "50% 50%" } : undefined}
+                          className={cn(
+                            "transition-transform duration-300 group-hover:scale-[1.03]",
+                            fit === "contain" ? "h-auto w-full" : "h-full w-full object-cover",
+                          )}
                         />
                         {enablePhotoLightbox ? (
                           <div className="pointer-events-none absolute right-3 top-3 rounded-full bg-black/65 p-2 text-white opacity-0 transition-opacity duration-200 group-hover:opacity-100">

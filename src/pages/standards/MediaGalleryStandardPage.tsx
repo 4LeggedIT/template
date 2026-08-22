@@ -110,6 +110,18 @@ const MediaGalleryStandardPage = () => {
           />
         </div>
 
+        <div className="space-y-3">
+          <h2 className="text-lg font-semibold">{t("mediaGallery:sections.contain.title")}</h2>
+          <p className="text-sm text-muted-foreground">{t("mediaGallery:sections.contain.description")}</p>
+          <MediaGallerySection
+            title={t("mediaGallery:sections.contain.sectionTitle")}
+            items={sampleItems}
+            columns={3}
+            fit="contain"
+            showFilters={false}
+          />
+        </div>
+
         <Card>
           <CardHeader>
             <CardTitle>{t("mediaGallery:standard.title")}</CardTitle>

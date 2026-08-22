@@ -26,6 +26,11 @@
       "title": "Variante unificada",
       "description": "Use el modo unificado cuando las fotos y los videos deban aparecer en una sola sección.",
       "sectionTitle": "Galería de medios (variante unificada)"
+    },
+    "contain": {
+      "title": "Variante sin recorte (`fit=\"contain\"`)",
+      "description": "Use `fit=\"contain\"` cuando las fotos nunca deban recortarse — la casilla de la cuadrícula muestra la imagen completa en su relación de aspecto natural en lugar del recorte de proporción fija predeterminado.",
+      "sectionTitle": "Galería de medios (fit=\"contain\")"
     }
   },
   "standard": {
@@ -37,9 +42,10 @@
       "Mantenga `showFilters` opcional y por defecto use grupos de categoría fáciles de entender.",
       "La visibilidad principal de los medios no debe depender de JavaScript.",
       "Use la caja de luz de fotos opcional solo como mejora, no como vía de acceso principal; la navegación (controles anterior/siguiente + flechas del teclado) es parte del comportamiento estándar.",
-      "Los comportamientos opcionales de la página (mezclar aleatoriamente, máximo de fotos/videos, aviso informativo, llamada a la acción social) son props del módulo.",
+      "Los comportamientos opcionales de la página (mezclar aleatoriamente, máximo de fotos/videos, aviso informativo, llamada a la acción social, fit) son props del módulo.",
       "El texto de estado vacío es visible cuando no se proporcionan elementos multimedia (`items={\"{[]}\"}`).",
-      "Valores predeterminados: `columns=3`, `showFilters=true`, `enablePhotoLightbox=true`, `shuffleOnLoad=false`.",
+      "Valores predeterminados: `columns=3`, `showFilters=true`, `enablePhotoLightbox=true`, `shuffleOnLoad=false`, `fit=\"cover\"`.",
+      "Gobernanza: los datos de la galería viven en `src/data/gallery.ts`; el texto del pie de foto se incorpora al `alt` en todo el sitio (solo alt, sin UI de pie de foto visible), aunque `caption` sigue siendo un campo compatible del tipo; las galerías con más de ~9 fotos deben usar `shuffleOnLoad` + `maxPhotos={9}`. Contrato completo: `gallery-module-wiring-contract.md`.",
       "Componente: `template/src/components/patterns/MediaGallerySection.tsx`",
       "Envoltorio: `template/src/components/patterns/SplitMediaGallerySection.tsx`"
     ]
