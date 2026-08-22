@@ -1,0 +1,27 @@
+{
+  "hero": {
+    "title": "Patrón de acordeón de preguntas frecuentes",
+    "description": "Esquema canónico de contenido de preguntas frecuentes, regla de ubicación de datos i18n, y datos estructurados derivados obligatorios."
+  },
+  "breadcrumb": "Patrón de Acordeón de Preguntas Frecuentes",
+  "sections": {
+    "sectioned": {
+      "title": "Ejemplo — por secciones",
+      "description": "Agrupe los elementos bajo FaqAccordionSection cuando las preguntas frecuentes abarquen varios temas (adopción, acogida, donaciones, etc.).",
+      "sectionTitle": "Preguntas Frecuentes"
+    }
+  },
+  "standard": {
+    "title": "Estándar",
+    "items": [
+      "Importe `FaqAccordionItem`/`FaqAccordionSection` desde `@/components/patterns/FaqAccordion` — nunca declare localmente una forma equivalente.",
+      "Sitios i18n: el texto de las preguntas frecuentes vive en `src/locales/{lang}/faq.json`; `src/data/faq.tsx` exporta un adaptador `getFaqSections(t)` que lo resuelve a los tipos canónicos (vea `roversreturndogrescue/src/data/faq.tsx` como implementación de referencia, incluidos los enlaces `<Trans>` incrustados).",
+      "Sitios sin i18n: `src/data/faq.ts` exporta `faqSections: FaqAccordionSection[]` (o `faqItems: FaqAccordionItem[]` para una sola lista plana) directamente, como hace el propio `src/data/faq.ts` de esta página.",
+      "Los datos estructurados `FAQPage` deben calcularse a partir de las mismas secciones que renderiza la página, mediante `buildFaqJsonLd()` en `src/lib/faq-json-ld.ts` — nunca escritos a mano como un segundo arreglo mantenido por separado.",
+      "Nunca adjunte datos estructurados `FAQPage` a una página que no renderice realmente el contenido de preguntas y respuestas correspondiente.",
+      "Contrato completo: `internal-tools/4leggedit-websites/docs/governance/faq-module-wiring-contract.md`.",
+      "Esto es distinto del estándar de accesibilidad/sin JS en `/standards/faq-disclosure` — ambos aplican a una página de preguntas frecuentes en vivo, ninguno sustituye al otro.",
+      "Componente: `template/src/components/patterns/FaqAccordion.tsx`"
+    ]
+  }
+}

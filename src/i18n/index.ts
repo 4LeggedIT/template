@@ -23,6 +23,7 @@ import enTestimonials from "@/locales/en/testimonials.json";
 import enFlyerLibrary from "@/locales/en/flyerLibrary.json";
 import enMediaGallery from "@/locales/en/mediaGallery.json";
 import enFaqDisclosure from "@/locales/en/faqDisclosure.json";
+import enFaqAccordion from "@/locales/en/faqAccordion.json";
 import enNewsHighlight from "@/locales/en/newsHighlight.json";
 import enFormEmbedModal from "@/locales/en/formEmbedModal.json";
 import enPaypalDonate from "@/locales/en/paypalDonate.json";
@@ -60,6 +61,7 @@ import esTestimonials from "@/locales/es/testimonials.json";
 import esFlyerLibrary from "@/locales/es/flyerLibrary.json";
 import esMediaGallery from "@/locales/es/mediaGallery.json";
 import esFaqDisclosure from "@/locales/es/faqDisclosure.json";
+import esFaqAccordion from "@/locales/es/faqAccordion.json";
 import esNewsHighlight from "@/locales/es/newsHighlight.json";
 import esFormEmbedModal from "@/locales/es/formEmbedModal.json";
 import esPaypalDonate from "@/locales/es/paypalDonate.json";
@@ -103,6 +105,7 @@ i18n.use(initReactI18next).init({
       flyerLibrary: enFlyerLibrary,
       mediaGallery: enMediaGallery,
       faqDisclosure: enFaqDisclosure,
+      faqAccordion: enFaqAccordion,
       newsHighlight: enNewsHighlight,
       formEmbedModal: enFormEmbedModal,
       paypalDonate: enPaypalDonate,
@@ -141,6 +144,7 @@ i18n.use(initReactI18next).init({
       flyerLibrary: esFlyerLibrary,
       mediaGallery: esMediaGallery,
       faqDisclosure: esFaqDisclosure,
+      faqAccordion: esFaqAccordion,
       newsHighlight: esNewsHighlight,
       formEmbedModal: esFormEmbedModal,
       paypalDonate: esPaypalDonate,
@@ -182,6 +186,7 @@ i18n.use(initReactI18next).init({
     "flyerLibrary",
     "mediaGallery",
     "faqDisclosure",
+    "faqAccordion",
     "newsHighlight",
     "formEmbedModal",
     "paypalDonate",

@@ -18,6 +18,7 @@ import DogSpotlightStandardPage from "@/pages/standards/DogSpotlightStandardPage
 import JourneyTimelineStandardPage from "@/pages/standards/JourneyTimelineStandardPage";
 import PawPlacerStandardPage from "@/pages/standards/PawPlacerStandardPage";
 import FaqDisclosureStandardPage from "@/pages/standards/FaqDisclosureStandardPage";
+import FaqAccordionStandardPage from "@/pages/standards/FaqAccordionStandardPage";
 import FoundStandardPage from "@/pages/standards/FoundStandardPage";
 import FormEmbedModalStandardPage from "@/pages/standards/FormEmbedModalStandardPage";
 import FlyerLibraryStandardPage from "@/pages/standards/FlyerLibraryStandardPage";
@@ -91,6 +92,7 @@ const AppRoutes = () => {
         <Route path="/standards/dog-spotlight" element={<DogSpotlightStandardPage />} />
         <Route path="/standards/journey-timeline" element={<JourneyTimelineStandardPage />} />
         <Route path="/standards/pawplacer" element={<PawPlacerStandardPage />} />
+        <Route path="/standards/faq-accordion" element={<FaqAccordionStandardPage />} />
         <Route path="/standards/faq-disclosure" element={<FaqDisclosureStandardPage />} />
         <Route path="/standards/found" element={<FoundStandardPage />} />
         <Route path="/standards/form-embed-modal" element={<FormEmbedModalStandardPage />} />

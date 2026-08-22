@@ -20,6 +20,7 @@
     "testimonials": { "title": "Patrón de Testimonios", "description": "Patrones de testimonios destacados y en cuadrícula para secciones reutilizables de prueba social." },
     "flyerLibrary": { "title": "Patrón de Biblioteca de Volantes", "description": "Biblioteca de volantes de concientización atemporales, sin fecha, con filtrado por categoría — distinta de eventos/noticias con fecha." },
     "mediaGallery": { "title": "Patrón de Galería de Medios", "description": "Galería unificada de fotos y videos con filtrado opcional y renderizado seguro sin JS." },
+    "faqAccordion": { "title": "Patrón de Acordeón de Preguntas Frecuentes", "description": "Esquema canónico de contenido de preguntas frecuentes, patrón de datos i18n, y requisito de JSON-LD derivado." },
     "faq": { "title": "Patrón de Preguntas Frecuentes", "description": "Requisito nativo `<details>/<summary>` para contenido público de preguntas frecuentes." },
     "formEmbedModal": { "title": "Estándar de FormEmbedModal", "description": "Patrón de modal de formulario independiente del proveedor con ayuda y respaldo sin JS." },
     "paypalDonate": { "title": "Patrón de Donación por PayPal", "description": "Uso del botón SDK de donación y patrón de enlace directo de respaldo." },

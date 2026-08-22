@@ -20,6 +20,7 @@
     "testimonials": { "title": "Testimonials Pattern", "description": "Featured and grid testimonial patterns for reusable social-proof sections." },
     "flyerLibrary": { "title": "Flyer Library Pattern", "description": "Timeless, undated awareness flyer library with category filtering — distinct from dated events/news." },
     "mediaGallery": { "title": "Media Gallery Pattern", "description": "Unified photo/video gallery with optional filtering and no-JS-safe rendering." },
+    "faqAccordion": { "title": "FAQ Accordion Pattern", "description": "Canonical FAQ content schema, i18n data pattern, and derived JSON-LD requirement." },
     "faq": { "title": "FAQ Pattern", "description": "Native `<details>/<summary>` requirement for public FAQ/disclosure content." },
     "formEmbedModal": { "title": "FormEmbedModal Standard", "description": "Provider-agnostic form modal pattern with helper and no-JS fallbacks." },
     "paypalDonate": { "title": "PayPal Donate Pattern", "description": "Donate SDK button usage and direct-link fallback helper pattern." },

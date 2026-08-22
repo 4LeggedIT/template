@@ -21,6 +21,7 @@ const docSections: DocSection[] = [
   { key: "eventsNews", href: "/standards/events-news", group: "contentEngagement" },
   { key: "newsHighlight", href: "/standards/news-highlight", group: "contentEngagement" },
   { key: "blog", href: "/standards/blog", group: "contentEngagement" },
+  { key: "faqAccordion", href: "/standards/faq-accordion", group: "contentEngagement" },
   { key: "faq", href: "/standards/faq-disclosure", group: "contentEngagement" },
   { key: "flyerLibrary", href: "/standards/flyer-library", group: "mediaLibraries" },
   { key: "mediaGallery", href: "/standards/media-gallery", group: "mediaLibraries" },

@@ -1,0 +1,27 @@
+{
+  "hero": {
+    "title": "FAQ Accordion pattern",
+    "description": "Canonical FAQ content schema, i18n data-location rule, and required derived structured data."
+  },
+  "breadcrumb": "FAQ Accordion Pattern",
+  "sections": {
+    "sectioned": {
+      "title": "Example — sectioned",
+      "description": "Group items under FaqAccordionSection when the FAQ spans multiple topics (adoption, fostering, donations, etc.).",
+      "sectionTitle": "FAQ"
+    }
+  },
+  "standard": {
+    "title": "Standard",
+    "items": [
+      "Import `FaqAccordionItem`/`FaqAccordionSection` from `@/components/patterns/FaqAccordion` — never hand-declare an equivalent local shape.",
+      "i18n sites: FAQ text lives in `src/locales/{lang}/faq.json`; `src/data/faq.tsx` exports a `getFaqSections(t)` adapter that resolves it into canonical types (see `roversreturndogrescue/src/data/faq.tsx` for the reference implementation, including embedded `<Trans>` links).",
+      "Non-i18n sites: `src/data/faq.ts` exports `faqSections: FaqAccordionSection[]` (or `faqItems: FaqAccordionItem[]` for a single flat list) directly, as this page's own `src/data/faq.ts` does.",
+      "`FAQPage` JSON-LD must be computed from the same sections the page renders, via `buildFaqJsonLd()` in `src/lib/faq-json-ld.ts` — never hand-typed as a second, separately-maintained array.",
+      "Never attach `FAQPage` JSON-LD to a page that doesn't actually render the corresponding Q&A content.",
+      "Full contract: `internal-tools/4leggedit-websites/docs/governance/faq-module-wiring-contract.md`.",
+      "This is distinct from the no-JS/accessibility standard at `/standards/faq-disclosure` — both apply to a live FAQ page, neither substitutes for the other.",
+      "Component: `template/src/components/patterns/FaqAccordion.tsx`"
+    ]
+  }
+}
