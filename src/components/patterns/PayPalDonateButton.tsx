@@ -1,3 +1,10 @@
+// Wraps PayPal's legacy "Donate Button" product (donate-sdk.js / PayPal.Donation.Button) —
+// only needs a hostedButtonId + env, no client-id. NOT interchangeable with a button created
+// under PayPal's newer "Hosted Buttons" product, which needs PayPalHostedButton.tsx instead
+// (paypal.com/sdk/js?...components=hosted-buttons / paypal.HostedButtons). A button id from
+// one product renders nothing (or a cryptic CORS error from the wrong product's API) under
+// the other's SDK — see module-wiring-contracts.md's "PayPal Buttons" entry for how to tell
+// which product a given org's button belongs to before wiring it up.
 import { useEffect, useId, useMemo, useState } from "react";
 import { cn } from "@/lib/utils";
 

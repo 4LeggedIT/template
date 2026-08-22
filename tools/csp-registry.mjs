@@ -95,6 +95,14 @@ export const patternCspRequirements = {
     connectSrc: ["https://www.paypal.com"],
     frameSrc: ["https://www.paypal.com"],
   },
+  PayPalHostedButton: {
+    // HOSTED_BUTTONS_SDK_ORIGIN = paypal.com/sdk/js?components=hosted-buttons
+    // — a different PayPal product/SDK from PayPalDonateButton's donate-sdk.js.
+    scriptSrc: ["https://www.paypal.com", "https://www.paypalobjects.com"],
+    imgSrc: ["https://www.paypalobjects.com"],
+    connectSrc: ["https://www.paypal.com"],
+    frameSrc: ["https://www.paypal.com"],
+  },
   ZeffyDonateEmbed: {
     // ZEFFY_EMBED_SCRIPT_SRC, populates [data-zeffy-embed]; frameSrc covers
     // both the no-JS-safe fallback iframe and the script's own embedded form.
