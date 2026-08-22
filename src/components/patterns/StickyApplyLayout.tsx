@@ -11,6 +11,9 @@ export type StickyApplySidebar = {
   mobileCta?: ReactNode;
   /** Optional one-line note under the heading in the mobile bar (e.g. a sign-in requirement). */
   mobileNotice?: string;
+  /** Optional photo shown above the icon in the desktop sticky card. Omitted from the mobile bar to keep it compact. */
+  imageSrc?: string;
+  imageAlt?: string;
 };
 
 type StickyApplyLayoutProps = {
@@ -21,7 +24,7 @@ type StickyApplyLayoutProps = {
 };
 
 const StickyApplyLayout = ({ sidebar, children, className, contentClassName }: StickyApplyLayoutProps) => {
-  const { icon: Icon, heading, subtext, cta, mobileCta, mobileNotice } = sidebar;
+  const { icon: Icon, heading, subtext, cta, mobileCta, mobileNotice, imageSrc, imageAlt } = sidebar;
 
   return (
     <>
@@ -33,6 +36,11 @@ const StickyApplyLayout = ({ sidebar, children, className, contentClassName }: S
               whole page's scroll rather than resetting at section boundaries. top-32 clears the
               site header's h-28 (112px, Header.tsx) with a 16px gap. */}
           <aside className="hidden flex-col items-start gap-4 p-6 lg:sticky lg:top-32 lg:flex lg:self-start card-soft">
+            {imageSrc ? (
+              <div className="image-frame aspect-[4/3] w-full">
+                <img src={imageSrc} alt={imageAlt ?? ""} className="h-full w-full object-cover" />
+              </div>
+            ) : null}
             <Icon className="h-8 w-8 text-sage" aria-hidden="true" />
             <p className="text-sm font-semibold">{heading}</p>
             <p className="text-sm text-muted-foreground">{subtext}</p>
