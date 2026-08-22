@@ -58,8 +58,8 @@ function loadHostedButtonsSdk(clientId: string, currency: string, enableFunding:
 
 type PayPalHostedButtonProps = {
   /** The PayPal app client-id embedded in the SDK script's `client-id` query param. */
-  clientId: string;
-  hostedButtonId: string;
+  clientId?: string;
+  hostedButtonId?: string;
   currency?: string;
   enableFunding?: string;
   className?: string;
@@ -119,8 +119,17 @@ const PayPalHostedButton = ({
     };
   }, [clientId, containerId, currency, enableFunding, hostedButtonId]);
 
+  if (!clientId || !hostedButtonId) {
+    return (
+      <div className={cn("rounded-xl border border-dashed border-border p-4 text-sm text-muted-foreground", className)}>
+        <p className="font-medium text-foreground">PayPal Hosted Button not configured</p>
+        <p className="mt-1">Provide both a `clientId` and `hostedButtonId` prop.</p>
+      </div>
+    );
+  }
+
   return (
-    <div className={cn("space-y-2", className)}>
+    <div className={cn("w-full space-y-2", className)}>
       <div id={containerId} />
       {errorMessage ? <p className="text-sm text-destructive">{errorMessage}</p> : null}
     </div>

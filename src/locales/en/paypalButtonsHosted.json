@@ -1,0 +1,29 @@
+{
+  "breadcrumb": {
+    "parent": "PayPal Buttons Pattern",
+    "current": "Hosted Buttons"
+  },
+  "hero": {
+    "title": "PayPal Hosted Buttons",
+    "description": "The newer paypal.com/sdk/js?components=hosted-buttons / paypal.HostedButtons product. Needs both a client-id and a hosted button ID from the org's own PayPal dashboard — real values only, no safe dummy ID for live rendering (see the gotcha below)."
+  },
+  "example": {
+    "title": "Example",
+    "docsLink": "PayPal's official Hosted Buttons documentation",
+    "note": "This example is intentionally left unconfigured (no `clientId`/`hostedButtonId`) rather than using a dummy ID: unlike the legacy Donate Button, the Hosted Buttons SDK makes a live client-side API call to fetch the button's config, so a fake ID here would surface a real, misleading error instead of safe placeholder documentation."
+  },
+  "gotcha": {
+    "title": "Known gotcha",
+    "text": "A wrong or nonexistent `hostedButtonId` surfaces as a browser CORS policy violation (no Access-Control-Allow-Origin header on PayPal's `paypal.com/ncp/api/form-fields/<id>` response), not a clear \"invalid ID\" error — easy to misdiagnose as a domain-whitelist problem. Verify the ID first with the exact literal snippet PayPal's dashboard provides, in a bare static HTML file, before assuming a CORS/whitelist issue."
+  },
+  "standard": {
+    "title": "Standard",
+    "items": [
+      "Render `PayPalHostedButton` with real `clientId`/`hostedButtonId` values from `DONATION_METHODS`/donation config — never hardcode them a second time at the call site.",
+      "The fallback \"having trouble\" link uses `https://www.paypal.com/ncp/payment/<hostedButtonId>` — a different URL shape from the Donate Button product's `paypal.com/donate?hosted_button_id=...`.",
+      "The component fills its parent's full width by default (`w-full`) — a PayPal Hosted Buttons widget with no explicit width, inside a `flex`/`items-center` layout, collapses to shrink-wrap width and its own text wraps one letter per line. Cap width with `className` at the call site instead of removing the base `w-full`.",
+      "If the client-id or hosted-button-id is missing, the component renders a clearly labeled \"not configured\" box rather than a blank area or a live API call.",
+      "Component: `template/src/components/patterns/PayPalHostedButton.tsx`"
+    ]
+  }
+}

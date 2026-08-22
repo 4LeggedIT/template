@@ -1,0 +1,21 @@
+{
+  "breadcrumb": "PayPal Buttons Pattern",
+  "hero": {
+    "title": "PayPal buttons pattern",
+    "description": "PayPal offers two separate button products with similarly-shaped hosted-button IDs but mutually incompatible SDKs. A button created under one product renders nothing — or a misleading CORS error — under the other's component. Pick the mode below matching what PayPal's own dashboard gave the org."
+  },
+  "modes": {
+    "donateButton": { "title": "Donate Button (legacy)", "description": "PayPal's original donate-sdk.js / PayPal.Donation.Button — only needs a hosted button ID and env, no client-id." },
+    "hostedButtons": { "title": "Hosted Buttons", "description": "PayPal's newer paypal.com/sdk/js?components=hosted-buttons / paypal.HostedButtons — needs both a client-id and a hosted button ID." }
+  },
+  "standard": {
+    "title": "Standard",
+    "items": [
+      "Never assume which product an org's button ID belongs to from the ID's shape alone — check which embed snippet PayPal's dashboard actually gave them.",
+      "`donate-sdk.js` snippet (script src ends in `/donate/sdk/donate-sdk.js`) → PayPalDonateButton, see its dedicated page.",
+      "`paypal.com/sdk/js?...components=hosted-buttons` snippet → PayPalHostedButton, see its dedicated page.",
+      "A wrong/nonexistent hosted-button-id under the Hosted Buttons SDK surfaces as a CORS error (no Access-Control-Allow-Origin header on PayPal's backend response), not a clear \"invalid ID\" error — easy to misdiagnose as a domain-whitelist problem. Verify the ID with the exact literal snippet PayPal's dashboard provides before chasing CORS config.",
+      "Both components render non-breaking fallback messaging (a clearly labeled \"not configured\" box) when required props are missing, rather than a blank area."
+    ]
+  }
+}

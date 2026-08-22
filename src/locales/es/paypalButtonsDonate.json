@@ -1,13 +1,17 @@
 {
-  "breadcrumb": "Patrón de Donación por PayPal",
+  "breadcrumb": {
+    "parent": "Patrón de Botones de PayPal",
+    "current": "Botón de Donación"
+  },
   "hero": {
-    "title": "Patrón de donación por PayPal",
-    "description": "Use el componente compartido de donación por PayPal junto con un enlace directo auxiliar para casos de fallo de la ventana emergente o del SDK."
+    "title": "Botón de Donación de PayPal",
+    "description": "El producto original donate-sdk.js / PayPal.Donation.Button. Use el componente compartido PayPalDonateButton junto con un enlace directo auxiliar para casos de fallo de la ventana emergente o del SDK."
   },
   "example": {
     "title": "Ejemplo",
     "helperLink": "¿Tiene problemas? Abra PayPal en una pestaña nueva",
-    "configNote": "Configure el ID del botón alojado mediante `hostedButtonId` o `VITE_PAYPAL_DONATE_HOSTED_BUTTON_ID`."
+    "configNote": "Configure el ID del botón alojado mediante `hostedButtonId` o `VITE_PAYPAL_DONATE_HOSTED_BUTTON_ID`.",
+    "docsLink": "Documentación oficial de PayPal para el Botón de Donación"
   },
   "standard": {
     "title": "Estándar",

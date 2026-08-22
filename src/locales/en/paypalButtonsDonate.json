@@ -1,13 +1,17 @@
 {
-  "breadcrumb": "PayPal Donate Pattern",
+  "breadcrumb": {
+    "parent": "PayPal Buttons Pattern",
+    "current": "Donate Button"
+  },
   "hero": {
-    "title": "PayPal donate pattern",
-    "description": "Use the shared PayPal donate component plus a direct-link helper for popup/SDK failure cases."
+    "title": "PayPal Donate Button",
+    "description": "The legacy donate-sdk.js / PayPal.Donation.Button product. Use the shared PayPalDonateButton component plus a direct-link helper for popup/SDK failure cases."
   },
   "example": {
     "title": "Example",
     "helperLink": "Having trouble? Open PayPal in a new tab",
-    "configNote": "Configure the hosted button ID via `hostedButtonId` or `VITE_PAYPAL_DONATE_HOSTED_BUTTON_ID`."
+    "configNote": "Configure the hosted button ID via `hostedButtonId` or `VITE_PAYPAL_DONATE_HOSTED_BUTTON_ID`.",
+    "docsLink": "PayPal's official Donate Button documentation"
   },
   "standard": {
     "title": "Standard",

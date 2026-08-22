@@ -28,7 +28,9 @@ import ImpactStatsStandardPage from "@/pages/standards/ImpactStatsStandardPage";
 import SpendBreakdownStandardPage from "@/pages/standards/SpendBreakdownStandardPage";
 import ImpactAccountabilityStandardPage from "@/pages/standards/ImpactAccountabilityStandardPage";
 import MediaGalleryStandardPage from "@/pages/standards/MediaGalleryStandardPage";
-import PayPalDonatePatternPage from "@/pages/standards/PayPalDonatePatternPage";
+import PayPalButtonsStandardPage from "@/pages/standards/PayPalButtonsStandardPage";
+import PayPalButtonsDonateStandardPage from "@/pages/standards/PayPalButtonsDonateStandardPage";
+import PayPalButtonsHostedStandardPage from "@/pages/standards/PayPalButtonsHostedStandardPage";
 import PlacementHelpStandardPage from "@/pages/standards/PlacementHelpStandardPage";
 import SuccessStoriesStandardPage from "@/pages/standards/SuccessStoriesStandardPage";
 import TemplateStandardsHomePage from "@/pages/standards/TemplateStandardsHomePage";
@@ -103,7 +105,9 @@ const AppRoutes = () => {
         <Route path="/standards/spend-breakdown" element={<SpendBreakdownStandardPage />} />
         <Route path="/standards/impact-accountability" element={<ImpactAccountabilityStandardPage />} />
         <Route path="/standards/media-gallery" element={<MediaGalleryStandardPage />} />
-        <Route path="/standards/paypal-donate" element={<PayPalDonatePatternPage />} />
+        <Route path="/standards/paypal-buttons" element={<PayPalButtonsStandardPage />} />
+        <Route path="/standards/paypal-buttons/donate-button" element={<PayPalButtonsDonateStandardPage />} />
+        <Route path="/standards/paypal-buttons/hosted-buttons" element={<PayPalButtonsHostedStandardPage />} />
         <Route path="/standards/zeffy-donate" element={<ZeffyDonatePatternPage />} />
         <Route path="/standards/placement-help" element={<PlacementHelpStandardPage />} />
         <Route path="/standards/success-stories" element={<SuccessStoriesStandardPage />} />

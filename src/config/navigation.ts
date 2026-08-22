@@ -37,7 +37,7 @@ export const templateNavItems: NavItem[] = [
       { label: "Flyer Library", href: "/standards/flyer-library", group: "mediaLibraries" },
       { label: "Media Gallery", href: "/standards/media-gallery", group: "mediaLibraries" },
       { label: "FormEmbedModal", href: "/standards/form-embed-modal", group: "formsPayments" },
-      { label: "PayPal Donate", href: "/standards/paypal-donate", group: "formsPayments" },
+      { label: "PayPal Buttons", href: "/standards/paypal-buttons", group: "formsPayments" },
       { label: "Zeffy Donate", href: "/standards/zeffy-donate", group: "formsPayments" },
       { label: "Community Partners", href: "/standards/community-partners", group: "community" },
       { label: "Supporter Recognition", href: "/standards/supporter-recognition", group: "community" },

@@ -26,7 +26,9 @@ import enFaqDisclosure from "@/locales/en/faqDisclosure.json";
 import enFaqAccordion from "@/locales/en/faqAccordion.json";
 import enNewsHighlight from "@/locales/en/newsHighlight.json";
 import enFormEmbedModal from "@/locales/en/formEmbedModal.json";
-import enPaypalDonate from "@/locales/en/paypalDonate.json";
+import enPaypalButtons from "@/locales/en/paypalButtons.json";
+import enPaypalButtonsDonate from "@/locales/en/paypalButtonsDonate.json";
+import enPaypalButtonsHosted from "@/locales/en/paypalButtonsHosted.json";
 import enZeffyDonate from "@/locales/en/zeffyDonate.json";
 import enCommunityPartners from "@/locales/en/communityPartners.json";
 import enSupporterRecognition from "@/locales/en/supporterRecognition.json";
@@ -64,7 +66,9 @@ import esFaqDisclosure from "@/locales/es/faqDisclosure.json";
 import esFaqAccordion from "@/locales/es/faqAccordion.json";
 import esNewsHighlight from "@/locales/es/newsHighlight.json";
 import esFormEmbedModal from "@/locales/es/formEmbedModal.json";
-import esPaypalDonate from "@/locales/es/paypalDonate.json";
+import esPaypalButtons from "@/locales/es/paypalButtons.json";
+import esPaypalButtonsDonate from "@/locales/es/paypalButtonsDonate.json";
+import esPaypalButtonsHosted from "@/locales/es/paypalButtonsHosted.json";
 import esZeffyDonate from "@/locales/es/zeffyDonate.json";
 import esCommunityPartners from "@/locales/es/communityPartners.json";
 import esSupporterRecognition from "@/locales/es/supporterRecognition.json";
@@ -108,7 +112,9 @@ i18n.use(initReactI18next).init({
       faqAccordion: enFaqAccordion,
       newsHighlight: enNewsHighlight,
       formEmbedModal: enFormEmbedModal,
-      paypalDonate: enPaypalDonate,
+      paypalButtons: enPaypalButtons,
+      paypalButtonsDonate: enPaypalButtonsDonate,
+      paypalButtonsHosted: enPaypalButtonsHosted,
       zeffyDonate: enZeffyDonate,
       communityPartners: enCommunityPartners,
       supporterRecognition: enSupporterRecognition,
@@ -147,7 +153,9 @@ i18n.use(initReactI18next).init({
       faqAccordion: esFaqAccordion,
       newsHighlight: esNewsHighlight,
       formEmbedModal: esFormEmbedModal,
-      paypalDonate: esPaypalDonate,
+      paypalButtons: esPaypalButtons,
+      paypalButtonsDonate: esPaypalButtonsDonate,
+      paypalButtonsHosted: esPaypalButtonsHosted,
       zeffyDonate: esZeffyDonate,
       communityPartners: esCommunityPartners,
       supporterRecognition: esSupporterRecognition,
@@ -189,7 +197,9 @@ i18n.use(initReactI18next).init({
     "faqAccordion",
     "newsHighlight",
     "formEmbedModal",
-    "paypalDonate",
+    "paypalButtons",
+    "paypalButtonsDonate",
+    "paypalButtonsHosted",
     "zeffyDonate",
     "communityPartners",
     "supporterRecognition",

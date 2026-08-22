@@ -23,7 +23,7 @@
     "faqAccordion": { "title": "FAQ Accordion Pattern", "description": "Canonical FAQ content schema, i18n data pattern, and derived JSON-LD requirement." },
     "faq": { "title": "FAQ Pattern", "description": "Native `<details>/<summary>` requirement for public FAQ/disclosure content." },
     "formEmbedModal": { "title": "FormEmbedModal Standard", "description": "Provider-agnostic form modal pattern with helper and no-JS fallbacks." },
-    "paypalDonate": { "title": "PayPal Donate Pattern", "description": "Donate SDK button usage and direct-link fallback helper pattern." },
+    "paypalButtons": { "title": "PayPal Buttons Pattern", "description": "Two incompatible PayPal button products (Donate Button vs Hosted Buttons) — pick the mode matching the org's real button." },
     "zeffyDonate": { "title": "Zeffy Donate Pattern", "description": "Zeffy donation form embed with a no-JS-safe working fallback as the default state." },
     "communityPartners": { "title": "Community Partners Pattern", "description": "Thanking rescue collaborators and local business supporters without implying favoritism." },
     "supporterRecognition": { "title": "Supporter Recognition Pattern", "description": "A flat, unranked thank-you list for individual donors and supporters." },
