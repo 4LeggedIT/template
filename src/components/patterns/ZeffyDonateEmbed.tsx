@@ -1,20 +1,32 @@
 import { useEffect, useId, useMemo, useState } from "react";
 import { cn } from "@/lib/utils";
 
+declare global {
+  interface Window {
+    Zeffy?: {
+      embed?: {
+        init?: () => void;
+      };
+    };
+  }
+}
+
 const ZEFFY_ORIGIN = "https://www.zeffy.com";
 const ZEFFY_EMBED_SCRIPT_SRC = `${ZEFFY_ORIGIN}/embed/v2/zeffy-embed.js`;
 
 let zeffyScriptPromise: Promise<void> | null = null;
 
-// Zeffy's script scans the DOM for [data-zeffy-embed] elements once it loads
-// and populates them itself -- we never call an imperative render function
-// the way PayPalDonateButton/PawPlacerEmbed do. It's injected as a singleton
-// (never twice, even across multiple ZeffyDonateEmbed instances on one page).
-// Whether it also observes DOM mutations to catch a container that mounts
-// *after* the script has already loaded (e.g. a client-side route change
-// back to a page with this component, in an already-warm SPA session) is
-// unverified -- confirm live if an instance ever fails to populate outside
-// of a fresh full-page load.
+// Zeffy's script scans the DOM for [data-zeffy-embed] elements and populates
+// them itself, but ONLY does this scan once, when it first loads -- it does
+// not observe later DOM mutations. Since the script is only ever injected
+// once per page (singleton, never twice even across multiple instances on
+// one page), a container that mounts *after* the script already loaded --
+// e.g. a client-side SPA route change back to this page in an already-warm
+// session -- would otherwise sit empty forever. Confirmed live 2026-08-20:
+// window.Zeffy.embed.init() is a public, synchronous, idempotent re-scan
+// that Zeffy itself exposes for exactly this; called on every mount below,
+// after the script is confirmed loaded, regardless of whether this is the
+// first load or a cached one.
 function loadZeffyEmbedScript(): Promise<void> {
   if (typeof window === "undefined") return Promise.resolve();
   if (zeffyScriptPromise) return zeffyScriptPromise;
@@ -83,7 +95,9 @@ const ZeffyDonateEmbed = ({
 
     loadZeffyEmbedScript()
       .then(() => {
-        if (!cancelled) setState("embed");
+        if (cancelled) return;
+        window.Zeffy?.embed?.init?.();
+        setState("embed");
       })
       .catch((error: unknown) => {
         if (cancelled) return;

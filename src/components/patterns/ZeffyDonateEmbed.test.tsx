@@ -22,6 +22,7 @@ beforeEach(async () => {
 
 afterEach(() => {
   document.querySelectorAll(`script[src="${ZEFFY_SCRIPT_SRC}"]`).forEach((el) => el.remove());
+  delete window.Zeffy;
 });
 
 describe("ZeffyDonateEmbed", () => {
@@ -57,6 +58,45 @@ describe("ZeffyDonateEmbed", () => {
 
     const fallbackContainer = screen.getByTitle("Donation form powered by Zeffy").parentElement;
     expect(fallbackContainer).toHaveStyle({ display: "none" });
+  });
+
+  it("calls window.Zeffy.embed.init() once the script loads", async () => {
+    const init = vi.fn();
+    window.Zeffy = { embed: { init } };
+
+    render(<ZeffyDonateEmbed formSlug="example-fund-slug" />);
+    fireScriptEvent("load");
+
+    await waitFor(() => {
+      expect(init).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  it("calls window.Zeffy.embed.init() again on a remount after the script is already cached -- the fix for containers that mount after Zeffy's one-time DOM scan (e.g. a client-side SPA route change back to this page)", async () => {
+    const init = vi.fn();
+    window.Zeffy = { embed: { init } };
+
+    const { unmount } = render(<ZeffyDonateEmbed formSlug="example-fund-slug" />);
+    fireScriptEvent("load");
+    await waitFor(() => expect(init).toHaveBeenCalledTimes(1));
+
+    unmount();
+    render(<ZeffyDonateEmbed formSlug="example-fund-slug" />);
+
+    await waitFor(() => {
+      expect(init).toHaveBeenCalledTimes(2);
+    });
+    expect(document.querySelectorAll(`script[src="${ZEFFY_SCRIPT_SRC}"]`)).toHaveLength(1);
+  });
+
+  it("doesn't throw if window.Zeffy is unavailable when the script resolves", async () => {
+    const { container } = render(<ZeffyDonateEmbed formSlug="example-fund-slug" />);
+
+    fireScriptEvent("load");
+
+    await waitFor(() => {
+      expect(container.querySelector("[data-zeffy-embed]")).not.toHaveStyle({ display: "none" });
+    });
   });
 
   it("keeps the fallback iframe visible and calls onError if the script fails to load", async () => {
