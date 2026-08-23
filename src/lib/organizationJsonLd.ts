@@ -36,14 +36,18 @@ export const organizationJsonLd = {
   description: siteConfig.defaultDescription,
   ...(contact?.email ? { email: contact.email } : {}),
   ...(contact?.phone ? { telephone: contact.phone } : {}),
-  ...(contact?.addressLine1
+  // Emit a (possibly partial) PostalAddress whenever any address field exists — sites like
+  // roversreturndogrescue only carry city/state (no street address), which previously fell
+  // through and silently dropped the address from JSON-LD entirely even though city/state
+  // data was available.
+  ...(contact?.addressLine1 || contact?.city || contact?.region || contact?.state
     ? {
         address: {
           "@type": "PostalAddress",
-          streetAddress: contact.addressLine1,
-          addressLocality: contact.city,
-          addressRegion: contact.region ?? contact.state,
-          postalCode: contact.postalCode,
+          ...(contact?.addressLine1 ? { streetAddress: contact.addressLine1 } : {}),
+          ...(contact?.city ? { addressLocality: contact.city } : {}),
+          ...(contact?.region ?? contact?.state ? { addressRegion: contact.region ?? contact.state } : {}),
+          ...(contact?.postalCode ? { postalCode: contact.postalCode } : {}),
         },
       }
     : {}),
