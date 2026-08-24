@@ -33,6 +33,7 @@ const docSections: DocSection[] = [
   { key: "impactStats", href: "/standards/impact-stats", group: "community" },
   { key: "spendBreakdown", href: "/standards/spend-breakdown", group: "community" },
   { key: "impactAccountability", href: "/standards/impact-accountability", group: "community" },
+  { key: "detailedImpact", href: "/standards/detailed-impact", group: "community" },
   { key: "kennelDisplayTools", href: "/standards/kennel-display-tools", group: "tools" },
   { key: "documents", href: "/standards/documents", group: "tools" },
   { key: "buildValidation", href: "/standards/workflow/build-validation", group: "workflow" },

@@ -30,6 +30,7 @@
     "impactStats": { "title": "Impact Stats Pattern", "description": "Lifetime impact stat tiles plus an optional period-by-period bar chart for rescue-organization impact reporting." },
     "spendBreakdown": { "title": "Spend Breakdown Pattern", "description": "Rolled-up spend category tiles for accountability reporting, composable with Impact Stats without being merged into it." },
     "impactAccountability": { "title": "Impact & Accountability", "description": "Worked example composing Impact Stats and Spend Breakdown together on one page, plus links to each pattern on its own." },
+    "detailedImpact": { "title": "Detailed Impact Pattern", "description": "A dated, taggable accountability log connecting real-world events to Impact Stats counters and per-category detail pages." },
     "kennelDisplayTools": { "title": "Kennel & Display Tools Pattern", "description": "Standalone full-viewport print/kiosk tools: adoptable slideshow and 2-up kennel card/binder print sheets." },
     "documents": { "title": "Documents Pattern", "description": "Print-ready adoption certificate, medical record, and generic document wrapper, plus the /documents index." },
     "buildValidation": { "title": "Build & Validation", "description": "Build, preview, no-JS preview, and link-check commands." },

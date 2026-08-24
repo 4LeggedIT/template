@@ -35,6 +35,7 @@ import enSupporterRecognition from "@/locales/en/supporterRecognition.json";
 import enImpactStats from "@/locales/en/impactStats.json";
 import enSpendBreakdown from "@/locales/en/spendBreakdown.json";
 import enImpactAccountability from "@/locales/en/impactAccountability.json";
+import enDetailedImpact from "@/locales/en/detailedImpact.json";
 import enKennelDisplayTools from "@/locales/en/kennelDisplayTools.json";
 import enDocuments from "@/locales/en/documents.json";
 import enFound from "@/locales/en/found.json";
@@ -75,6 +76,7 @@ import esSupporterRecognition from "@/locales/es/supporterRecognition.json";
 import esImpactStats from "@/locales/es/impactStats.json";
 import esSpendBreakdown from "@/locales/es/spendBreakdown.json";
 import esImpactAccountability from "@/locales/es/impactAccountability.json";
+import esDetailedImpact from "@/locales/es/detailedImpact.json";
 import esKennelDisplayTools from "@/locales/es/kennelDisplayTools.json";
 import esDocuments from "@/locales/es/documents.json";
 import esFound from "@/locales/es/found.json";
@@ -121,6 +123,7 @@ i18n.use(initReactI18next).init({
       impactStats: enImpactStats,
       spendBreakdown: enSpendBreakdown,
       impactAccountability: enImpactAccountability,
+      detailedImpact: enDetailedImpact,
       kennelDisplayTools: enKennelDisplayTools,
       documents: enDocuments,
       found: enFound,
@@ -162,6 +165,7 @@ i18n.use(initReactI18next).init({
       impactStats: esImpactStats,
       spendBreakdown: esSpendBreakdown,
       impactAccountability: esImpactAccountability,
+      detailedImpact: esDetailedImpact,
       kennelDisplayTools: esKennelDisplayTools,
       documents: esDocuments,
       found: esFound,
@@ -206,6 +210,7 @@ i18n.use(initReactI18next).init({
     "impactStats",
     "spendBreakdown",
     "impactAccountability",
+    "detailedImpact",
     "kennelDisplayTools",
     "documents",
     "found",

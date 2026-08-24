@@ -1,9 +1,12 @@
 import { render, screen } from "@testing-library/react";
+import { MemoryRouter } from "react-router-dom";
 import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
 import ImpactStatsSection, {
   type ImpactStat,
   type ImpactStatsPeriod,
 } from "@/components/patterns/ImpactStatsSection";
+
+const renderWithRouter = (ui: React.ReactElement) => render(<MemoryRouter>{ui}</MemoryRouter>);
 
 // recharts measures its ResponsiveContainer via getBoundingClientRect(), which jsdom always
 // reports as all-zero — without a real size, recharts renders no chart children at all.
@@ -111,12 +114,35 @@ describe("ImpactStatsSection", () => {
   });
 
   it("renders the CTA only when both ctaHref and ctaLabel are provided", () => {
-    const { rerender } = render(<ImpactStatsSection lifetimeStats={lifetimeStats} />);
+    const { rerender } = render(
+      <MemoryRouter>
+        <ImpactStatsSection lifetimeStats={lifetimeStats} />
+      </MemoryRouter>,
+    );
     expect(screen.queryByRole("link")).not.toBeInTheDocument();
 
     rerender(
-      <ImpactStatsSection lifetimeStats={lifetimeStats} ctaHref="/donate" ctaLabel="Support Us" />,
+      <MemoryRouter>
+        <ImpactStatsSection lifetimeStats={lifetimeStats} ctaHref="/donate" ctaLabel="Support Us" />
+      </MemoryRouter>,
     );
     expect(screen.getByRole("link", { name: "Support Us" })).toHaveAttribute("href", "/donate");
+  });
+
+  it("renders a lifetime stat tile as a Link when href is set", () => {
+    renderWithRouter(
+      <ImpactStatsSection
+        lifetimeStats={[{ id: "adopted", value: 1240, label: "Dogs Adopted", href: "/impact/adopted" }]}
+      />,
+    );
+
+    expect(screen.getByRole("link", { name: /Dogs Adopted/ })).toHaveAttribute("href", "/impact/adopted");
+  });
+
+  it("renders a lifetime stat tile as a plain (unlinked) element when href is omitted", () => {
+    renderWithRouter(<ImpactStatsSection lifetimeStats={lifetimeStats} />);
+
+    expect(screen.queryByRole("link")).not.toBeInTheDocument();
+    expect(screen.getByText("Dogs Adopted")).toBeInTheDocument();
   });
 });

@@ -1,4 +1,5 @@
 import type { LucideIcon } from "lucide-react";
+import { Link } from "react-router-dom";
 import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts";
 import {
   ChartContainer,
@@ -16,6 +17,10 @@ export type ImpactStat = {
   value: string | number;
   label: string;
   icon?: LucideIcon;
+  /** Optional — when set, the tile renders as a link (internal Link for `/`-prefixed hrefs, an
+   * external `<a target="_blank">` otherwise), e.g. to a category detail page. Purely additive;
+   * every existing/future consumer that never sets it renders exactly as before. */
+  href?: string;
 };
 
 export type ImpactStatsPeriod = {
@@ -47,6 +52,8 @@ type ImpactStatsSectionProps = {
   className?: string;
   labels?: ImpactStatsSectionLabels;
 };
+
+const isExternalContentHref = (href: string) => !href.startsWith("/");
 
 const DEFAULT_METRIC_COLORS = [
   "hsl(var(--primary))",
@@ -118,15 +125,38 @@ const ImpactStatsSection = ({
         <div className="flex flex-wrap justify-center gap-4">
           {lifetimeStats.map((stat) => {
             const Icon = stat.icon;
-            return (
-              <div
-                key={stat.id}
-                className="flex w-[calc(50%-0.5rem)] flex-col items-center gap-2 rounded-xl border border-border bg-card p-4 text-center sm:w-[calc(33.333%-0.667rem)] lg:w-[calc(16.666%-0.833rem)]"
-              >
+            const tileClassName =
+              "flex w-[calc(50%-0.5rem)] flex-col items-center gap-2 rounded-xl border border-border bg-card p-4 text-center sm:w-[calc(33.333%-0.667rem)] lg:w-[calc(16.666%-0.833rem)]";
+            const tileContent = (
+              <>
                 {Icon ? <Icon className="h-6 w-6 text-primary" aria-hidden="true" /> : null}
                 <span className="text-3xl font-bold tabular-nums">{stat.value}</span>
                 <span className="text-sm text-muted-foreground">{stat.label}</span>
-              </div>
+              </>
+            );
+
+            if (!stat.href) {
+              return (
+                <div key={stat.id} className={tileClassName}>
+                  {tileContent}
+                </div>
+              );
+            }
+
+            return isExternalContentHref(stat.href) ? (
+              <a
+                key={stat.id}
+                href={stat.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={cn(tileClassName, "transition-colors hover:bg-muted")}
+              >
+                {tileContent}
+              </a>
+            ) : (
+              <Link key={stat.id} to={stat.href} className={cn(tileClassName, "transition-colors hover:bg-muted")}>
+                {tileContent}
+              </Link>
             );
           })}
         </div>
@@ -171,7 +201,13 @@ const ImpactStatsSection = ({
       {ctaHref && ctaLabel ? (
         <div className="text-center">
           <Button asChild>
-            <a href={ctaHref}>{ctaLabel}</a>
+            {isExternalContentHref(ctaHref) ? (
+              <a href={ctaHref} target="_blank" rel="noopener noreferrer">
+                {ctaLabel}
+              </a>
+            ) : (
+              <Link to={ctaHref}>{ctaLabel}</Link>
+            )}
           </Button>
         </div>
       ) : null}
