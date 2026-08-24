@@ -9,6 +9,8 @@ export type EventBannerRecurrence = EventRecurrence;
 export type EventBannerItem = {
   id: string;
   title: string;
+  /** Compound "[Title] - [Venue] in [City]"-style override for banner display when `title` alone is too generic to disambiguate. Optional — falls back to `title` when unset. */
+  calendarTitle?: string;
   startsAtIso?: string;
   endsAtIso?: string;
   expiresAtIso?: string;
@@ -181,7 +183,7 @@ const EventBanner = ({
                 className="flex flex-col items-start justify-between gap-2 sm:flex-row sm:items-center"
               >
                 <div className="flex flex-col gap-2 text-sm sm:flex-row sm:items-center sm:gap-4">
-                  <div className="font-semibold text-foreground">📣 {event.title}</div>
+                  <div className="font-semibold text-foreground">📣 {event.calendarTitle ?? event.title}</div>
                   <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-muted-foreground">
                     {event.startsAtIso ? (
                       <span className="inline-flex items-center gap-1">
@@ -204,7 +206,7 @@ const EventBanner = ({
                     event.ctaHref.startsWith("/") ? (
                       <Link
                         to={event.ctaHref}
-                        aria-label={`${event.ctaLabel ?? detailsFallback}: ${event.title}`}
+                        aria-label={`${event.ctaLabel ?? detailsFallback}: ${event.calendarTitle ?? event.title}`}
                         className="text-sm font-semibold text-primary hover:underline"
                       >
                         {event.ctaLabel ?? detailsFallback}
@@ -214,7 +216,7 @@ const EventBanner = ({
                         href={event.ctaHref}
                         target="_blank"
                         rel="noopener noreferrer"
-                        aria-label={`${event.ctaLabel ?? detailsFallback}: ${event.title}`}
+                        aria-label={`${event.ctaLabel ?? detailsFallback}: ${event.calendarTitle ?? event.title}`}
                         className="text-sm font-semibold text-primary hover:underline"
                       >
                         {event.ctaLabel ?? detailsFallback}

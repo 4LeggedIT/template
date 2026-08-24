@@ -193,7 +193,7 @@ export const eventsNewsExampleEntries: EventsNewsEntry[] = [
     locationLabel: "Community Hall, 456 Oak Ave, Example City, ST",
     registrationUrl: "https://example.org/events/basket-raffle",
     summary: "First Saturday of every month — dog-themed gift baskets, tickets $5 each or 5 for $20.",
-    imageSrc: "https://images.unsplash.com/photo-1517849845537-4d257902861a?auto=format&fit=crop&w=1200&q=80",
+    imageSrc: "https://images.unsplash.com/photo-1497700003451-e1df943a194b?auto=format&fit=crop&w=1200&q=80",
     imageAlt: "Gift baskets set out for a fundraiser raffle",
     highlights: [
       "Held the first Saturday of every month",

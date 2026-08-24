@@ -79,6 +79,18 @@ const AppRoutes = () => {
           path="/examples/events-news/events/event-yard-sale-2026-02-21"
           element={<EventsNewsExampleEventDetailPage eventSlug="event-yard-sale-2026-02-21" />}
         />
+        <Route
+          path="/examples/events-news/events/event-basket-raffle-monthly"
+          element={<EventsNewsExampleEventDetailPage eventSlug="event-basket-raffle-monthly" />}
+        />
+        <Route
+          path="/examples/events-news/events/news-field-rescue-2026-02-10"
+          element={<EventsNewsExampleEventDetailPage eventSlug="news-field-rescue-2026-02-10" />}
+        />
+        <Route
+          path="/examples/events-news/events/news-volunteer-call-2026-01-10"
+          element={<EventsNewsExampleEventDetailPage eventSlug="news-volunteer-call-2026-01-10" />}
+        />
         <Route path="/news/example-article" element={<NewsArticleExamplePage />} />
         <Route path="/news/example-video-article" element={<NewsVideoArticleExamplePage />} />
         <Route path="/examples/blog/:slug" element={<BlogExamplePostPage />} />

@@ -154,6 +154,18 @@ export type EventsNewsEventEntry = EventsNewsBaseEntry & {
   recurrence?: EventsNewsEventRecurrence;
   /** Per-occurrence image swap for recurring events — falls back to imageSrc/imageAlt/images when no entry matches the occurrence date. */
   imageOverrides?: EventsNewsImageOverride[];
+  /**
+   * Curated, content-author-controlled homepage announcement window — the counterpart to
+   * `showFutureEventsBanner`'s automatic "every upcoming event" selection (see that prop below).
+   * Pair with `getHomeAnnouncementBannerItems()` to build the `EventBannerItem[]` a site's own
+   * homepage banner renders. Folded into canonical 2026-08-23 (TPL-032) after the same
+   * `{ enabled, expiresAtIso }` shape was found independently duplicated on roversreturndogrescue
+   * and 4leggedit.
+   */
+  homeAnnouncement?: {
+    enabled: boolean;
+    expiresAtIso: string;
+  };
 };
 
 export type EventsNewsArticleEntry = EventsNewsBaseEntry & {
@@ -551,15 +563,40 @@ const humanDateTimeFormatter = new Intl.DateTimeFormat(undefined, {
   minute: "2-digit",
 });
 
+const humanTimeFormatter = new Intl.DateTimeFormat(undefined, {
+  hour: "numeric",
+  minute: "2-digit",
+});
+
+// Appends the end date/time when the entry has one, so a fallback (no explicit `dateLabel`
+// authored) event never silently drops its end — see TPL-026 in template-enhancement-backlog.md.
+// Same-day end renders as a time-only suffix ("...7:00 PM – 9:00 PM"); a multi-day span
+// renders the end as a full date. Purely additive: an entry with no end behaves exactly as before.
 export const formatFallbackDateLabel = (entry: EventsNewsRenderableEntry) => {
   if (entry.kind === "event") {
     if (entry.allDay) {
-      const ymd = parseYmdUtc(entry.startAt);
-      if (ymd) return humanDateFormatter.format(ymd);
+      const startYmd = parseYmdUtc(entry.startAt);
+      if (startYmd) {
+        const startLabel = humanDateFormatter.format(startYmd);
+        const endYmd = entry.endAt && entry.endAt !== entry.startAt ? parseYmdUtc(entry.endAt) : null;
+        return endYmd ? `${startLabel} – ${humanDateFormatter.format(endYmd)}` : startLabel;
+      }
     }
 
     const timedMs = entry.startAtIso ? Date.parse(entry.startAtIso) : NaN;
-    if (Number.isFinite(timedMs)) return humanDateTimeFormatter.format(new Date(timedMs));
+    if (Number.isFinite(timedMs)) {
+      const startDate = new Date(timedMs);
+      const startLabel = humanDateTimeFormatter.format(startDate);
+      const endMs = entry.endAtIso ? Date.parse(entry.endAtIso) : NaN;
+      if (Number.isFinite(endMs) && endMs > timedMs) {
+        const endDate = new Date(endMs);
+        const sameDay = humanDateFormatter.format(startDate) === humanDateFormatter.format(endDate);
+        return sameDay
+          ? `${startLabel} – ${humanTimeFormatter.format(endDate)}`
+          : `${startLabel} – ${humanDateTimeFormatter.format(endDate)}`;
+      }
+      return startLabel;
+    }
 
     const ymd = parseYmdUtc(entry.startAt);
     if (ymd) return humanDateFormatter.format(ymd);
@@ -779,6 +816,33 @@ const toBannerEvents = (
     });
 };
 
+/**
+ * Selects every event entry flagged `homeAnnouncement.enabled` and maps it to the shape
+ * `EventBanner` renders — the curated counterpart to `toBannerEvents`'s automatic "every
+ * upcoming event" selection above (that one powers `showFutureEventsBanner` inside this
+ * component; this one is for a site's own homepage, rendered separately from this section).
+ * Callers pass already-localized entries. `ctaHrefBase` builds `${ctaHrefBase}/${entry.id}`
+ * when the entry itself has no explicit `href`.
+ */
+export const getHomeAnnouncementBannerItems = (
+  entries: EventsNewsEventEntry[],
+  options?: { ctaHrefBase?: string; ctaLabel?: string },
+): EventBannerItem[] =>
+  entries
+    .filter((entry) => entry.homeAnnouncement?.enabled)
+    .map((entry) => ({
+      id: entry.id,
+      title: entry.calendarTitle ?? entry.title,
+      startsAtIso: entry.startAtIso,
+      endsAtIso: entry.endAtIso,
+      allDay: entry.allDay,
+      expiresAtIso: entry.homeAnnouncement?.expiresAtIso,
+      recurrence: entry.recurrence,
+      locationLabel: entry.locationLabel,
+      ctaHref: entry.href ?? (options?.ctaHrefBase ? `${options.ctaHrefBase}/${entry.id}` : undefined),
+      ctaLabel: options?.ctaLabel,
+    }));
+
 export const getMapsUrl = (entry: EventsNewsRenderableEventEntry) => {
   if (entry.mapsUrl) return entry.mapsUrl;
   const query = entry.locationAddress ?? entry.locationLabel;
@@ -786,10 +850,41 @@ export const getMapsUrl = (entry: EventsNewsRenderableEventEntry) => {
   return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}`;
 };
 
-export const getGoogleCalendarUrl = (entry: EventsNewsRenderableEventEntry) => {
-  const details = [entry.summary, entry.body]
-    .filter(Boolean)
-    .join("\n\n");
+/**
+ * Optional, purely additive richer-calendar-link behavior (TPL-031, added 2026-08-23) — every
+ * field defaults to today's exact output when omitted, so existing call sites are unaffected.
+ * `timeZone` emits a `ctz` param (e.g. "America/Los_Angeles"). `includeHighlights` appends
+ * `entry.highlights` as a bulleted list to the calendar description. `moreInfoUrl` (a site's own
+ * absolute detail-page URL — this component has no siteUrl/config knowledge, so it must be passed
+ * in) appends a "more info" line. Piloted on roversreturndogrescue's `lib/calendar.ts`, folded into
+ * canonical instead of staying a one-site fork — see event-module-wiring-contract.md §2.
+ */
+export type GoogleCalendarUrlOptions = {
+  timeZone?: string;
+  includeHighlights?: boolean;
+  highlightsLabel?: string;
+  moreInfoUrl?: string;
+  moreInfoLabel?: string;
+};
+
+export const getGoogleCalendarUrl = (
+  entry: EventsNewsRenderableEventEntry,
+  options?: GoogleCalendarUrlOptions,
+) => {
+  // Calendar description renders body only, never summary — summary is a card-view teaser,
+  // frequently a near-duplicate of body's opening line (or, on sites that migrated from a single
+  // undifferentiated content field, byte-identical to it), which read as a doubled paragraph once
+  // both landed in the same calendar invite. Fixed fleet-wide 2026-08-23 (TPL-031).
+  const detailsParts = [entry.body].filter((value): value is string => Boolean(value));
+  if (options?.includeHighlights && entry.highlights?.length) {
+    detailsParts.push(
+      [options.highlightsLabel ?? "Highlights", ...entry.highlights.map((item) => `- ${item}`)].join("\n"),
+    );
+  }
+  if (options?.moreInfoUrl) {
+    detailsParts.push(`${options.moreInfoLabel ?? "More info"}:\n${options.moreInfoUrl}`);
+  }
+  const details = detailsParts.join("\n\n");
 
   let dates: string | null = null;
   if (entry.allDay) {
@@ -824,6 +919,7 @@ export const getGoogleCalendarUrl = (entry: EventsNewsRenderableEventEntry) => {
     ...(details ? { details } : {}),
     ...(calLocation ? { location: calLocation } : {}),
     ...(rrule ? { recur: rrule } : {}),
+    ...(options?.timeZone ? { ctz: options.timeZone } : {}),
     sf: "true",
     output: "xml",
   });

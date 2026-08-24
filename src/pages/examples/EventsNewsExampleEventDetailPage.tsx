@@ -3,7 +3,7 @@ import PageHero from "@/components/patterns/PageHero";
 import SEOHead from "@/components/patterns/SEOHead";
 import EventsNewsDetail from "@/components/patterns/EventsNewsDetail";
 import { getAdjacentEntries, resolveEventOccurrence } from "@/components/patterns/EventsNewsSection";
-import { eventsNewsExampleEntries, getEventsNewsExampleEventBySlug } from "@/pages/examples/eventsNewsExampleData";
+import { eventsNewsExampleEntries, getEventsNewsExampleEntryBySlug } from "@/pages/examples/eventsNewsExampleData";
 import { describeRecurrence, type EventRecurrence } from "@/lib/event-recurrence";
 
 const EVENT_DETAILS_BASE_PATH = "/examples/events-news/events";
@@ -46,16 +46,21 @@ function formatRecurrenceSummary(recurrence: EventRecurrence, seedStartIso: stri
 }
 
 const EventsNewsExampleEventDetailPage = ({ eventSlug }: EventsNewsExampleEventDetailPageProps) => {
-  const rawEvent = getEventsNewsExampleEventBySlug(eventSlug);
+  // Looks up both kinds (event and news) — every locally-authored entry gets a detail page per
+  // the fleet's own contract (module-wiring-contracts.md), so this example page must handle both,
+  // not just events.
+  const rawEntry = getEventsNewsExampleEntryBySlug(eventSlug);
   const canonicalPath = `/examples/events-news/events/${eventSlug}`;
 
   // `resolveEventOccurrence()` is the one shared entry point every site's detail page should call
   // for this: it resolves a recurring event to the `?date=` occurrence a list card linked to (see
   // EventsNewsSection.tsx's expandEventEntry(), which stamps that param onto each occurrence's
-  // href), falling back to the live next occurrence when the param is absent or invalid.
+  // href), falling back to the live next occurrence when the param is absent or invalid. Only
+  // applies to `kind: "event"` entries — news entries have no `recurrence` field.
   const [searchParams] = useSearchParams();
   const requestedDate = searchParams.get("date") ?? undefined;
-  const event = rawEvent ? resolveEventOccurrence(rawEvent, new Date(), requestedDate) : rawEvent;
+  const event =
+    rawEntry && rawEntry.kind === "event" ? resolveEventOccurrence(rawEntry, new Date(), requestedDate) : rawEntry;
 
   if (!event) {
     return (
@@ -81,24 +86,24 @@ const EventsNewsExampleEventDetailPage = ({ eventSlug }: EventsNewsExampleEventD
   }
 
   const recurrenceSummary =
-    event.recurrence && event.startAtIso ? formatRecurrenceSummary(event.recurrence, event.startAtIso) : null;
-  const dateLabel = event.startAtIso
-    ? dateTimeFormatter.format(new Date(event.startAtIso))
-    : event.dateLabel ?? event.startAt;
+    event.kind === "event" && event.recurrence && event.startAtIso
+      ? formatRecurrenceSummary(event.recurrence, event.startAtIso)
+      : null;
+  const dateLabel =
+    event.kind === "event"
+      ? event.startAtIso
+        ? dateTimeFormatter.format(new Date(event.startAtIso))
+        : event.dateLabel ?? event.startAt
+      : event.dateLabel ?? event.publishedAt;
 
-  // "event-basket-raffle-monthly" has local detail content (highlights + an image) but no
-  // registered example route (see AppRoutes.tsx) — excluded here so the Previous/Next demo
-  // never links to a 404. A real site's entries/routes stay in sync, so this exclusion is
-  // reference-example-only.
-  const adjacencyEntries = eventsNewsExampleEntries.filter((entry) => entry.id !== "event-basket-raffle-monthly");
   // Pass the resolved event's own occurrence date so a recurring series' Previous/Next match the
   // exact occurrence being viewed, not whichever occurrence of that series sorts first — see
   // getAdjacentEntries()'s doc comment in EventsNewsSection.tsx.
   const { previous, next } = getAdjacentEntries(
-    adjacencyEntries,
+    eventsNewsExampleEntries,
     eventSlug,
     EVENT_DETAILS_BASE_PATH,
-    event.recurrence ? event.startAt : undefined,
+    event.kind === "event" && event.recurrence ? event.startAt : undefined,
   );
 
   // Fold the live-computed occurrence date (and recurrence summary) into the entry passed to
@@ -113,14 +118,14 @@ const EventsNewsExampleEventDetailPage = ({ eventSlug }: EventsNewsExampleEventD
   return (
     <>
       <SEOHead
-        title={`${event.title} | Event Example`}
+        title={`${event.title} | ${event.kind === "event" ? "Event" : "News"} Example`}
         canonicalPath={canonicalPath}
-        description={event.summary ?? "Event detail route for Events & News module examples."}
+        description={event.summary ?? "Detail route for Events & News module examples."}
       />
       <PageHero
-        eyebrow="Event"
+        eyebrow={event.kind === "event" ? "Event" : "News"}
         title={event.title}
-        description={event.summary ?? "Event detail page linked from the Events & News module index."}
+        description={event.summary ?? "Detail page linked from the Events & News module index."}
         breadcrumbs={[
           { label: "Home", href: "/" },
           { label: "Standards", href: "/standards" },
