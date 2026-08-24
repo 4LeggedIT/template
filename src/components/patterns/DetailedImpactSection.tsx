@@ -203,9 +203,9 @@ const DetailedImpactSection = ({
   locale = DEFAULT_LOCALE,
 }: DetailedImpactSectionProps) => {
   const {
-    emptyMessage = "No updates logged yet.",
+    emptyMessage = "No updates shared yet.",
     readMoreLabel = "Read the full story",
-    runningTotalLabel = "Updates Logged So Far",
+    runningTotalLabel = "Updates Shared So Far",
   } = labels;
 
   const sorted = [...entries].sort(byNewestFirst);

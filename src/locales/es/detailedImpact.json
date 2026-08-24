@@ -1,13 +1,13 @@
 {
   "hero": {
     "title": "Patrón de Impacto Detallado",
-    "description": "Un registro de rendición de cuentas fechado y etiquetable. Etiquete una publicación real con las categorías de impacto que tocó, y deje que esas etiquetas generen automáticamente sus recuadros de estadísticas de por vida y sus páginas de detalle por categoría — sin números mantenidos a mano."
+    "description": "Un registro de impacto fechado y etiquetable. Etiquete una publicación real con las categorías de impacto que tocó, y deje que esas etiquetas generen automáticamente sus recuadros de estadísticas de por vida y sus páginas de detalle por categoría — sin números mantenidos a mano."
   },
   "breadcrumb": "Patrón de Impacto Detallado",
   "sections": {
     "timeline": {
       "title": "Línea de tiempo combinada",
-      "description": "Cada entrada registrada, de la más reciente a la más antigua — el registro de rendición de cuentas en sí. Una sola entrada puede etiquetar varias categorías a la vez."
+      "description": "Cada actualización que hemos compartido, de la más reciente a la más antigua. Una sola entrada puede etiquetar varias categorías a la vez."
     },
     "categoryPage": {
       "title": "La página de una sola categoría",
@@ -15,7 +15,7 @@
     },
     "derivedStats": {
       "title": "Cómo derivar los recuadros de Estadísticas de Impacto",
-      "description": "getImpactLifetimeStats() cuenta cuántas entradas tocaron cada categoría en recuadros listos para Estadísticas de Impacto, cada uno enlazado a la página de su categoría. Una categoría sin nada registrado se omite, nunca se muestra como un cero de relleno."
+      "description": "getImpactLifetimeStats() cuenta cuántas entradas tocaron cada categoría en recuadros listos para Estadísticas de Impacto, cada uno enlazado a la página de su categoría. Una categoría sin nada compartido aún se omite, nunca se muestra como un cero de relleno."
     }
   },
   "sampleData": {
@@ -47,18 +47,18 @@
       }
     },
     "readMoreLabel": "Lea la historia completa",
-    "runningTotalLabel": "Actualizaciones Registradas Hasta Ahora",
-    "derivedStatsNote": "Cada número cuenta cuántas actualizaciones distintas hemos registrado para esa categoría — no libras, dólares ni cantidad de personas."
+    "runningTotalLabel": "Actualizaciones Compartidas Hasta Ahora",
+    "derivedStatsNote": "Cada número cuenta cuántas actualizaciones hemos compartido para esa categoría — no libras, dólares ni cantidad de personas."
   },
   "standard": {
     "title": "Estándar",
-    "oneEntryManyCategories": "Una entrada puede etiquetar varias categorías a la vez — contributions es un arreglo. Este es el propósito central del patrón: una sola publicación real (una ruta de alimentación que también se convirtió en atención veterinaria y un rescate) no debería tener que registrarse tres veces por separado.",
+    "oneEntryManyCategories": "Una entrada puede etiquetar varias categorías a la vez — contributions es un arreglo. Este es el propósito central del patrón: una sola publicación real (una ruta de alimentación que también se convirtió en atención veterinaria y un rescate) no debería tener que compartirse tres veces por separado.",
     "composedNotMerged": {
       "before": "Una entrada de Impacto Detallado enlaza a su narrativa completa mediante",
       "after": "en lugar de incluirla directamente — es un \"qué cambió y por qué\" corto y estructurado, compuesto junto con Blog/Noticias en lugar de reemplazar a ninguno de los dos."
     },
     "noInventedNumbers": "Nunca invente ni estime una cantidad de contribución. getImpactLifetimeStats() ya omite cualquier categoría con un total de cero en lugar de mostrar un recuadro de relleno — no hay necesidad de inventar un número solo para mostrar algo.",
-    "categoryCardsAlwaysRender": "A diferencia de los recuadros de estadísticas, las tarjetas de navegación por categoría de un sitio siempre deben mostrarse sin importar la cantidad — son navegación hacia una página filtrada, no una afirmación numérica. Una categoría vacía todavía necesita una página localizable de \"aún no hay actualizaciones registradas\".",
+    "categoryCardsAlwaysRender": "A diferencia de los recuadros de estadísticas, las tarjetas de navegación por categoría de un sitio siempre deben mostrarse sin importar la cantidad — son navegación hacia una página filtrada, no una afirmación numérica. Una categoría vacía todavía necesita una página localizable de \"aún no hay actualizaciones compartidas\".",
     "countingRule": "Todos los números que muestra este patrón — los recuadros de estadísticas y el total acumulado de la página de categoría — cuentan cuántas entradas tocaron esa categoría. Nunca suma el campo opcional amount, porque dos entradas que tocan la misma categoría pueden medirla de formas completamente distintas (una bolsa de comida entregada vs. golosinas repartidas vs. un peso real en báscula). amount/unit son solo detalle descriptivo en la tarjeta de esa entrada.",
     "multiDay": "date/endDate son ambos campos simples en formato AAAA-MM-DD, para un día o período narrativo — no una cita programada. Establezca endDate solo cuando el trabajo real haya abarcado más de un día.",
     "categoryIdStability": "Trate los ids de categoría como efectivamente permanentes una vez que cualquier entrada real los referencie. Un id con un error tipográfico falla en silencio — la entrada simplemente deja de contribuir a cualquier estadística o página — así que prefiera agregar una nueva categoría en lugar de renombrar una existente.",

@@ -76,7 +76,7 @@ const DetailedImpactStandardPage = () => {
       <SEOHead
         title="Detailed Impact Pattern"
         canonicalPath="/standards/detailed-impact"
-        description="A dated, taggable accountability log connecting real-world events to Impact Stats counters and per-category detail pages."
+        description="A dated, taggable impact record connecting real-world events to Impact Stats counters and per-category detail pages."
       />
       <PageHero
         eyebrow={t("common:nav.standards")}

@@ -1,13 +1,13 @@
 {
   "hero": {
     "title": "Detailed Impact pattern",
-    "description": "A dated, taggable accountability log. Tag one real-world write-up with the impact categories it touched, and let those tags drive your lifetime stat tiles and per-category detail pages automatically — no hand-maintained numbers."
+    "description": "A dated, taggable impact record. Tag one real-world write-up with the impact categories it touched, and let those tags drive your lifetime stat tiles and per-category detail pages automatically — no hand-maintained numbers."
   },
   "breadcrumb": "Detailed Impact Pattern",
   "sections": {
     "timeline": {
       "title": "Combined timeline",
-      "description": "Every logged entry, newest first — the accountability log itself. A single entry can tag several categories at once."
+      "description": "Every update we've shared, newest first. A single entry can tag several categories at once."
     },
     "categoryPage": {
       "title": "A single category's page",
@@ -15,7 +15,7 @@
     },
     "derivedStats": {
       "title": "Deriving Impact Stats tiles",
-      "description": "getImpactLifetimeStats() counts how many entries touched each category into Impact Stats-ready tiles, each linking to its category's page. A category with nothing logged yet is omitted, never shown as a placeholder zero."
+      "description": "getImpactLifetimeStats() counts how many entries touched each category into Impact Stats-ready tiles, each linking to its category's page. A category with nothing shared yet is omitted, never shown as a placeholder zero."
     }
   },
   "sampleData": {
@@ -47,18 +47,18 @@
       }
     },
     "readMoreLabel": "Read the full story",
-    "runningTotalLabel": "Updates Logged So Far",
-    "derivedStatsNote": "Each number counts how many separate updates we've logged for that category — not pounds, dollars, or head count."
+    "runningTotalLabel": "Updates Shared So Far",
+    "derivedStatsNote": "Each number counts how many updates we've shared for that category — not pounds, dollars, or head count."
   },
   "standard": {
     "title": "Standard",
-    "oneEntryManyCategories": "One entry can tag several categories at once — contributions is an array. This is the pattern's whole point: a single real-world write-up (a feeding route that also became a vet-care stop and a rescue) shouldn't need to be logged three separate times.",
+    "oneEntryManyCategories": "One entry can tag several categories at once — contributions is an array. This is the pattern's whole point: a single real-world write-up (a feeding route that also became a vet-care stop and a rescue) shouldn't need to be shared three separate times.",
     "composedNotMerged": {
       "before": "A Detailed Impact entry links out to its full narrative via",
       "after": "rather than embedding it — it's a short structured \"what changed and why,\" composed with Blog/News rather than replacing either."
     },
     "noInventedNumbers": "Never fabricate or estimate a contribution amount. getImpactLifetimeStats() already omits any category with a zero total rather than rendering a placeholder tile — there's no need to invent a number just to have something show.",
-    "categoryCardsAlwaysRender": "Unlike stat tiles, a site's category-navigation cards should always render regardless of count — they're navigation into a filtered page, not a numeric claim. An empty category still needs a findable \"no updates logged yet\" page.",
+    "categoryCardsAlwaysRender": "Unlike stat tiles, a site's category-navigation cards should always render regardless of count — they're navigation into a filtered page, not a numeric claim. An empty category still needs a findable \"no updates shared yet\" page.",
     "countingRule": "Every number this pattern shows — the stat tiles and the category-page running total — counts how many entries touched that category. It never sums the optional amount field, because two entries touching the same category can measure it in completely different ways (a bag of food dropped off vs. treats handed out vs. an actual scale weight). amount/unit are just descriptive detail on that one entry's own card.",
     "multiDay": "date/endDate are both plain YYYY-MM-DD, for a narrative day or span — not a scheduled appointment. Set endDate only when real-world work actually spanned more than one day.",
     "categoryIdStability": "Treat category ids as effectively permanent once any real entry references them. A typo'd id fails silently — the entry simply stops contributing to any stat or page — so prefer adding a new category over renaming an existing one.",

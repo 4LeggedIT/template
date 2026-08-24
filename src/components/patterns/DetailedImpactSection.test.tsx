@@ -52,7 +52,7 @@ describe("DetailedImpactSection", () => {
   it("renders the empty-state message when entries is empty", () => {
     renderWithRouter(<DetailedImpactSection entries={[]} categories={categories} />);
 
-    expect(screen.getByText("No updates logged yet.")).toBeInTheDocument();
+    expect(screen.getByText("No updates shared yet.")).toBeInTheDocument();
   });
 
   it("renders one card per entry, newest first", () => {
