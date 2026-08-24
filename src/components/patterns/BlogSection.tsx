@@ -32,10 +32,10 @@ export type BlogPostEntry = {
   /**
    * Internal record of where this post's content originated — a Facebook/Instagram post URL, an
    * external article URL, etc. Editorial reference only, never rendered on the page. Leave unset
-   * when the content has no external source (e.g. an org-authored announcement). Mirrors
-   * `EventsNewsEntry.source`.
+   * when the content has no external source (e.g. an org-authored announcement). Pass an array
+   * when one write-up draws on more than one original source post. Mirrors `EventsNewsEntry.source`.
    */
-  source?: string;
+  source?: string | string[];
   author?: string;
   authorRole?: string;
   /** Site-local category key. No badge renders when omitted. */
@@ -119,11 +119,21 @@ export const estimateReadTime = (content: string) => {
 export const byNewestFirst = (a: BlogPostEntry, b: BlogPostEntry) =>
   a.publishedAt < b.publishedAt ? 1 : a.publishedAt > b.publishedAt ? -1 : 0;
 
-export const getRelatedBlogPosts = (posts: BlogPostEntry[], currentSlug: string, limit = 2) =>
-  posts
+/** Prefers posts sharing the current post's category, newest first within each group, then falls back to pure recency. */
+export const getRelatedBlogPosts = (posts: BlogPostEntry[], currentSlug: string, limit = 2) => {
+  const currentCategory = posts.find((post) => post.slug === currentSlug)?.category;
+  return posts
     .filter((post) => post.slug !== currentSlug)
-    .sort(byNewestFirst)
+    .sort((a, b) => {
+      if (currentCategory) {
+        const aMatches = a.category === currentCategory;
+        const bMatches = b.category === currentCategory;
+        if (aMatches !== bMatches) return aMatches ? -1 : 1;
+      }
+      return byNewestFirst(a, b);
+    })
     .slice(0, limit);
+};
 
 const getPostSortMs = (post: BlogPostEntry) => {
   const ms = Date.parse(post.publishedAt);

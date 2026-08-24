@@ -60,10 +60,11 @@ export type DetailedImpactEntry = {
   imageAlt?: string;
   /**
    * Internal record of where this entry's content originated — a Facebook/Instagram post URL, etc.
-   * Editorial reference only, never rendered on the page. Mirrors `BlogPostEntry.source` /
-   * `EventsNewsEntry.source` exactly.
+   * Editorial reference only, never rendered on the page. Pass an array when one entry draws on
+   * more than one original source post. Mirrors `BlogPostEntry.source` / `EventsNewsEntry.source`
+   * exactly.
    */
-  source?: string;
+  source?: string | string[];
   /** Reserved for future HomeHighlightSection reuse — mirrors the fleet's "no auto-pin" convention. Not required for the timeline/category pages themselves. */
   highlightOnHome?: boolean;
 };

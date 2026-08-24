@@ -130,9 +130,10 @@ type EventsNewsBaseEntry = {
   /**
    * Internal record of where this entry's content originated — a Facebook/Instagram post URL, an
    * external article URL, etc. Editorial reference only, never rendered on the page. Leave unset
-   * when the content has no external source (e.g. an org-authored announcement).
+   * when the content has no external source (e.g. an org-authored announcement). Pass an array
+   * when one entry draws on more than one original source post.
    */
-  source?: string;
+  source?: string | string[];
   dateLabel?: string;
   highlights?: string[];
   highlightOnHome?: boolean;
