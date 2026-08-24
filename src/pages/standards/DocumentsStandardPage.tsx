@@ -35,6 +35,11 @@ const tools = [
     href: "/tools/business-card-team",
     component: "BusinessCardTeamSection.tsx",
   },
+  {
+    key: "printableImage",
+    href: "/tools/printable-image",
+    component: "PrintableImageSection.tsx",
+  },
 ];
 
 const DocumentsStandardPage = () => {

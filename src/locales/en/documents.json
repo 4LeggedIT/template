@@ -28,6 +28,10 @@
     "businessCardTeam": {
       "title": "Business Card (Team)",
       "description": "Live-editable team-member cards — front carries the person's details, back carries a vCard QR that saves them as a contact when scanned."
+    },
+    "printableImage": {
+      "title": "Printable Image",
+      "description": "Prints a supplied image (a certificate, sign, or flyer designed elsewhere) full-page, portrait or landscape — the image itself isn't part of this pattern."
     }
   },
   "openLiveExample": "Open live example",
@@ -38,6 +42,7 @@
       "`AdoptionCertificateSection` and `PetMedicalRecordSection` are dedicated, purpose-built components — use them instead of hand-rolling a document layout for these two required document types.",
       "`BusinessCardGenericSection` covers two of the three required business-card documents via a `layout` prop: `\"generic\"` (default) is the front+back two-sheet card; `\"simple\"` is the minimal single-sided card, and needs `logoSrc` to be a white-background or transparent variant since the logo renders unmasked. `BusinessCardTeamSection` is the third — a live-editable form (not a static config-only render like the others) whose back side encodes a per-member vCard QR, not a website-URL QR, so scanning it saves that person as a phone contact. All three share the same `SocialIconRow` treatment: icon-only social links (never plain-text URLs), shown only on the back side, only for platforms actually configured.",
       "For any other printable document (foster agreement, volunteer agreement, educational guide, etc.), use `DocumentLayout` as a generic wrapper (`title`, `orgName`, `logoSrc`, `children`) rather than duplicating the print page shell — no live example above, since it renders whatever content a site passes as children, but the component exists and follows the same conventions as the two dedicated ones.",
+      "`PrintableImageSection` prints a supplied image full-page instead of hand-rolling document markup — for a certificate, sign, or flyer that was designed elsewhere (e.g. exported from a design tool) rather than built from `.doc-page` markup. The image is a required `imageSrc`/`imageAlt` prop, never bundled with the pattern itself. `orientation` (`\"portrait\"` default or `\"landscape\"`) sets the default Letter page size; `pageWidthIn`/`pageHeightIn` override it for a custom page size (e.g. a 5x7 card), and `fit` (`\"contain\"` default, or `\"cover\"` to fill edge-to-edge and crop) controls how the image fills that box. `printInstructions` is required and should describe the actual paper stock/media (e.g. \"Print on cardstock for best results.\"), not just \"Print on Letter paper.\" Opt-in, not part of the required baseline set — use it per document, wherever a site has a pre-designed image to print.",
       "All of these components render a self-contained, full-viewport `.doc-body`/`.doc-page` layout with its own `@page` print-size rule — like the Kennel & Display Tools, these are not meant to be embedded inside a normal page layout, and their routes are mounted outside the shared `SiteLayout`/`AppShell` wrapper so no site header or footer prints alongside the document.",
       "Every config comes from one shared `PrintableDocConfig` shape (`printable-doc-config.ts`): `orgName`, `orgTagline`, `logoSrc`, `adoptUrl`, `fosterUrl`, `contact`, optional `donation`, optional `social`. Build one config per site and reuse it across every document page — never duplicate org details per document.",
       "`src/styles/documents.css` holds the shared print-optimized styling; sites override its CSS variables (`--doc-primary`, `--doc-accent`, etc.) for brand colors, never the layout rules themselves.",
@@ -45,7 +50,7 @@
       "A document offered in both print and digital form should link both from one `/documents` index row, not two separate rows: the primary link goes to the print version, and each digital counterpart appears as a small `.doc-index-variant` pill (e.g. \"E-Sign Version\") inline next to it, wired via the item's optional `variants: { label, to }[]`.",
       "Document routes must be excluded from prerender/sitemap discovery via the `/documents` prefix in `PRERENDER_EXCLUDE_PREFIXES`/`SITEMAP_EXCLUDE_PREFIXES` on a real site (this template's own `/tools/*` documents examples are excluded the same way its other `/tools/*` routes are, for the same self-contained-page reason).",
       "When a print document's content changes, refresh its public PDF with `npm run gen:document-pdf -- <slug>` (`tools/gen-document-pdf.mjs`, requires the dev/preview server already running) instead of a manual browser Print-to-PDF — it renders the print-mode `/documents/<slug>` route (never a `-digital` variant) via a local Chrome/Chromium/Brave/Edge install's headless `--print-to-pdf` and writes straight to `public/documents/<slug>.pdf`, the exact file the Resources page (`src/pages/Resources.tsx`) links for download.",
-      "Components: `template/src/components/patterns/DocumentsIndexSection.tsx`, `AdoptionCertificateSection.tsx`, `PetMedicalRecordSection.tsx`, `BusinessCardGenericSection.tsx`, `BusinessCardTeamSection.tsx`, `DocumentLayout.tsx`, `printable-doc-config.ts`"
+      "Components: `template/src/components/patterns/DocumentsIndexSection.tsx`, `AdoptionCertificateSection.tsx`, `PetMedicalRecordSection.tsx`, `BusinessCardGenericSection.tsx`, `BusinessCardTeamSection.tsx`, `PrintableImageSection.tsx`, `DocumentLayout.tsx`, `printable-doc-config.ts`"
     ]
   }
 }
