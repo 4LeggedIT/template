@@ -12,6 +12,10 @@ export type SuccessStoryItem = PetProfile & {
   name: string;
   imageSrc: string;
   imageAlt?: string;
+  /** Fine-tune framing for `fit="cover"` (the section-level default) — e.g. "50% 0%" to favor
+   * the top of a portrait/off-center photo instead of the center-cropped default. Ignored in
+   * `fit="contain"` mode, where the full image is always shown uncropped. */
+  imageObjectPosition?: string;
   petType?: string;
   ageLabel?: string;
   ageLabelOverride?: string;
@@ -44,6 +48,11 @@ type SuccessStoriesSectionProps = {
   showStoryCtas?: boolean;
   columns?: 2 | 3;
   contentWidth?: "full" | "contained";
+  /** "cover" (default) center-crops every photo into a square — fine for evenly-framed
+   * portraits, but clips off-center subjects (e.g. a candid photo, a video still). "contain"
+   * shows the full image uncropped, letterboxed as needed. See MediaGallerySection's identical
+   * `fit` prop / TPL-029 for precedent. */
+  fit?: "cover" | "contain";
   className?: string;
   emptyMessage?: string;
   labels?: {
@@ -64,6 +73,7 @@ const SuccessStoriesSection = ({
   showStoryCtas = true,
   columns = 3,
   contentWidth = "full",
+  fit = "cover",
   className,
   emptyMessage = "Success stories coming soon.",
   labels = {},
@@ -98,40 +108,42 @@ const SuccessStoriesSection = ({
                 )}
               >
                 <div className="relative">
-                  {story.storyHref ? (
-                    story.storyHref.startsWith("/") ? (
-                      <Link to={story.storyHref} aria-label={story.storyCtaLabel ?? readStoryLabel}>
+                  {(() => {
+                    const image =
+                      fit === "contain" ? (
+                        <div className="flex aspect-square items-center justify-center overflow-hidden bg-muted">
+                          <img
+                            src={story.imageSrc}
+                            alt={story.imageAlt ?? story.name}
+                            className="h-full w-full object-contain"
+                            loading="lazy"
+                          />
+                        </div>
+                      ) : (
                         <AspectRatio ratio={1}>
                           <img
                             src={story.imageSrc}
                             alt={story.imageAlt ?? story.name}
                             className="h-full w-full object-cover"
+                            style={{ objectPosition: story.imageObjectPosition ?? "50% 50%" }}
                             loading="lazy"
                           />
                         </AspectRatio>
-                      </Link>
+                      );
+                    return story.storyHref ? (
+                      story.storyHref.startsWith("/") ? (
+                        <Link to={story.storyHref} aria-label={story.storyCtaLabel ?? readStoryLabel}>
+                          {image}
+                        </Link>
+                      ) : (
+                        <a href={story.storyHref} target="_blank" rel="noreferrer" aria-label={story.storyCtaLabel ?? readStoryLabel}>
+                          {image}
+                        </a>
+                      )
                     ) : (
-                      <a href={story.storyHref} target="_blank" rel="noreferrer" aria-label={story.storyCtaLabel ?? readStoryLabel}>
-                        <AspectRatio ratio={1}>
-                          <img
-                            src={story.imageSrc}
-                            alt={story.imageAlt ?? story.name}
-                            className="h-full w-full object-cover"
-                            loading="lazy"
-                          />
-                        </AspectRatio>
-                      </a>
-                    )
-                  ) : (
-                    <AspectRatio ratio={1}>
-                      <img
-                        src={story.imageSrc}
-                        alt={story.imageAlt ?? story.name}
-                        className="h-full w-full object-cover"
-                        loading="lazy"
-                      />
-                    </AspectRatio>
-                  )}
+                      image
+                    );
+                  })()}
                   <div className="pointer-events-none absolute left-3 top-3 inline-flex items-center gap-1 rounded-full bg-primary px-2.5 py-1 text-[11px] font-medium text-primary-foreground">
                     <Heart className="h-3 w-3 fill-current" />
                     <span>{story.badgeLabel ?? adoptedLabel}</span>
