@@ -8,6 +8,9 @@ export type JourneyTimelineStage = {
   imageAlt?: string;
   /** When set, renders a native <video> (poster={imageSrc}) instead of a plain image. */
   videoSrc?: string;
+  /** Optional credit links rendered below the description — e.g. partner rescues named in the
+   * stage's own text (`description` is plain text, so it can't carry inline links itself). */
+  partnerLinks?: { label: string; href: string }[];
 };
 
 type JourneyTimelineProps = {
@@ -28,6 +31,23 @@ const JourneyTimeline = ({ stages, className }: JourneyTimelineProps) => {
             {stage.date ? <span className="text-xs font-medium uppercase tracking-wide text-muted-foreground">{stage.date}</span> : null}
           </div>
           <p className="mt-2 text-sm text-muted-foreground">{stage.description}</p>
+          {stage.partnerLinks?.length ? (
+            <p className="mt-2 flex flex-wrap gap-x-1.5 gap-y-1 text-sm text-muted-foreground">
+              {stage.partnerLinks.map((partner, partnerIndex) => (
+                <span key={partner.href}>
+                  <a
+                    href={partner.href}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="font-medium text-primary underline underline-offset-4 hover:text-primary/80"
+                  >
+                    {partner.label}
+                  </a>
+                  {partnerIndex < stage.partnerLinks!.length - 1 ? "," : ""}
+                </span>
+              ))}
+            </p>
+          ) : null}
           {stage.videoSrc ? (
             <figure className="mt-4 overflow-hidden rounded-2xl border border-border bg-card sm:max-w-sm">
               <video controls playsInline preload="metadata" poster={stage.imageSrc} className="block h-auto w-full">
