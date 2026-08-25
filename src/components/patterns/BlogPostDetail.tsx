@@ -349,8 +349,14 @@ const BlogPostDetail = ({
       </header>
 
       {post.videoSrc ? (
-        <div className="mb-8 overflow-hidden rounded-2xl">
-          <video controls playsInline preload="metadata" poster={post.imageSrc} className="block h-auto w-full">
+        <div className="mb-8 flex justify-center">
+          <video
+            controls
+            playsInline
+            preload="metadata"
+            poster={post.imageSrc}
+            className="block max-h-[520px] w-auto max-w-full rounded-2xl"
+          >
             <source src={post.videoSrc} type="video/mp4" />
           </video>
         </div>
