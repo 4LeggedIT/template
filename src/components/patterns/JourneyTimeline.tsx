@@ -49,8 +49,14 @@ const JourneyTimeline = ({ stages, className }: JourneyTimelineProps) => {
             </p>
           ) : null}
           {stage.videoSrc ? (
-            <figure className="mt-4 overflow-hidden rounded-2xl border border-border bg-card sm:max-w-sm">
-              <video controls playsInline preload="metadata" poster={stage.imageSrc} className="block h-auto w-full">
+            <figure className="mt-4 flex justify-center overflow-hidden rounded-2xl border border-border bg-card sm:max-w-sm">
+              <video
+                controls
+                playsInline
+                preload="metadata"
+                poster={stage.imageSrc}
+                className="block max-h-[420px] w-auto max-w-full"
+              >
                 <source src={stage.videoSrc} type="video/mp4" />
               </video>
             </figure>
