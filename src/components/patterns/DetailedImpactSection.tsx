@@ -75,6 +75,14 @@ export type DetailedImpactSectionLabels = {
   runningTotalLabel?: string;
 };
 
+/**
+ * "side" (default, matches original behavior) — image in a fixed-width column, always on the
+ * left. "top" — full-width image above the card content. "alternating" — same fixed-column
+ * layout as "side", but flips left/right by card index (odd cards mirror even ones). Mirrors
+ * `EventsNewsImageLayout`'s "top" | "side" | "alternating" convention exactly (see TPL-033).
+ */
+export type DetailedImpactImageLayout = "side" | "top" | "alternating";
+
 type DetailedImpactSectionProps = {
   title?: string;
   description?: string;
@@ -93,6 +101,8 @@ type DetailedImpactSectionProps = {
   labels?: DetailedImpactSectionLabels;
   /** BCP 47 tag (e.g. "es-US") for date formatting — mirrors EventBanner's `locale` prop exactly. */
   locale?: string;
+  /** Defaults to "side" — matches the original, only-ever layout. See `DetailedImpactImageLayout`. */
+  imageLayout?: DetailedImpactImageLayout;
 };
 
 const isExternalContentHref = (href: string) => !href.startsWith("/");
@@ -202,6 +212,7 @@ const DetailedImpactSection = ({
   className,
   labels = {},
   locale = DEFAULT_LOCALE,
+  imageLayout = "side",
 }: DetailedImpactSectionProps) => {
   const {
     emptyMessage = "No updates shared yet.",
@@ -237,62 +248,88 @@ const DetailedImpactSection = ({
 
       {visible.length ? (
         <ol className="space-y-6">
-          {visible.map((entry) => {
+          {visible.map((entry, index) => {
             const activeContribution = totalForCategoryId
               ? entry.contributions.find((c) => c.categoryId === totalForCategoryId)
               : undefined;
             const bodyText = activeContribution?.note ?? entry.summary;
             const external = entry.relatedHref ? isExternalContentHref(entry.relatedHref) : false;
+            const isTopLayout = imageLayout === "top";
+            const imageOnRight = imageLayout === "alternating" && index % 2 === 1;
+
+            const image = entry.imageSrc ? (
+              <div
+                className={cn(
+                  "overflow-hidden bg-muted",
+                  isTopLayout ? "block" : "h-40 sm:h-full",
+                )}
+              >
+                <img
+                  src={entry.imageSrc}
+                  alt={entry.imageAlt ?? entry.title}
+                  loading="lazy"
+                  decoding="async"
+                  className={cn("object-contain", isTopLayout ? "w-full max-h-[420px]" : "h-full w-full")}
+                />
+              </div>
+            ) : null;
+
+            const cardBody = (
+              <CardContent className="flex flex-col gap-3 p-6">
+                <span className="inline-flex items-center gap-1.5 text-xs font-medium uppercase tracking-wide text-muted-foreground">
+                  <Calendar className="h-3.5 w-3.5" aria-hidden="true" />
+                  {formatDetailedImpactDateLabel(entry, locale)}
+                </span>
+                <h3 className="text-xl font-semibold tracking-tight">{entry.title}</h3>
+                <p className="text-sm text-muted-foreground">{bodyText}</p>
+                <div className="flex flex-wrap gap-2">
+                  {entry.contributions.map((contribution) => (
+                    <ContributionBadge
+                      key={contribution.categoryId}
+                      contribution={contribution}
+                      categories={categories}
+                      categoryBasePath={categoryBasePath}
+                    />
+                  ))}
+                </div>
+                {entry.relatedHref ? (
+                  <Button asChild variant="link" className="w-fit px-0">
+                    {external ? (
+                      <a href={entry.relatedHref} target="_blank" rel="noopener noreferrer" className="gap-2">
+                        {readMoreLabel}
+                        <ArrowRight className="h-4 w-4" />
+                      </a>
+                    ) : (
+                      <Link to={entry.relatedHref} className="gap-2">
+                        {readMoreLabel}
+                        <ArrowRight className="h-4 w-4" />
+                      </Link>
+                    )}
+                  </Button>
+                ) : null}
+              </CardContent>
+            );
 
             return (
               <li key={entry.id}>
                 <Card className="overflow-hidden border-border/80">
-                  <div className={cn("grid gap-0", entry.imageSrc ? "sm:grid-cols-[220px_1fr]" : undefined)}>
-                    {entry.imageSrc ? (
-                      <div className="h-40 overflow-hidden sm:h-full">
-                        <img
-                          src={entry.imageSrc}
-                          alt={entry.imageAlt ?? entry.title}
-                          loading="lazy"
-                          decoding="async"
-                          className="h-full w-full object-cover"
-                        />
-                      </div>
-                    ) : null}
-                    <CardContent className="flex flex-col gap-3 p-6">
-                      <span className="inline-flex items-center gap-1.5 text-xs font-medium uppercase tracking-wide text-muted-foreground">
-                        <Calendar className="h-3.5 w-3.5" aria-hidden="true" />
-                        {formatDetailedImpactDateLabel(entry, locale)}
-                      </span>
-                      <h3 className="text-xl font-semibold tracking-tight">{entry.title}</h3>
-                      <p className="text-sm text-muted-foreground">{bodyText}</p>
-                      <div className="flex flex-wrap gap-2">
-                        {entry.contributions.map((contribution) => (
-                          <ContributionBadge
-                            key={contribution.categoryId}
-                            contribution={contribution}
-                            categories={categories}
-                            categoryBasePath={categoryBasePath}
-                          />
-                        ))}
-                      </div>
-                      {entry.relatedHref ? (
-                        <Button asChild variant="link" className="w-fit px-0">
-                          {external ? (
-                            <a href={entry.relatedHref} target="_blank" rel="noopener noreferrer" className="gap-2">
-                              {readMoreLabel}
-                              <ArrowRight className="h-4 w-4" />
-                            </a>
-                          ) : (
-                            <Link to={entry.relatedHref} className="gap-2">
-                              {readMoreLabel}
-                              <ArrowRight className="h-4 w-4" />
-                            </Link>
-                          )}
-                        </Button>
-                      ) : null}
-                    </CardContent>
-                  </div>
+                  {isTopLayout ? (
+                    <>
+                      {image}
+                      {cardBody}
+                    </>
+                  ) : (
+                    <div
+                      className={cn(
+                        "grid gap-0",
+                        entry.imageSrc ? (imageOnRight ? "sm:grid-cols-[1fr_220px]" : "sm:grid-cols-[220px_1fr]") : undefined,
+                      )}
+                    >
+                      {entry.imageSrc && !imageOnRight ? image : null}
+                      {cardBody}
+                      {entry.imageSrc && imageOnRight ? image : null}
+                    </div>
+                  )}
                 </Card>
               </li>
             );

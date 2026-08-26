@@ -113,6 +113,38 @@ describe("DetailedImpactSection", () => {
       "/impact/feeding-supplies",
     );
   });
+
+  const withImages: DetailedImpactEntry[] = [
+    { ...entries[0], imageSrc: "/a.jpg", imageAlt: "First" },
+    { ...entries[1], imageSrc: "/b.jpg", imageAlt: "Second" },
+  ];
+
+  it("imageLayout defaults to side: image column always comes before the card content", () => {
+    const { container } = renderWithRouter(<DetailedImpactSection entries={withImages} categories={categories} />);
+
+    const grid = container.querySelector("img")?.closest(".grid");
+    expect(grid?.firstElementChild?.querySelector("img")).toBeTruthy();
+  });
+
+  it('imageLayout="alternating" flips the image side by card index', () => {
+    const { container } = renderWithRouter(
+      <DetailedImpactSection entries={withImages} categories={categories} imageLayout="alternating" />,
+    );
+
+    const grids = container.querySelectorAll(".grid");
+    // Newest first: index 0 (even) keeps image first; index 1 (odd) moves image last.
+    expect(grids[0].firstElementChild?.querySelector("img")).toBeTruthy();
+    expect(grids[1].lastElementChild?.querySelector("img")).toBeTruthy();
+  });
+
+  it('imageLayout="top" stacks the image above the card content, no side grid', () => {
+    const { container } = renderWithRouter(
+      <DetailedImpactSection entries={withImages} categories={categories} imageLayout="top" />,
+    );
+
+    expect(container.querySelector(".grid")).toBeNull();
+    expect(container.querySelectorAll("img")).toHaveLength(2);
+  });
 });
 
 describe("DetailedImpactSection helpers", () => {
