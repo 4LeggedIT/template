@@ -17,7 +17,7 @@
     "blog": { "title": "Patrón de Blog", "description": "Patrón compartido de lista de publicaciones y detalle de publicación que cubre tanto guías técnicas como contenido de historias de rescate con fotos reales." },
     "journeyTimeline": { "title": "Patrón de Línea de Tiempo del Trayecto", "description": "Línea de tiempo vertical de rescate a la actualidad para la página de detalle de un perro, una tarjeta por etapa." },
     "successStories": { "title": "Patrón de Historias de Éxito", "description": "Módulo de tarjetas narrativas para resultados de adopción e historias felices." },
-    "testimonials": { "title": "Patrón de Testimonios", "description": "Patrones de testimonios destacados y en cuadrícula para secciones reutilizables de prueba social." },
+    "testimonials": { "title": "Patrón de Testimonios", "description": "Patrones de testimonios destacados, en cuadrícula y de formato largo para secciones reutilizables de prueba social, con valoración por estrellas opcional." },
     "flyerLibrary": { "title": "Patrón de Biblioteca de Volantes", "description": "Biblioteca de volantes de concientización atemporales, sin fecha, con filtrado por categoría — distinta de eventos/noticias con fecha." },
     "mediaGallery": { "title": "Patrón de Galería de Medios", "description": "Galería unificada de fotos y videos con filtrado opcional y renderizado seguro sin JS." },
     "faqAccordion": { "title": "Patrón de Acordeón de Preguntas Frecuentes", "description": "Esquema canónico de contenido de preguntas frecuentes, patrón de datos i18n, y requisito de JSON-LD derivado." },

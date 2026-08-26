@@ -55,7 +55,11 @@
       "El contenido de texto se renderiza en el servidor sin JS — conserve el renderizado SSR, los testimonios deben permanecer legibles sin JS.",
       "Usa `layout=\"longform\"` para testimonios con extensión de carta: muestra párrafos reales y elige su único elemento con `featuredIndex`, nunca al azar.",
       "Da a cualquier testimonio largo mostrado en `grid`/`featured` un `excerpt` escrito por una persona; nunca recortes una cita desde el código.",
+      "Asigna `rating` solo cuando la reseña original realmente lo incluía: nunca lo deduzcas ni lo promedies, y nunca lo publiques como JSON-LD `Review` (los buscadores no permiten marcado de reseñas sobre uno mismo).",
       "Componente: `template/src/components/patterns/TestimonialsSection.tsx`"
     ]
+  },
+  "labels": {
+    "ratingLabel": "Valorado con {rating} de 5 estrellas"
   }
 }

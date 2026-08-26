@@ -12,6 +12,17 @@ export type TestimonialItem = {
   authorMeta?: string;
   emoji?: string;
   /**
+   * Star rating out of 5, exactly as the reviewer gave it on the source platform.
+   * Optional and additive: omit it and no stars render, which is every testimonial
+   * in the fleet today. Never infer, average, or invent a value — only set this when
+   * the source review actually carried a rating.
+   *
+   * Deliberately NOT emitted as `Review`/`AggregateRating` JSON-LD: search engines
+   * disallow self-serving review markup on your own site, so this is a visual
+   * affordance only.
+   */
+  rating?: 1 | 2 | 3 | 4 | 5;
+  /**
    * Author-written short stand-in for `quote`, used by the `grid` and `featured`
    * layouts when the full quote is too long for a card. Falls back to `quote` when
    * omitted, so adding this field never changes an existing call site's output.
@@ -70,7 +81,19 @@ type TestimonialsSectionProps = {
   /** Which single item `featured`/`longform` render. Clamped into range. */
   featuredIndex?: number;
   className?: string;
+  labels?: {
+    /**
+     * Accessible name for a star rating. `{rating}` is substituted with the numeric
+     * value. The English default is for monolingual sites only — a translated site
+     * must pass this from its own `t()`.
+     */
+    ratingLabel?: string;
+  };
 };
+
+const MAX_RATING = 5;
+
+const DEFAULT_RATING_LABEL = "Rated {rating} out of 5 stars";
 
 /**
  * Normalizes authored line endings and splits a long quote into paragraphs.
@@ -108,6 +131,37 @@ const TranslationNote = ({ note, className }: { note?: string; className?: strin
     </p>
   ) : null;
 
+/**
+ * Star rating for one testimonial. Renders nothing without a `rating`, which is the
+ * overwhelming majority of testimonials in the fleet.
+ *
+ * The glyphs are `aria-hidden` and the rating is announced once via the visually
+ * hidden label instead — a screen reader reading out five separate star characters
+ * (or, worse, "black star black star black star") is noise, not information.
+ */
+const StarRating = ({
+  rating,
+  label,
+  className,
+}: {
+  rating?: number;
+  label: string;
+  className?: string;
+}) => {
+  if (!rating) return null;
+  const filled = Math.max(1, Math.min(Math.round(rating), MAX_RATING));
+
+  return (
+    <p className={cn("flex items-center", className)}>
+      <span aria-hidden="true" className="text-base leading-none tracking-[0.15em] text-primary">
+        {"\u2605".repeat(filled)}
+        <span className="text-muted-foreground/40">{"\u2606".repeat(MAX_RATING - filled)}</span>
+      </span>
+      <span className="sr-only">{label.replace("{rating}", String(filled))}</span>
+    </p>
+  );
+};
+
 const TestimonialsSection = ({
   title,
   description,
@@ -117,7 +171,9 @@ const TestimonialsSection = ({
   featuredStrategy = "randomOnLoad",
   featuredIndex = 0,
   className,
+  labels,
 }: TestimonialsSectionProps) => {
+  const ratingLabel = labels?.ratingLabel ?? DEFAULT_RATING_LABEL;
   const [clientFeaturedIndex, setClientFeaturedIndex] = useState(featuredIndex);
 
   useEffect(() => {
@@ -203,8 +259,9 @@ const TestimonialsSection = ({
                 ))}
               </blockquote>
 
-              {featuredItem.author || featuredItem.authorMeta || featuredItem.emoji ? (
+              {featuredItem.author || featuredItem.authorMeta || featuredItem.emoji || featuredItem.rating ? (
                 <figcaption className="relative z-10 mt-8 max-w-[68ch] border-t border-border pt-6">
+                  <StarRating rating={featuredItem.rating} label={ratingLabel} className="mb-3" />
                   {featuredItem.author || featuredItem.emoji ? (
                     <p className="text-base font-semibold text-foreground">
                       {featuredItem.author}
@@ -249,8 +306,9 @@ const TestimonialsSection = ({
                 <p className="whitespace-pre-line pl-8 text-base italic leading-7 text-foreground md:text-lg">
                   "{featuredItem.excerpt ?? featuredItem.quote}"
                 </p>
-                {(featuredItem.author || featuredItem.authorMeta || featuredItem.emoji) ? (
+                {(featuredItem.author || featuredItem.authorMeta || featuredItem.emoji || featuredItem.rating) ? (
                   <div className="flex flex-wrap items-center gap-2 pl-8 text-sm text-muted-foreground">
+                    <StarRating rating={featuredItem.rating} label={ratingLabel} className="basis-full" />
                     {featuredItem.author ? (
                       <span className="font-semibold text-foreground">— {featuredItem.author}</span>
                     ) : null}
@@ -274,8 +332,9 @@ const TestimonialsSection = ({
                 <p className="whitespace-pre-line text-sm leading-6 text-foreground">
                   "{testimonial.excerpt ?? testimonial.quote}"
                 </p>
-                {(testimonial.author || testimonial.authorMeta || testimonial.emoji) ? (
+                {(testimonial.author || testimonial.authorMeta || testimonial.emoji || testimonial.rating) ? (
                   <div className="flex flex-wrap items-center gap-1 text-xs text-muted-foreground">
+                    <StarRating rating={testimonial.rating} label={ratingLabel} className="basis-full" />
                     {testimonial.author ? (
                       <p className="font-medium text-foreground">{testimonial.author}</p>
                     ) : null}

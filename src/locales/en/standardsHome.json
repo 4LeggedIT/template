@@ -17,7 +17,7 @@
     "blog": { "title": "Blog Pattern", "description": "Shared post list and post-detail pattern covering both tech guides and rescue-story content with real photos." },
     "journeyTimeline": { "title": "Journey Timeline Pattern", "description": "Vertical rescue-to-today timeline for an individual dog's detail page, one card per stage." },
     "successStories": { "title": "Success Stories Pattern", "description": "Narrative story-card module for adoption outcomes and happy tails." },
-    "testimonials": { "title": "Testimonials Pattern", "description": "Featured and grid testimonial patterns for reusable social-proof sections." },
+    "testimonials": { "title": "Testimonials Pattern", "description": "Featured, grid and longform testimonial patterns for reusable social-proof sections, with optional star ratings." },
     "flyerLibrary": { "title": "Flyer Library Pattern", "description": "Timeless, undated awareness flyer library with category filtering — distinct from dated events/news." },
     "mediaGallery": { "title": "Media Gallery Pattern", "description": "Unified photo/video gallery with optional filtering and no-JS-safe rendering." },
     "faqAccordion": { "title": "FAQ Accordion Pattern", "description": "Canonical FAQ content schema, i18n data pattern, and derived JSON-LD requirement." },

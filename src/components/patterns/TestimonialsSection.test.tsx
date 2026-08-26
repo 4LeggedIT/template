@@ -156,3 +156,61 @@ describe("TestimonialsSection translation disclosure", () => {
     expect(screen.getByRole("note")).toBeInTheDocument();
   });
 });
+
+describe("star rating", () => {
+  const rated: TestimonialItem = {
+    id: "rated",
+    quote: "Four solid stars.",
+    author: "Carly",
+    rating: 4,
+  };
+
+  it.each(["longform", "featured", "grid"] as const)("renders the rating in the %s layout", (layout) => {
+    render(<TestimonialsSection testimonials={[rated]} layout={layout} />);
+    expect(screen.getByText("Rated 4 out of 5 stars")).toBeInTheDocument();
+  });
+
+  it("fills to the rating and leaves the remainder empty", () => {
+    render(<TestimonialsSection testimonials={[rated]} layout="longform" />);
+    // Glyphs are aria-hidden, so assert on the rendered text rather than a role.
+    expect(screen.getByText("★★★★")).toBeInTheDocument();
+    expect(screen.getByText("☆")).toBeInTheDocument();
+  });
+
+  it("hides the glyphs from assistive tech and announces the rating once", () => {
+    const { container } = render(<TestimonialsSection testimonials={[rated]} layout="longform" />);
+    expect(container.querySelector('[aria-hidden="true"].tracking-\\[0\\.15em\\]')).not.toBeNull();
+    expect(screen.getAllByText(/out of 5 stars/)).toHaveLength(1);
+  });
+
+  it("renders nothing when the item carries no rating", () => {
+    const { rating: _omitted, ...unrated } = rated;
+    render(<TestimonialsSection testimonials={[unrated]} layout="longform" />);
+    expect(screen.queryByText(/out of 5 stars/)).toBeNull();
+    expect(screen.queryByText(/★/)).toBeNull();
+  });
+
+  it("renders the rating even when the item has no attribution to sit under", () => {
+    render(
+      <TestimonialsSection testimonials={[{ id: "anon", quote: "No name.", rating: 5 }]} layout="longform" />,
+    );
+    expect(screen.getByText("Rated 5 out of 5 stars")).toBeInTheDocument();
+  });
+
+  it("substitutes {rating} into a call-site label override", () => {
+    render(
+      <TestimonialsSection
+        testimonials={[rated]}
+        layout="longform"
+        labels={{ ratingLabel: "Valoracion: {rating} de 5 estrellas" }}
+      />,
+    );
+    expect(screen.getByText("Valoracion: 4 de 5 estrellas")).toBeInTheDocument();
+  });
+
+  it("rates only the items that carry a rating in a mixed grid", () => {
+    const unrated: TestimonialItem = { id: "unrated", quote: "No stars here.", author: "Sam" };
+    render(<TestimonialsSection testimonials={[rated, unrated]} layout="grid" columns={2} />);
+    expect(screen.getAllByText(/out of 5 stars/)).toHaveLength(1);
+  });
+});

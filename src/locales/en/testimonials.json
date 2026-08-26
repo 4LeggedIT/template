@@ -55,7 +55,11 @@
       "Text content renders server-side without JS — preserve SSR rendering, testimonials must remain readable without JS.",
       "Opt into `layout=\"longform\"` for letter-length testimonials — it renders real paragraphs and picks its single item from `featuredIndex`, never at random.",
       "Give any long testimonial shown in `grid`/`featured` an author-written `excerpt`; never truncate a quote in code.",
+      "Set `rating` only when the source review actually carried one — never infer or average it, and never emit it as `Review` JSON-LD (search engines disallow self-serving review markup).",
       "Component: `template/src/components/patterns/TestimonialsSection.tsx`"
     ]
+  },
+  "labels": {
+    "ratingLabel": "Rated {rating} out of 5 stars"
   }
 }

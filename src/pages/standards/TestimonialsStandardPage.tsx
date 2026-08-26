@@ -14,6 +14,7 @@ const TestimonialsStandardPage = () => {
       author: t("testimonials:items.t1.author"),
       authorMeta: t("testimonials:items.t1.authorMeta"),
       emoji: "🐾",
+      rating: 5,
     },
     {
       id: "t-2",
@@ -21,6 +22,7 @@ const TestimonialsStandardPage = () => {
       author: t("testimonials:items.t2.author"),
       authorMeta: t("testimonials:items.t2.authorMeta"),
       emoji: "❤️",
+      rating: 4,
     },
     {
       id: "t-3",
@@ -37,6 +39,7 @@ const TestimonialsStandardPage = () => {
       pullQuote: t("testimonials:items.longform.pullQuote"),
       author: t("testimonials:items.longform.author"),
       authorMeta: t("testimonials:items.longform.authorMeta"),
+      rating: 5,
     },
   ];
 
@@ -45,7 +48,7 @@ const TestimonialsStandardPage = () => {
       <SEOHead
         title="Testimonials Pattern"
         canonicalPath="/standards/testimonials"
-        description="Standardized testimonials module for featured and grid content."
+        description="Standardized testimonials module for featured, grid and longform content, with optional star ratings."
       />
       <PageHero
         eyebrow={t("common:nav.standards")}
@@ -67,6 +70,7 @@ const TestimonialsStandardPage = () => {
             testimonials={sampleTestimonials}
             layout="featured"
             featuredStrategy="randomOnLoad"
+            labels={{ ratingLabel: t("testimonials:labels.ratingLabel") }}
           />
         </div>
 
@@ -78,6 +82,7 @@ const TestimonialsStandardPage = () => {
             testimonials={sampleTestimonials}
             layout="grid"
             columns={3}
+            labels={{ ratingLabel: t("testimonials:labels.ratingLabel") }}
           />
         </div>
 
@@ -88,6 +93,7 @@ const TestimonialsStandardPage = () => {
             title={t("testimonials:sections.longform.sectionTitle")}
             testimonials={longformSample}
             layout="longform"
+            labels={{ ratingLabel: t("testimonials:labels.ratingLabel") }}
           />
         </div>
 
