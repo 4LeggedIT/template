@@ -3,6 +3,7 @@ import { Quote } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { safeContentUrl } from "@/lib/safe-url";
+import type { ContentLocale } from "@/lib/localized-content";
 
 export type TestimonialItem = {
   id: string;
@@ -32,6 +33,28 @@ export type TestimonialItem = {
    * http/https/mailto/tel renders as plain text instead of a link.
    */
   authorHref?: string;
+  /**
+   * The language this person actually wrote in. Content metadata, not presentation:
+   * the module never renders it and never infers a default from it. A bilingual call
+   * site compares it against the active UI language to decide whether to pass
+   * `translationNote` — see `isTranslatedFrom` in `@/lib/localized-content`.
+   *
+   * Leave it unset on monolingual sites, where there is nothing to disclose.
+   */
+  sourceLocale?: ContentLocale;
+  /**
+   * Rendered in this testimonial's footer when the quote on screen is our translation
+   * rather than the author's own words. A reader seeing quotation marks attributed by
+   * name to a real person deserves to be told when the words in them are not the ones
+   * that person wrote.
+   *
+   * The call site passes the finished string because it is the only place that knows
+   * both the author's original language and the active UI language. Nothing here
+   * assumes English is the source — a Spanish-authored quote displayed in English is
+   * just as much a translation as the reverse, and supplies its own note. Omit it and
+   * nothing renders, so untranslated items in the same list are unaffected.
+   */
+  translationNote?: string;
 };
 
 export type TestimonialsLayout = "grid" | "featured" | "longform";
@@ -73,6 +96,17 @@ export const splitQuoteParagraphs = (quote: string): string[] =>
     .split(/\n{2,}/)
     .map((paragraph) => paragraph.trim())
     .filter(Boolean);
+
+/**
+ * Footer disclosure for a translated quote. Renders nothing when the item carries no
+ * note, which is every untranslated testimonial and every monolingual site.
+ */
+const TranslationNote = ({ note, className }: { note?: string; className?: string }) =>
+  note ? (
+    <p role="note" className={cn("text-xs text-muted-foreground", className)}>
+      {note}
+    </p>
+  ) : null;
 
 const TestimonialsSection = ({
   title,
@@ -198,6 +232,11 @@ const TestimonialsSection = ({
                   ) : null}
                 </figcaption>
               ) : null}
+
+              <TranslationNote
+                note={featuredItem.translationNote}
+                className="relative z-10 mt-6 max-w-[68ch]"
+              />
             </CardContent>
           </Card>
         </figure>
@@ -219,6 +258,7 @@ const TestimonialsSection = ({
                     {featuredItem.emoji ? <span aria-hidden="true">{featuredItem.emoji}</span> : null}
                   </div>
                 ) : null}
+                <TranslationNote note={featuredItem.translationNote} className="pl-8" />
               </div>
             </CardContent>
           </Card>
@@ -243,6 +283,7 @@ const TestimonialsSection = ({
                     {testimonial.emoji ? <span aria-hidden="true">{testimonial.emoji}</span> : null}
                   </div>
                 ) : null}
+                <TranslationNote note={testimonial.translationNote} />
               </CardContent>
             </Card>
           ))}

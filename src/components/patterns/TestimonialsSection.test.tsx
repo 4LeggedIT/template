@@ -107,3 +107,52 @@ describe("TestimonialsSection longform", () => {
     expect(container.textContent).toContain("Only the quote.");
   });
 });
+
+describe("TestimonialsSection translation disclosure", () => {
+  const translated: TestimonialItem = {
+    id: "translated",
+    quote: "Traduccion mostrada al lector.",
+    author: "Natalie",
+    authorMeta: "Adoptante",
+    sourceLocale: "en",
+    translationNote: "Traducido del original en ingles.",
+  };
+
+  it.each(["longform", "featured", "grid"] as const)("renders the note in the %s footer", (layout) => {
+    render(<TestimonialsSection testimonials={[translated]} layout={layout} />);
+    expect(screen.getByRole("note")).toHaveTextContent("Traducido del original en ingles.");
+  });
+
+  it("renders nothing when the item carries no note", () => {
+    const { translationNote: _omitted, ...untranslated } = translated;
+    render(<TestimonialsSection testimonials={[untranslated]} layout="longform" />);
+    expect(screen.queryByRole("note")).toBeNull();
+  });
+
+  it("discloses only the translated items in a mixed grid", () => {
+    // The direction is the call site's to decide, and it is not always en -> es:
+    // a Spanish-authored quote read in English is equally a translation.
+    const fromSpanish: TestimonialItem = {
+      id: "from-spanish",
+      quote: "Translation shown to the reader.",
+      author: "Mateo",
+      sourceLocale: "es",
+      translationNote: "Translated from the original Spanish.",
+    };
+    const original: TestimonialItem = { id: "original", quote: "The author's own words.", author: "Sam" };
+    render(<TestimonialsSection testimonials={[translated, fromSpanish, original]} layout="grid" columns={3} />);
+
+    const notes = screen.getAllByRole("note").map((node) => node.textContent);
+    expect(notes).toEqual(["Traducido del original en ingles.", "Translated from the original Spanish."]);
+  });
+
+  it("renders the note even when the item has no attribution to sit under", () => {
+    render(
+      <TestimonialsSection
+        testimonials={[{ id: "anon", quote: "Sin atribucion.", translationNote: "Traducido del original en ingles." }]}
+        layout="longform"
+      />,
+    );
+    expect(screen.getByRole("note")).toBeInTheDocument();
+  });
+});
