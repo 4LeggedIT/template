@@ -33,6 +33,8 @@ export type SiteConfig = {
     ein?: string;
     location?: string;
   };
+  /** Max upcoming events shown at once in the homepage `EventBanner` strip. Defaults to 2 (`EventBanner`'s own default) when unset. */
+  eventBannerMaxVisible?: number;
   name: string;
   description: string;
 };
