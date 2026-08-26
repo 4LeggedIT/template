@@ -30,6 +30,16 @@ const TestimonialsStandardPage = () => {
     },
   ];
 
+  const longformSample: TestimonialItem[] = [
+    {
+      id: "t-longform",
+      quote: t("testimonials:items.longform.quote"),
+      pullQuote: t("testimonials:items.longform.pullQuote"),
+      author: t("testimonials:items.longform.author"),
+      authorMeta: t("testimonials:items.longform.authorMeta"),
+    },
+  ];
+
   return (
     <>
       <SEOHead
@@ -68,6 +78,16 @@ const TestimonialsStandardPage = () => {
             testimonials={sampleTestimonials}
             layout="grid"
             columns={3}
+          />
+        </div>
+
+        <div className="space-y-3">
+          <h2 className="text-lg font-semibold">{t("testimonials:sections.longform.title")}</h2>
+          <p className="text-sm text-muted-foreground">{t("testimonials:sections.longform.description")}</p>
+          <TestimonialsSection
+            title={t("testimonials:sections.longform.sectionTitle")}
+            testimonials={longformSample}
+            layout="longform"
           />
         </div>
 

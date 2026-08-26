@@ -19,6 +19,12 @@
       "quote": "Nuestro equipo de voluntarios trabaja duro, pero estas historias nos mantienen motivados. Ver a los perros instalarse en hogares llenos de amor lo es todo.",
       "author": "Equipo de Voluntarios",
       "authorMeta": "Miembro de la Comunidad"
+    },
+    "longform": {
+      "quote": "Nunca habíamos sido hogar temporal y, sinceramente, casi no enviamos la solicitud. El formulario preguntaba cuánta experiencia teníamos y la respuesta era ninguna.\n\nAun así, alguien nos devolvió la llamada esa misma tarde.\n\nNos explicó cómo es realmente la primera semana y después nos hizo las preguntas que no se nos había ocurrido hacernos:\n\n\"¿Y si no se adapta?\"\n\"¿Y si a nuestro perro no le cae bien?\"\n\"¿Y si no podemos devolverlo?\"\n\nNadie fingió que sería fácil. Esa es la parte que no esperábamos, y es la razón por la que dijimos que sí.\n\nTres acogidas después, seguimos llamando con preguntas y alguien sigue contestando.",
+      "pullQuote": "Nadie fingió que sería fácil.",
+      "author": "Sam",
+      "authorMeta": "Familia de acogida"
     }
   },
   "sections": {
@@ -31,6 +37,11 @@
       "title": "Cuadrícula",
       "description": "El diseño en cuadrícula funciona para secciones estándar de varias tarjetas.",
       "sectionTitle": "Testimonios en cuadrícula"
+    },
+    "longform": {
+      "title": "Formato largo",
+      "description": "El formato largo muestra un único testimonio con extensión de carta en párrafos reales: sin cursiva, sin comillas literales y con una cita destacada opcional. Las líneas en blanco separan párrafos; un solo salto de línea mantiene agrupadas las líneas consecutivas en un mismo párrafo.",
+      "sectionTitle": "Testimonio en formato largo"
     }
   },
   "standard": {
@@ -42,6 +53,8 @@
       "Un arreglo `testimonials` vacío no muestra nada.",
       "Mantenga los testimonios en archivos de datos de la página/sitio, no dentro del componente.",
       "El contenido de texto se renderiza en el servidor sin JS — conserve el renderizado SSR, los testimonios deben permanecer legibles sin JS.",
+      "Usa `layout=\"longform\"` para testimonios con extensión de carta: muestra párrafos reales y elige su único elemento con `featuredIndex`, nunca al azar.",
+      "Da a cualquier testimonio largo mostrado en `grid`/`featured` un `excerpt` escrito por una persona; nunca recortes una cita desde el código.",
       "Componente: `template/src/components/patterns/TestimonialsSection.tsx`"
     ]
   }

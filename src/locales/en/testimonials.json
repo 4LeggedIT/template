@@ -19,6 +19,12 @@
       "quote": "Our volunteer team works hard, but these stories keep us going. Seeing dogs settle into loving homes is everything.",
       "author": "Team Volunteer",
       "authorMeta": "Community Member"
+    },
+    "longform": {
+      "quote": "We had never fostered before, and honestly we almost didn't apply. The form asked how much experience we had and the answer was none at all.\n\nSomeone called us back the same afternoon anyway.\n\nShe walked us through what the first week actually looks like, and then she asked us the questions we hadn't thought to ask ourselves:\n\n\"What happens if he doesn't settle?\"\n\"What if our own dog doesn't like him?\"\n\"What if we can't give him back?\"\n\nNobody pretended it would be easy. That is the part I did not expect, and it is the reason we said yes.\n\nThree fosters later, we still call with questions, and somebody still picks up.",
+      "pullQuote": "Nobody pretended it would be easy.",
+      "author": "Sam",
+      "authorMeta": "Foster Family"
     }
   },
   "sections": {
@@ -31,6 +37,11 @@
       "title": "Grid",
       "description": "Grid layout works for standard multi-card sections.",
       "sectionTitle": "Grid testimonials"
+    },
+    "longform": {
+      "title": "Longform",
+      "description": "Longform renders a single letter-length testimonial as real paragraphs — not italic, no literal quote characters, with an optional pull quote. Blank lines separate paragraphs; a single line break keeps consecutive lines grouped in one paragraph.",
+      "sectionTitle": "Longform testimonial"
     }
   },
   "standard": {
@@ -42,6 +53,8 @@
       "An empty `testimonials` array renders nothing.",
       "Keep testimonials in page/site data files, not inline component internals.",
       "Text content renders server-side without JS — preserve SSR rendering, testimonials must remain readable without JS.",
+      "Opt into `layout=\"longform\"` for letter-length testimonials — it renders real paragraphs and picks its single item from `featuredIndex`, never at random.",
+      "Give any long testimonial shown in `grid`/`featured` an author-written `excerpt`; never truncate a quote in code.",
       "Component: `template/src/components/patterns/TestimonialsSection.tsx`"
     ]
   }
