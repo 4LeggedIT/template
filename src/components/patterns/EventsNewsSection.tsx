@@ -1286,6 +1286,9 @@ const renderEntryCard = (
     share: "Share",
     shareCopied: "Copied",
     shareShared: "Shared",
+    searchPlaceholder: "Search events & news…",
+    searchClearAriaLabel: "Clear search",
+    searchEmptyMessage: "No events or news match your search.",
   },
   now: number = Date.now(),
 ) => {
@@ -1607,7 +1610,7 @@ const EventsNewsSection = ({
         <div className="relative mb-6">
           <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
           <Input
-            type="search"
+            type="text"
             value={searchQuery}
             onChange={(event) => setSearchQuery(event.target.value)}
             placeholder={resolvedLabels.searchPlaceholder}
