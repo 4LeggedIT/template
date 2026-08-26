@@ -21,6 +21,7 @@ import enJourneyTimeline from "@/locales/en/journeyTimeline.json";
 import enSuccessStories from "@/locales/en/successStories.json";
 import enTestimonials from "@/locales/en/testimonials.json";
 import enFlyerLibrary from "@/locales/en/flyerLibrary.json";
+import enMediaCarousel from "@/locales/en/mediaCarousel.json";
 import enMediaGallery from "@/locales/en/mediaGallery.json";
 import enFaqDisclosure from "@/locales/en/faqDisclosure.json";
 import enFaqAccordion from "@/locales/en/faqAccordion.json";
@@ -62,6 +63,7 @@ import esJourneyTimeline from "@/locales/es/journeyTimeline.json";
 import esSuccessStories from "@/locales/es/successStories.json";
 import esTestimonials from "@/locales/es/testimonials.json";
 import esFlyerLibrary from "@/locales/es/flyerLibrary.json";
+import esMediaCarousel from "@/locales/es/mediaCarousel.json";
 import esMediaGallery from "@/locales/es/mediaGallery.json";
 import esFaqDisclosure from "@/locales/es/faqDisclosure.json";
 import esFaqAccordion from "@/locales/es/faqAccordion.json";
@@ -109,6 +111,7 @@ i18n.use(initReactI18next).init({
       successStories: enSuccessStories,
       testimonials: enTestimonials,
       flyerLibrary: enFlyerLibrary,
+      mediaCarousel: enMediaCarousel,
       mediaGallery: enMediaGallery,
       faqDisclosure: enFaqDisclosure,
       faqAccordion: enFaqAccordion,
@@ -151,6 +154,7 @@ i18n.use(initReactI18next).init({
       successStories: esSuccessStories,
       testimonials: esTestimonials,
       flyerLibrary: esFlyerLibrary,
+      mediaCarousel: esMediaCarousel,
       mediaGallery: esMediaGallery,
       faqDisclosure: esFaqDisclosure,
       faqAccordion: esFaqAccordion,
@@ -196,6 +200,7 @@ i18n.use(initReactI18next).init({
     "successStories",
     "testimonials",
     "flyerLibrary",
+    "mediaCarousel",
     "mediaGallery",
     "faqDisclosure",
     "faqAccordion",

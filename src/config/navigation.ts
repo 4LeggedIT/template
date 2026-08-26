@@ -35,6 +35,7 @@ export const templateNavItems: NavItem[] = [
       { label: "FAQ Accordion", href: "/standards/faq-accordion", group: "contentEngagement" },
       { label: "FAQ Disclosure", href: "/standards/faq-disclosure", group: "contentEngagement" },
       { label: "Flyer Library", href: "/standards/flyer-library", group: "mediaLibraries" },
+      { label: "Media Carousel", href: "/standards/media-carousel", group: "mediaLibraries" },
       { label: "Media Gallery", href: "/standards/media-gallery", group: "mediaLibraries" },
       { label: "FormEmbedModal", href: "/standards/form-embed-modal", group: "formsPayments" },
       { label: "PayPal Buttons", href: "/standards/paypal-buttons", group: "formsPayments" },

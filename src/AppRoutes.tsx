@@ -28,6 +28,7 @@ import ImpactStatsStandardPage from "@/pages/standards/ImpactStatsStandardPage";
 import SpendBreakdownStandardPage from "@/pages/standards/SpendBreakdownStandardPage";
 import ImpactAccountabilityStandardPage from "@/pages/standards/ImpactAccountabilityStandardPage";
 import DetailedImpactStandardPage from "@/pages/standards/DetailedImpactStandardPage";
+import MediaCarouselStandardPage from "@/pages/standards/MediaCarouselStandardPage";
 import MediaGalleryStandardPage from "@/pages/standards/MediaGalleryStandardPage";
 import PayPalButtonsStandardPage from "@/pages/standards/PayPalButtonsStandardPage";
 import PayPalButtonsDonateStandardPage from "@/pages/standards/PayPalButtonsDonateStandardPage";
@@ -119,6 +120,7 @@ const AppRoutes = () => {
         <Route path="/standards/spend-breakdown" element={<SpendBreakdownStandardPage />} />
         <Route path="/standards/impact-accountability" element={<ImpactAccountabilityStandardPage />} />
         <Route path="/standards/detailed-impact" element={<DetailedImpactStandardPage />} />
+        <Route path="/standards/media-carousel" element={<MediaCarouselStandardPage />} />
         <Route path="/standards/media-gallery" element={<MediaGalleryStandardPage />} />
         <Route path="/standards/paypal-buttons" element={<PayPalButtonsStandardPage />} />
         <Route path="/standards/paypal-buttons/donate-button" element={<PayPalButtonsDonateStandardPage />} />
