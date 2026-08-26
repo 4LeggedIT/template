@@ -95,7 +95,7 @@ const AdoptAPetEmbed = ({
           </Button>
         </div>
 
-        {shelterId ? (
+        {shelterId && /^\d+$/.test(shelterId) ? (
           <div className="overflow-hidden rounded-xl border border-border/80" style={{ width: scrollerWidth }}>
             <iframe
               srcDoc={buildScrollerSrcDoc(shelterId, scrollerWidth, scrollerHeight)}
@@ -104,6 +104,7 @@ const AdoptAPetEmbed = ({
               width={scrollerWidth}
               height={scrollerHeight + 53}
               loading="lazy"
+              sandbox="allow-scripts"
             />
           </div>
         ) : showIframe && iframeUrl ? (
