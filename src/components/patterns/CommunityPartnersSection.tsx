@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { safeContentUrl } from "@/lib/safe-url";
 
 export type CommunityPartner = {
   id: string;
@@ -112,8 +113,9 @@ const CommunityPartnersSection = ({
                         />
                       </div>
                     );
-                    return partner.url ? (
-                      <a href={partner.url} target="_blank" rel="noreferrer">
+                    const partnerHref = safeContentUrl(partner.url);
+                    return partnerHref ? (
+                      <a href={partnerHref} target="_blank" rel="noreferrer">
                         {logo}
                       </a>
                     ) : (
@@ -123,16 +125,19 @@ const CommunityPartnersSection = ({
                 ) : null}
                 <p className="font-display text-xl text-ink">{partner.name}</p>
                 <p className="mt-2 text-sm text-muted-foreground">{partner.description}</p>
-                {partner.url && !partner.logoSrc ? (
-                  <a
-                    href={partner.url}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="mt-4 text-sm font-medium text-primary underline-offset-4 hover:underline"
-                  >
-                    {visitLabel}
-                  </a>
-                ) : null}
+                {(() => {
+                  const textLinkHref = !partner.logoSrc ? safeContentUrl(partner.url) : undefined;
+                  return textLinkHref ? (
+                    <a
+                      href={textLinkHref}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="mt-4 text-sm font-medium text-primary underline-offset-4 hover:underline"
+                    >
+                      {visitLabel}
+                    </a>
+                  ) : null;
+                })()}
               </div>
             ))}
           </div>

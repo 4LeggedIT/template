@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { resolvePetAgeLabel } from "@/lib/pet-age";
 import { cn } from "@/lib/utils";
+import { safeContentUrl } from "@/lib/safe-url";
 
 export type PetCardItem = {
   id: string;
@@ -135,6 +136,8 @@ const PetCard = ({
   const [activeImageIndex, setActiveImageIndex] = useState(0);
   const activeImageSrc = gallery[Math.min(activeImageIndex, gallery.length - 1)] ?? pet.imageSrc;
   const hasGallery = gallery.length > 1;
+  const safeActiveImageHref = imageHref ? safeContentUrl(activeImageSrc) : undefined;
+  const safeImageHref = imageHref ? safeContentUrl(imageHref) : undefined;
 
   useEffect(() => {
     // Resets to the first photo when the pet identity or gallery changes; callers
@@ -227,8 +230,8 @@ const PetCard = ({
         {variant === "adoptable" ? (
           <>
             <div className="relative">
-              {imageHref ? (
-                <a href={activeImageSrc} target="_blank" rel="noreferrer" className="block">
+              {safeActiveImageHref ? (
+                <a href={safeActiveImageHref} target="_blank" rel="noreferrer" className="block">
                   <img
                     src={activeImageSrc}
                     alt={pet.imageAlt ?? `Meet ${pet.name ?? "this pet"}`}
@@ -312,8 +315,8 @@ const PetCard = ({
                   decoding="async"
                   className={cn("h-40 w-full", imageObjectFit)}
                 />
-              ) : imageHref ? (
-                <a href={imageHref} target="_blank" rel="noreferrer" className="block">
+              ) : safeImageHref ? (
+                <a href={safeImageHref} target="_blank" rel="noreferrer" className="block">
                   <img
                     src={activeImageSrc}
                     alt={pet.imageAlt ?? pet.name ?? "Pet photo"}

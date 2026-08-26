@@ -1,12 +1,14 @@
-import { Calendar, CalendarDays, ExternalLink, Newspaper } from "lucide-react";
+import { Calendar, CalendarDays, ExternalLink, Newspaper, Search, X } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import EventBanner, { type EventBannerItem } from "@/components/patterns/EventBanner";
 import FormEmbedModal from "@/components/patterns/FormEmbedModal";
 import EventActions from "@/components/patterns/EventActions";
 import SocialFollowCta, { type SocialFollowCtaProps } from "@/components/patterns/SocialFollowCta";
 import { cn } from "@/lib/utils";
+import { safeContentUrl } from "@/lib/safe-url";
 import {
   type EventRecurrence,
   buildRrule,
@@ -215,6 +217,9 @@ export type EventsNewsSectionLabels = {
   share?: string;
   shareCopied?: string;
   shareShared?: string;
+  searchPlaceholder?: string;
+  searchClearAriaLabel?: string;
+  searchEmptyMessage?: string;
 };
 
 type EventsNewsSectionProps = {
@@ -245,6 +250,29 @@ type EventsNewsSectionProps = {
    * treatment, and work in either `cardMode`.
    */
   imageLayout?: EventsNewsImageLayout;
+  /**
+   * Replaces the `maxLatest`-then-single-archive-blob structure with sections grouped by
+   * calendar month (newest first), each with a visible heading — a scan landmark so a reader
+   * looking for "did we already post about X" can jump straight to the right month instead of
+   * eyeballing an undifferentiated scroll. Also avoids the flat cutoff silently archiving items
+   * out of view sooner just because a given month was unusually active. Default `false` — every
+   * existing call site keeps today's `maxLatest`/archive rendering unless it opts in.
+   */
+  groupByMonth?: boolean;
+  /**
+   * Minimum number of entries to keep expanded (across the most recent month groups) before
+   * folding the rest behind per-month `<details>`. Only used when `groupByMonth` is true.
+   * Defaults to 6, matching `maxLatest`'s default, so the first paint looks the same as today.
+   */
+  defaultExpandedGroupCount?: number;
+  /**
+   * Renders a lightweight client-side text filter (title/summary/body/dateLabel/locationLabel,
+   * case-insensitive substring) above the list. A backstop for the rare case someone remembers
+   * exact wording but not roughly when something was posted — `groupByMonth`'s visible headers
+   * are what make content findable during normal browsing. Searches the full entry set,
+   * including anything folded into a collapsed month or the archive. Default `false`.
+   */
+  enableSearch?: boolean;
   labels?: EventsNewsSectionLabels;
   socialCta?: SocialFollowCtaProps;
 };
@@ -631,6 +659,65 @@ const isRecurringEventEntry = (entry: EventsNewsRenderableEventEntry) =>
 
 export const byNewestFirst = (left: EventsNewsRenderableEntry, right: EventsNewsRenderableEntry) =>
   getSortMs(right) - getSortMs(left);
+
+export type EventsNewsMonthGroup = {
+  key: string;
+  label: string;
+  entries: EventsNewsRenderableEntry[];
+};
+
+const monthGroupFormatter = new Intl.DateTimeFormat(undefined, {
+  month: "long",
+  year: "numeric",
+  timeZone: "UTC",
+});
+
+// Buckets an already newest-first-sorted entry list into calendar-month groups (also
+// newest-first), preserving each group's relative entry order. Grouping key is UTC-based to
+// match the rest of this module's date handling (see `parseYmdUtc`/`addDaysUtc`).
+const groupEntriesByMonth = (entries: EventsNewsRenderableEntry[]): EventsNewsMonthGroup[] => {
+  const groups = new Map<string, EventsNewsMonthGroup>();
+
+  for (const entry of entries) {
+    const date = new Date(getSortMs(entry));
+    const key = `${date.getUTCFullYear()}-${String(date.getUTCMonth()).padStart(2, "0")}`;
+    const existing = groups.get(key);
+    if (existing) {
+      existing.entries.push(entry);
+      continue;
+    }
+    groups.set(key, { key, label: monthGroupFormatter.format(date), entries: [entry] });
+  }
+
+  return [...groups.values()].sort((a, b) => (a.key < b.key ? 1 : a.key > b.key ? -1 : 0));
+};
+
+// How many leading (most recent) month groups to render expanded by default, so at least
+// `minVisibleItems` entries are showing on first paint — mirrors `maxLatest`'s old role without
+// splitting a busy month across the fold. Always expands at least one group when any exist.
+const getDefaultExpandedGroupCount = (groups: EventsNewsMonthGroup[], minVisibleItems: number) => {
+  let visible = 0;
+  for (let index = 0; index < groups.length; index++) {
+    if (visible >= minVisibleItems) return index;
+    visible += groups[index].entries.length;
+  }
+  return groups.length;
+};
+
+const matchesSearchQuery = (entry: EventsNewsRenderableEntry, lowerCaseQuery: string) => {
+  const haystack = [
+    entry.title,
+    entry.kind === "event" ? entry.calendarTitle : undefined,
+    entry.summary,
+    entry.body,
+    entry.dateLabel,
+    entry.kind === "event" ? entry.locationLabel : undefined,
+  ]
+    .filter((value): value is string => Boolean(value))
+    .join(" ")
+    .toLowerCase();
+  return haystack.includes(lowerCaseQuery);
+};
 
 const bySoonestFirst = (left: EventsNewsRenderableEventEntry, right: EventsNewsRenderableEventEntry) =>
   getEventStartMs(left) - getEventStartMs(right);
@@ -1065,11 +1152,14 @@ const renderNewsInlineText = (text: string): Array<string | ReactNode> => {
         </code>,
       );
     } else if (match[2]) {
+      const href = safeContentUrl(match[4]);
       parts.push(
-        isExternalContentHref(match[4]) ? (
+        !href ? (
+          match[3]
+        ) : isExternalContentHref(href) ? (
           <a
             key={`link-${keyIndex++}`}
-            href={match[4]}
+            href={href}
             target="_blank"
             rel="noopener noreferrer"
             className="font-medium text-primary underline underline-offset-4 hover:text-primary/80"
@@ -1079,7 +1169,7 @@ const renderNewsInlineText = (text: string): Array<string | ReactNode> => {
         ) : (
           <Link
             key={`link-${keyIndex++}`}
-            to={match[4]}
+            to={href}
             className="font-medium text-primary underline underline-offset-4 hover:text-primary/80"
           >
             {match[3]}
@@ -1146,11 +1236,13 @@ export const renderContentBlock = (entryId: string, block: EventsNewsContentBloc
   return (
     <div key={`${entryId}-ctas-${index}`} className="flex flex-wrap items-center gap-2">
       {block.actions.map((action) => {
-        const external = isExternalContentHref(action.href, action.external);
+        const href = safeContentUrl(action.href);
+        if (!href) return null;
+        const external = isExternalContentHref(href, action.external);
         if (external) {
           return (
             <Button key={`${entryId}-${index}-${action.href}`} asChild size="sm" variant="outline">
-              <a href={action.href} target="_blank" rel="noopener noreferrer">
+              <a href={href} target="_blank" rel="noopener noreferrer">
                 {action.label}
               </a>
             </Button>
@@ -1158,7 +1250,7 @@ export const renderContentBlock = (entryId: string, block: EventsNewsContentBloc
         }
         return (
           <Button key={`${entryId}-${index}-${action.href}`} asChild size="sm" variant="outline">
-            <Link to={action.href}>{action.label}</Link>
+            <Link to={href}>{action.label}</Link>
           </Button>
         );
       })}
@@ -1407,6 +1499,9 @@ const EventsNewsSection = ({
   eventDetailsBasePath,
   cardMode = "index",
   imageLayout = "auto",
+  groupByMonth = false,
+  defaultExpandedGroupCount = 6,
+  enableSearch = false,
   labels = {},
   socialCta,
 }: EventsNewsSectionProps) => {
@@ -1432,8 +1527,12 @@ const EventsNewsSection = ({
     share: labels.share ?? "Share",
     shareCopied: labels.shareCopied ?? "Copied",
     shareShared: labels.shareShared ?? "Shared",
+    searchPlaceholder: labels.searchPlaceholder ?? "Search events & news…",
+    searchClearAriaLabel: labels.searchClearAriaLabel ?? "Clear search",
+    searchEmptyMessage: labels.searchEmptyMessage ?? "No events or news match your search.",
   };
 
+  const [searchQuery, setSearchQuery] = useState("");
   const [now, setNow] = useState<number | null>(null);
   useEffect(() => {
     // Deliberately deferred to post-hydration: this page is statically
@@ -1471,6 +1570,21 @@ const EventsNewsSection = ({
     ? toBannerEvents(renderableEntries, futureEventsBannerDefaultCtaHref, eventDetailsBasePath, resolvedLabels.detailsLabel, safeNow)
     : [];
 
+  // Unified pool backing both `groupByMonth` and `enableSearch` — everything not pinned as
+  // `featured`, past events included, so a folded-away month or the old single archive blob
+  // can't hide a match from search. Cheap to compute unconditionally; only rendered when one of
+  // those props is on.
+  const combinedNonFeatured = [...nonFeatured, ...archivedEvents].sort(byNewestFirst);
+  const monthGroups = groupByMonth ? groupEntriesByMonth(combinedNonFeatured) : [];
+  const expandedGroupCount = getDefaultExpandedGroupCount(monthGroups, defaultExpandedGroupCount);
+
+  const trimmedQuery = enableSearch ? searchQuery.trim().toLowerCase() : "";
+  const isSearching = trimmedQuery.length > 0;
+  const searchPool = featured ? [featured, ...combinedNonFeatured] : combinedNonFeatured;
+  const searchResults = isSearching
+    ? searchPool.filter((entry) => matchesSearchQuery(entry, trimmedQuery))
+    : [];
+
   return (
     <section className={cn("rounded-2xl border border-border bg-card/40 p-6", className)}>
       {showFutureEventsBanner && bannerEvents.length ? (
@@ -1489,40 +1603,116 @@ const EventsNewsSection = ({
         </div>
       ) : null}
 
-      {featured ? (
-        <div className="mb-6">
-          <p className="mb-2 text-xs font-medium uppercase tracking-wide text-muted-foreground">{resolvedLabels.featuredLabel}</p>
-          {renderEntryCard(featured, eventDetailsBasePath, cardMode, imageLayout, 0, resolvedLabels, safeNow)}
+      {enableSearch ? (
+        <div className="relative mb-6">
+          <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+          <Input
+            type="search"
+            value={searchQuery}
+            onChange={(event) => setSearchQuery(event.target.value)}
+            placeholder={resolvedLabels.searchPlaceholder}
+            aria-label={resolvedLabels.searchPlaceholder}
+            className="pl-9 pr-9"
+          />
+          {searchQuery ? (
+            <button
+              type="button"
+              onClick={() => setSearchQuery("")}
+              aria-label={resolvedLabels.searchClearAriaLabel}
+              className="absolute right-2 top-1/2 -translate-y-1/2 rounded-md p-1 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+            >
+              <X className="h-4 w-4" />
+            </button>
+          ) : null}
         </div>
       ) : null}
 
-      {latest.length ? (
-        <div className="space-y-6">
-          {latest.map((entry, index) =>
-            renderEntryCard(entry, eventDetailsBasePath, cardMode, imageLayout, index, resolvedLabels, safeNow),
-          )}
-        </div>
-      ) : (
-        <Card className="border-dashed">
-          <CardContent className="py-6 text-sm text-muted-foreground">{emptyMessage}</CardContent>
-        </Card>
-      )}
-
-      {archive.length ? (
-        <details
-          className="mt-6 rounded-xl border border-border bg-background/60 p-4"
-          open={archiveOpenByDefault}
-        >
-          <summary className="cursor-pointer list-none text-sm font-medium text-foreground [&::-webkit-details-marker]:hidden">
-            {archiveTitle} ({archive.length})
-          </summary>
-          <div className="mt-4 space-y-4">
-            {archive.map((entry, index) =>
+      {isSearching ? (
+        searchResults.length ? (
+          <div className="space-y-6">
+            {searchResults.map((entry, index) =>
               renderEntryCard(entry, eventDetailsBasePath, cardMode, imageLayout, index, resolvedLabels, safeNow),
             )}
           </div>
-        </details>
-      ) : null}
+        ) : (
+          <Card className="border-dashed">
+            <CardContent className="py-6 text-sm text-muted-foreground">{resolvedLabels.searchEmptyMessage}</CardContent>
+          </Card>
+        )
+      ) : (
+        <>
+          {featured ? (
+            <div className="mb-6">
+              <p className="mb-2 text-xs font-medium uppercase tracking-wide text-muted-foreground">{resolvedLabels.featuredLabel}</p>
+              {renderEntryCard(featured, eventDetailsBasePath, cardMode, imageLayout, 0, resolvedLabels, safeNow)}
+            </div>
+          ) : null}
+
+          {groupByMonth ? (
+            monthGroups.length ? (
+              <div className="space-y-4">
+                {monthGroups.map((group, groupIndex) =>
+                  groupIndex < expandedGroupCount ? (
+                    <div key={group.key}>
+                      <h4 className="mb-3 text-sm font-semibold text-foreground">{group.label}</h4>
+                      <div className="space-y-6">
+                        {group.entries.map((entry, index) =>
+                          renderEntryCard(entry, eventDetailsBasePath, cardMode, imageLayout, index, resolvedLabels, safeNow),
+                        )}
+                      </div>
+                    </div>
+                  ) : (
+                    <details key={group.key} className="rounded-xl border border-border bg-background/60 p-4">
+                      <summary className="cursor-pointer list-none text-sm font-medium text-foreground [&::-webkit-details-marker]:hidden">
+                        {group.label} ({group.entries.length})
+                      </summary>
+                      <div className="mt-4 space-y-4">
+                        {group.entries.map((entry, index) =>
+                          renderEntryCard(entry, eventDetailsBasePath, cardMode, imageLayout, index, resolvedLabels, safeNow),
+                        )}
+                      </div>
+                    </details>
+                  ),
+                )}
+              </div>
+            ) : (
+              <Card className="border-dashed">
+                <CardContent className="py-6 text-sm text-muted-foreground">{emptyMessage}</CardContent>
+              </Card>
+            )
+          ) : (
+            <>
+              {latest.length ? (
+                <div className="space-y-6">
+                  {latest.map((entry, index) =>
+                    renderEntryCard(entry, eventDetailsBasePath, cardMode, imageLayout, index, resolvedLabels, safeNow),
+                  )}
+                </div>
+              ) : (
+                <Card className="border-dashed">
+                  <CardContent className="py-6 text-sm text-muted-foreground">{emptyMessage}</CardContent>
+                </Card>
+              )}
+
+              {archive.length ? (
+                <details
+                  className="mt-6 rounded-xl border border-border bg-background/60 p-4"
+                  open={archiveOpenByDefault}
+                >
+                  <summary className="cursor-pointer list-none text-sm font-medium text-foreground [&::-webkit-details-marker]:hidden">
+                    {archiveTitle} ({archive.length})
+                  </summary>
+                  <div className="mt-4 space-y-4">
+                    {archive.map((entry, index) =>
+                      renderEntryCard(entry, eventDetailsBasePath, cardMode, imageLayout, index, resolvedLabels, safeNow),
+                    )}
+                  </div>
+                </details>
+              ) : null}
+            </>
+          )}
+        </>
+      )}
 
       {socialCta?.links?.length ? (
         <SocialFollowCta title={socialCta.title} description={socialCta.description} links={socialCta.links} />

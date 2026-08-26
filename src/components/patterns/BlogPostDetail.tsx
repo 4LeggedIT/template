@@ -9,6 +9,7 @@ import {
   type BlogPostEntry,
 } from "@/components/patterns/BlogSection";
 import { cn } from "@/lib/utils";
+import { safeContentUrl } from "@/lib/safe-url";
 
 export type BlogPostDetailLabels = {
   backLabel?: string;
@@ -160,16 +161,21 @@ const renderInlineMarkdown = (text: string): Array<string | JSX.Element> => {
         </code>,
       );
     } else if (match[2]) {
+      const href = safeContentUrl(match[4]);
       parts.push(
-        <a
-          key={`link-${keyIndex++}`}
-          href={match[4]}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="font-medium text-primary underline underline-offset-4 transition-colors hover:text-primary/80"
-        >
-          {match[3]}
-        </a>,
+        href ? (
+          <a
+            key={`link-${keyIndex++}`}
+            href={href}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="font-medium text-primary underline underline-offset-4 transition-colors hover:text-primary/80"
+          >
+            {match[3]}
+          </a>
+        ) : (
+          match[3]
+        ),
       );
     } else if (match[5]) {
       parts.push(
