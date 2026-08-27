@@ -14,9 +14,12 @@ type SiteHeaderProps = {
 };
 
 const getDesktopDropdownPositionClass = (dropdownIndex: number, dropdownCount: number) => {
-  if (dropdownCount <= 1) return "left-1/2 -translate-x-1/2";
-  if (dropdownIndex === 0) return "left-0";
+  // The desktop nav is right-aligned, so the last dropdown's trigger always sits near the
+  // viewport edge — anchor its panel to the trigger's right edge so it opens inward. A lone
+  // dropdown is by definition the last one; centering it under its trigger pushed the panel
+  // past the container and made the whole document scroll sideways.
   if (dropdownIndex === dropdownCount - 1) return "right-0";
+  if (dropdownIndex === 0) return "left-0";
   return "left-1/2 -translate-x-1/2";
 };
 
