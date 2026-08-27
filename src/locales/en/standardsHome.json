@@ -16,6 +16,7 @@
     "newsHighlight": { "title": "Home Highlight Pattern", "description": "Homepage card that surfaces a single editor-flagged event, news entry, or blog post via the shared HomeHighlightSection component." },
     "blog": { "title": "Blog Pattern", "description": "Shared post list and post-detail pattern covering both tech guides and rescue-story content with real photos." },
     "journeyTimeline": { "title": "Journey Timeline Pattern", "description": "Vertical rescue-to-today timeline for an individual dog's detail page, one card per stage." },
+    "memorialSection": { "title": "Memorial Pattern", "description": "\"In Loving Memory\" tribute for animals who couldn't be saved — one card template for group tributes and single-dog reflections alike." },
     "successStories": { "title": "Success Stories Pattern", "description": "Narrative story-card module for adoption outcomes and happy tails." },
     "testimonials": { "title": "Testimonials Pattern", "description": "Featured, grid and longform testimonial patterns for reusable social-proof sections, with optional star ratings." },
     "flyerLibrary": { "title": "Flyer Library Pattern", "description": "Timeless, undated awareness flyer library with category filtering — distinct from dated events/news." },

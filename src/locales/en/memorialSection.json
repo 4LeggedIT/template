@@ -1,0 +1,51 @@
+{
+  "hero": {
+    "title": "Memorial pattern",
+    "description": "An \"In Loving Memory\" tribute for animals who couldn't be saved — one card template for both a multi-photo group tribute and a single dog's fuller story."
+  },
+  "breadcrumb": "Memorial Pattern",
+  "sections": {
+    "example": {
+      "title": "Example",
+      "description": "The same card template handles both real shapes this pattern was built from: a short group tribute with a badge and multiple photos, and a single dog's fuller story with dates, a closing line, and a link out to a reflection post."
+    }
+  },
+  "entries": {
+    "founder": {
+      "badge": "Our founding rescue",
+      "name": "Squirtle",
+      "message": "Rescued in 2020 and beloved by everyone who met him. Squirtle passed away this year, but will always be remembered as the one who started it all."
+    },
+    "sweetHops": {
+      "name": "Sweet Hops",
+      "dates": "January 2026 – May 2026",
+      "message1": "Sweet Hops came to us during an emergency rescue moment, already very sick but still surrounded by people trying to help. His time was far too short, but he was not alone.",
+      "message2": "He was cared for, comforted, and loved. His story reminds us why rescue work matters, even on the hardest days.",
+      "closingLine": "Our fight continues.",
+      "readReflection": "Read the Reflection"
+    }
+  },
+  "standard": {
+    "title": "Standard",
+    "noBlame": "Never assign blame for how the animal came to be lost, in distress, sick, or passed away — not toward an owner, Animal Control, a rescuer, or circumstance. Focus on the care given and gratitude.",
+    "emptyPhotos": {
+      "before": "An entry with an empty",
+      "after": "array renders a paw-icon fallback — never a broken image."
+    },
+    "emptyState": {
+      "before": "When",
+      "after": "is empty, the section renders",
+      "emptyMessageWord": "emptyMessage"
+    },
+    "import": {
+      "before": "A site's",
+      "after": "must import",
+      "typeWord": "MemorialEntry",
+      "fromWord": "from",
+      "componentPath": "@/components/patterns/MemorialSection",
+      "never": "— never hand-declare a lookalike shape."
+    },
+    "oneTemplate": "One card template handles every entry — no per-entry layout flags. Fields that aren't provided (badge, dates, closingLine, externalHref) are simply omitted, not shown empty.",
+    "component": "Component: `template/src/components/patterns/MemorialSection.tsx`"
+  }
+}

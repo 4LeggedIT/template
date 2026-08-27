@@ -18,6 +18,7 @@ import enPawPlacer from "@/locales/en/pawPlacer.json";
 import enDogSpotlight from "@/locales/en/dogSpotlight.json";
 import enEventsNews from "@/locales/en/eventsNews.json";
 import enJourneyTimeline from "@/locales/en/journeyTimeline.json";
+import enMemorialSection from "@/locales/en/memorialSection.json";
 import enSuccessStories from "@/locales/en/successStories.json";
 import enTestimonials from "@/locales/en/testimonials.json";
 import enFlyerLibrary from "@/locales/en/flyerLibrary.json";
@@ -60,6 +61,7 @@ import esPawPlacer from "@/locales/es/pawPlacer.json";
 import esDogSpotlight from "@/locales/es/dogSpotlight.json";
 import esEventsNews from "@/locales/es/eventsNews.json";
 import esJourneyTimeline from "@/locales/es/journeyTimeline.json";
+import esMemorialSection from "@/locales/es/memorialSection.json";
 import esSuccessStories from "@/locales/es/successStories.json";
 import esTestimonials from "@/locales/es/testimonials.json";
 import esFlyerLibrary from "@/locales/es/flyerLibrary.json";
@@ -108,6 +110,7 @@ i18n.use(initReactI18next).init({
       dogSpotlight: enDogSpotlight,
       eventsNews: enEventsNews,
       journeyTimeline: enJourneyTimeline,
+      memorialSection: enMemorialSection,
       successStories: enSuccessStories,
       testimonials: enTestimonials,
       flyerLibrary: enFlyerLibrary,
@@ -151,6 +154,7 @@ i18n.use(initReactI18next).init({
       dogSpotlight: esDogSpotlight,
       eventsNews: esEventsNews,
       journeyTimeline: esJourneyTimeline,
+      memorialSection: esMemorialSection,
       successStories: esSuccessStories,
       testimonials: esTestimonials,
       flyerLibrary: esFlyerLibrary,
@@ -197,6 +201,7 @@ i18n.use(initReactI18next).init({
     "dogSpotlight",
     "eventsNews",
     "journeyTimeline",
+    "memorialSection",
     "successStories",
     "testimonials",
     "flyerLibrary",

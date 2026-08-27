@@ -1,0 +1,51 @@
+{
+  "hero": {
+    "title": "Patrón de memorial",
+    "description": "Un homenaje \"En Memoria\" para animales que no pudieron ser salvados — una sola plantilla de tarjeta para un homenaje grupal con varias fotos y para la historia más completa de un solo perro."
+  },
+  "breadcrumb": "Patrón de Memorial",
+  "sections": {
+    "example": {
+      "title": "Ejemplo",
+      "description": "La misma plantilla de tarjeta maneja las dos formas reales de las que se construyó este patrón: un homenaje grupal breve con una insignia y varias fotos, y la historia más completa de un solo perro con fechas, una línea de cierre y un enlace a una publicación de reflexión."
+    }
+  },
+  "entries": {
+    "founder": {
+      "badge": "Nuestro rescate fundador",
+      "name": "Squirtle",
+      "message": "Rescatado en 2020 y querido por todos los que lo conocieron. Squirtle falleció este año, pero siempre será recordado como quien lo empezó todo."
+    },
+    "sweetHops": {
+      "name": "Sweet Hops",
+      "dates": "Enero de 2026 – Mayo de 2026",
+      "message1": "Sweet Hops llegó a nosotros en un momento de rescate de emergencia, ya muy enfermo pero rodeado de gente que intentaba ayudarlo. Su tiempo fue demasiado corto, pero no estuvo solo.",
+      "message2": "Fue cuidado, acompañado y querido. Su historia nos recuerda por qué importa el trabajo de rescate, incluso en los días más difíciles.",
+      "closingLine": "Nuestra lucha continúa.",
+      "readReflection": "Leer la reflexión"
+    }
+  },
+  "standard": {
+    "title": "Estándar",
+    "noBlame": "Nunca atribuir culpa por cómo el animal llegó a perderse, sufrir, enfermarse o fallecer — ni hacia un dueño, Control Animal, un rescatista ni las circunstancias. Enfocarse en el cuidado brindado y la gratitud.",
+    "emptyPhotos": {
+      "before": "Una entrada con un arreglo",
+      "after": "vacío muestra un ícono de huella como respaldo — nunca una imagen rota."
+    },
+    "emptyState": {
+      "before": "Cuando",
+      "after": "está vacío, la sección muestra",
+      "emptyMessageWord": "emptyMessage"
+    },
+    "import": {
+      "before": "El sitio debe importar",
+      "after": "desde",
+      "typeWord": "MemorialEntry",
+      "fromWord": "",
+      "componentPath": "@/components/patterns/MemorialSection",
+      "never": "— nunca declarar a mano una forma parecida."
+    },
+    "oneTemplate": "Una sola plantilla de tarjeta maneja cada entrada — sin indicadores de diseño por entrada. Los campos que no se proporcionan (badge, dates, closingLine, externalHref) simplemente se omiten, no se muestran vacíos.",
+    "component": "Componente: `template/src/components/patterns/MemorialSection.tsx`"
+  }
+}

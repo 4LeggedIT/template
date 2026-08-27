@@ -27,6 +27,7 @@ export const templateNavItems: NavItem[] = [
       { label: "Found", href: "/standards/found", group: "petsAdoption" },
       { label: "Placement", href: "/standards/placement-help", group: "petsAdoption" },
       { label: "Journey Timeline", href: "/standards/journey-timeline", group: "storiesJourneys" },
+      { label: "Memorial", href: "/standards/memorial-section", group: "storiesJourneys" },
       { label: "Success Stories", href: "/standards/success-stories", group: "storiesJourneys" },
       { label: "Testimonials", href: "/standards/testimonials", group: "storiesJourneys" },
       { label: "Events & News", href: "/standards/events-news", group: "contentEngagement" },

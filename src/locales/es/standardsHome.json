@@ -16,6 +16,7 @@
     "newsHighlight": { "title": "Patrón de Destacado de Inicio", "description": "Tarjeta de inicio que muestra un solo evento, noticia o publicación de blog marcado por el editor, mediante el componente compartido HomeHighlightSection." },
     "blog": { "title": "Patrón de Blog", "description": "Patrón compartido de lista de publicaciones y detalle de publicación que cubre tanto guías técnicas como contenido de historias de rescate con fotos reales." },
     "journeyTimeline": { "title": "Patrón de Línea de Tiempo del Trayecto", "description": "Línea de tiempo vertical de rescate a la actualidad para la página de detalle de un perro, una tarjeta por etapa." },
+    "memorialSection": { "title": "Patrón de Memorial", "description": "Homenaje \"En Memoria\" para animales que no pudieron ser salvados — una sola plantilla de tarjeta tanto para homenajes grupales como para la reflexión de un solo perro." },
     "successStories": { "title": "Patrón de Historias de Éxito", "description": "Módulo de tarjetas narrativas para resultados de adopción e historias felices." },
     "testimonials": { "title": "Patrón de Testimonios", "description": "Patrones de testimonios destacados, en cuadrícula y de formato largo para secciones reutilizables de prueba social, con valoración por estrellas opcional." },
     "flyerLibrary": { "title": "Patrón de Biblioteca de Volantes", "description": "Biblioteca de volantes de concientización atemporales, sin fecha, con filtrado por categoría — distinta de eventos/noticias con fecha." },
