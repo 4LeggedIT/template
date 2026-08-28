@@ -7,7 +7,7 @@
   "sections": {
     "listing": {
       "title": "Post list",
-      "description": "One post is marked featured and gets a hero card; the rest render in a filterable grid. Categories, colors, and the subscribe CTA are all site-supplied data.",
+      "description": "One post is marked featured and gets a hero card on the unfiltered view; the rest render in a filterable grid. Pick a category and the hero steps aside, its post rejoining the grid. Categories, colors, and the subscribe CTA are all site-supplied data.",
       "subscribeCta": {
         "title": "More posts coming soon",
         "description": "Occasional emails only — no noise, no spam.",
@@ -39,7 +39,7 @@
       "`category` is optional per post — no badge renders when it's absent.",
       "`imageSrc`/`imageAlt` give a real photo on the card and detail header; `emoji` is a lighter-weight decorative fallback when there's no photo. Neither is required.",
       "`readTime` is auto-computed from word count (~200wpm) via `estimateReadTime()` when omitted — set it explicitly only when a site wants an editorial override.",
-      "`showFeatured` renders a hero card for one post: an explicit `featuredPostId`, else the newest post flagged `featured: true`, else the newest post overall.",
+      "`showFeatured` renders a hero card for one post: an explicit `featuredPostId`, else the newest post flagged `featured: true`, else the newest post overall. The hero belongs to the unfiltered view only — click a category pill and it steps aside, and its post rejoins the grid below rather than disappearing from a category it belongs to.",
       "Cards only link out when `postBasePath` is set — omit it to render an unlinked teaser (e.g. a homepage preview with no dedicated blog section yet).",
       "The content grammar (`## heading`, `> quote`, `- list`, fenced ``` code blocks, inline `code`/`[link](url)`/`**bold**`) lives entirely inside `BlogPostDetail.tsx` — same self-contained-renderer approach as `EventsNewsDetail.tsx`, not a shared `lib/` markdown utility.",
       "`subscribeCta` (list) and `cta` (detail) are both fully optional call-outs — a site without a newsletter or a sales CTA simply omits the prop.",

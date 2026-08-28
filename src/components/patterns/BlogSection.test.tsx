@@ -87,6 +87,96 @@ describe("BlogSection", () => {
     expect(screen.getByRole("heading", { level: 3, name: "A Practical Guide" })).toBeInTheDocument();
   });
 
+  it("hides the featured hero once a category filter is active", () => {
+    const withFeatured: BlogPostEntry[] = [{ ...posts[0], featured: true }, posts[1]];
+    renderWithRouter(<BlogSection posts={withFeatured} showFeatured />);
+
+    expect(screen.getByText("Featured")).toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole("button", { name: "Stories" }));
+
+    expect(screen.queryByText("Featured")).not.toBeInTheDocument();
+    expect(screen.queryByText("A Practical Guide")).not.toBeInTheDocument();
+    expect(screen.getByText("An Adoption Story")).toBeInTheDocument();
+  });
+
+  it("hides the hero even on the featured post's own category — the pin is not per-category", () => {
+    const withFeatured: BlogPostEntry[] = [{ ...posts[0], featured: true }, posts[1]];
+    renderWithRouter(<BlogSection posts={withFeatured} showFeatured />);
+
+    fireEvent.click(screen.getByRole("button", { name: "Guides" }));
+
+    expect(screen.queryByText("Featured")).not.toBeInTheDocument();
+  });
+
+  it("folds the featured post back into the grid when its own category is filtered", () => {
+    const sibling: BlogPostEntry = { ...posts[0], id: "3", slug: "second-guide", title: "Another Guide" };
+    const withFeatured: BlogPostEntry[] = [{ ...posts[0], featured: true }, posts[1], sibling];
+    renderWithRouter(<BlogSection posts={withFeatured} showFeatured />);
+
+    fireEvent.click(screen.getByRole("button", { name: "Guides" }));
+
+    // No hero, so both guides are plain grid cards — the featured post must not be missing from a
+    // filtered view it belongs in.
+    expect(screen.queryByText("Featured")).not.toBeInTheDocument();
+    const titles = screen.getAllByRole("heading", { level: 3 }).map((el) => el.textContent);
+    expect(titles).toEqual(expect.arrayContaining(["A Practical Guide", "Another Guide"]));
+    expect(titles).toHaveLength(2);
+  });
+
+  it("shows a lone featured post as a grid card, not a hero above an empty grid", () => {
+    const withFeatured: BlogPostEntry[] = [{ ...posts[0], featured: true }, posts[1]];
+    renderWithRouter(<BlogSection posts={withFeatured} showFeatured />);
+
+    fireEvent.click(screen.getByRole("button", { name: "Guides" }));
+
+    expect(screen.getByText("A Practical Guide")).toBeInTheDocument();
+    expect(screen.queryByText("New posts are on the way.")).not.toBeInTheDocument();
+    expect(screen.queryByText("Featured")).not.toBeInTheDocument();
+  });
+
+  it("restores the hero when the All pill is re-selected", () => {
+    const withFeatured: BlogPostEntry[] = [{ ...posts[0], featured: true }, posts[1]];
+    renderWithRouter(<BlogSection posts={withFeatured} showFeatured />);
+
+    fireEvent.click(screen.getByRole("button", { name: "Stories" }));
+    expect(screen.queryByText("Featured")).not.toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole("button", { name: "All" }));
+    expect(screen.getByText("Featured")).toBeInTheDocument();
+  });
+
+  it("renders no hero under a categoryFilter lock, keeping the featured post in the grid", () => {
+    const withFeatured: BlogPostEntry[] = [{ ...posts[0], featured: true }, posts[1]];
+    renderWithRouter(<BlogSection posts={withFeatured} showFeatured categoryFilter="guides" />);
+
+    expect(screen.queryByText("Featured")).not.toBeInTheDocument();
+    expect(screen.getByText("A Practical Guide")).toBeInTheDocument();
+  });
+
+  it("lets the folded-back post compete on recency inside maxPosts", () => {
+    const older: BlogPostEntry = { ...posts[0], id: "3", slug: "older-guide", title: "Older Guide", publishedAt: "2025-12-01" };
+    const withFeatured: BlogPostEntry[] = [{ ...posts[0], featured: true }, posts[1], older];
+    renderWithRouter(<BlogSection posts={withFeatured} showFeatured maxPosts={1} />);
+
+    fireEvent.click(screen.getByRole("button", { name: "Guides" }));
+
+    expect(screen.getByText("A Practical Guide")).toBeInTheDocument();
+    expect(screen.queryByText("Older Guide")).not.toBeInTheDocument();
+  });
+
+  it("is unaffected by the hero rules when showFeatured is off", () => {
+    const withFeatured: BlogPostEntry[] = [{ ...posts[0], featured: true }, posts[1]];
+    renderWithRouter(<BlogSection posts={withFeatured} />);
+
+    expect(screen.queryByText("Featured")).not.toBeInTheDocument();
+
+    fireEvent.click(screen.getByRole("button", { name: "Guides" }));
+
+    expect(screen.getByText("A Practical Guide")).toBeInTheDocument();
+    expect(screen.queryByText("An Adoption Story")).not.toBeInTheDocument();
+  });
+
   it("links cards to postBasePath when provided, and renders unlinked otherwise", () => {
     const { unmount } = renderWithRouter(<BlogSection posts={posts} postBasePath="/blog" />);
     expect(screen.getByRole("link", { name: "An Adoption Story" })).toHaveAttribute("href", "/blog/story-post");

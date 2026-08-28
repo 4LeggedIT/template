@@ -91,6 +91,7 @@ type BlogSectionProps = {
   categoryFilter?: string;
   showFilters?: boolean;
   maxPosts?: number;
+  /** Renders a hero card above the grid. Unfiltered view only — any active category hides the hero and folds its post back into the grid. */
   showFeatured?: boolean;
   featuredPostId?: string;
   /** Cards link to `${postBasePath}/${slug}`; titles render unlinked when omitted. */
@@ -260,19 +261,24 @@ const BlogSection = ({
 
   const sortedPosts = useMemo(() => [...posts].sort(byNewestFirst), [posts]);
 
-  const featured = showFeatured
+  const activeCategory = categoryFilter ?? (activeFilter === "all" ? undefined : activeFilter);
+
+  // The hero is a claim about the whole collection, not about any one category, so it renders only
+  // in the unfiltered view. As soon as the reader narrows — a filter pill, or a `categoryFilter`
+  // lock — it steps aside and its post rejoins the grid below, competing on recency like any other.
+  // Mirrors `EventsNewsSection`, which already hides its featured card while a search is active and
+  // folds the pinned entry back into the searched pool.
+  const featured = showFeatured && !activeCategory
     ? (featuredPostId
         ? sortedPosts.find((post) => post.id === featuredPostId)
         : (sortedPosts.find((post) => post.featured) ?? sortedPosts[0])) ?? null
     : null;
 
-  const nonFeatured = featured ? sortedPosts.filter((post) => post.id !== featured.id) : sortedPosts;
-
   const filtered = useMemo(() => {
-    const effectiveFilter = categoryFilter ?? (activeFilter === "all" ? undefined : activeFilter);
-    const base = effectiveFilter ? nonFeatured.filter((post) => post.category === effectiveFilter) : nonFeatured;
+    const pool = featured ? sortedPosts.filter((post) => post.id !== featured.id) : sortedPosts;
+    const base = activeCategory ? pool.filter((post) => post.category === activeCategory) : pool;
     return typeof maxPosts === "number" ? base.slice(0, maxPosts) : base;
-  }, [nonFeatured, categoryFilter, activeFilter, maxPosts]);
+  }, [sortedPosts, featured, activeCategory, maxPosts]);
 
   const showPills = !categoryFilter && showFilters && categoryOptions.length > 1;
 

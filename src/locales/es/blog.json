@@ -7,7 +7,7 @@
   "sections": {
     "listing": {
       "title": "Lista de publicaciones",
-      "description": "Una publicación se marca como destacada y recibe una tarjeta principal; el resto se muestra en una cuadrícula filtrable. Las categorías, los colores y el llamado a suscribirse son datos suministrados por el sitio.",
+      "description": "Una publicación se marca como destacada y recibe una tarjeta principal en la vista sin filtrar; el resto se muestra en una cuadrícula filtrable. Al elegir una categoría, la tarjeta principal desaparece y su publicación vuelve a la cuadrícula. Las categorías, los colores y el llamado a suscribirse son datos suministrados por el sitio.",
       "subscribeCta": {
         "title": "Más publicaciones próximamente",
         "description": "Solo correos ocasionales — sin ruido, sin spam.",
@@ -39,7 +39,7 @@
       "`category` es opcional en cada publicación — no se muestra ninguna insignia cuando está ausente.",
       "`imageSrc`/`imageAlt` dan una foto real en la tarjeta y el encabezado de detalle; `emoji` es un respaldo decorativo más ligero cuando no hay foto. Ninguno de los dos es obligatorio.",
       "`readTime` se calcula automáticamente según el conteo de palabras (~200 ppm) mediante `estimateReadTime()` cuando se omite — configúrelo explícitamente solo cuando el sitio quiera un valor editorial fijo.",
-      "`showFeatured` muestra una tarjeta principal para una publicación: un `featuredPostId` explícito, o si no, la publicación más reciente marcada `featured: true`, o si no, la publicación más reciente en general.",
+      "`showFeatured` muestra una tarjeta principal para una publicación: un `featuredPostId` explícito, o si no, la publicación más reciente marcada `featured: true`, o si no, la publicación más reciente en general. La tarjeta principal pertenece solo a la vista sin filtrar: al hacer clic en una categoría desaparece, y su publicación vuelve a la cuadrícula de abajo en lugar de desaparecer de una categoría a la que pertenece.",
       "Las tarjetas solo enlazan cuando se define `postBasePath` — omítalo para mostrar una vista previa sin enlace (por ejemplo, una vista previa en la página de inicio sin una sección de blog dedicada todavía).",
       "La gramática de contenido (`## encabezado`, `> cita`, `- lista`, bloques de código con ```` ``` ````, `código` en línea, `[enlace](url)` y `**negrita**`) vive por completo dentro de `BlogPostDetail.tsx` — el mismo enfoque de renderizador autónomo que `EventsNewsDetail.tsx`, no una utilidad `lib/` compartida de markdown.",
       "`subscribeCta` (lista) y `cta` (detalle) son ambos llamados a la acción totalmente opcionales — un sitio sin boletín informativo o sin llamado comercial simplemente omite la propiedad.",
