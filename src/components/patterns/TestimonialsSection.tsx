@@ -10,6 +10,19 @@ export type TestimonialItem = {
   quote: string;
   author?: string;
   authorMeta?: string;
+  /**
+   * The author's role or title, rendered between `author` and `authorMeta` by all three
+   * layouts — its own line in `longform`, inline in the compact `grid`/`featured` cards
+   * (e.g. "Founder and CEO" between "Sandra Murray" and "Rovers Return Dog Rescue").
+   *
+   * This is a description we wrote, not identity, so it is translated on bilingual sites —
+   * unlike `author`, which never is. It is also never the linked line: `authorHref` stays
+   * on `authorMeta`, because the link belongs to the organization, not to the job title.
+   *
+   * Optional and additive: omit it and the attribution renders exactly as it did before
+   * this field existed.
+   */
+  authorTitle?: string;
   emoji?: string;
   /**
    * Star rating out of 5, exactly as the reviewer gave it on the source platform.
@@ -259,7 +272,11 @@ const TestimonialsSection = ({
                 ))}
               </blockquote>
 
-              {featuredItem.author || featuredItem.authorMeta || featuredItem.emoji || featuredItem.rating ? (
+              {featuredItem.author ||
+              featuredItem.authorTitle ||
+              featuredItem.authorMeta ||
+              featuredItem.emoji ||
+              featuredItem.rating ? (
                 <figcaption className="relative z-10 mt-8 max-w-[68ch] border-t border-border pt-6">
                   <StarRating rating={featuredItem.rating} label={ratingLabel} className="mb-3" />
                   {featuredItem.author || featuredItem.emoji ? (
@@ -271,6 +288,9 @@ const TestimonialsSection = ({
                         </span>
                       ) : null}
                     </p>
+                  ) : null}
+                  {featuredItem.authorTitle ? (
+                    <p className="mt-1 text-sm text-muted-foreground">{featuredItem.authorTitle}</p>
                   ) : null}
                   {featuredItem.authorMeta ? (
                     <p className="mt-1 text-sm text-muted-foreground">
@@ -306,12 +326,17 @@ const TestimonialsSection = ({
                 <p className="whitespace-pre-line pl-8 text-base italic leading-7 text-foreground md:text-lg">
                   "{featuredItem.excerpt ?? featuredItem.quote}"
                 </p>
-                {(featuredItem.author || featuredItem.authorMeta || featuredItem.emoji || featuredItem.rating) ? (
+                {featuredItem.author ||
+                featuredItem.authorTitle ||
+                featuredItem.authorMeta ||
+                featuredItem.emoji ||
+                featuredItem.rating ? (
                   <div className="flex flex-wrap items-center gap-2 pl-8 text-sm text-muted-foreground">
                     <StarRating rating={featuredItem.rating} label={ratingLabel} className="basis-full" />
                     {featuredItem.author ? (
                       <span className="font-semibold text-foreground">— {featuredItem.author}</span>
                     ) : null}
+                    {featuredItem.authorTitle ? <span>{featuredItem.authorTitle}</span> : null}
                     {featuredItem.authorMeta ? <span>{featuredItem.authorMeta}</span> : null}
                     {featuredItem.emoji ? <span aria-hidden="true">{featuredItem.emoji}</span> : null}
                   </div>
@@ -332,12 +357,17 @@ const TestimonialsSection = ({
                 <p className="whitespace-pre-line text-sm leading-6 text-foreground">
                   "{testimonial.excerpt ?? testimonial.quote}"
                 </p>
-                {(testimonial.author || testimonial.authorMeta || testimonial.emoji || testimonial.rating) ? (
+                {testimonial.author ||
+                testimonial.authorTitle ||
+                testimonial.authorMeta ||
+                testimonial.emoji ||
+                testimonial.rating ? (
                   <div className="flex flex-wrap items-center gap-1 text-xs text-muted-foreground">
                     <StarRating rating={testimonial.rating} label={ratingLabel} className="basis-full" />
                     {testimonial.author ? (
                       <p className="font-medium text-foreground">{testimonial.author}</p>
                     ) : null}
+                    {testimonial.authorTitle ? <p>{testimonial.authorTitle}</p> : null}
                     {testimonial.authorMeta ? <p>{testimonial.authorMeta}</p> : null}
                     {testimonial.emoji ? <span aria-hidden="true">{testimonial.emoji}</span> : null}
                   </div>

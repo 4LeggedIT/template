@@ -12,6 +12,7 @@ const TestimonialsStandardPage = () => {
       id: "t-1",
       quote: t("testimonials:items.t1.quote"),
       author: t("testimonials:items.t1.author"),
+      authorTitle: t("testimonials:items.t1.authorTitle"),
       authorMeta: t("testimonials:items.t1.authorMeta"),
       emoji: "🐾",
       rating: 5,
@@ -38,6 +39,7 @@ const TestimonialsStandardPage = () => {
       quote: t("testimonials:items.longform.quote"),
       pullQuote: t("testimonials:items.longform.pullQuote"),
       author: t("testimonials:items.longform.author"),
+      authorTitle: t("testimonials:items.longform.authorTitle"),
       authorMeta: t("testimonials:items.longform.authorMeta"),
       rating: 5,
     },
@@ -48,7 +50,7 @@ const TestimonialsStandardPage = () => {
       <SEOHead
         title="Testimonials Pattern"
         canonicalPath="/standards/testimonials"
-        description="Standardized testimonials module for featured, grid and longform content, with optional star ratings."
+        description="Standardized testimonials module for featured, grid and longform content, with optional author titles and star ratings."
       />
       <PageHero
         eyebrow={t("common:nav.standards")}

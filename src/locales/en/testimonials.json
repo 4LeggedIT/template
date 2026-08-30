@@ -8,7 +8,8 @@
     "t1": {
       "quote": "Fostering with our rescue has been an amazing experience. The support, supplies, and guidance made everything manageable.",
       "author": "Alex",
-      "authorMeta": "Foster Family"
+      "authorTitle": "Foster Family",
+      "authorMeta": "Example Rescue"
     },
     "t2": {
       "quote": "The adoption process was clear and thoughtful. We felt supported the entire time and found the right dog for our home.",
@@ -24,7 +25,8 @@
       "quote": "We had never fostered before, and honestly we almost didn't apply. The form asked how much experience we had and the answer was none at all.\n\nSomeone called us back the same afternoon anyway.\n\nShe walked us through what the first week actually looks like, and then she asked us the questions we hadn't thought to ask ourselves:\n\n\"What happens if he doesn't settle?\"\n\"What if our own dog doesn't like him?\"\n\"What if we can't give him back?\"\n\nNobody pretended it would be easy. That is the part I did not expect, and it is the reason we said yes.\n\nThree fosters later, we still call with questions, and somebody still picks up.",
       "pullQuote": "Nobody pretended it would be easy.",
       "author": "Sam",
-      "authorMeta": "Foster Family"
+      "authorTitle": "Foster Family",
+      "authorMeta": "Example Rescue"
     }
   },
   "sections": {
@@ -56,6 +58,7 @@
       "Opt into `layout=\"longform\"` for letter-length testimonials — it renders real paragraphs and picks its single item from `featuredIndex`, never at random.",
       "Give any long testimonial shown in `grid`/`featured` an author-written `excerpt`; never truncate a quote in code.",
       "Set `rating` only when the source review actually carried one — never infer or average it, and never emit it as `Review` JSON-LD (search engines disallow self-serving review markup).",
+      "Use `authorTitle` for the person's role or title — it renders between `author` and `authorMeta`, so a named partner reads as name / title / organization. `authorHref` stays on `authorMeta`: the link belongs to the organization, not the job title.",
       "Component: `template/src/components/patterns/TestimonialsSection.tsx`"
     ]
   },

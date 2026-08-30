@@ -8,7 +8,8 @@
     "t1": {
       "quote": "Ser familia de acogida con nuestro rescate ha sido una experiencia increíble. El apoyo, los suministros y la orientación hicieron que todo fuera manejable.",
       "author": "Alex",
-      "authorMeta": "Familia de Acogida"
+      "authorTitle": "Familia de Acogida",
+      "authorMeta": "Example Rescue"
     },
     "t2": {
       "quote": "El proceso de adopción fue claro y cuidadoso. Nos sentimos apoyados todo el tiempo y encontramos al perro adecuado para nuestro hogar.",
@@ -24,7 +25,8 @@
       "quote": "Nunca habíamos sido hogar temporal y, sinceramente, casi no enviamos la solicitud. El formulario preguntaba cuánta experiencia teníamos y la respuesta era ninguna.\n\nAun así, alguien nos devolvió la llamada esa misma tarde.\n\nNos explicó cómo es realmente la primera semana y después nos hizo las preguntas que no se nos había ocurrido hacernos:\n\n\"¿Y si no se adapta?\"\n\"¿Y si a nuestro perro no le cae bien?\"\n\"¿Y si no podemos devolverlo?\"\n\nNadie fingió que sería fácil. Esa es la parte que no esperábamos, y es la razón por la que dijimos que sí.\n\nTres acogidas después, seguimos llamando con preguntas y alguien sigue contestando.",
       "pullQuote": "Nadie fingió que sería fácil.",
       "author": "Sam",
-      "authorMeta": "Familia de acogida"
+      "authorTitle": "Familia de acogida",
+      "authorMeta": "Example Rescue"
     }
   },
   "sections": {
@@ -56,6 +58,7 @@
       "Usa `layout=\"longform\"` para testimonios con extensión de carta: muestra párrafos reales y elige su único elemento con `featuredIndex`, nunca al azar.",
       "Da a cualquier testimonio largo mostrado en `grid`/`featured` un `excerpt` escrito por una persona; nunca recortes una cita desde el código.",
       "Asigna `rating` solo cuando la reseña original realmente lo incluía: nunca lo deduzcas ni lo promedies, y nunca lo publiques como JSON-LD `Review` (los buscadores no permiten marcado de reseñas sobre uno mismo).",
+      "Usa `authorTitle` para el cargo o rol de la persona: se muestra entre `author` y `authorMeta`, de modo que un aliado con nombre se lee como nombre / cargo / organización. `authorHref` permanece en `authorMeta`: el enlace pertenece a la organización, no al cargo.",
       "Componente: `template/src/components/patterns/TestimonialsSection.tsx`"
     ]
   },

@@ -214,3 +214,57 @@ describe("star rating", () => {
     expect(screen.getAllByText(/out of 5 stars/)).toHaveLength(1);
   });
 });
+
+describe("author title", () => {
+  const titled: TestimonialItem = {
+    id: "titled",
+    quote: "A letter about the work.",
+    author: "Sandra Murray",
+    authorTitle: "Founder and CEO",
+    authorMeta: "Rovers Return Dog Rescue",
+    authorHref: "https://example.org",
+  };
+
+  it.each(["longform", "featured", "grid"] as const)("renders the title in %s", (layout) => {
+    render(<TestimonialsSection testimonials={[titled]} layout={layout} />);
+    expect(screen.getByText("Founder and CEO")).toBeInTheDocument();
+  });
+
+  it.each(["longform", "featured", "grid"] as const)(
+    "orders the title between the name and the meta in %s",
+    (layout) => {
+      const { container } = render(<TestimonialsSection testimonials={[titled]} layout={layout} />);
+      const attribution = container.textContent ?? "";
+      expect(attribution.indexOf("Sandra Murray")).toBeLessThan(attribution.indexOf("Founder and CEO"));
+      expect(attribution.indexOf("Founder and CEO")).toBeLessThan(
+        attribution.indexOf("Rovers Return Dog Rescue"),
+      );
+    },
+  );
+
+  it("leaves an item without a title unchanged", () => {
+    const { authorTitle: _omitted, ...untitled } = titled;
+    render(<TestimonialsSection testimonials={[untitled]} layout="longform" />);
+    expect(screen.queryByText("Founder and CEO")).toBeNull();
+    expect(screen.getByText("Sandra Murray")).toBeInTheDocument();
+  });
+
+  it("renders the attribution block for a title-only item", () => {
+    render(
+      <TestimonialsSection
+        testimonials={[{ id: "anon", quote: "No name.", authorTitle: "Founder and CEO" }]}
+        layout="longform"
+      />,
+    );
+    expect(screen.getByText("Founder and CEO")).toBeInTheDocument();
+  });
+
+  it("links the meta and never the title", () => {
+    render(<TestimonialsSection testimonials={[titled]} layout="longform" />);
+    expect(screen.getByRole("link", { name: "Rovers Return Dog Rescue" })).toHaveAttribute(
+      "href",
+      "https://example.org",
+    );
+    expect(screen.queryByRole("link", { name: "Founder and CEO" })).not.toBeInTheDocument();
+  });
+});
