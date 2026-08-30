@@ -15,8 +15,8 @@ export const printableDocExampleConfig: PrintableDocConfig = {
     state: "ST",
   },
   social: {
-    facebook: "https://facebook.com/example",
-    instagram: "https://instagram.com/example",
+    facebook: "https://facebook.example.org",
+    instagram: "https://instagram.example.org",
   },
   businessCardCta: "Scan to visit our website!",
 };
