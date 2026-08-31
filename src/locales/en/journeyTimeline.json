@@ -14,7 +14,8 @@
     "cleanBillOfHealth": {
       "label": "Clean Bill of Health",
       "date": "July 22, 2026",
-      "description": "A wellness exam confirmed he's healthy and ready for the next step — finding his family."
+      "description": "A wellness exam confirmed he's healthy and ready for the next step — finding his family.",
+      "relatedLabel": "Read the announcement"
     },
     "today": {
       "label": "Today",
@@ -55,6 +56,14 @@
     "videoSrc": {
       "before": "renders a native",
       "after": "instead of an image — for a self-hosted, real rescue-day video. Prefer this over a third-party embed: a prior fleet attempt at embedding Facebook video was reverted after hitting a rights-block on posts using licensed (non-original) audio."
+    },
+    "partnerLinks": {
+      "after": "credits outside organizations named in the stage's own text (description is plain text, so it can't carry inline links). Always opens in a new tab."
+    },
+    "relatedLinks": {
+      "before": "links out to the story behind the stage — the news post or blog entry that announced it. An href starting with",
+      "mid": "renders as a client-side link; anything else opens in a new tab. Never use",
+      "after": "for an internal route — it always opens a new tab, so the site would open itself in a second one."
     },
     "realContent": "Content must be real, sourced from the org's own posts/records — never invented backstory. This pattern exists specifically to hold a dog's actual rescue-to-today story.",
     "emptyState": {

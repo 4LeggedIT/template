@@ -21,6 +21,12 @@ const JourneyTimelineStandardPage = () => {
       label: t("journeyTimeline:stages.cleanBillOfHealth.label"),
       date: t("journeyTimeline:stages.cleanBillOfHealth.date"),
       description: t("journeyTimeline:stages.cleanBillOfHealth.description"),
+      // Demonstrates `relatedLinks`' internal branch — an href starting with "/" renders as a
+      // client-side <Link>. On a real site this points at the dog's own news entry; this repo
+      // has no /news/:slug route, so it points at the news pattern's own standards page.
+      relatedLinks: [
+        { label: t("journeyTimeline:stages.cleanBillOfHealth.relatedLabel"), href: "/standards/events-news" },
+      ],
     },
     {
       label: t("journeyTimeline:stages.today.label"),
@@ -103,6 +109,14 @@ const JourneyTimelineStandardPage = () => {
               - <code>videoSrc</code> {t("journeyTimeline:standard.videoSrc.before")}{" "}
               <code>&lt;video controls playsInline poster=&#123;imageSrc&#125;&gt;</code>{" "}
               {t("journeyTimeline:standard.videoSrc.after")}
+            </p>
+            <p>
+              - <code>partnerLinks</code> {t("journeyTimeline:standard.partnerLinks.after")}
+            </p>
+            <p>
+              - <code>relatedLinks</code> {t("journeyTimeline:standard.relatedLinks.before")} <code>/</code>{" "}
+              {t("journeyTimeline:standard.relatedLinks.mid")} <code>partnerLinks</code>{" "}
+              {t("journeyTimeline:standard.relatedLinks.after")}
             </p>
             <p>- {t("journeyTimeline:standard.realContent")}</p>
             <p>

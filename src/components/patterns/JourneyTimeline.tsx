@@ -1,3 +1,5 @@
+import { ArrowRight } from "lucide-react";
+import { Link } from "react-router-dom";
 import { cn } from "@/lib/utils";
 
 export type JourneyTimelineStage = {
@@ -11,7 +13,14 @@ export type JourneyTimelineStage = {
   /** Optional credit links rendered below the description — e.g. partner rescues named in the
    * stage's own text (`description` is plain text, so it can't carry inline links itself). */
   partnerLinks?: { label: string; href: string }[];
+  /** Optional "read more" links to related content — e.g. the news post or blog entry that
+   * announced what this stage describes. Distinct from `partnerLinks`, which credits outside
+   * organizations named in the stage's text: these are follow-the-story actions, so an internal
+   * href (starting with "/") renders as a client-side <Link> rather than a new tab. */
+  relatedLinks?: { label: string; href: string }[];
 };
+
+const isExternalContentHref = (href: string) => !href.startsWith("/");
 
 type JourneyTimelineProps = {
   stages: JourneyTimelineStage[];
@@ -47,6 +56,28 @@ const JourneyTimeline = ({ stages, className }: JourneyTimelineProps) => {
                 </span>
               ))}
             </p>
+          ) : null}
+          {stage.relatedLinks?.length ? (
+            <ul className="mt-3 space-y-1">
+              {stage.relatedLinks.map((related) => {
+                const linkClassName = "inline-flex items-center gap-1.5 text-sm font-semibold text-primary hover:underline";
+                return (
+                  <li key={related.href}>
+                    {isExternalContentHref(related.href) ? (
+                      <a href={related.href} target="_blank" rel="noopener noreferrer" className={linkClassName}>
+                        {related.label}
+                        <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                      </a>
+                    ) : (
+                      <Link to={related.href} className={linkClassName}>
+                        {related.label}
+                        <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                      </Link>
+                    )}
+                  </li>
+                );
+              })}
+            </ul>
           ) : null}
           {stage.videoSrc ? (
             <figure className="mt-4 flex justify-center overflow-hidden rounded-2xl border border-border bg-card sm:max-w-sm">

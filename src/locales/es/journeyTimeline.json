@@ -14,7 +14,8 @@
     "cleanBillOfHealth": {
       "label": "Certificado de Buena Salud",
       "date": "22 de julio de 2026",
-      "description": "Un examen de bienestar confirmó que está sano y listo para el siguiente paso — encontrar a su familia."
+      "description": "Un examen de bienestar confirmó que está sano y listo para el siguiente paso — encontrar a su familia.",
+      "relatedLabel": "Lee el anuncio"
     },
     "today": {
       "label": "Hoy",
@@ -55,6 +56,14 @@
     "videoSrc": {
       "before": "muestra un",
       "after": "nativo en lugar de una imagen — para un video real del día del rescate, alojado propio. Prefiera esto sobre una incrustación de terceros: un intento previo en la flota de incrustar video de Facebook se revirtió tras un bloqueo de derechos en publicaciones con audio con licencia (no original)."
+    },
+    "partnerLinks": {
+      "after": "acredita a organizaciones externas mencionadas en el texto de la etapa (la descripción es texto plano, así que no puede llevar enlaces incrustados). Siempre abre en una pestaña nueva."
+    },
+    "relatedLinks": {
+      "before": "enlaza a la historia detrás de la etapa — la noticia o entrada de blog que la anunció. Un href que empieza con",
+      "mid": "se renderiza como enlace del lado del cliente; cualquier otro abre en una pestaña nueva. Nunca uses",
+      "after": "para una ruta interna — siempre abre una pestaña nueva, así que el sitio se abriría a sí mismo en una segunda."
     },
     "realContent": "El contenido debe ser real, obtenido de las propias publicaciones/registros de la organización — nunca una historia inventada. Este patrón existe específicamente para contener la historia real de un perro, desde el rescate hasta hoy.",
     "emptyState": {
