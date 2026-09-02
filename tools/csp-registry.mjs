@@ -59,6 +59,14 @@ export const patternCspRequirements = {
   KennelBinderCoverSection: { imgSrc: ["https://api.qrserver.com"] },
   KennelCards2UpSection: { imgSrc: ["https://api.qrserver.com"] },
   BusinessCardGenericSection: { imgSrc: ["https://api.qrserver.com"] },
+  PayPalHostedButton: {
+    // HOSTED_BUTTONS_SDK_ORIGIN = paypal.com/sdk/js?components=hosted-buttons
+    // — a different PayPal product/SDK from PayPalDonateButton's donate-sdk.js.
+    scriptSrc: ["https://www.paypal.com", "https://www.paypalobjects.com"],
+    imgSrc: ["https://www.paypalobjects.com"],
+    connectSrc: ["https://www.paypal.com"],
+    frameSrc: ["https://www.paypal.com"],
+  },
   BusinessCardTeamSection: { imgSrc: ["https://api.qrserver.com"] },
   AdoptAPetEmbed: {
     // buildScrollerSrcDoc()'s injected <script>/<img> — rendered inside an
@@ -91,14 +99,6 @@ export const patternCspRequirements = {
   PayPalDonateButton: {
     // DONATE_SDK_SRC = paypalobjects.com/donate/sdk/donate-sdk.js
     scriptSrc: ["https://www.paypalobjects.com"],
-    imgSrc: ["https://www.paypalobjects.com"],
-    connectSrc: ["https://www.paypal.com"],
-    frameSrc: ["https://www.paypal.com"],
-  },
-  PayPalHostedButton: {
-    // HOSTED_BUTTONS_SDK_ORIGIN = paypal.com/sdk/js?components=hosted-buttons
-    // — a different PayPal product/SDK from PayPalDonateButton's donate-sdk.js.
-    scriptSrc: ["https://www.paypal.com", "https://www.paypalobjects.com"],
     imgSrc: ["https://www.paypalobjects.com"],
     connectSrc: ["https://www.paypal.com"],
     frameSrc: ["https://www.paypal.com"],
