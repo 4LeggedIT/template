@@ -9,6 +9,14 @@
  * Requires the site's dev or preview server to already be running (this
  * script does not start one).
  *
+ * When to use it: only for content that arrived as an old-format text
+ * document (Word, Google Doc, typed handout) and was migrated into the
+ * site's /documents format. If the rescue published its own designed
+ * graphic (flyer, infographic, social-post image), that image IS the
+ * download: wrap it with img2pdf at native size and write the result to
+ * public/resources/<Name>.pdf instead of printing the document page.
+ *   img2pdf <image> --title "<Title> | <Org>" -o public/resources/<Name>.pdf
+ *
  * Usage:
  *   node tools/gen-document-pdf.mjs foster-agreement
  *   node tools/gen-document-pdf.mjs foster-agreement --base http://localhost:4180
