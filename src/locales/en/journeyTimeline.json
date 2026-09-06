@@ -55,7 +55,7 @@
     },
     "videoSrc": {
       "before": "renders a native",
-      "after": "instead of an image — for a self-hosted, real rescue-day video. Prefer this over a third-party embed: a prior fleet attempt at embedding Facebook video was reverted after hitting a rights-block on posts using licensed (non-original) audio."
+      "after": "instead of an image — for a real rescue-day video served from the fleet media host (`mediaUrl()`). Prefer this over a third-party embed: a prior fleet attempt at embedding Facebook video was reverted after hitting a rights-block on posts using licensed (non-original) audio."
     },
     "partnerLinks": {
       "after": "credits outside organizations named in the stage's own text (description is plain text, so it can't carry inline links). Always opens in a new tab."

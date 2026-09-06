@@ -38,6 +38,11 @@ const FIXED_DIRECTIVES = {
   "style-src": ["'self'", "'unsafe-inline'"],
   "font-src": ["'self'"],
   "img-src": ["'self'", "data:"],
+  // Fleet video host (TPL-042): every site's <video src> points at the one R2
+  // bucket behind media.4leggedit.com, so this is fixed rather than
+  // pattern-driven. Without it media-src falls back to default-src 'self'
+  // and every cross-origin reel is refused.
+  "media-src": ["'self'", "https://media.4leggedit.com"],
   "connect-src": ["'self'"],
 };
 
@@ -46,6 +51,7 @@ const DIRECTIVE_KEY_MAP = {
   styleSrc: "style-src",
   fontSrc: "font-src",
   imgSrc: "img-src",
+  mediaSrc: "media-src",
   connectSrc: "connect-src",
   frameSrc: "frame-src",
 };
@@ -59,6 +65,7 @@ const DIRECTIVE_ORDER = [
   "style-src",
   "font-src",
   "img-src",
+  "media-src",
   "connect-src",
   "frame-src",
 ];

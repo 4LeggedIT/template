@@ -767,6 +767,93 @@ const checkExternalUrl = async (url) => {
   return { kind: "blocked", status: head.status, finalUrl: head.finalUrl, reason: `unexpected status ${head.status}` };
 };
 
+// ---------------------------------------------------------------------------
+// Fleet media host (TPL-042): video is never in the repo, always at
+// https://media.4leggedit.com/<site>/<path>. This pass is text-based rather
+// than AST-based on purpose -- `src`/`videoSrc`/`poster` are not link props,
+// so the prop-threading resolver above never sees them (and never did: the
+// old `/videos/*.mp4` public paths were never validated either). Runs in the
+// DEFAULT mode so `npm run links:check` in CI is the gate.
+// ---------------------------------------------------------------------------
+
+const MEDIA_HOST = "https://media.4leggedit.com";
+const skipMediaHead = process.env.LINK_CHECK_SKIP_MEDIA === "1";
+
+// Drop block comments and whole-line `//` / JSDoc `*` lines so a comment
+// quoting the old "/videos/..." form or an example mediaUrl() call is not
+// mistaken for code. Trailing `//` comments are left alone because `https://`
+// would be cut in half.
+const stripComments = (content) =>
+  content.replace(/\/\*[\s\S]*?\*\//g, "").replace(/^[ \t]*(\/\/|\*).*$/gm, "");
+
+const collectMediaRefs = (fileContents) => {
+  const urls = new Map(); // url -> Set(file:line)
+  const issues = []; // { file, url, reason }
+  const add = (url, where) => {
+    const set = urls.get(url) || new Set();
+    set.add(where);
+    urls.set(url, set);
+  };
+  for (const [file, raw] of fileContents) {
+    // The helper's own definition file: declares mediaUrl(), no real refs.
+    if (path.basename(file) === "media-host.ts") continue;
+    const rel = path.relative(projectRoot, file);
+    const content = stripComments(raw);
+    const lines = content.split("\n");
+    lines.forEach((text, idx) => {
+      const line = idx + 1;
+      const where = `${rel}:${line}`;
+
+      for (const m of text.matchAll(/https:\/\/media\.4leggedit\.com\/[^"'`\s)]+/g)) add(m[0], where);
+
+      for (const m of text.matchAll(/(?<!function\s)\bmediaUrl\(([^)]*)\)/g)) {
+        const lit = /^\s*"([^"]+)"\s*,\s*"([^"]+)"\s*$/.exec(m[1]);
+        if (lit) add(`${MEDIA_HOST}/${lit[1]}/${lit[2].replace(/^\/+/, "")}`, where);
+        else issues.push({ file, url: `mediaUrl(${m[1].trim()})`, reason: "mediaUrl() must be called with two string literals (media pass resolves by text scan)" });
+      }
+
+      const videoImport = /\bfrom\s+["'][^"']+\.(mp4|mov|webm)["']/i.exec(text);
+      if (videoImport) issues.push({ file, url: videoImport[0], reason: "video imported from the repo; upload it to the media host and use mediaUrl() (TPL-042)" });
+
+      const publicVideo = /["'`](\/videos\/[^"'`]*)/.exec(text);
+      if (publicVideo) issues.push({ file, url: publicVideo[1], reason: "video referenced from public/videos/; upload it to the media host and use mediaUrl() (TPL-042)" });
+    });
+  }
+  return { urls, issues };
+};
+
+// HEAD the object and read the headers that matter for playback: a 200 (not
+// a redirect to a login/challenge page), a video content-type, and byte
+// ranges (seeking; iOS Safari refuses to play without them).
+const checkMediaUrl = async (url) => {
+  const timeoutSec = Math.ceil(Number(process.env.LINK_CHECK_TIMEOUT_MS || 15000) / 1000);
+  const userAgent = process.env.LINK_CHECK_UA || "template-link-audit/1.0";
+  let stdout;
+  try {
+    ({ stdout } = await execFileAsync(
+      "curl",
+      ["-sS", "-I", "-L", "--max-time", String(timeoutSec), "-A", userAgent, "-o", "/dev/null", "-D", "-", url],
+      { cwd: projectRoot },
+    ));
+  } catch (err) {
+    return { ok: false, reason: `network error (${String(err?.message || err).split("\n")[0]})` };
+  }
+  // With -L there is one header block per hop; the last one is the answer.
+  const blocks = String(stdout || "").split(/\r?\n\r?\n/).map((b) => b.trim()).filter(Boolean);
+  const last = blocks[blocks.length - 1] || "";
+  const statusMatch = /^HTTP\/[\d.]+\s+(\d{3})/.exec(last);
+  const status = statusMatch ? Number(statusMatch[1]) : 0;
+  const header = (name) => {
+    const m = new RegExp(`^${name}:\\s*(.+)$`, "im").exec(last);
+    return m ? m[1].trim() : "";
+  };
+  if (status !== 200) return { ok: false, reason: `status ${status || "unknown"}` };
+  const contentType = header("content-type");
+  if (!/^video\//i.test(contentType)) return { ok: false, reason: `content-type "${contentType || "missing"}" is not video/*` };
+  if (!/bytes/i.test(header("accept-ranges"))) return { ok: false, reason: "no `accept-ranges: bytes` (seeking/iOS playback would fail)" };
+  return { ok: true, reason: null };
+};
+
 const runPool = async (items, concurrency, fn) => {
   if (!items.length) return [];
   const results = new Array(items.length);
@@ -1024,6 +1111,31 @@ const main = async () => {
   if (printInternal) {
     process.stdout.write(`${[...routes].sort().join("\n")}${routes.size ? "\n" : ""}`);
     return;
+  }
+
+  // ---- media host pass (TPL-042) -------------------------------------------
+  let mediaVerified = 0;
+  if (!externalOnly) {
+    const media = collectMediaRefs(fileContents);
+    internalIssues.push(...media.issues);
+    const mediaUrls = [...media.urls.keys()].sort();
+    if (mediaUrls.length && skipMediaHead) {
+      console.log(`[links] media host: ${mediaUrls.length} url(s) found, HEAD checks skipped (LINK_CHECK_SKIP_MEDIA=1)`);
+    } else if (mediaUrls.length) {
+      const concurrency = Number(process.env.LINK_CHECK_CONCURRENCY || 8);
+      const results = await runPool(mediaUrls, concurrency, async (url) => ({ url, ...(await checkMediaUrl(url)) }));
+      for (const res of results) {
+        if (res.ok) {
+          mediaVerified += 1;
+          continue;
+        }
+        for (const where of media.urls.get(res.url)) {
+          const [relFile] = where.split(":");
+          internalIssues.push({ file: path.join(projectRoot, relFile), url: res.url, reason: `media host: ${res.reason}` });
+        }
+      }
+      console.log(`[links] media host: ${mediaVerified}/${mediaUrls.length} url(s) verified`);
+    }
   }
 
   if ((shouldCheckExternal || externalOnly) && externalRefs.size) {

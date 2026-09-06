@@ -44,6 +44,13 @@ export const cspBaseline = {
 // tools/build.mjs to call writeCspHeaders(rootDir) LAST, after prerendering
 // writes every route's HTML — not right after the Vite client build.
 
+// media-src is NOT registered here: the fleet video host
+// (https://media.4leggedit.com, TPL-042) is a fixed directive owned by
+// gen-csp-headers.mjs FIXED_DIRECTIVES, since every video-rendering pattern
+// takes a `src` from the site and the host is the same for all of them.
+// A `mediaSrc` key is still accepted for any future pattern that loads
+// media from somewhere else.
+
 // Keyed by pattern component name — must match the .tsx filename (minus
 // extension) in components/patterns/.
 export const patternCspRequirements = {

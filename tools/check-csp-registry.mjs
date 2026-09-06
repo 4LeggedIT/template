@@ -41,6 +41,7 @@ function registeredHostnames(patternName) {
   const all = [
     ...(requirement.scriptSrc ?? []),
     ...(requirement.imgSrc ?? []),
+    ...(requirement.mediaSrc ?? []),
     ...(requirement.connectSrc ?? []),
     ...(requirement.frameSrc ?? []),
     ...(requirement.styleSrc ?? []),

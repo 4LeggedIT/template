@@ -55,7 +55,7 @@
     },
     "videoSrc": {
       "before": "muestra un",
-      "after": "nativo en lugar de una imagen — para un video real del día del rescate, alojado propio. Prefiera esto sobre una incrustación de terceros: un intento previo en la flota de incrustar video de Facebook se revirtió tras un bloqueo de derechos en publicaciones con audio con licencia (no original)."
+      "after": "nativo en lugar de una imagen — para un video real del día del rescate, servido desde el host de medios de la flota (`mediaUrl()`). Prefiera esto sobre una incrustación de terceros: un intento previo en la flota de incrustar video de Facebook se revirtió tras un bloqueo de derechos en publicaciones con audio con licencia (no original)."
     },
     "partnerLinks": {
       "after": "acredita a organizaciones externas mencionadas en el texto de la etapa (la descripción es texto plano, así que no puede llevar enlaces incrustados). Siempre abre en una pestaña nueva."

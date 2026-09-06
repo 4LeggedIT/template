@@ -117,8 +117,8 @@ type EventsNewsBaseEntry = {
   imageAlt?: string;
   images?: EventsNewsImage[];
   /**
-   * A real, self-hosted mp4 (e.g. downloaded via yt-dlp from a source Facebook Reel and placed in
-   * `public/videos/`) — renders a native `<video>` in place of imageSrc/images/videoEmbed in
+   * A real mp4 served from the fleet media host (`mediaUrl("<site>", "<name>.mp4")`, see
+   * lib/media-host.ts; never a file in this repo) — renders a native `<video>` in place of imageSrc/images/videoEmbed in
    * full/detail views (card thumbnails still use imageSrc as the video's poster). Takes priority
    * over `videoEmbed` when both are set. Prefer this over `videoEmbed` when possible — a self-hosted
    * file always plays, where a Facebook iframe embed can be blocked by Rights Manager depending on
