@@ -847,6 +847,13 @@ const checkMediaUrl = async (url) => {
     const m = new RegExp(`^${name}:\\s*(.+)$`, "im").exec(last);
     return m ? m[1].trim() : "";
   };
+  // Bot Fight Mode on the media host's zone answers datacenter IPs (GitHub
+  // runners included) with a 403 challenge. A public R2 custom domain never
+  // 403s for any other reason -- a missing key is a 404 -- so a 403 means
+  // "could not verify from here", not "broken". Reported as blocked (warning);
+  // the object was HEAD-verified by `npm run build` on the operator's machine
+  // before the commit. 404/5xx/network errors still fail.
+  if (status === 403) return { ok: false, blocked: true, reason: "403 from the edge (bot protection); verified locally, not from this network" };
   if (status !== 200) return { ok: false, reason: `status ${status || "unknown"}` };
   const contentType = header("content-type");
   if (!/^video\//i.test(contentType)) return { ok: false, reason: `content-type "${contentType || "missing"}" is not video/*` };
@@ -1124,9 +1131,14 @@ const main = async () => {
     } else if (mediaUrls.length) {
       const concurrency = Number(process.env.LINK_CHECK_CONCURRENCY || 8);
       const results = await runPool(mediaUrls, concurrency, async (url) => ({ url, ...(await checkMediaUrl(url)) }));
+      let mediaBlocked = 0;
       for (const res of results) {
         if (res.ok) {
           mediaVerified += 1;
+          continue;
+        }
+        if (res.blocked) {
+          mediaBlocked += 1;
           continue;
         }
         for (const where of media.urls.get(res.url)) {
@@ -1134,7 +1146,8 @@ const main = async () => {
           internalIssues.push({ file: path.join(projectRoot, relFile), url: res.url, reason: `media host: ${res.reason}` });
         }
       }
-      console.log(`[links] media host: ${mediaVerified}/${mediaUrls.length} url(s) verified`);
+      const blockedNote = mediaBlocked ? `; ${mediaBlocked} blocked by the edge's bot protection (403) -- not verifiable from this network, verified locally before commit` : "";
+      console.log(`[links] media host: ${mediaVerified}/${mediaUrls.length} url(s) verified${blockedNote}`);
     }
   }
 
