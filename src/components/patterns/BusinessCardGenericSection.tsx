@@ -31,38 +31,58 @@ type BusinessCardGenericSectionProps = {
    * "simple" — "Business Card (Simple)": one single-sided card, logo as-is on one side, QR + one line of text on the other, printed as one Avery sheet.
    */
   layout?: "generic" | "simple";
+  /**
+   * Only used by layout="simple". When set, the card slot renders this pre-designed
+   * image (e.g. artwork the org had professionally made) instead of composing the
+   * card from logoSrc/QR/businessCardCta. Expected aspect ratio 3.5:2 (object-fit: cover).
+   */
+  cardImageSrc?: string;
+  cardImageAlt?: string;
 };
 
-const BusinessCardGenericSection = ({ config, layout = "generic" }: BusinessCardGenericSectionProps) => {
+const BusinessCardGenericSection = ({ config, layout = "generic", cardImageSrc, cardImageAlt }: BusinessCardGenericSectionProps) => {
   const { orgName, orgTagline, logoSrc, contact, social, businessCardCta } = config;
   const cleanUrl = contact.website.replace(/^https?:\/\//, "").replace(/^www\./, "");
   const qrWebSrc = `https://api.qrserver.com/v1/create-qr-code/?size=144x144&data=${encodeURIComponent(contact.website)}`;
 
   const cards = Array.from({ length: 10 });
 
-  const SimpleCard = () => (
-    <div style={{
-      width: "3.5in", height: "2in", overflow: "hidden",
-      display: "flex",
-      boxShadow: "inset 0 0 0 0.5px hsl(210,20%,82%)",
-    }}>
-      <div style={{ flex: 1, minWidth: 0, padding: 14, display: "flex", alignItems: "center", justifyContent: "center" }}>
-        <img src={logoSrc} alt={orgName} style={{ maxWidth: "100%", maxHeight: "100%", objectFit: "contain" }} />
-      </div>
+  const SimpleCard = () => {
+    if (cardImageSrc) {
+      return (
+        <div style={{
+          width: "3.5in", height: "2in", overflow: "hidden",
+          boxShadow: "inset 0 0 0 0.5px hsl(210,20%,82%)",
+        }}>
+          <img src={cardImageSrc} alt={cardImageAlt ?? orgName} style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+        </div>
+      );
+    }
 
-      <div style={{ flex: 1, minWidth: 0, padding: 14, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 6 }}>
-        <img src={qrWebSrc} alt={`QR code for ${cleanUrl}`} style={{ width: 76, height: 76, display: "block" }} />
-        {businessCardCta ? (
-          <div style={{ width: "100%", fontSize: "8pt", fontWeight: 600, color: "var(--doc-primary, hsl(10,42%,58%))", textAlign: "center", overflowWrap: "break-word", wordBreak: "break-word" }}>
-            {businessCardCta}
+    return (
+      <div style={{
+        width: "3.5in", height: "2in", overflow: "hidden",
+        display: "flex",
+        boxShadow: "inset 0 0 0 0.5px hsl(210,20%,82%)",
+      }}>
+        <div style={{ flex: 1, minWidth: 0, padding: 14, display: "flex", alignItems: "center", justifyContent: "center" }}>
+          <img src={logoSrc} alt={orgName} style={{ maxWidth: "100%", maxHeight: "100%", objectFit: "contain" }} />
+        </div>
+
+        <div style={{ flex: 1, minWidth: 0, padding: 14, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 6 }}>
+          <img src={qrWebSrc} alt={`QR code for ${cleanUrl}`} style={{ width: 76, height: 76, display: "block" }} />
+          {businessCardCta ? (
+            <div style={{ width: "100%", fontSize: "8pt", fontWeight: 600, color: "var(--doc-primary, hsl(10,42%,58%))", textAlign: "center", overflowWrap: "break-word", wordBreak: "break-word" }}>
+              {businessCardCta}
+            </div>
+          ) : null}
+          <div style={{ width: "100%", fontSize: "8pt", fontWeight: 600, color: "var(--doc-dark, hsl(212,30%,20%))", textAlign: "center", overflowWrap: "break-word", wordBreak: "break-word" }}>
+            {cleanUrl}
           </div>
-        ) : null}
-        <div style={{ width: "100%", fontSize: "8pt", fontWeight: 600, color: "var(--doc-dark, hsl(212,30%,20%))", textAlign: "center", overflowWrap: "break-word", wordBreak: "break-word" }}>
-          {cleanUrl}
         </div>
       </div>
-    </div>
-  );
+    );
+  };
 
   const FrontCard = () => (
     <div style={{
