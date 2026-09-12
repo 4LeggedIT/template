@@ -44,6 +44,11 @@
       "title": "Formato largo",
       "description": "El formato largo muestra un único testimonio con extensión de carta en párrafos reales: sin cursiva, sin comillas literales y con una cita destacada opcional. Las líneas en blanco separan párrafos; un solo salto de línea mantiene agrupadas las líneas consecutivas en un mismo párrafo.",
       "sectionTitle": "Testimonio en formato largo"
+    },
+    "longformCollapsible": {
+      "title": "Formato largo, plegable",
+      "description": "Active `collapsible` para ocultar el cuerpo detrás de un interruptor nativo `<details>` cuando una carta es muy larga — la cita destacada permanece visible como resumen, y el texto completo se sigue incluyendo en el HTML renderizado (rastreable, y funciona con JS desactivado, ya que expandir/contraer es un comportamiento nativo del navegador). No tiene efecto sin una `pullQuote`.",
+      "sectionTitle": "Testimonio en formato largo plegable"
     }
   },
   "standard": {
@@ -59,10 +64,12 @@
       "Da a cualquier testimonio largo mostrado en `grid`/`featured` un `excerpt` escrito por una persona; nunca recortes una cita desde el código.",
       "Asigna `rating` solo cuando la reseña original realmente lo incluía: nunca lo deduzcas ni lo promedies, y nunca lo publiques como JSON-LD `Review` (los buscadores no permiten marcado de reseñas sobre uno mismo).",
       "Usa `authorTitle` para el cargo o rol de la persona: se muestra entre `author` y `authorMeta`, de modo que un aliado con nombre se lee como nombre / cargo / organización. `authorHref` permanece en `authorMeta`: el enlace pertenece a la organización, no al cargo.",
+      "Activa `collapsible` en `layout=\"longform\"` cuando una carta es demasiado larga para mostrarla completa de entrada: oculta el cuerpo detrás de un interruptor nativo `<details>` (cerrado por defecto) mientras la `pullQuote` permanece visible como resumen. Requiere `pullQuote`; sin ella el elemento vuelve al renderizado siempre expandido. Pasa `labels.readMoreLabel` para el texto del interruptor en sitios con i18n.",
       "Componente: `template/src/components/patterns/TestimonialsSection.tsx`"
     ]
   },
   "labels": {
-    "ratingLabel": "Valorado con {rating} de 5 estrellas"
+    "ratingLabel": "Valorado con {rating} de 5 estrellas",
+    "readMoreLabel": "Leer la carta completa"
   }
 }

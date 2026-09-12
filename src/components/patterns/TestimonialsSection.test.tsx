@@ -108,6 +108,61 @@ describe("TestimonialsSection longform", () => {
   });
 });
 
+describe("TestimonialsSection collapsible longform", () => {
+  it("renders the full quote in a closed <details> disclosure when collapsible and a pullQuote is set", () => {
+    const { container } = render(
+      <TestimonialsSection testimonials={[letter]} layout="longform" collapsible />,
+    );
+
+    const details = container.querySelector("details");
+    expect(details).not.toBeNull();
+    expect(details).not.toHaveAttribute("open");
+    // The full quote still ships in the markup — collapse is native browser
+    // behavior, not something that hides content from the rendered HTML.
+    expect(details?.querySelector("blockquote")?.textContent).toContain("Closing paragraph.");
+  });
+
+  it("shows the default toggle label, and a call-site override", () => {
+    const { rerender } = render(
+      <TestimonialsSection testimonials={[letter]} layout="longform" collapsible />,
+    );
+    expect(screen.getByText("Read the full letter")).toBeInTheDocument();
+
+    rerender(
+      <TestimonialsSection
+        testimonials={[letter]}
+        layout="longform"
+        collapsible
+        labels={{ readMoreLabel: "Leer la carta completa" }}
+      />,
+    );
+    expect(screen.getByText("Leer la carta completa")).toBeInTheDocument();
+  });
+
+  it("falls back to the always-expanded rendering without a pullQuote", () => {
+    const { noPullQuote } = { noPullQuote: { ...letter, pullQuote: undefined } };
+    const { container } = render(
+      <TestimonialsSection testimonials={[noPullQuote]} layout="longform" collapsible />,
+    );
+
+    expect(container.querySelector("details")).toBeNull();
+    expect(container.querySelector("blockquote")).not.toBeNull();
+  });
+
+  it("ignores collapsible outside of longform", () => {
+    const { container } = render(
+      <TestimonialsSection testimonials={[letter]} layout="grid" collapsible />,
+    );
+    expect(container.querySelector("details")).toBeNull();
+  });
+
+  it("defaults to always-expanded when collapsible is omitted", () => {
+    const { container } = render(<TestimonialsSection testimonials={[letter]} layout="longform" />);
+    expect(container.querySelector("details")).toBeNull();
+    expect(container.querySelector("blockquote")).not.toBeNull();
+  });
+});
+
 describe("TestimonialsSection translation disclosure", () => {
   const translated: TestimonialItem = {
     id: "translated",

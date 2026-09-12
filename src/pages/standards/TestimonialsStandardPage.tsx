@@ -99,6 +99,23 @@ const TestimonialsStandardPage = () => {
           />
         </div>
 
+        <div className="space-y-3">
+          <h2 className="text-lg font-semibold">{t("testimonials:sections.longformCollapsible.title")}</h2>
+          <p className="text-sm text-muted-foreground">
+            {t("testimonials:sections.longformCollapsible.description")}
+          </p>
+          <TestimonialsSection
+            title={t("testimonials:sections.longformCollapsible.sectionTitle")}
+            testimonials={longformSample}
+            layout="longform"
+            collapsible
+            labels={{
+              ratingLabel: t("testimonials:labels.ratingLabel"),
+              readMoreLabel: t("testimonials:labels.readMoreLabel"),
+            }}
+          />
+        </div>
+
         <Card>
           <CardHeader>
             <CardTitle>{t("testimonials:standard.title")}</CardTitle>

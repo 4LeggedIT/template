@@ -1,5 +1,5 @@
 import { Fragment, useEffect, useMemo, useState } from "react";
-import { Quote } from "lucide-react";
+import { ChevronDown, Quote } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { safeContentUrl } from "@/lib/safe-url";
@@ -93,6 +93,20 @@ type TestimonialsSectionProps = {
   featuredStrategy?: "first" | "randomOnLoad";
   /** Which single item `featured`/`longform` render. Clamped into range. */
   featuredIndex?: number;
+  /**
+   * `longform` only. Wraps the quote body in a native `<details>` disclosure,
+   * closed by default, so a reader sees only `pullQuote` until they choose to
+   * expand it. Purely presentational — the full quote still ships in the
+   * server-rendered HTML (crawlable, and works with JS disabled: expand/collapse
+   * is native browser behavior, not application state, so there is no
+   * no-JS-safe-reveal problem the way code-truncating a string would create).
+   *
+   * Has no effect without `pullQuote` — there would be nothing to show while
+   * collapsed, so the item falls back to the existing always-expanded
+   * rendering. Ignored by `grid`/`featured`. Default `false` (existing
+   * always-expanded behavior, unchanged for every current call site).
+   */
+  collapsible?: boolean;
   className?: string;
   labels?: {
     /**
@@ -101,12 +115,19 @@ type TestimonialsSectionProps = {
      * must pass this from its own `t()`.
      */
     ratingLabel?: string;
+    /**
+     * `longform` + `collapsible` only. Text on the always-visible `<summary>`
+     * toggle. The English default is for monolingual sites only — a translated
+     * site must pass this from its own `t()`.
+     */
+    readMoreLabel?: string;
   };
 };
 
 const MAX_RATING = 5;
 
 const DEFAULT_RATING_LABEL = "Rated {rating} out of 5 stars";
+const DEFAULT_READ_MORE_LABEL = "Read the full letter";
 
 /**
  * Normalizes authored line endings and splits a long quote into paragraphs.
@@ -183,10 +204,12 @@ const TestimonialsSection = ({
   columns = 1,
   featuredStrategy = "randomOnLoad",
   featuredIndex = 0,
+  collapsible = false,
   className,
   labels,
 }: TestimonialsSectionProps) => {
   const ratingLabel = labels?.ratingLabel ?? DEFAULT_RATING_LABEL;
+  const readMoreLabel = labels?.readMoreLabel ?? DEFAULT_READ_MORE_LABEL;
   const [clientFeaturedIndex, setClientFeaturedIndex] = useState(featuredIndex);
 
   useEffect(() => {
@@ -221,6 +244,12 @@ const TestimonialsSection = ({
 
   const longformAuthorHref = layout === "longform" ? safeContentUrl(featuredItem?.authorHref) : undefined;
   const longformAuthorIsExternal = Boolean(longformAuthorHref && /^https?:/i.test(longformAuthorHref));
+
+  // Collapsing only makes sense when there's a pull quote to show in its place —
+  // otherwise a reader would land on a card with nothing readable until they
+  // find and click a toggle.
+  const isLongformCollapsible =
+    layout === "longform" && collapsible && Boolean(featuredItem?.pullQuote);
 
   const gridColumnsClass = columns === 3 ? "md:grid-cols-2 lg:grid-cols-3" : columns === 2 ? "md:grid-cols-2" : "";
 
@@ -259,18 +288,42 @@ const TestimonialsSection = ({
               {/* No literal quote characters and no `italic`: at letter length an
                   italic face is a genuine legibility/dyslexia problem, and the
                   <figure>/<blockquote> pairing already conveys "this is a quote". */}
-              <blockquote className="relative z-10 max-w-[68ch] space-y-5 text-base leading-7 text-foreground md:text-lg md:leading-8">
-                {longformParagraphs.map((paragraph, paragraphIndex) => (
-                  <p key={`${featuredItem.id}-p${paragraphIndex}`}>
-                    {paragraph.split("\n").map((line, lineIndex) => (
-                      <Fragment key={`${featuredItem.id}-p${paragraphIndex}-l${lineIndex}`}>
-                        {lineIndex > 0 ? <br /> : null}
-                        {line}
-                      </Fragment>
+              {isLongformCollapsible ? (
+                <details className="group relative z-10 max-w-[68ch]">
+                  <summary className="mb-5 flex w-fit cursor-pointer list-none items-center gap-1.5 text-sm font-semibold text-primary underline underline-offset-4 hover:text-primary/80 [&::-webkit-details-marker]:hidden">
+                    <ChevronDown
+                      aria-hidden="true"
+                      className="h-4 w-4 shrink-0 transition-transform duration-200 group-open:rotate-180"
+                    />
+                    {readMoreLabel}
+                  </summary>
+                  <blockquote className="space-y-5 text-base leading-7 text-foreground md:text-lg md:leading-8">
+                    {longformParagraphs.map((paragraph, paragraphIndex) => (
+                      <p key={`${featuredItem.id}-p${paragraphIndex}`}>
+                        {paragraph.split("\n").map((line, lineIndex) => (
+                          <Fragment key={`${featuredItem.id}-p${paragraphIndex}-l${lineIndex}`}>
+                            {lineIndex > 0 ? <br /> : null}
+                            {line}
+                          </Fragment>
+                        ))}
+                      </p>
                     ))}
-                  </p>
-                ))}
-              </blockquote>
+                  </blockquote>
+                </details>
+              ) : (
+                <blockquote className="relative z-10 max-w-[68ch] space-y-5 text-base leading-7 text-foreground md:text-lg md:leading-8">
+                  {longformParagraphs.map((paragraph, paragraphIndex) => (
+                    <p key={`${featuredItem.id}-p${paragraphIndex}`}>
+                      {paragraph.split("\n").map((line, lineIndex) => (
+                        <Fragment key={`${featuredItem.id}-p${paragraphIndex}-l${lineIndex}`}>
+                          {lineIndex > 0 ? <br /> : null}
+                          {line}
+                        </Fragment>
+                      ))}
+                    </p>
+                  ))}
+                </blockquote>
+              )}
 
               {featuredItem.author ||
               featuredItem.authorTitle ||

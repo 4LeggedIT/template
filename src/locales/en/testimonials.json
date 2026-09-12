@@ -44,6 +44,11 @@
       "title": "Longform",
       "description": "Longform renders a single letter-length testimonial as real paragraphs — not italic, no literal quote characters, with an optional pull quote. Blank lines separate paragraphs; a single line break keeps consecutive lines grouped in one paragraph.",
       "sectionTitle": "Longform testimonial"
+    },
+    "longformCollapsible": {
+      "title": "Longform, collapsible",
+      "description": "Set `collapsible` to close the body behind a native `<details>` toggle when a letter runs long — the pull quote stays visible as the summary, and the full text still ships in the rendered HTML (crawlable, and works with JS disabled, since expand/collapse is native browser behavior). Has no effect without a `pullQuote`.",
+      "sectionTitle": "Collapsible longform testimonial"
     }
   },
   "standard": {
@@ -59,10 +64,12 @@
       "Give any long testimonial shown in `grid`/`featured` an author-written `excerpt`; never truncate a quote in code.",
       "Set `rating` only when the source review actually carried one — never infer or average it, and never emit it as `Review` JSON-LD (search engines disallow self-serving review markup).",
       "Use `authorTitle` for the person's role or title — it renders between `author` and `authorMeta`, so a named partner reads as name / title / organization. `authorHref` stays on `authorMeta`: the link belongs to the organization, not the job title.",
+      "Set `collapsible` on `layout=\"longform\"` when a letter is too long to show in full up front — it closes the body behind a native `<details>` toggle (default closed) while the `pullQuote` stays visible as the summary. Requires `pullQuote`; without one the item falls back to the always-expanded rendering. Pass `labels.readMoreLabel` for the toggle text on i18n sites.",
       "Component: `template/src/components/patterns/TestimonialsSection.tsx`"
     ]
   },
   "labels": {
-    "ratingLabel": "Rated {rating} out of 5 stars"
+    "ratingLabel": "Rated {rating} out of 5 stars",
+    "readMoreLabel": "Read the full letter"
   }
 }
