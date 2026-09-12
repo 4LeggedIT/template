@@ -185,7 +185,7 @@ const FoundListingsSection = ({
   return (
     <section className={cn("space-y-10", className)}>
       {title || description ? (
-        <div className="rounded-2xl bg-gradient-to-br from-green-50 to-green-100 px-6 py-10 text-center">
+        <div className="rounded-2xl bg-gradient-to-br from-primary/5 to-primary/10 px-6 py-10 text-center">
           {title ? <h2 className="text-3xl font-bold text-foreground md:text-4xl">{title}</h2> : null}
           {description ? <p className="mx-auto mt-3 max-w-3xl text-muted-foreground">{description}</p> : null}
         </div>
@@ -342,7 +342,7 @@ const FoundListingsSection = ({
                 href={emailCta.href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center justify-center gap-2 rounded-lg bg-green-700 px-6 py-3 font-bold text-white transition-colors hover:bg-green-800"
+                className="inline-flex items-center justify-center gap-2 rounded-lg border-2 border-primary-foreground bg-transparent px-6 py-3 font-bold text-primary-foreground transition-colors hover:bg-primary-foreground hover:text-primary"
               >
                 <Mail className="h-5 w-5" />
                 {emailCta.label}
