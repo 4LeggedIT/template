@@ -26,6 +26,7 @@ const docSections: DocSection[] = [
   { key: "faq", href: "/standards/faq-disclosure", group: "contentEngagement" },
   { key: "flyerLibrary", href: "/standards/flyer-library", group: "mediaLibraries" },
   { key: "mediaCarousel", href: "/standards/media-carousel", group: "mediaLibraries" },
+  { key: "mediaCarouselTile", href: "/standards/media-carousel-tile", group: "mediaLibraries" },
   { key: "mediaGallery", href: "/standards/media-gallery", group: "mediaLibraries" },
   { key: "formEmbedModal", href: "/standards/form-embed-modal", group: "formsPayments" },
   { key: "paypalButtons", href: "/standards/paypal-buttons", group: "formsPayments" },

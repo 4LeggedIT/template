@@ -21,6 +21,7 @@
     "testimonials": { "title": "Testimonials Pattern", "description": "Featured, grid and longform testimonial patterns for reusable social-proof sections, with optional star ratings." },
     "flyerLibrary": { "title": "Flyer Library Pattern", "description": "Timeless, undated awareness flyer library with category filtering — distinct from dated events/news." },
     "mediaCarousel": { "title": "Media Carousel Pattern", "description": "Photo carousel whose per-tile name, description and link are each optional." },
+    "mediaCarouselTile": { "title": "Media Carousel Tile Pattern", "description": "Shared primitive for one-or-more media items in a single tile, with an inline carousel and count badge for several." },
     "mediaGallery": { "title": "Media Gallery Pattern", "description": "Unified photo/video gallery with optional filtering and no-JS-safe rendering." },
     "faqAccordion": { "title": "FAQ Accordion Pattern", "description": "Canonical FAQ content schema, i18n data pattern, and derived JSON-LD requirement." },
     "faq": { "title": "FAQ Pattern", "description": "Native `<details>/<summary>` requirement for public FAQ/disclosure content." },

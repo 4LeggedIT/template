@@ -8,7 +8,10 @@
     "photo1": { "alt": "Perro corriendo en el pasto", "caption": "Momentos destacados del evento de adopción de fin de semana.", "category": "Eventos" },
     "photo2": { "alt": "Retrato de perro en primer plano", "caption": "Ingreso reciente tras revisión médica.", "category": "Ingreso" },
     "video1": { "title": "Resumen del Día de Voluntariado", "description": "Breve resumen del más reciente día de voluntariado y enriquecimiento.", "category": "Eventos" },
-    "video2": { "title": "Actualización de Acogida", "description": "Actualización de progreso de una colocación temporal en acogida.", "category": "Acogida" }
+    "video2": { "title": "Actualización de Acogida", "description": "Actualización de progreso de una colocación temporal en acogida.", "category": "Acogida" },
+    "groupedPhoto1": { "alt": "Perro descansando en un porche durante una visita al hogar", "category": "Historia" },
+    "groupedPhoto2": { "alt": "Perro recibiendo un chequeo de salud de rutina", "category": "Historia" },
+    "groupedPhoto3": { "alt": "Perro jugando en un patio, mostrado en su propia casilla", "category": "Historia" }
   },
   "sections": {
     "split": {
@@ -31,6 +34,11 @@
       "title": "Variante sin recorte (`fit=\"contain\"`)",
       "description": "Use `fit=\"contain\"` cuando las fotos nunca deban recortarse — la casilla de la cuadrícula muestra la imagen completa en su relación de aspecto natural en lugar del recorte de proporción fija predeterminado.",
       "sectionTitle": "Galería de medios (fit=\"contain\")"
+    },
+    "grouped": {
+      "title": "Variante de casillas agrupadas (`groupId`)",
+      "description": "Asigne un `groupId` compartido a dos o más elementos para mostrarlos como una sola casilla con un carrusel interno y una insignia de conteo, en lugar de una casilla por elemento — útil para una historia/entrada con varias fotos. Un elemento sin `groupId` sigue mostrándose como su propia casilla individual, junto a las casillas agrupadas en la misma cuadrícula.",
+      "sectionTitle": "Galería de medios (casillas agrupadas)"
     }
   },
   "standard": {
@@ -46,8 +54,10 @@
       "El texto de estado vacío es visible cuando no se proporcionan elementos multimedia (`items={\"{[]}\"}`).",
       "Valores predeterminados: `columns=3`, `showFilters=true`, `enablePhotoLightbox=true`, `shuffleOnLoad=false`, `fit=\"cover\"`.",
       "Gobernanza: los datos de la galería viven en `src/data/gallery.ts`; el texto del pie de foto se incorpora al `alt` en todo el sitio (solo alt, sin UI de pie de foto visible), aunque `caption` sigue siendo un campo compatible del tipo; las galerías con más de ~9 fotos deben usar `shuffleOnLoad` + `maxPhotos={9}`. Contrato completo: `gallery-module-wiring-contract.md`.",
+      "El `groupId` opcional en `MediaGalleryItem` agrupa elementos en una sola casilla con un carrusel interno (mediante el primitivo compartido `MediaCarouselTile`) en lugar de una casilla por elemento; asigne la misma `category` a cada elemento de un grupo, ya que el filtrado sigue siendo por elemento. La caja de luz sigue recorriendo todas las fotos del filtro activo, no solo las del grupo.",
       "Componente: `template/src/components/patterns/MediaGallerySection.tsx`",
-      "Envoltorio: `template/src/components/patterns/SplitMediaGallerySection.tsx`"
+      "Envoltorio: `template/src/components/patterns/SplitMediaGallerySection.tsx`",
+      "Primitivo de casillas agrupadas: `template/src/components/patterns/MediaCarouselTile.tsx`"
     ]
   }
 }

@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import SocialFollowCta, { type SocialFollowCtaLink, type SocialFollowCtaProps } from "@/components/patterns/SocialFollowCta";
+import MediaCarouselTile, { type MediaCarouselTileItem } from "@/components/patterns/MediaCarouselTile";
 
 export type MediaGalleryItem =
   | {
@@ -17,6 +18,8 @@ export type MediaGalleryItem =
       category?: string;
       /** CSS object-position value (e.g. "50% 20%") to override the default centered crop when the subject isn't centered in the source photo. */
       objectPosition?: string;
+      /** Items sharing one groupId render as a single tile with an inline carousel instead of one tile each. Share one `category` across a group — filtering stays per-item. */
+      groupId?: string;
     }
   | {
       id: string;
@@ -26,6 +29,8 @@ export type MediaGalleryItem =
       description?: string;
       poster?: string;
       category?: string;
+      /** Items sharing one groupId render as a single tile with an inline carousel instead of one tile each. Share one `category` across a group — filtering stays per-item. */
+      groupId?: string;
     };
 
 export type MediaGalleryNotice = {
@@ -152,6 +157,30 @@ const MediaGallerySection = ({
     () => visibleItems.filter((item): item is Extract<MediaGalleryItem, { kind: "photo" }> => item.kind === "photo"),
     [visibleItems],
   );
+
+  // Items sharing a `groupId` collapse into one tile (rendered via MediaCarouselTile); items
+  // without one stay their own tile, keyed by their own id — byte-identical to the pre-grouping
+  // behaviour. Order follows each tile's first appearance in `visibleItems`.
+  const tiles = useMemo(() => {
+    const tileByKey = new Map<string, MediaGalleryItem[]>();
+    const order: string[] = [];
+    for (const item of visibleItems) {
+      const key = item.groupId ?? item.id;
+      const existing = tileByKey.get(key);
+      if (existing) {
+        existing.push(item);
+      } else {
+        tileByKey.set(key, [item]);
+        order.push(key);
+      }
+    }
+    return order.map((key) => ({ key, items: tileByKey.get(key)! }));
+  }, [visibleItems]);
+
+  const toMediaCarouselTileItem = (item: MediaGalleryItem): MediaCarouselTileItem =>
+    item.kind === "photo"
+      ? { id: item.id, kind: "photo", src: item.src, label: item.alt, objectPosition: item.objectPosition }
+      : { id: item.id, kind: "video", src: item.src, label: item.title, poster: item.poster };
   const activePhoto = selectedPhotoId
     ? photoItems.find((photo) => photo.id === selectedPhotoId) ?? null
     : null;
@@ -188,6 +217,89 @@ const MediaGallerySection = ({
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
   }, [activePhoto, goToNextPhoto, goToPreviousPhoto]);
+
+  const renderTile = (tile: { key: string; items: MediaGalleryItem[] }) => {
+    if (tile.items.length > 1) {
+      return (
+        <Card key={tile.key} className="overflow-hidden border-border/80">
+          <CardContent className="p-0">
+            <MediaCarouselTile
+              media={tile.items.map(toMediaCarouselTileItem)}
+              fit={fit}
+              videoFallback={videoFallback}
+              onPhotoClick={enablePhotoLightbox ? (mediaItem) => setSelectedPhotoId(mediaItem.id) : undefined}
+            />
+          </CardContent>
+        </Card>
+      );
+    }
+
+    const item = tile.items[0];
+    return (
+      <Card key={item.id} className="overflow-hidden border-border/80">
+        {item.kind === "photo" ? (
+          <CardContent className="p-0">
+            <a
+              href={item.href ?? item.src}
+              target="_blank"
+              rel="noreferrer"
+              className="group block"
+              onClick={(event) => {
+                if (!enablePhotoLightbox) return;
+                event.preventDefault();
+                setSelectedPhotoId(item.id);
+              }}
+            >
+              <div className={cn("relative overflow-hidden bg-muted", fit === "contain" ? "" : "aspect-[4/3]")}>
+                <img
+                  src={item.src}
+                  alt={item.alt}
+                  loading="lazy"
+                  decoding="async"
+                  style={fit === "cover" ? { objectPosition: item.objectPosition ?? "50% 50%" } : undefined}
+                  className={cn(
+                    "transition-transform duration-300 group-hover:scale-[1.03]",
+                    fit === "contain" ? "h-auto w-full" : "h-full w-full object-cover",
+                  )}
+                />
+                {enablePhotoLightbox ? (
+                  <div className="pointer-events-none absolute right-3 top-3 rounded-full bg-black/65 p-2 text-white opacity-0 transition-opacity duration-200 group-hover:opacity-100">
+                    <Expand className="h-4 w-4" />
+                  </div>
+                ) : null}
+              </div>
+            </a>
+            {item.caption ? (
+              <div className="border-t border-border/70 px-4 py-3 text-sm text-muted-foreground">{item.caption}</div>
+            ) : null}
+          </CardContent>
+        ) : (
+          <>
+            <div className="aspect-video bg-black">
+              <video
+                src={item.src}
+                controls
+                preload="metadata"
+                playsInline
+                poster={item.poster}
+                className="h-full w-full object-cover"
+              >
+                {videoFallback}
+              </video>
+            </div>
+            <CardHeader className="pb-2">
+              <CardTitle className="text-base">{item.title}</CardTitle>
+            </CardHeader>
+            {item.description ? (
+              <CardContent className="pt-0">
+                <p className="text-sm text-muted-foreground">{item.description}</p>
+              </CardContent>
+            ) : null}
+          </>
+        )}
+      </Card>
+    );
+  };
 
   return (
     <section className={cn("rounded-2xl border border-border bg-card/40 p-6", className)}>
@@ -234,70 +346,7 @@ const MediaGallerySection = ({
       {visibleItems.length ? (
         <>
           <div className={cn("grid gap-4", columnClassMap[columns])}>
-            {visibleItems.map((item) => (
-              <Card key={item.id} className="overflow-hidden border-border/80">
-                {item.kind === "photo" ? (
-                  <CardContent className="p-0">
-                    <a
-                      href={item.href ?? item.src}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="group block"
-                      onClick={(event) => {
-                        if (!enablePhotoLightbox) return;
-                        event.preventDefault();
-                        setSelectedPhotoId(item.id);
-                      }}
-                    >
-                      <div className={cn("relative overflow-hidden bg-muted", fit === "contain" ? "" : "aspect-[4/3]")}>
-                        <img
-                          src={item.src}
-                          alt={item.alt}
-                          loading="lazy"
-                          decoding="async"
-                          style={fit === "cover" ? { objectPosition: item.objectPosition ?? "50% 50%" } : undefined}
-                          className={cn(
-                            "transition-transform duration-300 group-hover:scale-[1.03]",
-                            fit === "contain" ? "h-auto w-full" : "h-full w-full object-cover",
-                          )}
-                        />
-                        {enablePhotoLightbox ? (
-                          <div className="pointer-events-none absolute right-3 top-3 rounded-full bg-black/65 p-2 text-white opacity-0 transition-opacity duration-200 group-hover:opacity-100">
-                            <Expand className="h-4 w-4" />
-                          </div>
-                        ) : null}
-                      </div>
-                    </a>
-                    {item.caption ? (
-                      <div className="border-t border-border/70 px-4 py-3 text-sm text-muted-foreground">{item.caption}</div>
-                    ) : null}
-                  </CardContent>
-                ) : (
-                  <>
-                    <div className="aspect-video bg-black">
-                      <video
-                        src={item.src}
-                        controls
-                        preload="metadata"
-                        playsInline
-                        poster={item.poster}
-                        className="h-full w-full object-cover"
-                      >
-                        {videoFallback}
-                      </video>
-                    </div>
-                    <CardHeader className="pb-2">
-                      <CardTitle className="text-base">{item.title}</CardTitle>
-                    </CardHeader>
-                    {item.description ? (
-                      <CardContent className="pt-0">
-                        <p className="text-sm text-muted-foreground">{item.description}</p>
-                      </CardContent>
-                    ) : null}
-                  </>
-                )}
-              </Card>
-            ))}
+            {tiles.map(renderTile)}
           </div>
           <p className="mt-4 text-xs text-muted-foreground">
             {browseHint}
@@ -308,7 +357,6 @@ const MediaGallerySection = ({
           <CardContent className="py-6 text-sm text-muted-foreground">{emptyMessage}</CardContent>
         </Card>
       )}
-
       {activePhoto ? (
         <div
           className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 p-4"

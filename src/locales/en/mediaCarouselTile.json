@@ -1,0 +1,38 @@
+{
+  "hero": {
+    "title": "Media carousel tile pattern",
+    "description": "Renders one or more media items as a single tile: a plain box for one item, or an inline carousel with a count badge for several."
+  },
+  "breadcrumb": "Media Carousel Tile Pattern",
+  "items": {
+    "i1": { "label": "Dog resting on a porch during a home visit" },
+    "i2": { "label": "Dog receiving a routine health check" },
+    "i3": { "label": "Dog playing in a yard" }
+  },
+  "sections": {
+    "single": {
+      "title": "One item",
+      "description": "A single media item renders as a plain box with no carousel controls and no count badge."
+    },
+    "grouped": {
+      "title": "Several items",
+      "description": "More than one item gets prev/next controls and a count badge, cycling through the group in place."
+    },
+    "contain": {
+      "title": "Uncropped variant (`fit=\"contain\"`, `aspect=\"portrait\"`)",
+      "description": "`fit=\"contain\"` letterboxes within the aspect box instead of cropping; `aspect` picks the box's shape (`landscape` default, `portrait`, `square`)."
+    }
+  },
+  "standard": {
+    "title": "Standard",
+    "items": [
+      "Use `MediaCarouselTile` any time a card needs to show one or more media items as a single tile — never hand-roll a per-tile embla carousel again.",
+      "`media` items use a minimal, consumer-decoupled shape: `{id, kind, src, label, poster?, objectPosition?}`. Callers map their own item type's fields (e.g. `alt`/`title`) to `label` before passing it in.",
+      "The tile always renders in a fixed-ratio box (default `aspect=\"landscape\"`); `fit=\"contain\"` letterboxes within it rather than switching to a natural, un-boxed height.",
+      "Pass `onPhotoClick` to make photo tiles clickable (e.g. to open a lightbox) — videos are never click-through, since they already have their own controls.",
+      "`MediaGallerySection` uses this internally for its opt-in `groupId` grouped-tile mode — see the Media Gallery pattern's \"Grouped tiles\" example.",
+      "Also used directly (outside `MediaGallerySection`) by site-specific card patterns that need the same media box but have their own metadata/layout, e.g. a rescue's field-story feed or honor-roll page.",
+      "Component: `template/src/components/patterns/MediaCarouselTile.tsx`"
+    ]
+  }
+}

@@ -8,7 +8,10 @@
     "photo1": { "alt": "Dog running in grass", "caption": "Weekend adoption event highlights.", "category": "Events" },
     "photo2": { "alt": "Dog portrait close-up", "caption": "Recent intake after medical check.", "category": "Intake" },
     "video1": { "title": "Volunteer Day Recap", "description": "Short recap from the latest volunteer and enrichment day.", "category": "Events" },
-    "video2": { "title": "Foster Update", "description": "Progress update from a temporary foster placement.", "category": "Foster" }
+    "video2": { "title": "Foster Update", "description": "Progress update from a temporary foster placement.", "category": "Foster" },
+    "groupedPhoto1": { "alt": "Dog resting on a porch during a home visit", "category": "Story" },
+    "groupedPhoto2": { "alt": "Dog receiving a routine health check", "category": "Story" },
+    "groupedPhoto3": { "alt": "Dog playing in a yard, shown on its own tile", "category": "Story" }
   },
   "sections": {
     "split": {
@@ -31,6 +34,11 @@
       "title": "Uncropped variant (`fit=\"contain\"`)",
       "description": "Use `fit=\"contain\"` when photos must never be cropped — the grid tile shows the full image at its natural aspect ratio instead of the default fixed-ratio crop.",
       "sectionTitle": "Media gallery (fit=\"contain\")"
+    },
+    "grouped": {
+      "title": "Grouped tiles variant (`groupId`)",
+      "description": "Set a shared `groupId` on two or more items to render them as one tile with an inline carousel and a count badge, instead of one tile per item — useful for a story/entry that has several photos. An item with no `groupId` still renders as its own single tile, shown alongside grouped tiles in the same grid.",
+      "sectionTitle": "Media gallery (grouped tiles)"
     }
   },
   "standard": {
@@ -46,8 +54,10 @@
       "Empty-state copy is visible when no media items are provided (`items={\"{[]}\"}`).",
       "Defaults: `columns=3`, `showFilters=true`, `enablePhotoLightbox=true`, `shuffleOnLoad=false`, `fit=\"cover\"`.",
       "Governance: gallery data lives in `src/data/gallery.ts`; caption text folds into `alt` fleet-wide (alt-only, no visible caption UI) even though `caption` remains a supported field on the type; galleries with more than ~9 photos should set `shuffleOnLoad` + `maxPhotos={9}`. Full contract: `gallery-module-wiring-contract.md`.",
+      "Optional `groupId` on `MediaGalleryItem` groups items into one tile with an inline carousel (via the shared `MediaCarouselTile` primitive) instead of one tile per item; give every item in a group the same `category`, since filtering stays per-item. The lightbox still cycles through every photo in the active filter, not just the group's.",
       "Component: `template/src/components/patterns/MediaGallerySection.tsx`",
-      "Wrapper: `template/src/components/patterns/SplitMediaGallerySection.tsx`"
+      "Wrapper: `template/src/components/patterns/SplitMediaGallerySection.tsx`",
+      "Grouped-tile primitive: `template/src/components/patterns/MediaCarouselTile.tsx`"
     ]
   }
 }

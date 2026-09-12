@@ -43,6 +43,32 @@ const MediaGalleryStandardPage = () => {
     },
   ];
 
+  const groupedSampleItems: MediaGalleryItem[] = [
+    {
+      id: "grouped-photo-1",
+      kind: "photo",
+      src: "https://images.unsplash.com/photo-1601758228041-f3b2795255f1?auto=format&fit=crop&w=1200&q=80",
+      alt: t("mediaGallery:items.groupedPhoto1.alt"),
+      category: t("mediaGallery:items.groupedPhoto1.category"),
+      groupId: "story-1",
+    },
+    {
+      id: "grouped-photo-2",
+      kind: "photo",
+      src: "https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?auto=format&fit=crop&w=1200&q=80",
+      alt: t("mediaGallery:items.groupedPhoto2.alt"),
+      category: t("mediaGallery:items.groupedPhoto2.category"),
+      groupId: "story-1",
+    },
+    {
+      id: "grouped-photo-3",
+      kind: "photo",
+      src: "https://images.unsplash.com/photo-1548199973-03cce0bbc87b?auto=format&fit=crop&w=1200&q=80",
+      alt: t("mediaGallery:items.groupedPhoto3.alt"),
+      category: t("mediaGallery:items.groupedPhoto3.category"),
+    },
+  ];
+
   return (
     <>
       <SEOHead
@@ -118,6 +144,17 @@ const MediaGalleryStandardPage = () => {
             items={sampleItems}
             columns={3}
             fit="contain"
+            showFilters={false}
+          />
+        </div>
+
+        <div className="space-y-3">
+          <h2 className="text-lg font-semibold">{t("mediaGallery:sections.grouped.title")}</h2>
+          <p className="text-sm text-muted-foreground">{t("mediaGallery:sections.grouped.description")}</p>
+          <MediaGallerySection
+            title={t("mediaGallery:sections.grouped.sectionTitle")}
+            items={groupedSampleItems}
+            columns={3}
             showFilters={false}
           />
         </div>

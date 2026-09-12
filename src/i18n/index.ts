@@ -23,6 +23,7 @@ import enSuccessStories from "@/locales/en/successStories.json";
 import enTestimonials from "@/locales/en/testimonials.json";
 import enFlyerLibrary from "@/locales/en/flyerLibrary.json";
 import enMediaCarousel from "@/locales/en/mediaCarousel.json";
+import enMediaCarouselTile from "@/locales/en/mediaCarouselTile.json";
 import enMediaGallery from "@/locales/en/mediaGallery.json";
 import enFaqDisclosure from "@/locales/en/faqDisclosure.json";
 import enFaqAccordion from "@/locales/en/faqAccordion.json";
@@ -66,6 +67,7 @@ import esSuccessStories from "@/locales/es/successStories.json";
 import esTestimonials from "@/locales/es/testimonials.json";
 import esFlyerLibrary from "@/locales/es/flyerLibrary.json";
 import esMediaCarousel from "@/locales/es/mediaCarousel.json";
+import esMediaCarouselTile from "@/locales/es/mediaCarouselTile.json";
 import esMediaGallery from "@/locales/es/mediaGallery.json";
 import esFaqDisclosure from "@/locales/es/faqDisclosure.json";
 import esFaqAccordion from "@/locales/es/faqAccordion.json";
@@ -115,6 +117,7 @@ i18n.use(initReactI18next).init({
       testimonials: enTestimonials,
       flyerLibrary: enFlyerLibrary,
       mediaCarousel: enMediaCarousel,
+      mediaCarouselTile: enMediaCarouselTile,
       mediaGallery: enMediaGallery,
       faqDisclosure: enFaqDisclosure,
       faqAccordion: enFaqAccordion,
@@ -159,6 +162,7 @@ i18n.use(initReactI18next).init({
       testimonials: esTestimonials,
       flyerLibrary: esFlyerLibrary,
       mediaCarousel: esMediaCarousel,
+      mediaCarouselTile: esMediaCarouselTile,
       mediaGallery: esMediaGallery,
       faqDisclosure: esFaqDisclosure,
       faqAccordion: esFaqAccordion,
@@ -206,6 +210,7 @@ i18n.use(initReactI18next).init({
     "testimonials",
     "flyerLibrary",
     "mediaCarousel",
+    "mediaCarouselTile",
     "mediaGallery",
     "faqDisclosure",
     "faqAccordion",

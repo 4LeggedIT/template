@@ -1,0 +1,38 @@
+{
+  "hero": {
+    "title": "Patrón de casilla de carrusel de medios",
+    "description": "Muestra uno o más elementos multimedia como una sola casilla: una caja simple para un elemento, o un carrusel interno con una insignia de conteo para varios."
+  },
+  "breadcrumb": "Patrón de Casilla de Carrusel de Medios",
+  "items": {
+    "i1": { "label": "Perro descansando en un porche durante una visita al hogar" },
+    "i2": { "label": "Perro recibiendo un chequeo de salud de rutina" },
+    "i3": { "label": "Perro jugando en un patio" }
+  },
+  "sections": {
+    "single": {
+      "title": "Un elemento",
+      "description": "Un solo elemento multimedia se muestra como una caja simple, sin controles de carrusel ni insignia de conteo."
+    },
+    "grouped": {
+      "title": "Varios elementos",
+      "description": "Más de un elemento obtiene controles de anterior/siguiente y una insignia de conteo, recorriendo el grupo en el mismo lugar."
+    },
+    "contain": {
+      "title": "Variante sin recorte (`fit=\"contain\"`, `aspect=\"portrait\"`)",
+      "description": "`fit=\"contain\"` deja franjas dentro de la casilla en lugar de recortar; `aspect` define la forma de la casilla (`landscape` por defecto, `portrait`, `square`)."
+    }
+  },
+  "standard": {
+    "title": "Estándar",
+    "items": [
+      "Use `MediaCarouselTile` siempre que una tarjeta deba mostrar uno o más elementos multimedia como una sola casilla — nunca vuelva a crear un carrusel embla por casilla a mano.",
+      "Los elementos de `media` usan una forma mínima, desacoplada del consumidor: `{id, kind, src, label, poster?, objectPosition?}`. Cada quien mapea los campos de su propio tipo (por ejemplo `alt`/`title`) a `label` antes de pasarlos.",
+      "La casilla siempre se muestra en una caja de proporción fija (por defecto `aspect=\"landscape\"`); `fit=\"contain\"` deja franjas dentro de la caja en lugar de pasar a una altura natural sin caja.",
+      "Pase `onPhotoClick` para que las casillas de foto sean clicables (por ejemplo, para abrir una caja de luz) — los videos nunca son clicables de esa forma, ya que ya tienen sus propios controles.",
+      "`MediaGallerySection` usa esto internamente para su modo opcional de casillas agrupadas (`groupId`) — vea el ejemplo \"Casillas agrupadas\" del patrón de Galería de Medios.",
+      "También se usa directamente (fuera de `MediaGallerySection`) en patrones de tarjeta específicos del sitio que necesitan la misma caja de medios pero con sus propios metadatos/diseño, por ejemplo el feed de historias de campo de un rescate o una página de cuadro de honor.",
+      "Componente: `template/src/components/patterns/MediaCarouselTile.tsx`"
+    ]
+  }
+}
