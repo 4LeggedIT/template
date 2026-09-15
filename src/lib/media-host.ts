@@ -15,14 +15,17 @@
  */
 export const MEDIA_HOST = "https://media.4leggedit.com";
 
-/** Bucket key prefix per site. Add a site here AND in media-hosting-standard.md. */
-export type MediaSitePrefix =
-  | "rovers"
-  | "comeback"
-  | "unidad51"
-  | "better-together"
-  | "feeding"
-  | "enders-wish";
+/**
+ * Bucket key prefix for the calling site. Deliberately plain `string`, not a
+ * closed union of every fleet site's real prefix — this file is synced
+ * verbatim to every site (patterns/lib travel unchanged), so a shared file is
+ * the wrong place to enumerate which real organizations use it. The
+ * authoritative site → prefix table lives in the internal-only
+ * `docs/standards/media-hosting-standard.md`; add a site there when
+ * onboarding it. Typos are still caught functionally by the link checker's
+ * HEAD check against the real bucket, not by the type system.
+ */
+export type MediaSitePrefix = string;
 
 export function mediaUrl(site: MediaSitePrefix, relPath: string): string {
   return `${MEDIA_HOST}/${site}/${relPath.replace(/^\/+/, "")}`;

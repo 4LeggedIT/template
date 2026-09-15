@@ -5,8 +5,14 @@
   },
   "breadcrumb": "Events & News Pattern",
   "banner": {
-    "adoptionFridays": { "title": "Friday Adoption Meet-and-Greet", "location": "123 Main St, Example City, ST" },
-    "basketRaffle": { "title": "Monthly Basket Raffle", "location": "Community Hall, 456 Oak Ave, Example City, ST" }
+    "adoptionFridays": {
+      "title": "Friday Adoption Meet-and-Greet",
+      "location": "123 Main St, Example City, ST"
+    },
+    "basketRaffle": {
+      "title": "Monthly Basket Raffle",
+      "location": "Community Hall, 456 Oak Ave, Example City, ST"
+    }
   },
   "sections": {
     "listing": {
@@ -64,7 +70,6 @@
       "If both render on a page, order must be `EnvironmentBanner` first, then event banner.",
       "Render event banner only when there are active future events; if none exist, do not render event banner row.",
       "Banner placement standard: render both in page flow directly under the header; do not mount globally in shared layout.",
-      "Content seeding standard: do not add fake/sample events in migrated production-like sites; start with empty entries until real events exist.",
       "Optional featured card and archive controls are built in (`showFeatured`, archive props).",
       "`socialCta` is a required governance default (not opt-in) for sites on the current generation — populate it from `siteConfig.social.*` so a \"follow us\" row renders via `SocialFollowCta`; never hand-roll a page-local version.",
       "Set `entry.videoSrc` (a real mp4 on the fleet media host, via `mediaUrl()` from `lib/media-host.ts`) on any entry to render a native `<video>` inline on the detail page (and full-mode card) instead of a static image — takes priority over `videoEmbed` when both are set. Pair it with `entry.imageSrc`, which doubles as the poster frame, and optional `videoAspectRatio` (`\"landscape\"` default, `\"portrait\"` for a vertical Reel-shaped clip). Card thumbnails (news index, homepage highlight) still use `imageSrc`/`imageAlt`. Prefer this over `videoEmbed` whenever the source clip can be downloaded (e.g. via `yt-dlp` from a Facebook Reel) — a self-hosted file always plays, where the Facebook iframe embed below can be blocked by Rights Manager depending on the source post's audio track.",

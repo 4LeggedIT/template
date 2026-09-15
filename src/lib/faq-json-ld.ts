@@ -26,7 +26,7 @@ const isTransElement = (node: ReactNode): node is ReactElement<TransLikeProps> =
 
 // Some sites don't use <Trans> — they compose an answer as a plain fragment interleaving t()
 // strings with inline elements, e.g. <>{t("a")} <Link>{t("b")}</Link> {t("c")}</> (see
-// feedingperrisstrays' data/faq equivalent). collectPlainText walks any such ReactNode tree,
+// a bilingual site's data/faq equivalent). collectPlainText walks any such ReactNode tree,
 // concatenating string content (including inline elements' own children) while preserving
 // whitespace between pieces — whitespace is only collapsed once, in toPlainText below, so an
 // inner fragment's own trim doesn't eat the space that separates it from a sibling.

@@ -27,7 +27,6 @@
   },
   "standard": {
     "title": "Estándar",
-    "noBlame": "Nunca atribuir culpa por cómo el animal llegó a perderse, sufrir, enfermarse o fallecer — ni hacia un dueño, Control Animal, un rescatista ni las circunstancias. Enfocarse en el cuidado brindado y la gratitud.",
     "emptyPhotos": {
       "before": "Una entrada con un arreglo",
       "after": "vacío muestra un ícono de huella como respaldo — nunca una imagen rota."

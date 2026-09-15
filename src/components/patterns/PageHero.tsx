@@ -23,7 +23,7 @@ type PageHeroProps = {
   breadcrumbs?: BreadcrumbEntry[];
   /** Optional class overrides for a site that needs to diverge from the default left-aligned
    * layout (e.g. a centered hero) without forking the whole component. Piloted on
-   * fosterpawsnetwork, promoted to canonical 2026-08-13. */
+   * a real site, promoted to canonical 2026-08-13. */
   className?: string;
   eyebrowClassName?: string;
   titleClassName?: string;

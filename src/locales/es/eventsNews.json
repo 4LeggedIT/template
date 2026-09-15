@@ -5,8 +5,14 @@
   },
   "breadcrumb": "Patrón de Eventos y Noticias",
   "banner": {
-    "adoptionFridays": { "title": "Encuentro de Adopción de los Viernes", "location": "123 Main St, Example City, ST" },
-    "basketRaffle": { "title": "Rifa de Canastas Mensual", "location": "Salón Comunitario, 456 Oak Ave, Example City, ST" }
+    "adoptionFridays": {
+      "title": "Encuentro de Adopción de los Viernes",
+      "location": "123 Main St, Example City, ST"
+    },
+    "basketRaffle": {
+      "title": "Rifa de Canastas Mensual",
+      "location": "Salón Comunitario, 456 Oak Ave, Example City, ST"
+    }
   },
   "sections": {
     "listing": {
@@ -64,7 +70,6 @@
       "Si ambos se muestran en una página, el orden debe ser `EnvironmentBanner` primero, luego el banner de eventos.",
       "Muestre el banner de eventos solo cuando haya eventos futuros activos; si no existe ninguno, no muestre la fila del banner de eventos.",
       "Estándar de ubicación de banners: muestre ambos en el flujo de la página directamente debajo del encabezado; no los monte globalmente en el layout compartido.",
-      "Estándar de contenido inicial: no agregue eventos falsos/de muestra en sitios migrados de tipo producción; comience con entradas vacías hasta que existan eventos reales.",
       "Los controles opcionales de tarjeta destacada y archivo vienen incorporados (`showFeatured`, props de archivo).",
       "`socialCta` es un valor predeterminado de gobernanza obligatorio (no opcional) para los sitios de la generación actual — complételo desde `siteConfig.social.*` para que una fila de \"síguenos\" se muestre mediante `SocialFollowCta`; nunca cree una versión local de la página a mano.",
       "Configure `entry.videoSrc` (un mp4 real en el host de medios de la flota, vía `mediaUrl()` de `lib/media-host.ts`) en cualquier entrada para mostrar un `<video>` nativo directamente en la página de detalle (y en la tarjeta en modo completo) en lugar de una imagen estática — tiene prioridad sobre `videoEmbed` cuando ambos están definidos. Combínelo con `entry.imageSrc`, que funciona como fotograma de póster, y opcionalmente `videoAspectRatio` (`\"landscape\"` por defecto, `\"portrait\"` para un clip vertical con forma de Reel). Las miniaturas de tarjeta (índice de noticias, destacado de inicio) siguen usando `imageSrc`/`imageAlt`. Prefiera esto en lugar de `videoEmbed` siempre que el clip de origen se pueda descargar (por ejemplo, con `yt-dlp` desde un Reel de Facebook) — un archivo alojado propio siempre se reproduce, mientras que la incrustación de iframe de Facebook de abajo puede ser bloqueada por Rights Manager según la pista de audio de la publicación de origen.",

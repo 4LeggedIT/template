@@ -15,7 +15,7 @@
     "title": "Estándar",
     "items": [
       "Importe `FaqAccordionItem`/`FaqAccordionSection` desde `@/components/patterns/FaqAccordion` — nunca declare localmente una forma equivalente.",
-      "Sitios i18n: el texto de las preguntas frecuentes vive en `src/locales/{lang}/faq.json`; `src/data/faq.tsx` exporta un adaptador `getFaqSections(t)` que lo resuelve a los tipos canónicos (vea `roversreturndogrescue/src/data/faq.tsx` como implementación de referencia, incluidos los enlaces `<Trans>` incrustados).",
+      "Sitios i18n: el texto de las preguntas frecuentes vive en `src/locales/{lang}/faq.json`; `src/data/faq.tsx` exporta un adaptador `getFaqSections(t)` que lo resuelve a los tipos canónicos (vea el `data/faq.tsx` de un sitio bilingüe como implementación de referencia, incluidos los enlaces `<Trans>` incrustados).",
       "Sitios sin i18n: `src/data/faq.ts` exporta `faqSections: FaqAccordionSection[]` (o `faqItems: FaqAccordionItem[]` para una sola lista plana) directamente, como hace el propio `src/data/faq.ts` de esta página.",
       "Los datos estructurados `FAQPage` deben calcularse a partir de las mismas secciones que renderiza la página, mediante `buildFaqJsonLd()` en `src/lib/faq-json-ld.ts` — nunca escritos a mano como un segundo arreglo mantenido por separado.",
       "Nunca adjunte datos estructurados `FAQPage` a una página que no renderice realmente el contenido de preguntas y respuestas correspondiente.",

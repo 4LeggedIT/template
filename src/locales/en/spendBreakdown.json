@@ -30,8 +30,6 @@
       "before": "The optional",
       "after": "highlight is always computed by the site's own page code from real, same-period totals on both sides — the component never guesses which spend category maps to which outcome."
     },
-    "noInventedNumbers": "Every figure must come from the organization's actual filed tax return. Never estimate, round for effect, or invent a category that isn't real.",
-    "noDonorInfo": "Never use this pattern to list individual contributors or their gift amounts — donor identities are explicitly exempt from public disclosure under IRS rules (Form 990 Schedule B), and that boundary is absolute regardless of what a site might otherwise want to showcase.",
     "emptyState": "Renders nothing if categories is empty — no placeholder $0 total.",
     "component": {
       "before": "Component:"

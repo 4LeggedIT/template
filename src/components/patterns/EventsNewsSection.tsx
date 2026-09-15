@@ -162,8 +162,7 @@ export type EventsNewsEventEntry = EventsNewsBaseEntry & {
    * `showFutureEventsBanner`'s automatic "every upcoming event" selection (see that prop below).
    * Pair with `getHomeAnnouncementBannerItems()` to build the `EventBannerItem[]` a site's own
    * homepage banner renders. Folded into canonical 2026-08-23 (TPL-032) after the same
-   * `{ enabled, expiresAtIso }` shape was found independently duplicated on roversreturndogrescue
-   * and 4leggedit.
+   * `{ enabled, expiresAtIso }` shape was found independently duplicated across two sites.
    */
   homeAnnouncement?: {
     enabled: boolean;
@@ -944,7 +943,7 @@ export const getMapsUrl = (entry: EventsNewsRenderableEventEntry) => {
  * `timeZone` emits a `ctz` param (e.g. "America/Los_Angeles"). `includeHighlights` appends
  * `entry.highlights` as a bulleted list to the calendar description. `moreInfoUrl` (a site's own
  * absolute detail-page URL — this component has no siteUrl/config knowledge, so it must be passed
- * in) appends a "more info" line. Piloted on roversreturndogrescue's `lib/calendar.ts`, folded into
+ * in) appends a "more info" line. Piloted on a real site's `lib/calendar.ts`, folded into
  * canonical instead of staying a one-site fork — see event-module-wiring-contract.md §2.
  */
 export type GoogleCalendarUrlOptions = {

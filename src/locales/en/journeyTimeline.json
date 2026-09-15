@@ -65,7 +65,6 @@
       "mid": "renders as a client-side link; anything else opens in a new tab. Never use",
       "after": "for an internal route — it always opens a new tab, so the site would open itself in a second one."
     },
-    "realContent": "Content must be real, sourced from the org's own posts/records — never invented backstory. This pattern exists specifically to hold a dog's actual rescue-to-today story.",
     "emptyState": {
       "before": "Renders nothing if",
       "after": "is empty — no empty-state placeholder."
@@ -75,7 +74,7 @@
       "mid": "that component's curated grid is the \"wall,\" this is the detail page each card's",
       "after": "points to — see the composed example above."
     },
-    "rescueJourneys": "Composing a full rescue-journeys page (teaser → list → detail): the list/teaser pages are built from `SuccessStoriesSection` (see that pattern's page for the live status-split and auto-rotating-teaser examples); each dog's own detail page renders this component. Reference implementation: `the-comeback-pack`'s `/pack-journeys` + `/pack-journeys/:slug`.",
+    "rescueJourneys": "Composing a full rescue-journeys page (teaser → list → detail): the list/teaser pages are built from `SuccessStoriesSection` (see that pattern's page for the live status-split and auto-rotating-teaser examples); each dog's own detail page renders this component.",
     "component": "Component: `template/src/components/patterns/JourneyTimeline.tsx`"
   }
 }

@@ -33,7 +33,7 @@ export type SuccessStoryItem = PetProfile & {
   featured?: boolean;
   /** Optional extra CTA button(s) rendered before the "read story" link — e.g. a badge-driven
    * "Apply to Adopt"/"Apply to Foster" so an index card can offer the actual next step, not just
-   * a link through to the detail page. Piloted on `the-comeback-pack`'s `/pack-journeys`. */
+   * a link through to the detail page. Piloted on a live rescue-journeys index page. */
   ctaLinks?: { label: string; href: string; external?: boolean }[];
 };
 

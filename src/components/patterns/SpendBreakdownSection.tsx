@@ -11,7 +11,7 @@ export type SpendCategoryId =
 
 export type SpendCategory = {
   id: SpendCategoryId;
-  /** Always freeform, even though `id` is drawn from a recommended set — e.g. "Dog Recovery & Trapping Supplies" (Rovers Return) vs. "Community Feeding Routes" (Feeding Perris Strays) can both be the "rescueOperations" id. */
+  /** Always freeform, even though `id` is drawn from a recommended set — e.g. "Dog Recovery & Trapping Supplies" at one site vs. "Community Feeding Routes" at another can both be the "rescueOperations" id. */
   label: string;
   amount: number;
   icon?: LucideIcon;

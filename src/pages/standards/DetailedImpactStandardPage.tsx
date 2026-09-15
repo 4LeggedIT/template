@@ -128,7 +128,6 @@ const DetailedImpactStandardPage = () => {
               - {t("detailedImpact:standard.composedNotMerged.before")} <code>relatedHref</code>{" "}
               {t("detailedImpact:standard.composedNotMerged.after")}
             </p>
-            <p>- {t("detailedImpact:standard.noInventedNumbers")}</p>
             <p>- {t("detailedImpact:standard.categoryCardsAlwaysRender")}</p>
             <p>- {t("detailedImpact:standard.countingRule")}</p>
             <p>- {t("detailedImpact:standard.multiDay")}</p>

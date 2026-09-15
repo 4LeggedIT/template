@@ -65,7 +65,6 @@
       "mid": "se renderiza como enlace del lado del cliente; cualquier otro abre en una pestaña nueva. Nunca uses",
       "after": "para una ruta interna — siempre abre una pestaña nueva, así que el sitio se abriría a sí mismo en una segunda."
     },
-    "realContent": "El contenido debe ser real, obtenido de las propias publicaciones/registros de la organización — nunca una historia inventada. Este patrón existe específicamente para contener la historia real de un perro, desde el rescate hasta hoy.",
     "emptyState": {
       "before": "No muestra nada si",
       "after": "está vacío — no hay estado vacío de reemplazo."
@@ -75,7 +74,7 @@
       "mid": "la cuadrícula curada de ese componente es el \"muro\"; esta es la página de detalle a la que apunta el",
       "after": "de cada tarjeta — vea el ejemplo compuesto arriba."
     },
-    "rescueJourneys": "Cómo componer una página completa de historias de rescate (vista previa → lista → detalle): las páginas de lista/vista previa se construyen con `SuccessStoriesSection` (vea los ejemplos en vivo de separación por estado y vista previa con rotación automática en la página de ese patrón); la página de detalle propia de cada perro muestra este componente. Implementación de referencia: `/pack-journeys` + `/pack-journeys/:slug` de `the-comeback-pack`.",
+    "rescueJourneys": "Cómo componer una página completa de historias de rescate (vista previa → lista → detalle): las páginas de lista/vista previa se construyen con `SuccessStoriesSection` (vea los ejemplos en vivo de separación por estado y vista previa con rotación automática en la página de ese patrón); la página de detalle propia de cada perro muestra este componente.",
     "component": "Componente: `template/src/components/patterns/JourneyTimeline.tsx`"
   }
 }

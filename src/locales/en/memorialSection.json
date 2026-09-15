@@ -27,7 +27,6 @@
   },
   "standard": {
     "title": "Standard",
-    "noBlame": "Never assign blame for how the animal came to be lost, in distress, sick, or passed away — not toward an owner, Animal Control, a rescuer, or circumstance. Focus on the care given and gratitude.",
     "emptyPhotos": {
       "before": "An entry with an empty",
       "after": "array renders a paw-icon fallback — never a broken image."

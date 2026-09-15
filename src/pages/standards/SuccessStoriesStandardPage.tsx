@@ -8,7 +8,7 @@ import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious
 
 // Demonstrates the "splitting by status" convention (see the Standard card below): `status` is a
 // site-owned field, not part of SuccessStoryItem itself — a real site's own extended story type
-// carries it the same way (e.g. the-comeback-pack's LocalizedPackJourneyItem).
+// carries it the same way.
 type DemoStoryItem = SuccessStoryItem & { status: "available" | "adopted" };
 
 const SuccessStoriesStandardPage = () => {

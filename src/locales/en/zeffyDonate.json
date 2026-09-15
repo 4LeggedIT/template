@@ -12,7 +12,6 @@
     "title": "Standard",
     "items": [
       "Render `ZeffyDonateEmbed` as the primary donate action.",
-      "Production pages must provide a real, live `formSlug` from the organization's own Zeffy account — never invent or guess one.",
       "Template/example pages use a clearly labeled dummy slug only, for visual documentation.",
       "The component defaults to its own working fallback iframe (no JS required) and only switches to the primary embed after Zeffy's script confirms it loaded — this is the safe default, not an error-triggered fallback, so it stays no-JS-safe and hydration-safe.",
       "A small helper link is always rendered below the embed, linking to the full-page Zeffy form in a new tab — built in, no separate wiring needed.",

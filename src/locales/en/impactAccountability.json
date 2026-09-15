@@ -26,7 +26,6 @@
   "standard": {
     "title": "Standard",
     "twoComponents": "Still two separate components under the hood — ImpactStatsSection and SpendBreakdownSection are composed on the page, never merged into one. A site can show this combined section, either pattern alone, or neither.",
-    "samePeriod": "Every figure on both sides must come from the same reporting period — pairing a lifetime impact total against one year's spending (or vice versa) is misleading, even if every individual number is accurate.",
     "sharedHeading": "Give the title/description to the first component only (typically ImpactStatsSection) and leave the second title-less, so the pair reads as one section rather than two stacked demos.",
     "costPerOutcome": "The cost-per-outcome highlight is always computed by the page from the same same-period totals shown on both sides — never estimated or computed by either component itself.",
     "onlyWhenBothReady": "Only build this combined page for a site once it genuinely has both a real impact dataset and a real spend dataset for the same period — don't pair one real side with a placeholder on the other."

@@ -274,9 +274,9 @@ describe("author title", () => {
   const titled: TestimonialItem = {
     id: "titled",
     quote: "A letter about the work.",
-    author: "Sandra Murray",
+    author: "Jane Smith",
     authorTitle: "Founder and CEO",
-    authorMeta: "Rovers Return Dog Rescue",
+    authorMeta: "4leggedit Example Rescue",
     authorHref: "https://example.org",
   };
 
@@ -290,9 +290,9 @@ describe("author title", () => {
     (layout) => {
       const { container } = render(<TestimonialsSection testimonials={[titled]} layout={layout} />);
       const attribution = container.textContent ?? "";
-      expect(attribution.indexOf("Sandra Murray")).toBeLessThan(attribution.indexOf("Founder and CEO"));
+      expect(attribution.indexOf("Jane Smith")).toBeLessThan(attribution.indexOf("Founder and CEO"));
       expect(attribution.indexOf("Founder and CEO")).toBeLessThan(
-        attribution.indexOf("Rovers Return Dog Rescue"),
+        attribution.indexOf("4leggedit Example Rescue"),
       );
     },
   );
@@ -301,7 +301,7 @@ describe("author title", () => {
     const { authorTitle: _omitted, ...untitled } = titled;
     render(<TestimonialsSection testimonials={[untitled]} layout="longform" />);
     expect(screen.queryByText("Founder and CEO")).toBeNull();
-    expect(screen.getByText("Sandra Murray")).toBeInTheDocument();
+    expect(screen.getByText("Jane Smith")).toBeInTheDocument();
   });
 
   it("renders the attribution block for a title-only item", () => {
@@ -316,7 +316,7 @@ describe("author title", () => {
 
   it("links the meta and never the title", () => {
     render(<TestimonialsSection testimonials={[titled]} layout="longform" />);
-    expect(screen.getByRole("link", { name: "Rovers Return Dog Rescue" })).toHaveAttribute(
+    expect(screen.getByRole("link", { name: "4leggedit Example Rescue" })).toHaveAttribute(
       "href",
       "https://example.org",
     );

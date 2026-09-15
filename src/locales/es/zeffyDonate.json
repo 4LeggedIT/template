@@ -12,7 +12,6 @@
     "title": "Estándar",
     "items": [
       "Renderice `ZeffyDonateEmbed` como la acción principal de donación.",
-      "Las páginas de producción deben proporcionar un `formSlug` real y en vivo de la cuenta de Zeffy de la organización — nunca invente ni adivine uno.",
       "Las páginas de plantilla/ejemplo usan solo un slug ficticio claramente etiquetado, para fines de documentación visual.",
       "El componente usa como predeterminado su propio iframe de respaldo funcional (sin necesidad de JS) y solo cambia al widget principal después de que el script de Zeffy confirme que se cargó — este es el valor predeterminado seguro, no un respaldo activado por error, por lo que sigue siendo seguro sin JS y seguro para la hidratación.",
       "Siempre se muestra un pequeño enlace auxiliar debajo del widget, que enlaza al formulario completo de Zeffy en una pestaña nueva — incorporado, sin necesidad de conexión adicional.",

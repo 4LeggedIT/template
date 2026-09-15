@@ -73,7 +73,6 @@ const MemorialSectionStandardPage = () => {
             <CardTitle>{t("memorialSection:standard.title")}</CardTitle>
           </CardHeader>
           <CardContent className="space-y-2 text-sm text-muted-foreground">
-            <p>- {t("memorialSection:standard.noBlame")}</p>
             <p>
               - {t("memorialSection:standard.emptyPhotos.before")} <code>photos</code>{" "}
               {t("memorialSection:standard.emptyPhotos.after")}

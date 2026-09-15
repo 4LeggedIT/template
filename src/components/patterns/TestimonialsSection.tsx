@@ -13,7 +13,7 @@ export type TestimonialItem = {
   /**
    * The author's role or title, rendered between `author` and `authorMeta` by all three
    * layouts — its own line in `longform`, inline in the compact `grid`/`featured` cards
-   * (e.g. "Founder and CEO" between "Sandra Murray" and "Rovers Return Dog Rescue").
+   * (e.g. "Founder and CEO" between "Jane Smith" and "4leggedit Example Rescue").
    *
    * This is a description we wrote, not identity, so it is translated on bilingual sites —
    * unlike `author`, which never is. It is also never the linked line: `authorHref` stays

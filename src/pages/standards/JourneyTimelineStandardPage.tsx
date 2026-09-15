@@ -118,7 +118,6 @@ const JourneyTimelineStandardPage = () => {
               {t("journeyTimeline:standard.relatedLinks.mid")} <code>partnerLinks</code>{" "}
               {t("journeyTimeline:standard.relatedLinks.after")}
             </p>
-            <p>- {t("journeyTimeline:standard.realContent")}</p>
             <p>
               - {t("journeyTimeline:standard.emptyState.before")} <code>stages</code>{" "}
               {t("journeyTimeline:standard.emptyState.after")}

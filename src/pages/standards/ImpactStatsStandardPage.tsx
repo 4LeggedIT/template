@@ -120,7 +120,6 @@ const ImpactStatsStandardPage = () => {
             <p>- {t("impactStats:standard.lifetimeAlwaysOn")}</p>
             <p>- {t("impactStats:standard.whenToShow")}</p>
             <p>- {t("impactStats:standard.chartThreshold")}</p>
-            <p>- {t("impactStats:standard.noInventedNumbers")}</p>
             <p>- {t("impactStats:standard.labelVocabulary")}</p>
             <p>
               - {t("impactStats:standard.timeframeNote.before")} <code>timeframeNote</code>{" "}

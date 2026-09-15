@@ -61,8 +61,6 @@
       "Mantenga los testimonios en archivos de datos de la página/sitio, no dentro del componente.",
       "El contenido de texto se renderiza en el servidor sin JS — conserve el renderizado SSR, los testimonios deben permanecer legibles sin JS.",
       "Usa `layout=\"longform\"` para testimonios con extensión de carta: muestra párrafos reales y elige su único elemento con `featuredIndex`, nunca al azar.",
-      "Da a cualquier testimonio largo mostrado en `grid`/`featured` un `excerpt` escrito por una persona; nunca recortes una cita desde el código.",
-      "Asigna `rating` solo cuando la reseña original realmente lo incluía: nunca lo deduzcas ni lo promedies, y nunca lo publiques como JSON-LD `Review` (los buscadores no permiten marcado de reseñas sobre uno mismo).",
       "Usa `authorTitle` para el cargo o rol de la persona: se muestra entre `author` y `authorMeta`, de modo que un aliado con nombre se lee como nombre / cargo / organización. `authorHref` permanece en `authorMeta`: el enlace pertenece a la organización, no al cargo.",
       "Activa `collapsible` en `layout=\"longform\"` cuando una carta es demasiado larga para mostrarla completa de entrada: oculta el cuerpo detrás de un interruptor nativo `<details>` (cerrado por defecto) mientras la `pullQuote` permanece visible como resumen. Requiere `pullQuote`; sin ella el elemento vuelve al renderizado siempre expandido. Pasa `labels.readMoreLabel` para el texto del interruptor en sitios con i18n.",
       "Componente: `template/src/components/patterns/TestimonialsSection.tsx`"

@@ -127,7 +127,6 @@ const ImpactAccountabilityStandardPage = () => {
           </CardHeader>
           <CardContent className="space-y-2 text-sm text-muted-foreground">
             <p>- {t("impactAccountability:standard.twoComponents")}</p>
-            <p>- {t("impactAccountability:standard.samePeriod")}</p>
             <p>- {t("impactAccountability:standard.sharedHeading")}</p>
             <p>- {t("impactAccountability:standard.costPerOutcome")}</p>
             <p>- {t("impactAccountability:standard.onlyWhenBothReady")}</p>

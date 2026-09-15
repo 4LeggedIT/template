@@ -30,8 +30,6 @@
       "before": "El indicador opcional",
       "after": "siempre lo calcula el propio código de la página del sitio a partir de totales reales del mismo período en ambos lados — el componente nunca adivina qué categoría de gasto corresponde a qué resultado."
     },
-    "noInventedNumbers": "Cada cifra debe provenir de la declaración de impuestos realmente presentada por la organización. Nunca estime, redondee para efecto, ni invente una categoría que no sea real.",
-    "noDonorInfo": "Nunca use este patrón para listar contribuyentes individuales o los montos de sus donaciones — la identidad de los donantes está explícitamente exenta de divulgación pública bajo las reglas del IRS (Anexo B del Formulario 990), y ese límite es absoluto sin importar lo que un sitio quiera mostrar.",
     "emptyState": "No muestra nada si categories está vacío — sin un total de relleno de $0.",
     "component": {
       "before": "Componente:"

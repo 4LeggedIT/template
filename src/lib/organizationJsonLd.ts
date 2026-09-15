@@ -37,7 +37,7 @@ export const organizationJsonLd = {
   ...(contact?.email ? { email: contact.email } : {}),
   ...(contact?.phone ? { telephone: contact.phone } : {}),
   // Emit a (possibly partial) PostalAddress whenever any address field exists — sites like
-  // roversreturndogrescue only carry city/state (no street address), which previously fell
+  // some sites only carry city/state (no street address), which previously fell
   // through and silently dropped the address from JSON-LD entirely even though city/state
   // data was available.
   ...(contact?.addressLine1 || contact?.city || contact?.region || contact?.state

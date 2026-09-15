@@ -89,8 +89,6 @@ const SpendBreakdownStandardPage = () => {
               - {t("spendBreakdown:standard.costPerOutcome.before")} <code>costPerOutcome</code>{" "}
               {t("spendBreakdown:standard.costPerOutcome.after")}
             </p>
-            <p>- {t("spendBreakdown:standard.noInventedNumbers")}</p>
-            <p>- {t("spendBreakdown:standard.noDonorInfo")}</p>
             <p>- {t("spendBreakdown:standard.emptyState")}</p>
             <p>
               - {t("spendBreakdown:standard.component.before")}{" "}
