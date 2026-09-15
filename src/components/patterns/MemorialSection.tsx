@@ -66,14 +66,16 @@ const MemorialSection = ({
               key={entry.id}
               className="grid gap-6 rounded-3xl border border-border bg-card p-6 shadow-sm sm:grid-cols-[auto_1fr] sm:p-8"
             >
-              <div className="mx-auto flex shrink-0 gap-2 sm:mx-0">
+              {/* Photos keep their own shape — never cropped (fleet rule). They wrap
+                  on narrow screens instead of overflowing. */}
+              <div className="mx-auto flex max-w-full flex-wrap justify-center gap-2 sm:mx-0 sm:max-w-md sm:justify-start">
                 {entry.photos.length ? (
                   entry.photos.map((photo, index) => (
                     <img
                       key={photo}
                       src={photo}
                       alt={index === 0 ? entry.name : `${entry.name}, additional photo`}
-                      className="h-36 w-36 rounded-2xl object-cover ring-2 ring-primary/30"
+                      className="h-48 w-auto max-w-full rounded-2xl object-contain ring-2 ring-primary/30"
                     />
                   ))
                 ) : (
