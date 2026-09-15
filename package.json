@@ -11,6 +11,7 @@
     "links:check": "node tools/check-internal-links.mjs",
     "links:check:all": "node tools/check-internal-links.mjs --external",
     "links:check:external": "node tools/check-internal-links.mjs --external-only",
+    "drafts": "node tools/list-drafts.mjs",
     "lint": "eslint .",
     "csp:check": "node tools/check-csp-registry.mjs src/components/patterns",
     "headers:check": "node tools/check-security-headers.mjs public/_headers --build-script=tools/build.mjs",

@@ -1,0 +1,69 @@
+{
+  "hero": {
+    "title": "Patrón de marcadores provisionales",
+    "description": "Dos marcadores que mantienen honesto el contenido sin confirmar: uno para texto redactado en nombre del dueño y otro para secciones que solo el dueño puede aportar. Ambos se ven en producción hasta que alguien confirma y los quita."
+  },
+  "breadcrumb": "Patrón de Marcadores Provisionales",
+  "sections": {
+    "inline": {
+      "title": "Texto redactado (`Placeholder`)",
+      "description": "Envuelve una oración redactada para que la página tenga algo. El borde punteado y la insignia indican que no está confirmada; pasa el cursor sobre la insignia para ver la nota."
+    },
+    "label": {
+      "title": "Insignia en el idioma del sitio (`label`)",
+      "description": "Pasa `label` en el idioma del sitio. Un sitio en español usa `borrador` en vez del valor por defecto en inglés, `draft`."
+    },
+    "section": {
+      "title": "Contenido que solo el dueño puede aportar (`PlaceholderSection`)",
+      "description": "La sección se muestra de todos modos: una línea de “próximamente” apta para visitantes y luego la petición dirigida al dueño. Se usa para una historia, un equipo, credenciales: cosas que no se pueden redactar."
+    }
+  },
+  "examples": {
+    "inline": {
+      "before": "Las visitas duran de 30 a 60 minutos.",
+      "drafted": "Seguimos la rutina de tu animal para que el día se sienta como cualquier otro.",
+      "note": "Redactado a partir de la descripción del servicio — falta la confirmación del dueño"
+    },
+    "label": {
+      "drafted": "Cuidamos a tu animal en su propia casa, siguiendo su rutina.",
+      "note": "Redactado por nosotros — falta la confirmación del dueño"
+    },
+    "section": {
+      "title": "Nuestra historia",
+      "publicText": "Próximamente, nuestra historia.",
+      "ask": "Esta parte solo la puedes escribir tú: ¿cómo empezaste y qué te hizo escoger este trabajo? Puede ser por audio; nosotros lo pasamos a texto.",
+      "why": "Esta sección está en la página a propósito, para que el espacio se vea hasta que se llene."
+    }
+  },
+  "whenToUse": {
+    "title": "Cuándo usar cuál",
+    "items": [
+      "`Placeholder`: una afirmación sobre cómo opera el negocio u organización que redactamos nosotros y el dueño no ha confirmado.",
+      "`PlaceholderSection`: contenido que solo el dueño puede dar — su historia, su equipo, credenciales, detalles del día a día. Nunca se inventa; se marca el espacio.",
+      "Ninguno: un dato que simplemente falta (usa el texto “detalles próximamente”), etiquetas de la interfaz, texto de botones, páginas de error, o cualquier cosa tomada de los flyers, mensajes o redes del propio dueño — eso ya es suyo.",
+      "Construye la sección de todos modos. Una sección omitida no se ve, y los espacios que no se ven se quedan para siempre."
+    ]
+  },
+  "standard": {
+    "title": "Estándar",
+    "items": [
+      "Importa ambos desde `@/components/patterns/` — nunca hagas un marcador parecido a mano en un sitio.",
+      "`Placeholder` va en línea (un `span`). Colócalo dentro de un párrafo o título; nunca envuelvas elementos de bloque con él.",
+      "Usa `note` para decir exactamente qué falta confirmar, así la revisión es rápida.",
+      "Pasa `label` en el idioma del sitio (por ejemplo `borrador`, `Nos falta tu parte`).",
+      "Los marcadores nunca se ocultan en producción — ni con opciones de compilación, ni con CSS, ni con un “quitar” automático. Publicar el texto sin marcar significa borrar el envoltorio.",
+      "Ambos usan solo tokens compartidos del tema (`muted`, `muted-foreground`, `background`, `accent`, `accent-foreground`, `foreground`). El `accent-foreground` del tema debe leerse bien sobre `accent`.",
+      "Configura `npm run drafts` (`tools/list-drafts.mjs`) en todo sitio que use los marcadores; lista cada uno pendiente. Una página de documentación que muestra marcadores a propósito se excluye con un comentario `drafts:ignore-file`.",
+      "Componentes: `template/src/components/patterns/Placeholder.tsx`, `template/src/components/patterns/PlaceholderSection.tsx`"
+    ]
+  },
+  "lifecycle": {
+    "title": "Cómo quitar un marcador",
+    "items": [
+      "El dueño confirma el texto → borra el envoltorio `Placeholder` y deja el texto. Ajústalo antes si solo era seguro mientras se veía como provisional.",
+      "El dueño envía el contenido de la sección → reemplaza el `PlaceholderSection` con el contenido real.",
+      "El dueño decide no aportarlo → quita la sección. Nunca publiques la petición sin marcar.",
+      "Vuelve a correr `npm run drafts` y quita las importaciones que queden sin usar."
+    ]
+  }
+}

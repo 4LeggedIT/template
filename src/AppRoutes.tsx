@@ -31,6 +31,7 @@ import ImpactAccountabilityStandardPage from "@/pages/standards/ImpactAccountabi
 import DetailedImpactStandardPage from "@/pages/standards/DetailedImpactStandardPage";
 import MediaCarouselStandardPage from "@/pages/standards/MediaCarouselStandardPage";
 import MediaCarouselTileStandardPage from "@/pages/standards/MediaCarouselTileStandardPage";
+import PlaceholderStandardPage from "@/pages/standards/PlaceholderStandardPage";
 import MediaGalleryStandardPage from "@/pages/standards/MediaGalleryStandardPage";
 import PayPalButtonsStandardPage from "@/pages/standards/PayPalButtonsStandardPage";
 import PayPalButtonsDonateStandardPage from "@/pages/standards/PayPalButtonsDonateStandardPage";
@@ -125,6 +126,7 @@ const AppRoutes = () => {
         <Route path="/standards/detailed-impact" element={<DetailedImpactStandardPage />} />
         <Route path="/standards/media-carousel" element={<MediaCarouselStandardPage />} />
         <Route path="/standards/media-carousel-tile" element={<MediaCarouselTileStandardPage />} />
+        <Route path="/standards/placeholder" element={<PlaceholderStandardPage />} />
         <Route path="/standards/media-gallery" element={<MediaGalleryStandardPage />} />
         <Route path="/standards/paypal-buttons" element={<PayPalButtonsStandardPage />} />
         <Route path="/standards/paypal-buttons/donate-button" element={<PayPalButtonsDonateStandardPage />} />

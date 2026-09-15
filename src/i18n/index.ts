@@ -24,6 +24,7 @@ import enTestimonials from "@/locales/en/testimonials.json";
 import enFlyerLibrary from "@/locales/en/flyerLibrary.json";
 import enMediaCarousel from "@/locales/en/mediaCarousel.json";
 import enMediaCarouselTile from "@/locales/en/mediaCarouselTile.json";
+import enPlaceholder from "@/locales/en/placeholder.json";
 import enMediaGallery from "@/locales/en/mediaGallery.json";
 import enFaqDisclosure from "@/locales/en/faqDisclosure.json";
 import enFaqAccordion from "@/locales/en/faqAccordion.json";
@@ -68,6 +69,7 @@ import esTestimonials from "@/locales/es/testimonials.json";
 import esFlyerLibrary from "@/locales/es/flyerLibrary.json";
 import esMediaCarousel from "@/locales/es/mediaCarousel.json";
 import esMediaCarouselTile from "@/locales/es/mediaCarouselTile.json";
+import esPlaceholder from "@/locales/es/placeholder.json";
 import esMediaGallery from "@/locales/es/mediaGallery.json";
 import esFaqDisclosure from "@/locales/es/faqDisclosure.json";
 import esFaqAccordion from "@/locales/es/faqAccordion.json";
@@ -118,6 +120,7 @@ i18n.use(initReactI18next).init({
       flyerLibrary: enFlyerLibrary,
       mediaCarousel: enMediaCarousel,
       mediaCarouselTile: enMediaCarouselTile,
+      placeholder: enPlaceholder,
       mediaGallery: enMediaGallery,
       faqDisclosure: enFaqDisclosure,
       faqAccordion: enFaqAccordion,
@@ -163,6 +166,7 @@ i18n.use(initReactI18next).init({
       flyerLibrary: esFlyerLibrary,
       mediaCarousel: esMediaCarousel,
       mediaCarouselTile: esMediaCarouselTile,
+      placeholder: esPlaceholder,
       mediaGallery: esMediaGallery,
       faqDisclosure: esFaqDisclosure,
       faqAccordion: esFaqAccordion,
@@ -211,6 +215,7 @@ i18n.use(initReactI18next).init({
     "flyerLibrary",
     "mediaCarousel",
     "mediaCarouselTile",
+    "placeholder",
     "mediaGallery",
     "faqDisclosure",
     "faqAccordion",

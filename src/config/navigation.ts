@@ -35,6 +35,7 @@ export const templateNavItems: NavItem[] = [
       { label: "Blog", href: "/standards/blog", group: "contentEngagement" },
       { label: "FAQ Accordion", href: "/standards/faq-accordion", group: "contentEngagement" },
       { label: "FAQ Disclosure", href: "/standards/faq-disclosure", group: "contentEngagement" },
+      { label: "Placeholder Markers", href: "/standards/placeholder", group: "contentEngagement" },
       { label: "Flyer Library", href: "/standards/flyer-library", group: "mediaLibraries" },
       { label: "Media Carousel", href: "/standards/media-carousel", group: "mediaLibraries" },
       { label: "Media Carousel Tile", href: "/standards/media-carousel-tile", group: "mediaLibraries" },
