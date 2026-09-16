@@ -124,8 +124,33 @@ const getNthWeekdayDateOfMonth = (
   return candidate.getUTCMonth() === monthIndex0 ? candidate : null;
 };
 
-const toOccurrenceIso = (seedStart: Date, occurrenceDate: Date) =>
-  new Date(
+// Matches the literal local wall-clock time and UTC offset in an authored ISO string, e.g.
+// "2026-08-06T17:00:00-07:00" -> time "17:00:00", offset "-07:00".
+const LOCAL_DATE_RE = /^(\d{4}-\d{2}-\d{2})T/;
+const LOCAL_TIME_OFFSET_RE = /T(\d{2}:\d{2}:\d{2}(?:\.\d+)?)(Z|[+-]\d{2}:?\d{2})$/;
+
+const getLocalDatePart = (iso: string): string | null => LOCAL_DATE_RE.exec(iso)?.[1] ?? null;
+
+const getLocalTimeOffsetPart = (iso: string): { time: string; offset: string } | null => {
+  const match = LOCAL_TIME_OFFSET_RE.exec(iso);
+  if (!match) return null;
+  return { time: match[1], offset: match[2] === "Z" ? "+00:00" : match[2] };
+};
+
+// Builds the occurrence's timestamp by splicing the generated calendar date onto the seed's
+// literal local time-of-day + UTC offset — read directly from the ISO string, never derived via
+// `.getUTCHours()` on a real converted instant. That conversion silently rolls the calendar day
+// whenever the local time + offset crosses a UTC day boundary (e.g. any evening event in a
+// negative-offset zone: 17:00-07:00 = 00:00 UTC the *next* day), which would otherwise shift
+// every generated occurrence back one day once rendered back in local time.
+const toOccurrenceIso = (seedStartIso: string, occurrenceDate: Date): string => {
+  const ymd = formatYmdUtc(occurrenceDate);
+  const timeOffset = getLocalTimeOffsetPart(seedStartIso);
+  if (timeOffset) return new Date(`${ymd}T${timeOffset.time}${timeOffset.offset}`).toISOString();
+
+  // Defensive fallback for a malformed seed ISO string (shouldn't happen for valid input).
+  const seedStart = new Date(Date.parse(seedStartIso));
+  return new Date(
     Date.UTC(
       occurrenceDate.getUTCFullYear(),
       occurrenceDate.getUTCMonth(),
@@ -136,6 +161,7 @@ const toOccurrenceIso = (seedStart: Date, occurrenceDate: Date) =>
       seedStart.getUTCMilliseconds(),
     ),
   ).toISOString();
+};
 
 function* iterateWeeklyDates(
   seedDate: Date,
@@ -217,6 +243,7 @@ export function getNextOccurrence(
   const seedStart = new Date(seedStartMs);
   const seedDate =
     parseYmdUtc(recurrence.startOn) ??
+    parseYmdUtc(getLocalDatePart(seedStartIso)) ??
     new Date(Date.UTC(seedStart.getUTCFullYear(), seedStart.getUTCMonth(), seedStart.getUTCDate()));
   const durationMs = seedEndMs - seedStartMs;
   const untilDate = parseYmdUtc(recurrence.until);
@@ -244,7 +271,7 @@ export function getNextOccurrence(
     if (toDayStartUtcMs(occurrenceDate) > upperBoundMs) return null;
     if (isSkipped(recurrence, occurrenceDate)) continue;
 
-    const occurrenceStartIso = toOccurrenceIso(seedStart, occurrenceDate);
+    const occurrenceStartIso = toOccurrenceIso(seedStartIso, occurrenceDate);
     const occurrenceStartMs = Date.parse(occurrenceStartIso);
     const occurrenceEndMs = occurrenceStartMs + durationMs;
     if (occurrenceEndMs < nowMs) continue;
@@ -278,9 +305,8 @@ export function getOccurrenceOnDate(
   const matches = getOccurrenceDates(recurrence, seedStartYmd, requestedDate, requestedDate);
   if (!matches.length) return null;
 
-  const seedStart = new Date(seedStartMs);
   const durationMs = seedEndMs - seedStartMs;
-  const occurrenceStartIso = toOccurrenceIso(seedStart, requestedDate);
+  const occurrenceStartIso = toOccurrenceIso(seedStartIso, requestedDate);
   const occurrenceStartMs = Date.parse(occurrenceStartIso);
   return { startAtIso: occurrenceStartIso, endAtIso: new Date(occurrenceStartMs + durationMs).toISOString() };
 }
@@ -291,8 +317,8 @@ export function getOccurrenceOnDate(
  * no English text — sites render their own strings (some are bilingual, some aren't).
  */
 export function describeRecurrence(recurrence: EventRecurrence, seedStartIso: string): RecurrenceDescription {
-  const seedStart = new Date(Date.parse(seedStartIso));
-  const seedWeekday = weekdayOrder[seedStart.getUTCDay()];
+  const seedDateOnly = parseYmdUtc(getLocalDatePart(seedStartIso)) ?? new Date(Date.parse(seedStartIso));
+  const seedWeekday = weekdayOrder[seedDateOnly.getUTCDay()];
 
   if (recurrence.frequency === "weekly") {
     return {
@@ -309,7 +335,7 @@ export function describeRecurrence(recurrence: EventRecurrence, seedStartIso: st
       frequency: "monthly",
       interval: Math.max(1, Math.floor(recurrence.intervalMonths ?? 1)),
       weekdays: recurrence.nthWeek ? (recurrence.weekdays?.length ? recurrence.weekdays : [seedWeekday]) : [],
-      monthDay: recurrence.nthWeek ? undefined : recurrence.monthDay ?? seedStart.getUTCDate(),
+      monthDay: recurrence.nthWeek ? undefined : recurrence.monthDay ?? seedDateOnly.getUTCDate(),
       nthWeek: recurrence.nthWeek,
       until: recurrence.until,
       count: recurrence.count,

@@ -1,5 +1,12 @@
 import { describe, expect, it } from "vitest";
-import { buildRrule, describeRecurrence, getNextOccurrence, getOccurrenceDates, type EventRecurrence } from "@/lib/event-recurrence";
+import {
+  buildRrule,
+  describeRecurrence,
+  getNextOccurrence,
+  getOccurrenceDates,
+  getOccurrenceOnDate,
+  type EventRecurrence,
+} from "@/lib/event-recurrence";
 
 const rangeStart = new Date(Date.UTC(2026, 0, 1));
 const rangeEnd = new Date(Date.UTC(2026, 7, 1));
@@ -136,6 +143,38 @@ describe("getNextOccurrence", () => {
       Date.parse("2026-01-05T00:00:00Z"),
     );
     expect(occurrence?.startAtIso.slice(0, 10)).toBe("2026-01-07");
+  });
+
+  it("regression: an evening seed time in a negative UTC offset doesn't shift occurrences back a day", () => {
+    // 17:00-07:00 = 00:00 UTC the *next* calendar day. A bug that read the seed's UTC hour back
+    // off a real converted instant (instead of the literal local time) rolled every generated
+    // occurrence back one day once rendered in local time — e.g. the 1st Thursday of October
+    // (Oct 1, 2026) rendered as "September 30". Assert against the local (Pacific) calendar date,
+    // not the raw UTC slice, so this test would have caught that.
+    const recurrence: EventRecurrence = { frequency: "monthly", nthWeek: 1, weekdays: ["thu"], startOn: "2026-08-06" };
+    const occurrence = getNextOccurrence(
+      recurrence,
+      "2026-08-06T17:00:00-07:00",
+      "2026-08-06T21:00:00-07:00",
+      Date.parse("2026-09-16T00:00:00Z"),
+    );
+    const localDate = occurrence && new Date(occurrence.startAtIso).toLocaleDateString("en-US", { timeZone: "America/Los_Angeles" });
+    expect(localDate).toBe("10/1/2026");
+  });
+});
+
+describe("getOccurrenceOnDate", () => {
+  it("regression: resolves an evening occurrence to the correct local calendar date", () => {
+    const recurrence: EventRecurrence = { frequency: "monthly", nthWeek: 1, weekdays: ["thu"], startOn: "2026-08-06" };
+    const occurrence = getOccurrenceOnDate(
+      recurrence,
+      "2026-08-06T17:00:00-07:00",
+      "2026-08-06T21:00:00-07:00",
+      "2026-08-06",
+      "2026-10-01",
+    );
+    const localDate = occurrence && new Date(occurrence.startAtIso).toLocaleDateString("en-US", { timeZone: "America/Los_Angeles" });
+    expect(localDate).toBe("10/1/2026");
   });
 });
 
