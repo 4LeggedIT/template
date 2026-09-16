@@ -15,6 +15,7 @@ import {
   getNextOccurrence,
   getOccurrenceDates,
   getOccurrenceOnDate,
+  resolveOccurrenceStartIso,
 } from "@/lib/event-recurrence";
 import { useEffect, useState, type ReactNode } from "react";
 
@@ -315,23 +316,6 @@ const formatYmdUtc = (date: Date) => {
 
 const toUtcDayMs = (date: Date) => Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate());
 
-const getTimedOccurrenceIso = (seedIso: string, occurrenceDate: Date) => {
-  const seedMs = Date.parse(seedIso);
-  if (!Number.isFinite(seedMs)) return null;
-  const seed = new Date(seedMs);
-  return new Date(
-    Date.UTC(
-      occurrenceDate.getUTCFullYear(),
-      occurrenceDate.getUTCMonth(),
-      occurrenceDate.getUTCDate(),
-      seed.getUTCHours(),
-      seed.getUTCMinutes(),
-      seed.getUTCSeconds(),
-      seed.getUTCMilliseconds(),
-    ),
-  ).toISOString();
-};
-
 /**
  * Resolves the single thumbnail (imageSrc/imageAlt) a card, highlight, or detail-page hero
  * should use: the entry's own `imageSrc` when set, otherwise its first `images[]` entry.
@@ -449,7 +433,7 @@ const expandEventEntry = (
     const endAtDate = addDaysUtc(occurrenceDate, daySpan);
     const endAt = entry.endAt || daySpan > 0 ? formatYmdUtc(endAtDate) : undefined;
 
-    const startAtIso = entry.startAtIso ? getTimedOccurrenceIso(entry.startAtIso, occurrenceDate) ?? undefined : undefined;
+    const startAtIso = entry.startAtIso ? resolveOccurrenceStartIso(entry.startAtIso, occurrenceDate) ?? undefined : undefined;
     const endAtIso =
       entry.endAtIso && startAtIso
         ? new Date(Date.parse(startAtIso) + timedDurationMs).toISOString()

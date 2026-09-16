@@ -163,6 +163,20 @@ const toOccurrenceIso = (seedStartIso: string, occurrenceDate: Date): string => 
   ).toISOString();
 };
 
+/**
+ * Public counterpart to `toOccurrenceIso`, for callers that expand every occurrence in a date
+ * range themselves (e.g. `EventsNewsSection`'s list-view card expansion via `getOccurrenceDates`)
+ * rather than going through `getNextOccurrence`/`getOccurrenceOnDate`. Exists so there is exactly
+ * one implementation of the local-time/offset splicing this file's internal callers already rely
+ * on — do not reimplement this logic locally in a pattern component; that duplication is exactly
+ * how the day-off-by-one bug this fixes shipped undetected for months. Returns null (instead of
+ * throwing) for an unparseable seed ISO string.
+ */
+export const resolveOccurrenceStartIso = (seedStartIso: string, occurrenceDate: Date): string | null => {
+  if (!Number.isFinite(Date.parse(seedStartIso))) return null;
+  return toOccurrenceIso(seedStartIso, occurrenceDate);
+};
+
 function* iterateWeeklyDates(
   seedDate: Date,
   intervalWeeks: number,
