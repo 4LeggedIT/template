@@ -20,19 +20,19 @@
   },
   "examples": {
     "inline": {
-      "before": "Visits last 30 to 60 minutes.",
-      "drafted": "We follow your pet's routine so the day feels like any other.",
-      "note": "Drafted from the owner's service description — awaiting confirmation"
+      "before": "The lending library is open on Saturday mornings.",
+      "drafted": "Borrowers may keep an item for two weeks, and renew it once if nobody is waiting.",
+      "note": "Drafted from a rough note — the lending terms are not confirmed"
     },
     "label": {
-      "drafted": "Cuidamos a tu animal en su propia casa, siguiendo su rutina.",
-      "note": "Redactado por nosotros — falta la confirmación del dueño"
+      "drafted": "Volunteers meet at the north gate before each shift.",
+      "note": "Drafted by us — the meeting point is not confirmed"
     },
     "section": {
-      "title": "Our story",
-      "publicText": "Our story is coming soon.",
-      "ask": "Only you can write this part: how did you get started, and what made you choose this work? A voice note is fine — we will put it in writing.",
-      "why": "This section is on the page on purpose, so the gap stays visible until it is filled."
+      "title": "How the workshop runs",
+      "publicText": "Workshop details are coming soon.",
+      "ask": "Only you can fill this in: how long does a session run, how many people fit, and what should someone bring? A voice note is fine — we will write it up.",
+      "why": "The section stays on the page so the gap is visible until it is filled."
     }
   },
   "whenToUse": {
@@ -53,17 +53,8 @@
       "Pass `label` in the site's language (e.g. `borrador`, `Nos falta tu parte`).",
       "Markers are never hidden in production — no build flag, no CSS, no “strip” helper. Shipping the wording unmarked means deleting the wrapper.",
       "Both use shared theme tokens only (`muted`, `muted-foreground`, `background`, `accent`, `accent-foreground`, `foreground`). A theme's `accent-foreground` must be readable on `accent`.",
-      "Wire `npm run drafts` (`tools/list-drafts.mjs`) on any site that uses the markers; it lists every outstanding one. A documentation page that renders markers on purpose opts out with a `drafts:ignore-file` comment.",
+      "Wire `npm run drafts` (`tools/list-drafts.mjs`) on any site that uses the markers; it lists every outstanding one, and is how you check nothing is left after removing a wrapper. Remove imports left unused. A documentation page that renders markers on purpose opts out with a `drafts:ignore-file` comment.",
       "Components: `template/src/components/patterns/Placeholder.tsx`, `template/src/components/patterns/PlaceholderSection.tsx`"
-    ]
-  },
-  "lifecycle": {
-    "title": "Removing a marker",
-    "items": [
-      "Owner confirms the wording → delete the `Placeholder` wrapper and keep the text. Reword first if it was only safe while visibly provisional.",
-      "Owner sends the section content → replace the `PlaceholderSection` with the real content.",
-      "Owner decides not to supply it → remove the section. Never publish the request unmarked.",
-      "Run `npm run drafts` again and remove any imports left unused."
     ]
   }
 }

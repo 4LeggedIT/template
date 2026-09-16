@@ -1,5 +1,10 @@
 // drafts:ignore-file — this page renders <Placeholder>/<PlaceholderSection> on purpose,
 // as live examples. `npm run drafts` must not report them as unconfirmed site copy.
+//
+// Public page: how the markers behave and how to use them. The client-facing
+// process around removing one (who confirms, what to do when the owner declines
+// to supply a section) is internal — it lives in internal-tools
+// placeholder-module-wiring-contract.md §5, not here (David, 2026-09-15).
 import { useTranslation } from "react-i18next";
 import PageHero from "@/components/patterns/PageHero";
 import Placeholder from "@/components/patterns/Placeholder";
@@ -83,13 +88,6 @@ const PlaceholderStandardPage = () => {
             <CardTitle>{t("placeholder:standard.title")}</CardTitle>
           </CardHeader>
           <CardContent className="space-y-2 text-sm text-muted-foreground">{list("placeholder:standard.items")}</CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle>{t("placeholder:lifecycle.title")}</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-2 text-sm text-muted-foreground">{list("placeholder:lifecycle.items")}</CardContent>
         </Card>
       </section>
     </>

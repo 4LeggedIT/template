@@ -20,19 +20,19 @@
   },
   "examples": {
     "inline": {
-      "before": "Las visitas duran de 30 a 60 minutos.",
-      "drafted": "Seguimos la rutina de tu animal para que el día se sienta como cualquier otro.",
-      "note": "Redactado a partir de la descripción del servicio — falta la confirmación del dueño"
+      "before": "La biblioteca de préstamo abre los sábados por la mañana.",
+      "drafted": "Quien toma prestado un artículo puede quedárselo dos semanas y renovarlo una vez si nadie está esperando.",
+      "note": "Redactado a partir de una nota suelta — las condiciones de préstamo no están confirmadas"
     },
     "label": {
-      "drafted": "Cuidamos a tu animal en su propia casa, siguiendo su rutina.",
-      "note": "Redactado por nosotros — falta la confirmación del dueño"
+      "drafted": "Los voluntarios se reúnen en el portón norte antes de cada turno.",
+      "note": "Redactado por nosotros — el punto de encuentro no está confirmado"
     },
     "section": {
-      "title": "Nuestra historia",
-      "publicText": "Próximamente, nuestra historia.",
-      "ask": "Esta parte solo la puedes escribir tú: ¿cómo empezaste y qué te hizo escoger este trabajo? Puede ser por audio; nosotros lo pasamos a texto.",
-      "why": "Esta sección está en la página a propósito, para que el espacio se vea hasta que se llene."
+      "title": "Cómo se da el taller",
+      "publicText": "Próximamente, los detalles del taller.",
+      "ask": "Esta parte solo la puedes llenar tú: cuánto dura una sesión, cuántas personas caben y qué debe traer cada quien. Puede ser por audio; nosotros lo escribimos.",
+      "why": "La sección se queda en la página para que el espacio se vea hasta que se llene."
     }
   },
   "whenToUse": {
@@ -53,17 +53,8 @@
       "Pasa `label` en el idioma del sitio (por ejemplo `borrador`, `Nos falta tu parte`).",
       "Los marcadores nunca se ocultan en producción — ni con opciones de compilación, ni con CSS, ni con un “quitar” automático. Publicar el texto sin marcar significa borrar el envoltorio.",
       "Ambos usan solo tokens compartidos del tema (`muted`, `muted-foreground`, `background`, `accent`, `accent-foreground`, `foreground`). El `accent-foreground` del tema debe leerse bien sobre `accent`.",
-      "Configura `npm run drafts` (`tools/list-drafts.mjs`) en todo sitio que use los marcadores; lista cada uno pendiente. Una página de documentación que muestra marcadores a propósito se excluye con un comentario `drafts:ignore-file`.",
+      "Configura `npm run drafts` (`tools/list-drafts.mjs`) en todo sitio que use los marcadores; lista cada uno pendiente y sirve para comprobar que no queda ninguno tras quitar un envoltorio. Quita las importaciones que queden sin usar. Una página de documentación que muestra marcadores a propósito se excluye con un comentario `drafts:ignore-file`.",
       "Componentes: `template/src/components/patterns/Placeholder.tsx`, `template/src/components/patterns/PlaceholderSection.tsx`"
-    ]
-  },
-  "lifecycle": {
-    "title": "Cómo quitar un marcador",
-    "items": [
-      "El dueño confirma el texto → borra el envoltorio `Placeholder` y deja el texto. Ajústalo antes si solo era seguro mientras se veía como provisional.",
-      "El dueño envía el contenido de la sección → reemplaza el `PlaceholderSection` con el contenido real.",
-      "El dueño decide no aportarlo → quita la sección. Nunca publiques la petición sin marcar.",
-      "Vuelve a correr `npm run drafts` y quita las importaciones que queden sin usar."
     ]
   }
 }
