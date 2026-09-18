@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "ports:check": "node ../internal-tools/4leggedit-websites/tools/check-port-registry.mjs --site template",
     "build": "node tools/check-event-recurrence.mjs && node tools/check-internal-links.mjs && node tools/build.mjs",
     "build:dev": "vite build --mode development",
     "check:recurrence": "node tools/check-event-recurrence.mjs",
