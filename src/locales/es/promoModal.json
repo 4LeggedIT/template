@@ -1,0 +1,29 @@
+{
+  "hero": {
+    "title": "Patrón de Ventana Emergente Promocional",
+    "description": "Una ventana emergente promocional descartable que se abre en la página de inicio tras una breve pausa, para una oferta o anuncio por tiempo limitado — nunca un sistema completo de eventos/noticias, solo una imagen de volante con un titular, texto y CTA opcionales."
+  },
+  "breadcrumb": "Patrón de Ventana Emergente Promocional",
+  "sections": {
+    "example": {
+      "title": "Ejemplo",
+      "description": "Haz clic en \"Reabrir ejemplo\" para previsualizar la ventana emergente — en un sitio real se abre por sí sola poco después de cargar la página de inicio, mostrando la promoción elegible que vence más pronto. Al descartarla (la × o haciendo clic fuera) se recuerda la elección en localStorage hasta la fecha de fin de esa promoción."
+    },
+    "reopen": "Reabrir ejemplo"
+  },
+  "example": {
+    "imageAlt": "Volante de Especial de Regreso a Clases — 20% de descuento en todos los servicios para clientes nuevos en septiembre",
+    "headline": "¡Especial de Regreso a Clases: 20% de descuento para clientes nuevos!",
+    "body": "Reserva cualquier servicio durante septiembre y ahorra 20% en todos los servicios.",
+    "ctaLabel": "Reservar Ahora"
+  },
+  "standard": {
+    "title": "Estándar",
+    "oneAtATime": "Muestra como máximo una promoción a la vez — la entrada elegible que vence más pronto del arreglo `promos`, nunca una pila de ventanas emergentes.",
+    "dateWindow": "`startsAtIso`/`expiresAtIso` controlan la elegibilidad: no se muestra antes de su fecha de inicio, y nunca se vuelve a mostrar una vez vencida.",
+    "dismiss": "El descarte persiste por id de promoción en localStorage (`${storageKeyPrefix}_${id}`), la misma convención que usa EventBanner — vinculado a la propia `expiresAtIso` de la promoción, así que una promoción descartada solo reaparece si se le cambia la fecha o se reemplaza.",
+    "homeOnly": "Solo en la página de inicio, por convención de la flota — la misma regla que EventBanner. Nunca renderizarlo también en otras páginas.",
+    "plainStrings": "Solo props de tipo string plano, sin i18n dentro del componente — un sitio bilingüe resuelve `LocalizedText` a un string plano por idioma antes de construir el arreglo `promos`, igual que cualquier otro patrón compartido.",
+    "component": "Componente: `template/src/components/patterns/PromoModal.tsx`"
+  }
+}

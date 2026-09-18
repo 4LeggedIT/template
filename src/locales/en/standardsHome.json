@@ -20,6 +20,7 @@
     "successStories": { "title": "Success Stories Pattern", "description": "Narrative story-card module for adoption outcomes and happy tails." },
     "testimonials": { "title": "Testimonials Pattern", "description": "Featured, grid and longform testimonial patterns for reusable social-proof sections, with optional star ratings." },
     "flyerLibrary": { "title": "Flyer Library Pattern", "description": "Timeless, undated awareness flyer library with category filtering — distinct from dated events/news." },
+    "promoModal": { "title": "Promo Modal Pattern", "description": "A dismissible promo popup that opens on the home page for a time-limited offer — never a full events/news system, just one flyer image plus an optional headline, body and CTA." },
     "mediaCarousel": { "title": "Media Carousel Pattern", "description": "Photo carousel whose per-tile name, description and link are each optional." },
     "placeholder": { "title": "Placeholder Markers Pattern", "description": "Markers for drafted-but-unconfirmed copy and for sections only the owner can supply — visible in production until confirmed." },
     "mediaCarouselTile": { "title": "Media Carousel Tile Pattern", "description": "Shared primitive for one-or-more media items in a single tile, with an inline carousel and count badge for several." },

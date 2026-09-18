@@ -20,6 +20,7 @@
     "successStories": { "title": "Patrón de Historias de Éxito", "description": "Módulo de tarjetas narrativas para resultados de adopción e historias felices." },
     "testimonials": { "title": "Patrón de Testimonios", "description": "Patrones de testimonios destacados, en cuadrícula y de formato largo para secciones reutilizables de prueba social, con valoración por estrellas opcional." },
     "flyerLibrary": { "title": "Patrón de Biblioteca de Volantes", "description": "Biblioteca de volantes de concientización atemporales, sin fecha, con filtrado por categoría — distinta de eventos/noticias con fecha." },
+    "promoModal": { "title": "Patrón de Ventana Emergente Promocional", "description": "Una ventana emergente promocional descartable que se abre en la página de inicio para una oferta por tiempo limitado — nunca un sistema completo de eventos/noticias, solo una imagen de volante con un titular, texto y CTA opcionales." },
     "mediaCarousel": { "title": "Patrón de Carrusel de Medios", "description": "Carrusel de fotos con nombre, descripción y enlace opcionales en cada tarjeta." },
     "placeholder": { "title": "Patrón de Marcadores Provisionales", "description": "Marcadores para texto redactado sin confirmar y para secciones que solo el dueño puede aportar — visibles en producción hasta confirmarse." },
     "mediaCarouselTile": { "title": "Patrón de Casilla de Carrusel de Medios", "description": "Primitivo compartido para uno o más elementos multimedia en una sola casilla, con un carrusel interno e insignia de conteo para varios." },

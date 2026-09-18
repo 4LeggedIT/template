@@ -17,6 +17,7 @@ import NewsHighlightStandardPage from "@/pages/standards/NewsHighlightStandardPa
 import DogSpotlightStandardPage from "@/pages/standards/DogSpotlightStandardPage";
 import JourneyTimelineStandardPage from "@/pages/standards/JourneyTimelineStandardPage";
 import MemorialSectionStandardPage from "@/pages/standards/MemorialSectionStandardPage";
+import PromoModalStandardPage from "@/pages/standards/PromoModalStandardPage";
 import PawPlacerStandardPage from "@/pages/standards/PawPlacerStandardPage";
 import FaqDisclosureStandardPage from "@/pages/standards/FaqDisclosureStandardPage";
 import FaqAccordionStandardPage from "@/pages/standards/FaqAccordionStandardPage";
@@ -112,6 +113,7 @@ const AppRoutes = () => {
         <Route path="/standards/dog-spotlight" element={<DogSpotlightStandardPage />} />
         <Route path="/standards/journey-timeline" element={<JourneyTimelineStandardPage />} />
         <Route path="/standards/memorial-section" element={<MemorialSectionStandardPage />} />
+        <Route path="/standards/promo-modal" element={<PromoModalStandardPage />} />
         <Route path="/standards/pawplacer" element={<PawPlacerStandardPage />} />
         <Route path="/standards/faq-accordion" element={<FaqAccordionStandardPage />} />
         <Route path="/standards/faq-disclosure" element={<FaqDisclosureStandardPage />} />

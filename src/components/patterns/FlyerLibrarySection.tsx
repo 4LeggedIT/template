@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 
-export type FlyerLibraryCategory = "foster" | "volunteer" | "spay-neuter" | "safety" | "general";
+export type FlyerLibraryCategory = "foster" | "volunteer" | "spay-neuter" | "safety" | "promo" | "general";
 
 export type FlyerLibraryItem = {
   id: string;

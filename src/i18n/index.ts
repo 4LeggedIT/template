@@ -19,6 +19,7 @@ import enDogSpotlight from "@/locales/en/dogSpotlight.json";
 import enEventsNews from "@/locales/en/eventsNews.json";
 import enJourneyTimeline from "@/locales/en/journeyTimeline.json";
 import enMemorialSection from "@/locales/en/memorialSection.json";
+import enPromoModal from "@/locales/en/promoModal.json";
 import enSuccessStories from "@/locales/en/successStories.json";
 import enTestimonials from "@/locales/en/testimonials.json";
 import enFlyerLibrary from "@/locales/en/flyerLibrary.json";
@@ -64,6 +65,7 @@ import esDogSpotlight from "@/locales/es/dogSpotlight.json";
 import esEventsNews from "@/locales/es/eventsNews.json";
 import esJourneyTimeline from "@/locales/es/journeyTimeline.json";
 import esMemorialSection from "@/locales/es/memorialSection.json";
+import esPromoModal from "@/locales/es/promoModal.json";
 import esSuccessStories from "@/locales/es/successStories.json";
 import esTestimonials from "@/locales/es/testimonials.json";
 import esFlyerLibrary from "@/locales/es/flyerLibrary.json";
@@ -115,6 +117,7 @@ i18n.use(initReactI18next).init({
       eventsNews: enEventsNews,
       journeyTimeline: enJourneyTimeline,
       memorialSection: enMemorialSection,
+      promoModal: enPromoModal,
       successStories: enSuccessStories,
       testimonials: enTestimonials,
       flyerLibrary: enFlyerLibrary,
@@ -161,6 +164,7 @@ i18n.use(initReactI18next).init({
       eventsNews: esEventsNews,
       journeyTimeline: esJourneyTimeline,
       memorialSection: esMemorialSection,
+      promoModal: esPromoModal,
       successStories: esSuccessStories,
       testimonials: esTestimonials,
       flyerLibrary: esFlyerLibrary,
@@ -210,6 +214,7 @@ i18n.use(initReactI18next).init({
     "eventsNews",
     "journeyTimeline",
     "memorialSection",
+    "promoModal",
     "successStories",
     "testimonials",
     "flyerLibrary",

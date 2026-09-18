@@ -25,6 +25,7 @@ const docSections: DocSection[] = [
   { key: "faqAccordion", href: "/standards/faq-accordion", group: "contentEngagement" },
   { key: "faq", href: "/standards/faq-disclosure", group: "contentEngagement" },
   { key: "placeholder", href: "/standards/placeholder", group: "contentEngagement" },
+  { key: "promoModal", href: "/standards/promo-modal", group: "contentEngagement" },
   { key: "flyerLibrary", href: "/standards/flyer-library", group: "mediaLibraries" },
   { key: "mediaCarousel", href: "/standards/media-carousel", group: "mediaLibraries" },
   { key: "mediaCarouselTile", href: "/standards/media-carousel-tile", group: "mediaLibraries" },
