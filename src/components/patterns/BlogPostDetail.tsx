@@ -42,10 +42,21 @@ type BlogPostDetailProps = {
 
 // Content grammar (ported from 4leggedit's original BlogArticle.tsx parser):
 // "## " headings, "### " subheadings, "> " blockquotes, "- " list items, full-line
-// "**bold**" emphasis paragraphs, plain paragraphs, fenced ``` code blocks (optional
-// language), and inline `code`, [text](url) links, and **bold**.
+// "**bold**" emphasis paragraphs, a standalone "![alt](url)" image line, plain
+// paragraphs, fenced ``` code blocks (optional language), and inline `code`,
+// [text](url) links, and **bold**.
 
-type BlogContentBlockType = "heading" | "subheading" | "paragraph" | "list" | "emphasis" | "blockquote" | "codeblock";
+type BlogContentBlockType =
+  | "heading"
+  | "subheading"
+  | "paragraph"
+  | "list"
+  | "emphasis"
+  | "blockquote"
+  | "codeblock"
+  | "image";
+
+const blockImageRegex = /^!\[([^\]]*)\]\(([^)]+)\)$/;
 
 type BlogContentBlock = {
   type: BlogContentBlockType;
@@ -122,6 +133,10 @@ const parseBlogContent = (content: string): BlogContentBlock[] => {
       flushList();
       flushBlockquote();
       blocks.push({ type: "emphasis", content: line.replace(/\*\*/g, "") });
+    } else if (blockImageRegex.test(line.trim())) {
+      flushList();
+      flushBlockquote();
+      blocks.push({ type: "image", content: line.trim() });
     } else if (line.trim() !== "") {
       flushList();
       flushBlockquote();
@@ -210,6 +225,12 @@ const renderBlogContentBlock = (block: BlogContentBlock, index: number) => {
           {block.content}
         </h3>
       );
+    case "image": {
+      const match = block.content.match(blockImageRegex);
+      const src = match ? safeContentUrl(match[2]) : undefined;
+      if (!src) return null;
+      return <img key={index} src={src} alt={match?.[1] ?? ""} loading="lazy" className="mb-8 w-full rounded-2xl shadow-sm" />;
+    }
     case "list":
       return (
         <ul key={index} className="mb-6 space-y-2 pl-1">

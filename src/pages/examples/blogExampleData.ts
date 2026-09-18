@@ -61,6 +61,8 @@ It took three weeks of quiet visits from our stray team before she trusted a han
 
 Luna spent four months with a foster family learning that people could be safe.
 
+![Luna resting comfortably on a dog bed during her foster placement](https://images.unsplash.com/photo-1583337130417-3346a1be7dee?auto=format&fit=crop&w=1200&q=80)
+
 - Weekly vet check-ins
 - Slow, patient socialization
 - A foster home with another calm dog to learn from

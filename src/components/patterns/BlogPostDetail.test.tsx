@@ -23,6 +23,8 @@ A plain paragraph with a [link](https://example.org) and \`inline code\` and **b
 
 **A bold emphasis paragraph**
 
+![an in-body photo](https://example.org/photo.jpg)
+
 \`\`\`js
 const x = 1;
 \`\`\``,
@@ -64,6 +66,17 @@ describe("BlogPostDetail", () => {
     expect(screen.getByText("A bold emphasis paragraph")).toBeInTheDocument();
     expect(screen.getByText("js")).toBeInTheDocument();
     expect(screen.getByText("const x = 1;")).toBeInTheDocument();
+    expect(screen.getByAltText("an in-body photo")).toHaveAttribute("src", "https://example.org/photo.jpg");
+  });
+
+  it("does not render an in-body image whose URL fails safeContentUrl validation", () => {
+    const unsafePost: BlogPostEntry = {
+      ...post,
+      content: `A paragraph.\n\n![unsafe image](javascript:alert(1))`,
+    };
+    renderWithRouter(<BlogPostDetail post={unsafePost} backHref="/blog" />);
+
+    expect(screen.queryByAltText("unsafe image")).not.toBeInTheDocument();
   });
 
   it("computes read time from content when readTime is omitted", () => {
