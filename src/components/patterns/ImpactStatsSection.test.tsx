@@ -113,6 +113,20 @@ describe("ImpactStatsSection", () => {
     expect(screen.getByText("Since 2024")).toBeInTheDocument();
   });
 
+  it("renders a per-tile note only on the stat that sets it", () => {
+    render(
+      <ImpactStatsSection
+        lifetimeStats={[
+          { id: "adopted", value: 1240, label: "Dogs Adopted" },
+          { id: "spayNeuter", value: 980, label: "Spay/Neuter Surgeries", note: "Since 2024" },
+        ]}
+      />,
+    );
+
+    expect(screen.getByText("Since 2024")).toBeInTheDocument();
+    expect(screen.getByText("980")).toBeInTheDocument();
+  });
+
   it("renders the CTA only when both ctaHref and ctaLabel are provided", () => {
     const { rerender } = render(
       <MemoryRouter>

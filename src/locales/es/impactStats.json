@@ -33,6 +33,7 @@
       "fostered": "Perros en Hogar Temporal",
       "helped": "Animales Ayudados",
       "spayNeuter": "Cirugías de Esterilización/Castración",
+      "spayNeuterNote": "Desde 2024",
       "transferred": "Transferidos a Rescates Aliados",
       "straysFed": "Callejeros Alimentados",
       "volunteers": "Voluntarios",
@@ -59,6 +60,10 @@
     "timeframeNote": {
       "before": "Una",
       "after": "opcional (por ejemplo, \"Desde 2024\" o \"Al 31 de julio de 2026\") se muestra junto a granularityLabel — texto simple, no se usa para ningún cálculo de fechas. Útil para que organizaciones más nuevas den contexto y credibilidad a sus cifras."
+    },
+    "tileNote": {
+      "before": "Cada recuadro también acepta su propio campo opcional",
+      "after": "(vea el recuadro de Cirugías de Esterilización/Castración arriba) para un calificativo que pertenece solo a esa estadística y no a toda la sección — por ejemplo, un recuadro con un período más corto que el resto."
     },
     "introSentence": {
       "before": "Una",

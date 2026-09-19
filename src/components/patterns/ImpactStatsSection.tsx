@@ -21,6 +21,10 @@ export type ImpactStat = {
    * external `<a target="_blank">` otherwise), e.g. to a category detail page. Purely additive;
    * every existing/future consumer that never sets it renders exactly as before. */
   href?: string;
+  /** Optional small qualifier shown above this tile's number, e.g. "Since 2025" — for when the
+   * timeframe belongs to one specific stat rather than the whole section (use `timeframeNote` on
+   * the section instead when it applies to every tile). Purely additive. */
+  note?: string;
 };
 
 export type ImpactStatsPeriod = {
@@ -130,6 +134,11 @@ const ImpactStatsSection = ({
             const tileContent = (
               <>
                 {Icon ? <Icon className="h-6 w-6 text-primary" aria-hidden="true" /> : null}
+                {stat.note ? (
+                  <span className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+                    {stat.note}
+                  </span>
+                ) : null}
                 <span className="text-3xl font-bold tabular-nums">{stat.value}</span>
                 <span className="text-sm text-muted-foreground">{stat.label}</span>
               </>

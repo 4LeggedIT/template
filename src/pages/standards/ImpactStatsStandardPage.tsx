@@ -25,7 +25,13 @@ const ImpactStatsStandardPage = () => {
     { id: "adopted", value: "1,240", label: t("impactStats:sampleData.lifetime.adopted"), icon: Heart },
     { id: "fostered", value: "340", label: t("impactStats:sampleData.lifetime.fostered"), icon: Home },
     { id: "helped", value: "2,100", label: t("impactStats:sampleData.lifetime.helped"), icon: HeartHandshake },
-    { id: "spayNeuter", value: "980", label: t("impactStats:sampleData.lifetime.spayNeuter"), icon: Syringe },
+    {
+      id: "spayNeuter",
+      value: "980",
+      label: t("impactStats:sampleData.lifetime.spayNeuter"),
+      icon: Syringe,
+      note: t("impactStats:sampleData.lifetime.spayNeuterNote"),
+    },
     {
       id: "transferred",
       value: "215",
@@ -124,6 +130,10 @@ const ImpactStatsStandardPage = () => {
             <p>
               - {t("impactStats:standard.timeframeNote.before")} <code>timeframeNote</code>{" "}
               {t("impactStats:standard.timeframeNote.after")}
+            </p>
+            <p>
+              - {t("impactStats:standard.tileNote.before")} <code>note</code>{" "}
+              {t("impactStats:standard.tileNote.after")}
             </p>
             <p>
               - {t("impactStats:standard.introSentence.before")} <code>description</code>{" "}

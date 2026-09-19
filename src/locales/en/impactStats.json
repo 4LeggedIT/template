@@ -33,6 +33,7 @@
       "fostered": "Dogs Fostered",
       "helped": "Animals Helped",
       "spayNeuter": "Spay/Neuter Surgeries",
+      "spayNeuterNote": "Since 2024",
       "transferred": "Transferred to Partner Rescues",
       "straysFed": "Strays Fed",
       "volunteers": "Volunteers",
@@ -59,6 +60,10 @@
     "timeframeNote": {
       "before": "An optional",
       "after": "line (e.g. \"Since 2024\" or \"As of July 2026\") renders next to granularityLabel — small, plain text, not used for any date math. Useful for newer organizations to add context and credibility to their numbers."
+    },
+    "tileNote": {
+      "before": "Each tile also accepts its own optional",
+      "after": "field (see the Spay/Neuter Surgeries tile above) for a qualifier that belongs to just that one stat rather than the whole section — e.g. one tile tracking a shorter timeframe than the rest."
     },
     "introSentence": {
       "before": "An optional one-sentence",
