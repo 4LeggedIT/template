@@ -1,5 +1,5 @@
 import { render, screen } from "@testing-library/react";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import TestimonialsSection, {
   splitQuoteParagraphs,
   type TestimonialItem,
@@ -321,5 +321,37 @@ describe("author title", () => {
       "https://example.org",
     );
     expect(screen.queryByRole("link", { name: "Founder and CEO" })).not.toBeInTheDocument();
+  });
+});
+
+describe("excludeFromFeatured", () => {
+  const a: TestimonialItem = { id: "a", quote: "Quote A", author: "Ann", excludeFromFeatured: true };
+  const b: TestimonialItem = { id: "b", quote: "Quote B", author: "Bob" };
+
+  it("never picks an excluded item in featured, with the first strategy", () => {
+    render(<TestimonialsSection testimonials={[a, b]} layout="featured" featuredStrategy="first" />);
+    expect(screen.getByText(/Quote B/)).toBeInTheDocument();
+    expect(screen.queryByText(/Quote A/)).not.toBeInTheDocument();
+  });
+
+  it("never picks an excluded item in featured, with the random strategy", () => {
+    const random = vi.spyOn(Math, "random").mockReturnValue(0);
+    render(<TestimonialsSection testimonials={[a, b]} layout="featured" />);
+    random.mockRestore();
+    expect(screen.getByText(/Quote B/)).toBeInTheDocument();
+    expect(screen.queryByText(/Quote A/)).not.toBeInTheDocument();
+  });
+
+  it("still shows the excluded item in grid and longform", () => {
+    const { unmount } = render(<TestimonialsSection testimonials={[a, b]} layout="grid" />);
+    expect(screen.getByText(/Quote A/)).toBeInTheDocument();
+    unmount();
+    render(<TestimonialsSection testimonials={[a, b]} layout="longform" />);
+    expect(screen.getByText(/Quote A/)).toBeInTheDocument();
+  });
+
+  it("falls back to the full list when every item is excluded", () => {
+    render(<TestimonialsSection testimonials={[a]} layout="featured" featuredStrategy="first" />);
+    expect(screen.getByText(/Quote A/)).toBeInTheDocument();
   });
 });

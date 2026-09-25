@@ -25,6 +25,14 @@ export type TestimonialItem = {
   authorTitle?: string;
   emoji?: string;
   /**
+   * `featured` only: when `true`, this item is never the one the featured layout picks
+   * (neither `randomOnLoad` nor `first`/`featuredIndex`) — e.g. a review from someone with a
+   * connection to the business, kept on the reviews page but off the home page. `grid` and
+   * `longform` ignore it and always show the item. If every item sets it, the layout falls
+   * back to the full list rather than rendering nothing. Optional and additive.
+   */
+  excludeFromFeatured?: boolean;
+  /**
    * Star rating out of 5, exactly as the reviewer gave it on the source platform.
    * Optional and additive: omit it and no stars render, which is every testimonial
    * in the fleet today. Never infer, average, or invent a value — only set this when
@@ -212,18 +220,26 @@ const TestimonialsSection = ({
   const readMoreLabel = labels?.readMoreLabel ?? DEFAULT_READ_MORE_LABEL;
   const [clientFeaturedIndex, setClientFeaturedIndex] = useState(featuredIndex);
 
+  // `featured` picks from the non-excluded items (a pure function of props, so SSR and the
+  // first client render agree); the other layouts always see the full list.
+  const candidates = useMemo(() => {
+    if (layout !== "featured") return testimonials;
+    const eligible = testimonials.filter((item) => !item.excludeFromFeatured);
+    return eligible.length ? eligible : testimonials;
+  }, [layout, testimonials]);
+
   useEffect(() => {
     // Deliberately client-only randomization, post-hydration: picking Math.random()
     // during render would desync the server-rendered and first client-rendered testimonial.
-    if (layout !== "featured" || featuredStrategy !== "randomOnLoad" || testimonials.length <= 1) {
+    if (layout !== "featured" || featuredStrategy !== "randomOnLoad" || candidates.length <= 1) {
       // eslint-disable-next-line react-hooks/set-state-in-effect
       setClientFeaturedIndex(featuredIndex);
       return;
     }
 
-    const randomIndex = Math.floor(Math.random() * testimonials.length);
+    const randomIndex = Math.floor(Math.random() * candidates.length);
     setClientFeaturedIndex(randomIndex);
-  }, [featuredIndex, featuredStrategy, layout, testimonials.length]);
+  }, [featuredIndex, featuredStrategy, layout, candidates.length]);
 
   // `longform` and `grid` never read the randomized state at all — their selected
   // item is a pure function of props, so the prerendered HTML, the first client
@@ -232,10 +248,10 @@ const TestimonialsSection = ({
   const resolvedIndex = layout === "featured" ? clientFeaturedIndex : featuredIndex;
 
   const featuredItem = useMemo(() => {
-    if (!testimonials.length) return null;
-    const normalized = Math.max(0, Math.min(resolvedIndex, testimonials.length - 1));
-    return testimonials[normalized];
-  }, [resolvedIndex, testimonials]);
+    if (!candidates.length) return null;
+    const normalized = Math.max(0, Math.min(resolvedIndex, candidates.length - 1));
+    return candidates[normalized];
+  }, [resolvedIndex, candidates]);
 
   const longformParagraphs = useMemo(
     () => (layout === "longform" && featuredItem ? splitQuoteParagraphs(featuredItem.quote) : []),
