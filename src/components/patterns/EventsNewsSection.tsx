@@ -430,10 +430,14 @@ const expandEventEntry = (
     const endAt = entry.endAt || daySpan > 0 ? formatYmdUtc(endAtDate) : undefined;
 
     const timedOccurrence =
-      entry.startAtIso && entry.endAtIso ? resolveOccurrence(entry.startAtIso, entry.endAtIso, occurrenceDate) : null;
+      entry.startAtIso && entry.endAtIso
+        ? resolveOccurrence(entry.startAtIso, entry.endAtIso, occurrenceDate, recurrence.timeZone)
+        : null;
     const startAtIso =
       timedOccurrence?.startAtIso ??
-      (entry.startAtIso ? resolveOccurrenceStartIso(entry.startAtIso, occurrenceDate) ?? undefined : undefined);
+      (entry.startAtIso
+        ? resolveOccurrenceStartIso(entry.startAtIso, occurrenceDate, recurrence.timeZone) ?? undefined
+        : undefined);
     const endAtIso = entry.endAtIso ? timedOccurrence?.endAtIso ?? startAtIso : undefined;
 
     return {

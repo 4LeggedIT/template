@@ -260,6 +260,94 @@ describe("occurrence local dates (evening event, negative offset)", () => {
   });
 });
 
+describe("occurrences with an IANA timeZone track DST (TPL-048)", () => {
+  const firstThursday: EventRecurrence = {
+    frequency: "monthly",
+    nthWeek: 1,
+    weekdays: ["thu"],
+    startOn: "2026-08-06",
+    timeZone: "America/Los_Angeles",
+  };
+
+  it("without timeZone, the fixed seed offset carries past the Nov 1, 2026 fall-back (the TPL-048 bug)", () => {
+    const noZone: EventRecurrence = { ...firstThursday, timeZone: undefined };
+    const occurrence = getNextOccurrence(
+      noZone,
+      "2026-08-06T17:00:00-07:00",
+      "2026-08-06T21:00:00-07:00",
+      Date.parse("2026-11-01T12:00:00Z"),
+    );
+    // Nov 5, 2026 is actually -08:00 (PST) local; the fixed-offset seed still says -07:00.
+    expect(occurrence).toEqual({
+      startAtIso: "2026-11-05T17:00:00-07:00",
+      endAtIso: "2026-11-05T21:00:00-07:00",
+      startDateYmd: "2026-11-05",
+      endDateYmd: "2026-11-05",
+    });
+  });
+
+  it("with timeZone, the offset flips to -08:00 after the Nov 1, 2026 fall-back", () => {
+    const occurrence = getNextOccurrence(
+      firstThursday,
+      "2026-08-06T17:00:00-07:00",
+      "2026-08-06T21:00:00-07:00",
+      Date.parse("2026-11-01T12:00:00Z"),
+    );
+    expect(occurrence).toEqual({
+      startAtIso: "2026-11-05T17:00:00-08:00",
+      endAtIso: "2026-11-05T21:00:00-08:00",
+      startDateYmd: "2026-11-05",
+      endDateYmd: "2026-11-05",
+    });
+    // The instant is genuinely one hour later in UTC than the (wrong) fixed-offset version above.
+    expect(Date.parse(occurrence!.startAtIso)).toBe(Date.parse("2026-11-06T01:00:00Z"));
+  });
+
+  it("offset flips back to -07:00 after the Mar 14, 2027 spring-forward", () => {
+    const occurrence = getOccurrenceOnDate(
+      firstThursday,
+      "2026-08-06T17:00:00-07:00",
+      "2026-08-06T21:00:00-07:00",
+      "2026-08-06",
+      "2027-04-01",
+    );
+    expect(occurrence?.startAtIso).toBe("2027-04-01T17:00:00-07:00");
+  });
+
+  it("dates before the transition are unaffected: still -07:00 in October", () => {
+    const occurrence = getOccurrenceOnDate(
+      firstThursday,
+      "2026-08-06T17:00:00-07:00",
+      "2026-08-06T21:00:00-07:00",
+      "2026-08-06",
+      "2026-10-01",
+    );
+    expect(occurrence?.startAtIso).toBe("2026-10-01T17:00:00-07:00");
+  });
+
+  it("resolveOccurrence (list-view expansion) honors timeZone too", () => {
+    const viaResolve = resolveOccurrence(
+      "2026-08-06T17:00:00-07:00",
+      "2026-08-06T21:00:00-07:00",
+      new Date(Date.UTC(2026, 10, 5)),
+      "America/Los_Angeles",
+    );
+    expect(viaResolve?.startAtIso).toBe("2026-11-05T17:00:00-08:00");
+  });
+
+  it("an invalid IANA zone falls back to the seed's fixed offset instead of throwing", () => {
+    const bogus: EventRecurrence = { ...firstThursday, timeZone: "Not/AZone" };
+    const occurrence = getOccurrenceOnDate(
+      bogus,
+      "2026-08-06T17:00:00-07:00",
+      "2026-08-06T21:00:00-07:00",
+      "2026-08-06",
+      "2026-11-05",
+    );
+    expect(occurrence?.startAtIso).toBe("2026-11-05T17:00:00-07:00");
+  });
+});
+
 describe("describeRecurrence", () => {
   it("describes a daily recurrence", () => {
     const recurrence: EventRecurrence = { frequency: "daily", intervalDays: 5, until: "2026-12-31" };

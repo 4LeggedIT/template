@@ -7,6 +7,15 @@ type EventRecurrenceBase = {
   count?: number;
   maxOccurrences?: number;
   skipDates?: string[];
+  /**
+   * IANA zone (e.g. "America/Los_Angeles") the seed's wall-clock time is authored in. When set,
+   * each occurrence's UTC offset is recomputed per its own calendar date via `Intl.DateTimeFormat`
+   * instead of reusing the seed's literal offset forever — so a recurring event keeps rendering at
+   * the same local time across a DST transition. Omit to keep the seed's fixed offset (the
+   * pre-existing, backward-compatible behavior — correct for a series that never crosses a DST
+   * change, wrong for one that does). See event-module-wiring-contract.md §6, TPL-048.
+   */
+  timeZone?: string;
 };
 
 export type EventWeeklyRecurrence = EventRecurrenceBase & {
@@ -80,6 +89,38 @@ const weekdayToRrule: Record<EventRecurrenceWeekday, string> = {
 };
 
 const pad2 = (value: number) => String(value).padStart(2, "0");
+
+const formatOffsetLabel = (minutes: number): string => {
+  const sign = minutes < 0 ? "-" : "+";
+  const abs = Math.abs(minutes);
+  return `${sign}${pad2(Math.floor(abs / 60))}:${pad2(abs % 60)}`;
+};
+
+// The UTC offset (in minutes) a zone observes on a given calendar date, e.g. -420 for
+// America/Los_Angeles in August (PDT), -480 in December (PST). Looked up via a noon-UTC
+// reference instant on that date — safe from any real-world transition, which always happens in
+// the small hours of local time, never near noon. Returns null for an invalid/unsupported zone
+// (e.g. `Intl.DateTimeFormat` throws) so the caller can fall back to the seed's fixed offset.
+const getZoneOffsetMinutes = (timeZone: string, ymd: string): number | null => {
+  try {
+    const refMs = Date.parse(`${ymd}T12:00:00Z`);
+    const parts = new Intl.DateTimeFormat("en-US", {
+      timeZone,
+      hourCycle: "h23",
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+    }).formatToParts(refMs);
+    const get = (type: string) => Number(parts.find((part) => part.type === type)?.value);
+    const asIfUtc = Date.UTC(get("year"), get("month") - 1, get("day"), get("hour"), get("minute"), get("second"));
+    return Math.round((asIfUtc - refMs) / 60_000);
+  } catch {
+    return null;
+  }
+};
 
 const parseYmdUtc = (value?: string): Date | null => {
   if (!value) return null;
@@ -174,14 +215,35 @@ const formatIsoAtOffset = (ms: number, offset: LocalOffset, zulu = false): strin
 // negative-offset zone: 17:00-07:00 = 00:00 UTC the *next* day). The output keeps that local
 // time + offset (rather than `toISOString()`), so the calendar date can never be read off a UTC
 // string, and the result is safe to feed back in as a seed.
-const toOccurrence = (seedStartIso: string, durationMs: number, occurrenceDate: Date): EventOccurrence => {
+const toOccurrence = (
+  seedStartIso: string,
+  durationMs: number,
+  occurrenceDate: Date,
+  timeZone?: string,
+): EventOccurrence => {
   const ymd = formatYmdUtc(occurrenceDate);
   const timeOffset = getLocalTimeOffsetPart(seedStartIso);
 
   if (timeOffset) {
-    const offset = parseOffset(timeOffset.offset);
-    const startAtIso = `${ymd}T${timeOffset.time}${offset.label}`;
-    const endAtIso = formatIsoAtOffset(Date.parse(startAtIso) + durationMs, offset);
+    const seedOffset = parseOffset(timeOffset.offset);
+    // With no timeZone, this is exactly the seed's fixed offset — unchanged, backward-compatible
+    // behavior. With a timeZone, recompute the offset for the *occurrence's own* calendar date, so
+    // a series that crosses a DST boundary keeps rendering at the same local wall-clock time.
+    const startOffsetMinutes = timeZone ? getZoneOffsetMinutes(timeZone, ymd) ?? seedOffset.minutes : seedOffset.minutes;
+    const startOffset = { label: formatOffsetLabel(startOffsetMinutes), minutes: startOffsetMinutes };
+    const startAtIso = `${ymd}T${timeOffset.time}${startOffset.label}`;
+    const startMs = Date.parse(startAtIso);
+    const endMs = startMs + durationMs;
+
+    // The end may fall on a different local date than the start (an overnight event) and, in the
+    // rare case of an event spanning the transition instant itself, a different offset. Estimate
+    // the end's local date using the start offset, then re-look-up the zone for that date — a
+    // second pass rather than true fixed-point iteration, sufficient since real transitions move
+    // the clock by exactly one hour in the small hours, never mid-event for anything but that
+    // vanishingly rare case.
+    const provisionalEndYmd = timeZone ? formatYmdUtc(new Date(endMs + startOffsetMinutes * 60_000)) : ymd;
+    const endOffsetMinutes = timeZone ? getZoneOffsetMinutes(timeZone, provisionalEndYmd) ?? startOffsetMinutes : startOffsetMinutes;
+    const endAtIso = formatIsoAtOffset(endMs, { label: formatOffsetLabel(endOffsetMinutes), minutes: endOffsetMinutes });
     return { startAtIso, endAtIso, startDateYmd: ymd, endDateYmd: endAtIso.slice(0, 10) };
   }
 
@@ -215,17 +277,18 @@ export const resolveOccurrence = (
   seedStartIso: string,
   seedEndIso: string,
   occurrenceDate: Date,
+  timeZone?: string,
 ): EventOccurrence | null => {
   const seedStartMs = Date.parse(seedStartIso);
   const seedEndMs = Date.parse(seedEndIso);
   if (!Number.isFinite(seedStartMs) || !Number.isFinite(seedEndMs) || seedEndMs < seedStartMs) return null;
-  return toOccurrence(seedStartIso, seedEndMs - seedStartMs, occurrenceDate);
+  return toOccurrence(seedStartIso, seedEndMs - seedStartMs, occurrenceDate, timeZone);
 };
 
 /** Start-only variant of `resolveOccurrence` (no seed end needed). Null for an unparseable seed. */
-export const resolveOccurrenceStartIso = (seedStartIso: string, occurrenceDate: Date): string | null => {
+export const resolveOccurrenceStartIso = (seedStartIso: string, occurrenceDate: Date, timeZone?: string): string | null => {
   if (!Number.isFinite(Date.parse(seedStartIso))) return null;
-  return toOccurrence(seedStartIso, 0, occurrenceDate).startAtIso;
+  return toOccurrence(seedStartIso, 0, occurrenceDate, timeZone).startAtIso;
 };
 
 function* iterateWeeklyDates(
@@ -336,7 +399,7 @@ export function getNextOccurrence(
     if (toDayStartUtcMs(occurrenceDate) > upperBoundMs) return null;
     if (isSkipped(recurrence, occurrenceDate)) continue;
 
-    const occurrence = toOccurrence(seedStartIso, durationMs, occurrenceDate);
+    const occurrence = toOccurrence(seedStartIso, durationMs, occurrenceDate, recurrence.timeZone);
     if (Date.parse(occurrence.endAtIso) < nowMs) continue;
 
     return occurrence;
@@ -369,7 +432,7 @@ export function getOccurrenceOnDate(
   if (!matches.length) return null;
 
   const durationMs = seedEndMs - seedStartMs;
-  return toOccurrence(seedStartIso, durationMs, requestedDate);
+  return toOccurrence(seedStartIso, durationMs, requestedDate, recurrence.timeZone);
 }
 
 /**
