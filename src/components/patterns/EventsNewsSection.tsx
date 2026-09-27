@@ -15,6 +15,7 @@ import {
   getNextOccurrence,
   getOccurrenceDates,
   getOccurrenceOnDate,
+  resolveOccurrence,
   resolveOccurrenceStartIso,
 } from "@/lib/event-recurrence";
 import { useEffect, useState, type ReactNode } from "react";
@@ -392,12 +393,14 @@ export const resolveEventOccurrence = <T extends EventsNewsEventEntry>(
   const occurrence = requestedOccurrence ?? getNextOccurrence(entry.recurrence, seedStartIso, seedEndIso, now.getTime());
   if (!occurrence) return entry;
 
-  const startAt = occurrence.startAtIso.slice(0, 10);
+  // Local calendar dates come from the occurrence's own Ymd fields — never sliced off the ISO
+  // string (see EventOccurrence in event-recurrence.ts).
+  const startAt = occurrence.startDateYmd;
   return {
     ...entry,
     ...resolveEventsNewsDateImage(entry, startAt),
     startAt,
-    endAt: entry.endAt ? occurrence.endAtIso.slice(0, 10) : entry.endAt,
+    endAt: entry.endAt ? occurrence.endDateYmd : entry.endAt,
     startAtIso: entry.startAtIso ? occurrence.startAtIso : undefined,
     endAtIso: entry.endAtIso ? occurrence.endAtIso : undefined,
   };
@@ -421,25 +424,17 @@ const expandEventEntry = (
       ? Math.max(0, Math.round((toUtcDayMs(seedEndDate) - toUtcDayMs(seedStartDate)) / (24 * 60 * 60 * 1000)))
       : 0;
 
-  const seedTimedStartMs = entry.startAtIso ? Date.parse(entry.startAtIso) : NaN;
-  const seedTimedEndMs = entry.endAtIso ? Date.parse(entry.endAtIso) : NaN;
-  const timedDurationMs =
-    Number.isFinite(seedTimedStartMs) && Number.isFinite(seedTimedEndMs) && seedTimedEndMs >= seedTimedStartMs
-      ? seedTimedEndMs - seedTimedStartMs
-      : 0;
-
   return occurrenceDates.map((occurrenceDate) => {
     const startAt = formatYmdUtc(occurrenceDate);
     const endAtDate = addDaysUtc(occurrenceDate, daySpan);
     const endAt = entry.endAt || daySpan > 0 ? formatYmdUtc(endAtDate) : undefined;
 
-    const startAtIso = entry.startAtIso ? resolveOccurrenceStartIso(entry.startAtIso, occurrenceDate) ?? undefined : undefined;
-    const endAtIso =
-      entry.endAtIso && startAtIso
-        ? new Date(Date.parse(startAtIso) + timedDurationMs).toISOString()
-        : entry.endAtIso
-          ? undefined
-          : undefined;
+    const timedOccurrence =
+      entry.startAtIso && entry.endAtIso ? resolveOccurrence(entry.startAtIso, entry.endAtIso, occurrenceDate) : null;
+    const startAtIso =
+      timedOccurrence?.startAtIso ??
+      (entry.startAtIso ? resolveOccurrenceStartIso(entry.startAtIso, occurrenceDate) ?? undefined : undefined);
+    const endAtIso = entry.endAtIso ? timedOccurrence?.endAtIso ?? startAtIso : undefined;
 
     return {
       ...entry,

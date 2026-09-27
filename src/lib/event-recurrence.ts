@@ -30,9 +30,18 @@ export type EventDailyRecurrence = EventRecurrenceBase & {
 
 export type EventRecurrence = EventWeeklyRecurrence | EventMonthlyRecurrence | EventDailyRecurrence;
 
+/**
+ * One resolved occurrence. `startAtIso`/`endAtIso` carry the seed's literal local time and UTC
+ * offset (e.g. "2026-10-01T17:00:00-07:00"), NOT a UTC ("Z") string — `Date.parse` of them is
+ * still the correct instant. `startDateYmd`/`endDateYmd` are the local calendar dates. Callers
+ * must read the calendar date from those fields, never by slicing the ISO string, and must never
+ * re-seed a recurrence from an already-generated occurrence's date derived any other way.
+ */
 export type EventOccurrence = {
   startAtIso: string;
   endAtIso: string;
+  startDateYmd: string;
+  endDateYmd: string;
 };
 
 export type RecurrenceDescription = {
@@ -137,44 +146,86 @@ const getLocalTimeOffsetPart = (iso: string): { time: string; offset: string } |
   return { time: match[1], offset: match[2] === "Z" ? "+00:00" : match[2] };
 };
 
-// Builds the occurrence's timestamp by splicing the generated calendar date onto the seed's
-// literal local time-of-day + UTC offset — read directly from the ISO string, never derived via
+type LocalOffset = { label: string; minutes: number };
+
+const parseOffset = (raw: string): LocalOffset => {
+  if (raw === "Z") return { label: "+00:00", minutes: 0 };
+  const match = /^([+-])(\d{2}):?(\d{2})$/.exec(raw);
+  if (!match) return { label: "+00:00", minutes: 0 };
+  const minutes = (match[1] === "-" ? -1 : 1) * (Number(match[2]) * 60 + Number(match[3]));
+  return { label: `${match[1]}${match[2]}:${match[3]}`, minutes };
+};
+
+// Formats an absolute instant as a local ISO string in a fixed UTC offset, e.g.
+// (ms of 2026-10-02T00:00Z, -07:00) -> "2026-10-01T17:00:00-07:00". Shifts by the offset and reads
+// the UTC getters of the shifted date, so the calendar date is the local one.
+const formatIsoAtOffset = (ms: number, offset: LocalOffset, zulu = false): string => {
+  const shifted = new Date(ms + (zulu ? 0 : offset.minutes) * 60_000);
+  const millis = shifted.getUTCMilliseconds();
+  const frac = millis ? `.${String(millis).padStart(3, "0")}` : "";
+  const time = `${pad2(shifted.getUTCHours())}:${pad2(shifted.getUTCMinutes())}:${pad2(shifted.getUTCSeconds())}${frac}`;
+  return `${formatYmdUtc(shifted)}T${time}${zulu ? "Z" : offset.label}`;
+};
+
+// Builds the occurrence by splicing the generated calendar date onto the seed's literal local
+// time-of-day + UTC offset — read directly from the ISO string, never derived via
 // `.getUTCHours()` on a real converted instant. That conversion silently rolls the calendar day
 // whenever the local time + offset crosses a UTC day boundary (e.g. any evening event in a
-// negative-offset zone: 17:00-07:00 = 00:00 UTC the *next* day), which would otherwise shift
-// every generated occurrence back one day once rendered back in local time.
-const toOccurrenceIso = (seedStartIso: string, occurrenceDate: Date): string => {
+// negative-offset zone: 17:00-07:00 = 00:00 UTC the *next* day). The output keeps that local
+// time + offset (rather than `toISOString()`), so the calendar date can never be read off a UTC
+// string, and the result is safe to feed back in as a seed.
+const toOccurrence = (seedStartIso: string, durationMs: number, occurrenceDate: Date): EventOccurrence => {
   const ymd = formatYmdUtc(occurrenceDate);
   const timeOffset = getLocalTimeOffsetPart(seedStartIso);
-  if (timeOffset) return new Date(`${ymd}T${timeOffset.time}${timeOffset.offset}`).toISOString();
 
-  // Defensive fallback for a malformed seed ISO string (shouldn't happen for valid input).
+  if (timeOffset) {
+    const offset = parseOffset(timeOffset.offset);
+    const startAtIso = `${ymd}T${timeOffset.time}${offset.label}`;
+    const endAtIso = formatIsoAtOffset(Date.parse(startAtIso) + durationMs, offset);
+    return { startAtIso, endAtIso, startDateYmd: ymd, endDateYmd: endAtIso.slice(0, 10) };
+  }
+
+  // Defensive fallback for a malformed seed ISO string (shouldn't happen for valid input): UTC.
   const seedStart = new Date(Date.parse(seedStartIso));
-  return new Date(
-    Date.UTC(
-      occurrenceDate.getUTCFullYear(),
-      occurrenceDate.getUTCMonth(),
-      occurrenceDate.getUTCDate(),
-      seedStart.getUTCHours(),
-      seedStart.getUTCMinutes(),
-      seedStart.getUTCSeconds(),
-      seedStart.getUTCMilliseconds(),
-    ),
-  ).toISOString();
+  const startMs = Date.UTC(
+    occurrenceDate.getUTCFullYear(),
+    occurrenceDate.getUTCMonth(),
+    occurrenceDate.getUTCDate(),
+    seedStart.getUTCHours(),
+    seedStart.getUTCMinutes(),
+    seedStart.getUTCSeconds(),
+    seedStart.getUTCMilliseconds(),
+  );
+  const utc: LocalOffset = { label: "+00:00", minutes: 0 };
+  const startAtIso = formatIsoAtOffset(startMs, utc, true);
+  const endAtIso = formatIsoAtOffset(startMs + durationMs, utc, true);
+  return { startAtIso, endAtIso, startDateYmd: startAtIso.slice(0, 10), endDateYmd: endAtIso.slice(0, 10) };
 };
 
 /**
- * Public counterpart to `toOccurrenceIso`, for callers that expand every occurrence in a date
- * range themselves (e.g. `EventsNewsSection`'s list-view card expansion via `getOccurrenceDates`)
+ * Public counterpart to `toOccurrence`, for callers that expand every occurrence in a date range
+ * themselves (e.g. `EventsNewsSection`'s list-view card expansion via `getOccurrenceDates`)
  * rather than going through `getNextOccurrence`/`getOccurrenceOnDate`. Exists so there is exactly
- * one implementation of the local-time/offset splicing this file's internal callers already rely
- * on — do not reimplement this logic locally in a pattern component; that duplication is exactly
- * how the day-off-by-one bug this fixes shipped undetected for months. Returns null (instead of
- * throwing) for an unparseable seed ISO string.
+ * one implementation of the local-time/offset splicing — do not reimplement this logic locally in
+ * a pattern component; that duplication is exactly how the day-off-by-one bug this fixes shipped
+ * undetected for months. Returns null (instead of throwing) for an unparseable seed ISO string
+ * or an end before the start.
  */
+export const resolveOccurrence = (
+  seedStartIso: string,
+  seedEndIso: string,
+  occurrenceDate: Date,
+): EventOccurrence | null => {
+  const seedStartMs = Date.parse(seedStartIso);
+  const seedEndMs = Date.parse(seedEndIso);
+  if (!Number.isFinite(seedStartMs) || !Number.isFinite(seedEndMs) || seedEndMs < seedStartMs) return null;
+  return toOccurrence(seedStartIso, seedEndMs - seedStartMs, occurrenceDate);
+};
+
+/** Start-only variant of `resolveOccurrence` (no seed end needed). Null for an unparseable seed. */
 export const resolveOccurrenceStartIso = (seedStartIso: string, occurrenceDate: Date): string | null => {
   if (!Number.isFinite(Date.parse(seedStartIso))) return null;
-  return toOccurrenceIso(seedStartIso, occurrenceDate);
+  return toOccurrence(seedStartIso, 0, occurrenceDate).startAtIso;
 };
 
 function* iterateWeeklyDates(
@@ -285,12 +336,10 @@ export function getNextOccurrence(
     if (toDayStartUtcMs(occurrenceDate) > upperBoundMs) return null;
     if (isSkipped(recurrence, occurrenceDate)) continue;
 
-    const occurrenceStartIso = toOccurrenceIso(seedStartIso, occurrenceDate);
-    const occurrenceStartMs = Date.parse(occurrenceStartIso);
-    const occurrenceEndMs = occurrenceStartMs + durationMs;
-    if (occurrenceEndMs < nowMs) continue;
+    const occurrence = toOccurrence(seedStartIso, durationMs, occurrenceDate);
+    if (Date.parse(occurrence.endAtIso) < nowMs) continue;
 
-    return { startAtIso: occurrenceStartIso, endAtIso: new Date(occurrenceEndMs).toISOString() };
+    return occurrence;
   }
   return null;
 }
@@ -320,9 +369,7 @@ export function getOccurrenceOnDate(
   if (!matches.length) return null;
 
   const durationMs = seedEndMs - seedStartMs;
-  const occurrenceStartIso = toOccurrenceIso(seedStartIso, requestedDate);
-  const occurrenceStartMs = Date.parse(occurrenceStartIso);
-  return { startAtIso: occurrenceStartIso, endAtIso: new Date(occurrenceStartMs + durationMs).toISOString() };
+  return toOccurrence(seedStartIso, durationMs, requestedDate);
 }
 
 /**

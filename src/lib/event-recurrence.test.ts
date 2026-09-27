@@ -5,6 +5,7 @@ import {
   getNextOccurrence,
   getOccurrenceDates,
   getOccurrenceOnDate,
+  resolveOccurrence,
   type EventRecurrence,
 } from "@/lib/event-recurrence";
 
@@ -103,7 +104,7 @@ describe("getNextOccurrence", () => {
       "2026-03-14T19:00:00.000Z",
       Date.parse("2026-07-10T00:00:00Z"),
     );
-    expect(occurrence?.startAtIso.slice(0, 10)).toBe("2026-08-01");
+    expect(occurrence?.startDateYmd).toBe("2026-08-01");
   });
 
   it("still consumes a count slot for a skipped occurrence rather than falling through to the next one", () => {
@@ -131,7 +132,7 @@ describe("getNextOccurrence", () => {
       "2026-01-05T19:00:00.000Z",
       Date.parse("2026-02-15T00:00:00Z"),
     );
-    expect(occurrence?.startAtIso.slice(0, 10)).toBe("2026-03-02");
+    expect(occurrence?.startDateYmd).toBe("2026-03-02");
   });
 
   it("resolves daily recurrences", () => {
@@ -142,7 +143,7 @@ describe("getNextOccurrence", () => {
       "2026-01-01T19:00:00.000Z",
       Date.parse("2026-01-05T00:00:00Z"),
     );
-    expect(occurrence?.startAtIso.slice(0, 10)).toBe("2026-01-07");
+    expect(occurrence?.startDateYmd).toBe("2026-01-07");
   });
 
   it("regression: an evening seed time in a negative UTC offset doesn't shift occurrences back a day", () => {
@@ -175,6 +176,87 @@ describe("getOccurrenceOnDate", () => {
     );
     const localDate = occurrence && new Date(occurrence.startAtIso).toLocaleDateString("en-US", { timeZone: "America/Los_Angeles" });
     expect(localDate).toBe("10/1/2026");
+  });
+});
+
+// Evening event in a negative-offset zone: 17:00-07:00 = 00:00Z the *next* UTC day. The old lib
+// returned toISOString() (UTC), so any caller slicing the date or re-seeding from the output was
+// a day early. These tests assert the local calendar date directly and fail on that behavior.
+describe("occurrence local dates (evening event, negative offset)", () => {
+  const seedStart = "2026-08-06T17:00:00-07:00";
+  const seedEnd = "2026-08-06T21:00:00-07:00";
+  const firstThursday: EventRecurrence = { frequency: "monthly", nthWeek: 1, weekdays: ["thu"], startOn: "2026-08-06" };
+
+  it("month boundary: Oct 1 keeps local date, local offset and correct instant", () => {
+    const occurrence = getNextOccurrence(firstThursday, seedStart, seedEnd, Date.parse("2026-09-26T12:00:00-07:00"));
+    expect(occurrence).toEqual({
+      startAtIso: "2026-10-01T17:00:00-07:00",
+      endAtIso: "2026-10-01T21:00:00-07:00",
+      startDateYmd: "2026-10-01",
+      endDateYmd: "2026-10-01",
+    });
+    expect(Date.parse(occurrence!.startAtIso)).toBe(Date.parse("2026-10-02T00:00:00Z"));
+  });
+
+  it("year boundary: Jan 1 does not slip into Dec 31", () => {
+    const occurrence = getNextOccurrence(firstThursday, seedStart, seedEnd, Date.parse("2026-12-20T12:00:00-08:00"));
+    expect(occurrence?.startDateYmd).toBe("2027-01-07");
+    const daily: EventRecurrence = { frequency: "daily", startOn: "2026-12-30" };
+    const dayOne = getOccurrenceOnDate(daily, "2026-12-30T17:00:00-08:00", "2026-12-30T21:00:00-08:00", "2026-12-30", "2027-01-01");
+    expect(dayOne?.startDateYmd).toBe("2027-01-01");
+    expect(dayOne?.startAtIso).toBe("2027-01-01T17:00:00-08:00");
+  });
+
+  it("endDateYmd reflects the local end date when the event crosses local midnight", () => {
+    const occurrence = getOccurrenceOnDate(
+      firstThursday,
+      "2026-08-06T22:00:00-07:00",
+      "2026-08-07T02:00:00-07:00",
+      "2026-08-06",
+      "2026-10-01",
+    );
+    expect(occurrence?.startDateYmd).toBe("2026-10-01");
+    expect(occurrence?.endDateYmd).toBe("2026-10-02");
+    expect(occurrence?.endAtIso).toBe("2026-10-02T02:00:00-07:00");
+  });
+
+  it("skipDates are matched on the local date", () => {
+    const skipping: EventRecurrence = { ...firstThursday, skipDates: ["2026-10-01"] };
+    const occurrence = getNextOccurrence(skipping, seedStart, seedEnd, Date.parse("2026-09-26T12:00:00-07:00"));
+    expect(occurrence?.startDateYmd).toBe("2026-11-05");
+  });
+
+  it("an occurrence re-fed as the seed resolves to the same date (banner double pass)", () => {
+    const now = Date.parse("2026-09-26T12:00:00-07:00");
+    const first = getNextOccurrence(firstThursday, seedStart, seedEnd, now)!;
+    // No startOn, so the seed date is derived from the fed-in ISO string itself.
+    const noStartOn: EventRecurrence = { frequency: "monthly", nthWeek: 1, weekdays: ["thu"] };
+    const again = getNextOccurrence(noStartOn, first.startAtIso, first.endAtIso, now);
+    expect(again).toEqual(first);
+  });
+
+  it("getOccurrenceOnDate round trips the requested local date", () => {
+    const occurrence = getOccurrenceOnDate(firstThursday, seedStart, seedEnd, "2026-08-06", "2026-10-01");
+    expect(occurrence?.startDateYmd).toBe("2026-10-01");
+    expect(occurrence?.startAtIso.startsWith("2026-10-01T17:00:00-07:00")).toBe(true);
+    expect(getOccurrenceOnDate(firstThursday, seedStart, seedEnd, "2026-08-06", "2026-10-02")).toBeNull();
+  });
+
+  it("resolveOccurrence (list-view expansion path) matches getOccurrenceOnDate", () => {
+    const viaResolve = resolveOccurrence(seedStart, seedEnd, new Date(Date.UTC(2026, 9, 1)));
+    expect(viaResolve).toEqual(getOccurrenceOnDate(firstThursday, seedStart, seedEnd, "2026-08-06", "2026-10-01"));
+  });
+
+  it("UTC (Z) seeds keep working: offset falls back to +00:00 and dates are unchanged", () => {
+    const occurrence = getNextOccurrence(
+      { frequency: "daily", startOn: "2026-03-14" },
+      "2026-03-14T18:00:00.000Z",
+      "2026-03-14T19:00:00.000Z",
+      Date.parse("2026-03-20T00:00:00Z"),
+    );
+    expect(occurrence?.startDateYmd).toBe("2026-03-20");
+    expect(Date.parse(occurrence!.startAtIso)).toBe(Date.parse("2026-03-20T18:00:00Z"));
+    expect(Date.parse(occurrence!.endAtIso)).toBe(Date.parse("2026-03-20T19:00:00Z"));
   });
 });
 
