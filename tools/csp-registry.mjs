@@ -97,7 +97,8 @@ export const patternCspRequirements = {
     // sign-in inside a third-party iframe (an anti-phishing restriction, not a
     // CSP/cookie issue), so sign-in-gated Google Forms use requiresGoogleAccount
     // to bypass the iframe/modal entirely and open as a plain new-tab link instead.
-    frameSrc: ["https://form.jotform.com", "https://docs.google.com"],
+    // www.zeffy.com: event ticketing, registrationUrl = zeffy.com/embed/ticketing/<slug>.
+    frameSrc: ["https://form.jotform.com", "https://docs.google.com", "https://www.zeffy.com"],
   },
   EventsNewsSection: {
     // getFacebookVideoEmbedSrc() -> facebook.com/plugins/video.php iframe

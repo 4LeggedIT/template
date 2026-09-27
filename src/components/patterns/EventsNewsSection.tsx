@@ -155,6 +155,8 @@ export type EventsNewsEventEntry = EventsNewsBaseEntry & {
   calendarTitle?: string;
   mapsUrl?: string;
   registrationUrl?: string;
+  /** Per-event text for the registration button, e.g. "Get tickets" for a paid event. Falls back to `labels.register`. */
+  registrationLabel?: string;
   moreInfoUrl?: string;
   recurrence?: EventsNewsEventRecurrence;
   /** Per-occurrence image swap for recurring events — falls back to imageSrc/imageAlt/images when no entry matches the occurrence date. */
@@ -218,6 +220,8 @@ export type EventsNewsSectionLabels = {
   share?: string;
   shareCopied?: string;
   shareShared?: string;
+  shareSection?: string;
+  openInNewTab?: string;
   searchPlaceholder?: string;
   searchClearAriaLabel?: string;
   searchEmptyMessage?: string;
@@ -1268,6 +1272,8 @@ const renderEntryCard = (
     share: "Share",
     shareCopied: "Copied",
     shareShared: "Shared",
+    shareSection: "Share this event",
+    openInNewTab: "Open in new tab",
     searchPlaceholder: "Search events & news…",
     searchClearAriaLabel: "Clear search",
     searchEmptyMessage: "No events or news match your search.",
@@ -1386,7 +1392,7 @@ const renderEntryCard = (
               </Button>
             )
           ) : null}
-          {!isIndexMode && entry.kind === "event" && registrationUrl ? (
+          {!isIndexMode && entry.kind === "event" && registrationUrl && !shareUrl && eventStatus !== "past" ? (
             <FormEmbedModal
               formUrl={registrationUrl}
               title={`${entry.title} Registration`}
@@ -1421,8 +1427,20 @@ const renderEntryCard = (
                 date: entry.dateLabel ?? formatFallbackDateLabel(entry),
                 location: entry.locationLabel,
               }}
+              registration={
+                registrationUrl && eventStatus !== "past"
+                  ? {
+                      url: registrationUrl,
+                      label: entry.registrationLabel,
+                      formTitle: `${entry.title} Registration`,
+                    }
+                  : undefined
+              }
               channels={["maps", "calendar", "whatsapp", "facebook", "copy-url", "copy-message"]}
               labels={{
+                register: labels.register,
+                openInNewTab: labels.openInNewTab,
+                shareSection: labels.shareSection,
                 openInMaps: labels.shareOpenInMaps,
                 addToCalendar: labels.shareAddToCalendar,
                 whatsapp: labels.shareWhatsapp,
@@ -1512,6 +1530,8 @@ const EventsNewsSection = ({
     share: labels.share ?? "Share",
     shareCopied: labels.shareCopied ?? "Copied",
     shareShared: labels.shareShared ?? "Shared",
+    shareSection: labels.shareSection ?? "Share this event",
+    openInNewTab: labels.openInNewTab ?? "Open in new tab",
     searchPlaceholder: labels.searchPlaceholder ?? "Search events & news…",
     searchClearAriaLabel: labels.searchClearAriaLabel ?? "Clear search",
     searchEmptyMessage: labels.searchEmptyMessage ?? "No events or news match your search.",

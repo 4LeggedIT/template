@@ -21,6 +21,7 @@ export const eventsNewsExampleEntries: EventsNewsEntry[] = [
     endAtIso: "2026-01-02T19:00:00-08:00",
     locationLabel: "123 Main St, Example City, ST",
     registrationUrl: "https://example.org/register/adoption-fridays",
+    registrationLabel: "Save your spot",
     summary: "Recurring weekly event every Friday evening.",
     highlights: [
       "Held weekly, every Friday evening",

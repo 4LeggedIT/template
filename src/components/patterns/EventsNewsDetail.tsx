@@ -1,4 +1,4 @@
-import { ArrowLeft, Calendar, ChevronLeft, ChevronRight, ExternalLink, MapPin } from "lucide-react";
+import { ArrowLeft, Calendar, ChevronLeft, ChevronRight, ExternalLink, MapPin, Ticket } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -33,6 +33,10 @@ export type EventsNewsDetailLabels = {
   share?: string;
   copied?: string;
   shared?: string;
+  shareSection?: string;
+  /** Share-row heading on a news entry's detail page. */
+  shareSectionNews?: string;
+  openInNewTab?: string;
   highlightsTitle?: string;
   detailsComingSoon?: string;
   previousLabel?: string;
@@ -178,6 +182,9 @@ const EventsNewsDetail = ({
     share: labels.share ?? "Share",
     copied: labels.copied ?? "Copied",
     shared: labels.shared ?? "Shared",
+    shareSection: labels.shareSection ?? "Share this event",
+    shareSectionNews: labels.shareSectionNews ?? "Share this post",
+    openInNewTab: labels.openInNewTab ?? "Open in new tab",
     highlightsTitle: labels.highlightsTitle ?? "Highlights",
     detailsComingSoon: labels.detailsComingSoon ?? "Full details coming soon.",
     previousLabel: labels.previousLabel ?? "Previous",
@@ -192,6 +199,11 @@ const EventsNewsDetail = ({
   const mapsUrl = isEvent ? mapsUrlOverride ?? getMapsUrl(entry) : null;
   const calendarUrl = isEvent ? calendarUrlOverride ?? getGoogleCalendarUrl(entry) : null;
   const registrationUrl = isEvent ? entry.registrationUrl?.trim() : null;
+  // Signing up for an event that already happened makes no sense, so the button goes away with the rest.
+  const registration =
+    registrationUrl && !isPastEvent
+      ? { url: registrationUrl, label: entry.kind === "event" ? entry.registrationLabel : undefined, formTitle: `${entry.title} Registration` }
+      : undefined;
   const moreInfoUrl = isEvent ? entry.moreInfoUrl?.trim() : null;
   const contentBlocks = entry.contentBlocks?.length
     ? getEntryContentBlocks(entry, resolvedLabels.highlightsTitle)
@@ -221,12 +233,18 @@ const EventsNewsDetail = ({
           </Link>
         ) : null}
 
-        {registrationUrl ? (
-          <FormEmbedModal formUrl={registrationUrl} title={`${entry.title} Registration`} asButton={false}>
-            <span className="inline-flex items-center gap-2 text-sm font-semibold text-primary hover:underline">
-              {resolvedLabels.register}
-              <ExternalLink className="h-3.5 w-3.5 opacity-70" />
-            </span>
+        {/* Registration normally renders as the primary button inside EventActions below; this
+            standalone button only covers an upcoming event rendered without a share URL. */}
+        {registration && !shareUrl ? (
+          <FormEmbedModal
+            formUrl={registration.url}
+            title={registration.formTitle ?? entry.title}
+            labels={{ openInNewTab: resolvedLabels.openInNewTab }}
+          >
+            <>
+              <Ticket className="h-4 w-4" />
+              {registration.label?.trim() || resolvedLabels.register}
+            </>
           </FormEmbedModal>
         ) : null}
 
@@ -249,9 +267,13 @@ const EventsNewsDetail = ({
             text={entry.summary}
             mapsUrl={mapsUrl ?? undefined}
             calendarUrl={calendarUrl ?? undefined}
+            registration={registration}
             eventDetails={{ date: dateLabel, location: isEvent ? entry.locationLabel : undefined }}
             channels={["maps", "calendar", "whatsapp", "facebook", "copy-url", "copy-message"]}
             labels={{
+              register: resolvedLabels.register,
+              openInNewTab: resolvedLabels.openInNewTab,
+              shareSection: isEvent ? resolvedLabels.shareSection : resolvedLabels.shareSectionNews,
               openInMaps: resolvedLabels.openInMaps,
               addToCalendar: resolvedLabels.addToCalendar,
               whatsapp: resolvedLabels.whatsapp,
