@@ -55,6 +55,8 @@ type EventsNewsDetailProps = {
   /** Chronologically adjacent entries — compute via `getAdjacentEntries()` from `EventsNewsSection.tsx`. Omit or pass `null` to hide that side of the nav row. */
   previous?: EventsNewsAdjacentEntry | null;
   next?: EventsNewsAdjacentEntry | null;
+  /** IANA zone (e.g. "America/Los_Angeles") for the fallback `dateLabel` header when `entry.dateLabel` isn't set — passed straight through to `formatFallbackDateLabel()`. See TPL-050 in template-enhancement-backlog.md; pass the same value given to `EventsNewsSection`/`getAdjacentEntries` on this page. */
+  timeZone?: string;
   className?: string;
   labels?: EventsNewsDetailLabels;
 };
@@ -164,6 +166,7 @@ const EventsNewsDetail = ({
   calendarUrl: calendarUrlOverride,
   previous,
   next,
+  timeZone,
   className,
   labels = {},
 }: EventsNewsDetailProps) => {
@@ -195,7 +198,7 @@ const EventsNewsDetail = ({
   // Once an event is over, "Open in Maps"/"Add to Calendar"/share are no longer actionable —
   // hide the whole action bar rather than showing controls for something that already happened.
   const isPastEvent = isEvent && getEventStatus(entry) === "past";
-  const dateLabel = entry.dateLabel ?? formatFallbackDateLabel(entry);
+  const dateLabel = entry.dateLabel ?? formatFallbackDateLabel(entry, timeZone);
   const mapsUrl = isEvent ? mapsUrlOverride ?? getMapsUrl(entry) : null;
   const calendarUrl = isEvent ? calendarUrlOverride ?? getGoogleCalendarUrl(entry) : null;
   const registrationUrl = isEvent ? entry.registrationUrl?.trim() : null;

@@ -246,6 +246,18 @@ type EventsNewsSectionProps = {
   futureEventsBannerClassName?: string;
   futureEventsBannerDefaultCtaHref?: string;
   eventDetailsBasePath?: string;
+  /**
+   * IANA zone (e.g. "America/Los_Angeles") used to render every timed date/time label computed
+   * by `formatFallbackDateLabel()` — list-card `dateLabel`s, the share-sheet `eventDetails.date`,
+   * and `getAdjacentEntries()`'s Previous/Next labels. Unset (the default) preserves the prior
+   * behavior of formatting in whatever zone the rendering runtime defaults to, which differs
+   * between the prerender build server and a visitor's browser — see TPL-050 in
+   * template-enhancement-backlog.md. Distinct from `futureEventsBannerTimeZone`, which only
+   * covers the separate `EventBanner` sub-component; a site using both should normally pass the
+   * same value to each. All-day/date-only labels are unaffected — they're always rendered in UTC
+   * regardless of this prop, since they're calendar dates with no time-of-day to shift.
+   */
+  timeZone?: string;
   cardMode?: EventsNewsCardMode;
   /**
    * Controls image placement on list cards, independent of `cardMode`.
@@ -564,69 +576,99 @@ const toAbsoluteShareUrl = (href: string) => {
   return href;
 };
 
-const humanDateFormatter = new Intl.DateTimeFormat(undefined, {
+// Calendar-only dates (all-day events, and any date-only value with no time-of-day) are anchored
+// to UTC midnight by `parseYmdUtc` — they represent a day, not a moment. Formatting must stay
+// pinned to "UTC" here too, unconditionally, regardless of the `timeZone` a caller passes for
+// *timed* labels below: formatting a UTC-midnight Date in any other zone would shift it onto the
+// adjacent calendar day depending on the rendering runtime's offset, which is the same class of
+// bug this file's `monthGroupFormatter` already avoids the same way. See TPL-050 in
+// template-enhancement-backlog.md.
+const utcDateFormatter = new Intl.DateTimeFormat(undefined, {
   year: "numeric",
   month: "long",
   day: "numeric",
+  timeZone: "UTC",
 });
 
-const humanDateTimeFormatter = new Intl.DateTimeFormat(undefined, {
-  year: "numeric",
-  month: "long",
-  day: "numeric",
-  hour: "numeric",
-  minute: "2-digit",
-});
+// For real timestamps (`startAtIso`/`endAtIso`, or any other value that parses to an actual
+// moment in time): built fresh per call so an optional `timeZone` (the event's own IANA zone) can
+// be threaded through from `EventsNewsSectionProps`/`EventsNewsDetailProps`. Left unset, these
+// fall back to `Intl.DateTimeFormat`'s own default — the rendering runtime's local zone, which is
+// the pre-TPL-050 behavior and differs between the prerender build server and a visitor's browser.
+const zonedDateFormatter = (timeZone?: string) =>
+  new Intl.DateTimeFormat(undefined, {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+    ...(timeZone ? { timeZone } : {}),
+  });
 
-const humanTimeFormatter = new Intl.DateTimeFormat(undefined, {
-  hour: "numeric",
-  minute: "2-digit",
-});
+const zonedDateTimeFormatter = (timeZone?: string) =>
+  new Intl.DateTimeFormat(undefined, {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+    hour: "numeric",
+    minute: "2-digit",
+    ...(timeZone ? { timeZone } : {}),
+  });
+
+const zonedTimeFormatter = (timeZone?: string) =>
+  new Intl.DateTimeFormat(undefined, {
+    hour: "numeric",
+    minute: "2-digit",
+    ...(timeZone ? { timeZone } : {}),
+  });
 
 // Appends the end date/time when the entry has one, so a fallback (no explicit `dateLabel`
 // authored) event never silently drops its end — see TPL-026 in template-enhancement-backlog.md.
 // Same-day end renders as a time-only suffix ("...7:00 PM – 9:00 PM"); a multi-day span
 // renders the end as a full date. Purely additive: an entry with no end behaves exactly as before.
-export const formatFallbackDateLabel = (entry: EventsNewsRenderableEntry) => {
+//
+// `timeZone` (optional, e.g. "America/Los_Angeles") pins every *timed* label to the event's own
+// zone instead of the rendering runtime's — see TPL-050 in template-enhancement-backlog.md. Unset
+// preserves the prior (buggy) runtime-default behavior; all-day/date-only labels are unaffected,
+// since they're always UTC-anchored regardless of this argument.
+export const formatFallbackDateLabel = (entry: EventsNewsRenderableEntry, timeZone?: string) => {
   if (entry.kind === "event") {
     if (entry.allDay) {
       const startYmd = parseYmdUtc(entry.startAt);
       if (startYmd) {
-        const startLabel = humanDateFormatter.format(startYmd);
+        const startLabel = utcDateFormatter.format(startYmd);
         const endYmd = entry.endAt && entry.endAt !== entry.startAt ? parseYmdUtc(entry.endAt) : null;
-        return endYmd ? `${startLabel} – ${humanDateFormatter.format(endYmd)}` : startLabel;
+        return endYmd ? `${startLabel} – ${utcDateFormatter.format(endYmd)}` : startLabel;
       }
     }
 
     const timedMs = entry.startAtIso ? Date.parse(entry.startAtIso) : NaN;
     if (Number.isFinite(timedMs)) {
       const startDate = new Date(timedMs);
-      const startLabel = humanDateTimeFormatter.format(startDate);
+      const startLabel = zonedDateTimeFormatter(timeZone).format(startDate);
       const endMs = entry.endAtIso ? Date.parse(entry.endAtIso) : NaN;
       if (Number.isFinite(endMs) && endMs > timedMs) {
         const endDate = new Date(endMs);
-        const sameDay = humanDateFormatter.format(startDate) === humanDateFormatter.format(endDate);
+        const sameDay = zonedDateFormatter(timeZone).format(startDate) === zonedDateFormatter(timeZone).format(endDate);
         return sameDay
-          ? `${startLabel} – ${humanTimeFormatter.format(endDate)}`
-          : `${startLabel} – ${humanDateTimeFormatter.format(endDate)}`;
+          ? `${startLabel} – ${zonedTimeFormatter(timeZone).format(endDate)}`
+          : `${startLabel} – ${zonedDateTimeFormatter(timeZone).format(endDate)}`;
       }
       return startLabel;
     }
 
     const ymd = parseYmdUtc(entry.startAt);
-    if (ymd) return humanDateFormatter.format(ymd);
+    if (ymd) return utcDateFormatter.format(ymd);
 
     const parsedMs = Date.parse(entry.startAt);
-    if (Number.isFinite(parsedMs)) return humanDateTimeFormatter.format(new Date(parsedMs));
+    if (Number.isFinite(parsedMs)) return zonedDateTimeFormatter(timeZone).format(new Date(parsedMs));
 
     return entry.startAt;
   }
 
   const ymd = parseYmdUtc(entry.publishedAt);
-  if (ymd) return humanDateFormatter.format(ymd);
+  if (ymd) return utcDateFormatter.format(ymd);
 
   const parsedMs = Date.parse(entry.publishedAt);
-  if (Number.isFinite(parsedMs)) return humanDateFormatter.format(new Date(parsedMs));
+  if (Number.isFinite(parsedMs)) return utcDateFormatter.format(new Date(parsedMs));
 
   return entry.publishedAt;
 };
@@ -761,12 +803,17 @@ const toEventDisplayBuckets = (entries: EventsNewsRenderableEntry[], now: number
  * happens to sort first, not the one actually being viewed. Pass `currentOccurrenceStartAt`
  * (the viewed entry's own, already-resolved `startAt` — see `resolveEventOccurrence()`) to
  * disambiguate; omit it only for non-recurring entries, where there's exactly one occurrence.
+ *
+ * `timeZone` (optional) is forwarded to `formatFallbackDateLabel()` for each neighbor's computed
+ * `dateLabel` — pass the same value given to `EventsNewsSection`/`EventsNewsDetail` on this page,
+ * see TPL-050 in template-enhancement-backlog.md.
  */
 export const getAdjacentEntries = (
   entries: EventsNewsEntry[],
   currentId: string,
   eventDetailsBasePath?: string,
   currentOccurrenceStartAt?: string,
+  timeZone?: string,
 ): { previous: EventsNewsAdjacentEntry | null; next: EventsNewsAdjacentEntry | null } => {
   const renderableEntries = getRenderableEntries(entries);
   const { activeEvents, archivedEvents } = toEventDisplayBuckets(renderableEntries);
@@ -795,7 +842,7 @@ export const getAdjacentEntries = (
     return {
       id: entry.id,
       title: entry.kind === "event" ? entry.calendarTitle ?? entry.title : entry.title,
-      dateLabel: entry.dateLabel ?? formatFallbackDateLabel(entry),
+      dateLabel: entry.dateLabel ?? formatFallbackDateLabel(entry, timeZone),
       href,
     };
   };
@@ -1279,6 +1326,7 @@ const renderEntryCard = (
     searchEmptyMessage: "No events or news match your search.",
   },
   now: number = Date.now(),
+  timeZone?: string,
 ) => {
   const detailsHref = getDetailsHref(entry, eventDetailsBasePath);
   const mapsUrl = entry.kind === "event" ? getMapsUrl(entry) : null;
@@ -1371,7 +1419,7 @@ const renderEntryCard = (
           {entry.kind === "event" ? (entry.calendarTitle ?? entry.title) : entry.title}
         </CardTitle>
         <CardDescription>
-          {entry.dateLabel ?? formatFallbackDateLabel(entry)}
+          {entry.dateLabel ?? formatFallbackDateLabel(entry, timeZone)}
           {entry.kind === "event" && entry.locationLabel ? ` • ${entry.locationLabel}` : ""}
         </CardDescription>
       </CardHeader>
@@ -1424,7 +1472,7 @@ const renderEntryCard = (
               mapsUrl={mapsUrl ?? undefined}
               calendarUrl={calendarUrl ?? undefined}
               eventDetails={{
-                date: entry.dateLabel ?? formatFallbackDateLabel(entry),
+                date: entry.dateLabel ?? formatFallbackDateLabel(entry, timeZone),
                 location: entry.locationLabel,
               }}
               registration={
@@ -1500,6 +1548,7 @@ const EventsNewsSection = ({
   futureEventsBannerClassName,
   futureEventsBannerDefaultCtaHref,
   eventDetailsBasePath,
+  timeZone,
   cardMode = "index",
   imageLayout = "auto",
   groupByMonth = false,
@@ -1636,7 +1685,7 @@ const EventsNewsSection = ({
         searchResults.length ? (
           <div className="space-y-6">
             {searchResults.map((entry, index) =>
-              renderEntryCard(entry, eventDetailsBasePath, cardMode, imageLayout, index, resolvedLabels, safeNow),
+              renderEntryCard(entry, eventDetailsBasePath, cardMode, imageLayout, index, resolvedLabels, safeNow, timeZone),
             )}
           </div>
         ) : (
@@ -1649,7 +1698,7 @@ const EventsNewsSection = ({
           {featured ? (
             <div className="mb-6">
               <p className="mb-2 text-xs font-medium uppercase tracking-wide text-muted-foreground">{resolvedLabels.featuredLabel}</p>
-              {renderEntryCard(featured, eventDetailsBasePath, cardMode, imageLayout, 0, resolvedLabels, safeNow)}
+              {renderEntryCard(featured, eventDetailsBasePath, cardMode, imageLayout, 0, resolvedLabels, safeNow, timeZone)}
             </div>
           ) : null}
 
@@ -1662,7 +1711,7 @@ const EventsNewsSection = ({
                       <h4 className="mb-3 text-sm font-semibold text-foreground">{group.label}</h4>
                       <div className="space-y-6">
                         {group.entries.map((entry, index) =>
-                          renderEntryCard(entry, eventDetailsBasePath, cardMode, imageLayout, index, resolvedLabels, safeNow),
+                          renderEntryCard(entry, eventDetailsBasePath, cardMode, imageLayout, index, resolvedLabels, safeNow, timeZone),
                         )}
                       </div>
                     </div>
@@ -1673,7 +1722,7 @@ const EventsNewsSection = ({
                       </summary>
                       <div className="mt-4 space-y-4">
                         {group.entries.map((entry, index) =>
-                          renderEntryCard(entry, eventDetailsBasePath, cardMode, imageLayout, index, resolvedLabels, safeNow),
+                          renderEntryCard(entry, eventDetailsBasePath, cardMode, imageLayout, index, resolvedLabels, safeNow, timeZone),
                         )}
                       </div>
                     </details>
@@ -1690,7 +1739,7 @@ const EventsNewsSection = ({
               {latest.length ? (
                 <div className="space-y-6">
                   {latest.map((entry, index) =>
-                    renderEntryCard(entry, eventDetailsBasePath, cardMode, imageLayout, index, resolvedLabels, safeNow),
+                    renderEntryCard(entry, eventDetailsBasePath, cardMode, imageLayout, index, resolvedLabels, safeNow, timeZone),
                   )}
                 </div>
               ) : (
@@ -1709,7 +1758,7 @@ const EventsNewsSection = ({
                   </summary>
                   <div className="mt-4 space-y-4">
                     {archive.map((entry, index) =>
-                      renderEntryCard(entry, eventDetailsBasePath, cardMode, imageLayout, index, resolvedLabels, safeNow),
+                      renderEntryCard(entry, eventDetailsBasePath, cardMode, imageLayout, index, resolvedLabels, safeNow, timeZone),
                     )}
                   </div>
                 </details>
