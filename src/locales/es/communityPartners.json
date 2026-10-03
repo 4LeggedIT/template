@@ -14,8 +14,8 @@
       "description": "Clínicas y profesionales de confianza que ayudan a mantener sanos a nuestros perros."
     },
     "businessPartners": {
-      "title": "Socios Comerciales de la Comunidad",
-      "description": "Comercios locales que apoyan generosamente nuestro trabajo. Este reconocimiento refleja nuestro aprecio por su generosidad y no constituye un respaldo a ningún producto o servicio."
+      "title": "Socios Comerciales y Comunitarios",
+      "description": "Comercios y organizaciones comunitarias locales que apoyan generosamente nuestro trabajo. Este reconocimiento refleja nuestro aprecio por su generosidad y no constituye un respaldo a ningún producto o servicio."
     },
     "technologyPartners": {
       "title": "Socios Tecnológicos",
@@ -54,7 +54,7 @@
   "standard": {
     "title": "Estándar",
     "items": [
-      "`category` distingue a los colaboradores de rescate/bienestar animal (`rescuePartners`) de los comercios (`businessPartners`) — son dos relaciones genuinamente distintas, no una jerarquía. Un sitio puede definir sus propias claves de categoría siempre que `sections` y `partners` usen valores coincidentes.",
+      "`category` distingue a los colaboradores de rescate/bienestar animal (`rescuePartners`) de los comercios y organizaciones comunitarias, como clubes y grupos cívicos (`businessPartners`, titulada \"Socios Comerciales y Comunitarios\") — son dos relaciones genuinamente distintas, no una jerarquía. Un sitio puede definir sus propias claves de categoría siempre que `sections` y `partners` usen valores coincidentes.",
       "`veterinaryPartners` (\"Socios Veterinarios y Médicos\") es una tercera categoría recomendada para clínicas y profesionales médicos — una relación genuinamente distinta tanto de la colaboración de rescate general como del apoyo comercial general, por lo que tiene su propio encabezado en lugar de incluirse en `businessPartners`. Aun así, se rige por la regla de cumplimiento de `businessPartners` que sigue cuando el socio es una clínica con fines de lucro: mantenga la descripción neutral y factual.",
       "**Sin favoritismo, nunca.** El componente siempre ordena a los socios alfabéticamente por nombre dentro de una categoría — nunca por fecha de alta, nunca manualmente. No agregue un campo `featured`/`order` para evitar esto; si un sitio desea un programa formal de patrocinio por niveles, eso requiere un umbral objetivo definido (por ejemplo, un programa real de donaciones por monto) y está fuera del alcance de este patrón.",
       "**Una categoría sin socios coincidentes no renderiza nada** — ni encabezado ni marcador de posición de \"próximamente\". Esto evita una subsección muerta junto a contenido real; la sección aparece automáticamente en cuanto el archivo de datos del sitio recibe su primera entrada en esa categoría.",

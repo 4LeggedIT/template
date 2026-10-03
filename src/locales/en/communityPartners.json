@@ -14,8 +14,8 @@
       "description": "Trusted clinics and professionals who help keep our dogs healthy."
     },
     "businessPartners": {
-      "title": "Community Business Partners",
-      "description": "Local businesses generously supporting our work. Recognition here reflects our appreciation for their generosity and does not constitute an endorsement of any product or service."
+      "title": "Business & Community Partners",
+      "description": "Local businesses and community organizations generously supporting our work. Recognition here reflects our appreciation for their generosity and does not constitute an endorsement of any product or service."
     },
     "technologyPartners": {
       "title": "Technology Partners",
@@ -54,7 +54,7 @@
   "standard": {
     "title": "Standard",
     "items": [
-      "`category` distinguishes rescue/animal-welfare collaborators (`rescuePartners`) from commercial businesses (`businessPartners`) — these are two genuinely different relationships, not a ranking. A site may define its own category keys as long as `sections` and `partners` use matching values.",
+      "`category` distinguishes rescue/animal-welfare collaborators (`rescuePartners`) from commercial businesses and community organizations such as clubs and civic groups (`businessPartners`, titled \"Business & Community Partners\") — these are two genuinely different relationships, not a ranking. A site may define its own category keys as long as `sections` and `partners` use matching values.",
       "`veterinaryPartners` (\"Veterinary & Medical Partners\") is a recommended third category for clinics and medical professionals — a genuinely distinct relationship from both general rescue collaboration and general commercial support, so it gets its own heading rather than being folded into `businessPartners`. It's still governed by the `businessPartners` compliance rule below when the partner is a for-profit clinic: keep the description neutral/factual.",
       "**No favoritism, ever.** The component always sorts partners alphabetically by name within a category — never by date added, never manually. Don't add a `featured`/`order` field to work around this; if a site wants a formal tiered sponsorship program, that requires a defined objective threshold (e.g. a real dollar-value giving program) and is out of scope for this pattern.",
       "**A category with zero matching partners renders nothing** — no heading, no \"coming soon\" placeholder. This avoids a dead subsection sitting next to real content; the section appears automatically once the site's data file gets its first entry in that category.",
