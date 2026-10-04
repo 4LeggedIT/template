@@ -115,7 +115,7 @@ const SiteHeader = ({ sticky = true, className }: SiteHeaderProps) => {
       ref={headerRef}
       className={cn(
         sticky ? "sticky top-0" : "relative",
-        "z-40 border-b border-border bg-background/95 backdrop-blur",
+        "z-40 border-b border-border bg-background/95 backdrop-blur-sm",
         className,
       )}
     >
@@ -141,7 +141,7 @@ const SiteHeader = ({ sticky = true, className }: SiteHeaderProps) => {
                     type="button"
                     aria-haspopup="true"
                     className={cn(
-                      "flex items-center gap-1 rounded-lg px-3 py-2 text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
+                      "flex items-center gap-1 rounded-lg px-3 py-2 text-sm transition-colors focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
                       isDropdownActive(item.dropdown)
                         ? "bg-primary/10 font-medium text-primary"
                         : "text-muted-foreground hover:bg-muted hover:text-foreground",
@@ -171,7 +171,7 @@ const SiteHeader = ({ sticky = true, className }: SiteHeaderProps) => {
                             to={subItem.href}
                             className={({ isActive }) =>
                               cn(
-                                "block whitespace-normal break-words rounded-lg px-3 py-2 text-sm transition-colors",
+                                "block whitespace-normal wrap-break-word rounded-lg px-3 py-2 text-sm transition-colors",
                                 isActive
                                   ? "bg-primary/10 font-medium text-primary"
                                   : "text-foreground/80 hover:bg-muted hover:text-foreground",

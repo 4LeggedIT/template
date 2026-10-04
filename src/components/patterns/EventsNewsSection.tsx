@@ -1123,7 +1123,7 @@ export const renderHostedVideo = (
     <div
       className={cn(
         "mx-auto overflow-hidden rounded-xl border border-border bg-black",
-        isPortrait ? "aspect-[9/16] max-w-[360px]" : "aspect-video max-w-full",
+        isPortrait ? "aspect-9/16 max-w-[360px]" : "aspect-video max-w-full",
       )}
     >
       <video controls playsInline preload="metadata" poster={posterSrc} title={title} className="h-full w-full object-contain">
@@ -1139,7 +1139,7 @@ export const renderVideoEmbed = (embed: EventsNewsVideoEmbed, fallbackTitle: str
     <div
       className={cn(
         "mx-auto overflow-hidden rounded-xl border border-border bg-black",
-        isPortrait ? "aspect-[9/16] max-w-[360px]" : "aspect-video max-w-full",
+        isPortrait ? "aspect-9/16 max-w-[360px]" : "aspect-video max-w-full",
       )}
     >
       <iframe

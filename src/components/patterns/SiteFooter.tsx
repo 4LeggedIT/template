@@ -9,7 +9,7 @@ const SiteFooter = () => {
   return (
     <footer>
       {/* CTA banner — 4leggedIT brand gradient */}
-      <div className="relative overflow-hidden bg-gradient-to-r from-primary via-highlight to-primary py-10 md:py-14">
+      <div className="relative overflow-hidden bg-linear-to-r from-primary via-highlight to-primary py-10 md:py-14">
         <PawPrint className="absolute left-8 top-4 h-8 w-8 text-primary-foreground/20" />
         <PawPrint className="absolute bottom-4 right-12 h-7 w-7 text-primary-foreground/20" />
         <PawPrint className="absolute right-1/4 top-1/2 h-12 w-12 -translate-y-1/2 text-primary-foreground/10" />

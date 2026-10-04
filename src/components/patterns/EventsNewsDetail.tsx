@@ -295,7 +295,7 @@ const EventsNewsDetail = ({
                 to={previous.href}
                 className="group flex items-center gap-3 rounded-lg border border-border p-3 text-left transition-colors hover:border-primary/40"
               >
-                <ChevronLeft className="h-4 w-4 flex-shrink-0 text-muted-foreground transition-colors group-hover:text-primary" />
+                <ChevronLeft className="h-4 w-4 shrink-0 text-muted-foreground transition-colors group-hover:text-primary" />
                 <span className="min-w-0">
                   <span className="block text-xs text-muted-foreground">{resolvedLabels.previousLabel}</span>
                   <span className="block truncate text-sm font-semibold text-foreground">{previous.dateLabel}</span>
@@ -315,7 +315,7 @@ const EventsNewsDetail = ({
                   <span className="block truncate text-sm font-semibold text-foreground">{next.dateLabel}</span>
                   <span className="block truncate text-sm text-muted-foreground">{next.title}</span>
                 </span>
-                <ChevronRight className="h-4 w-4 flex-shrink-0 text-muted-foreground transition-colors group-hover:text-primary" />
+                <ChevronRight className="h-4 w-4 shrink-0 text-muted-foreground transition-colors group-hover:text-primary" />
               </Link>
             ) : null}
           </div>

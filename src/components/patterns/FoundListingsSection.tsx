@@ -185,7 +185,7 @@ const FoundListingsSection = ({
   return (
     <section className={cn("space-y-10", className)}>
       {title || description ? (
-        <div className="rounded-2xl bg-gradient-to-br from-primary/5 to-primary/10 px-6 py-10 text-center">
+        <div className="rounded-2xl bg-linear-to-br from-primary/5 to-primary/10 px-6 py-10 text-center">
           {title ? <h2 className="text-3xl font-bold text-foreground md:text-4xl">{title}</h2> : null}
           {description ? <p className="mx-auto mt-3 max-w-3xl text-muted-foreground">{description}</p> : null}
         </div>
@@ -193,7 +193,7 @@ const FoundListingsSection = ({
 
       <div className="rounded-xl border border-amber-200 bg-amber-50 px-5 py-4">
         <div className="flex items-start gap-3">
-          <AlertTriangle className="mt-0.5 h-7 w-7 flex-shrink-0 text-amber-600" />
+          <AlertTriangle className="mt-0.5 h-7 w-7 shrink-0 text-amber-600" />
           <div>
             <h3 className="text-lg font-bold text-amber-800">{warningTitle}</h3>
             <p className="mt-1 text-sm text-amber-700">{warningBody}</p>
@@ -210,7 +210,7 @@ const FoundListingsSection = ({
           <ul className="mt-4 space-y-2">
             {checklistItems.map((item) => (
               <li key={item} className="flex items-start gap-2 text-sm text-muted-foreground">
-                <span className="mt-1.5 h-2 w-2 flex-shrink-0 rounded-full bg-primary" />
+                <span className="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-primary" />
                 <span>{item}</span>
               </li>
             ))}
@@ -226,11 +226,11 @@ const FoundListingsSection = ({
             {processSteps.map((step, index) => (
               <li key={`${index}-${step}`} className="flex items-start gap-2">
                 {index === 0 ? (
-                  <MapPin className="mt-0.5 h-4 w-4 flex-shrink-0 text-primary" />
+                  <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
                 ) : index === 1 ? (
-                  <Mail className="mt-0.5 h-4 w-4 flex-shrink-0 text-primary" />
+                  <Mail className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
                 ) : (
-                  <Phone className="mt-0.5 h-4 w-4 flex-shrink-0 text-primary" />
+                  <Phone className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
                 )}
                 <span>{step}</span>
               </li>
@@ -253,7 +253,7 @@ const FoundListingsSection = ({
                   .join(", ");
 
               return (
-                <article key={listing.id} className="overflow-hidden rounded-xl border bg-card shadow-sm">
+                <article key={listing.id} className="overflow-hidden rounded-xl border bg-card shadow-xs">
                   {featuredMedia && imageHref ? (
                     <a
                       href={imageHref}

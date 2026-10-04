@@ -21,7 +21,7 @@ const HomePage = () => {
         }
       />
       <section className="container px-4 py-10">
-        <div className="mx-auto max-w-3xl rounded-2xl border border-border bg-card p-8 shadow-sm">
+        <div className="mx-auto max-w-3xl rounded-2xl border border-border bg-card p-8 shadow-xs">
           <p className="text-sm text-muted-foreground">{t("bodyText")}</p>
         </div>
       </section>

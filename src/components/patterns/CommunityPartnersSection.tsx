@@ -93,7 +93,7 @@ const CommunityPartnersSection = ({
             {items.map((partner) => (
               <div
                 key={partner.id}
-                className="flex flex-col items-center rounded-2xl border border-border bg-card p-6 text-center shadow-sm"
+                className="flex flex-col items-center rounded-2xl border border-border bg-card p-6 text-center shadow-xs"
               >
                 {partner.logoSrc ? (
                   (() => {

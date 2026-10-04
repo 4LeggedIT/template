@@ -250,7 +250,7 @@ const PetCard = ({
                 />
               )}
               {galleryNav}
-              <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-black/70 to-transparent" />
+              <div className="absolute inset-x-0 bottom-0 h-24 bg-linear-to-t from-black/70 to-transparent" />
               <div className="absolute bottom-0 left-0 right-0 p-4">
                 <div className="flex flex-wrap items-center gap-2">
                   {pet.statusLabel ? (

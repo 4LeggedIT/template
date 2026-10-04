@@ -215,7 +215,7 @@ const renderBlogContentBlock = (block: BlogContentBlock, index: number) => {
           key={index}
           className="mb-4 mt-10 flex items-center gap-3 text-2xl font-bold tracking-tight md:text-3xl"
         >
-          <span className="h-8 w-1 flex-shrink-0 rounded-full bg-primary" />
+          <span className="h-8 w-1 shrink-0 rounded-full bg-primary" />
           {block.content}
         </h2>
       );
@@ -229,14 +229,14 @@ const renderBlogContentBlock = (block: BlogContentBlock, index: number) => {
       const match = block.content.match(blockImageRegex);
       const src = match ? safeContentUrl(match[2]) : undefined;
       if (!src) return null;
-      return <img key={index} src={src} alt={match?.[1] ?? ""} loading="lazy" className="mb-8 w-full rounded-2xl shadow-sm" />;
+      return <img key={index} src={src} alt={match?.[1] ?? ""} loading="lazy" className="mb-8 w-full rounded-2xl shadow-xs" />;
     }
     case "list":
       return (
         <ul key={index} className="mb-6 space-y-2 pl-1">
           {block.items?.map((item, itemIndex) => (
             <li key={itemIndex} className="flex items-start gap-3 text-muted-foreground">
-              <span className="mt-2 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-primary" />
+              <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-primary" />
               <span>{renderInlineMarkdown(item)}</span>
             </li>
           ))}
@@ -287,7 +287,7 @@ const RelatedPostCard = ({
 }) => {
   const body = (
     <>
-      {post.emoji ? <div className="flex-shrink-0 text-3xl">{post.emoji}</div> : null}
+      {post.emoji ? <div className="shrink-0 text-3xl">{post.emoji}</div> : null}
       <div>
         {post.category ? (
           <div className="mb-2">

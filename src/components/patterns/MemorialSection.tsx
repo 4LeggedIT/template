@@ -64,7 +64,7 @@ const MemorialSection = ({
           {entries.map((entry) => (
             <li
               key={entry.id}
-              className="grid gap-6 rounded-3xl border border-border bg-card p-6 shadow-sm sm:grid-cols-[auto_1fr] sm:p-8"
+              className="grid gap-6 rounded-3xl border border-border bg-card p-6 shadow-xs sm:grid-cols-[auto_1fr] sm:p-8"
             >
               {/* Photos keep their own shape — never cropped (fleet rule). They wrap
                   on narrow screens instead of overflowing. */}
@@ -120,7 +120,7 @@ const MemorialSection = ({
           ))}
         </ul>
       ) : (
-        <div className="mx-auto max-w-xl rounded-3xl border border-border bg-card p-8 text-center shadow-sm">
+        <div className="mx-auto max-w-xl rounded-3xl border border-border bg-card p-8 text-center shadow-xs">
           <PawPrint className="mx-auto h-8 w-8 text-primary" />
           <p className="mt-3 text-muted-foreground">{emptyMessage}</p>
         </div>
