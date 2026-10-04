@@ -1165,10 +1165,11 @@ const isExternalContentHref = (href: string, external?: boolean) =>
 
 // Inline "`code`", "[text](url)" (internal hrefs render as an in-app <Link>, everything
 // else as an external <a>), and "**bold**" — the same three constructs BlogPostDetail.tsx
-// supports, duplicated rather than imported so this pattern stays standalone-syncable.
+// supports. Exported so EventsNewsDetail's plain `body` rendering shares it (that page used its
+// own https-only link regex, so a relative "[text](/donate)" in a body printed as raw markdown).
 const newsInlineMarkdownRegex = /(`[^`]+`)|(\[([^\]]+)\]\(([^)]+)\))|(\*\*([^*]+)\*\*)/g;
 
-const renderNewsInlineText = (text: string): Array<string | ReactNode> => {
+export const renderNewsInlineText = (text: string): Array<string | ReactNode> => {
   const parts: Array<string | ReactNode> = [];
   const regex = new RegExp(newsInlineMarkdownRegex.source, "g");
   let lastIndex = 0;

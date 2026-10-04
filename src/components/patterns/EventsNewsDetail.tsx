@@ -12,6 +12,7 @@ import {
   getMapsUrl,
   renderContentBlock,
   renderHostedVideo,
+  renderNewsInlineText,
   renderVideoEmbed,
   type EventsNewsAdjacentEntry,
   type EventsNewsEntry,
@@ -61,36 +62,6 @@ type EventsNewsDetailProps = {
   labels?: EventsNewsDetailLabels;
 };
 
-const linkPattern = /\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g;
-
-const renderInlineText = (text: string) => {
-  const nodes: Array<string | JSX.Element> = [];
-  let lastIndex = 0;
-  let match: RegExpExecArray | null;
-  const regex = new RegExp(linkPattern.source, "g");
-
-  while ((match = regex.exec(text))) {
-    const [full, label, href] = match;
-    const start = match.index;
-    if (start > lastIndex) nodes.push(text.slice(lastIndex, start));
-    nodes.push(
-      <a
-        key={`${href}-${start}`}
-        href={href}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="font-semibold text-primary hover:underline"
-      >
-        {label}
-      </a>,
-    );
-    lastIndex = start + full.length;
-  }
-
-  if (lastIndex < text.length) nodes.push(text.slice(lastIndex));
-  return nodes;
-};
-
 const renderBody = (body?: string) => {
   if (!body) return null;
 
@@ -109,7 +80,7 @@ const renderBody = (body?: string) => {
         return (
           <ul key={idx} className="mt-4 list-disc space-y-1 pl-6 leading-relaxed text-muted-foreground">
             {lines.map((line, lineIdx) => (
-              <li key={`${idx}-${lineIdx}`}>{renderInlineText(line.replace(/^- /, ""))}</li>
+              <li key={`${idx}-${lineIdx}`}>{renderNewsInlineText(line.replace(/^- /, ""))}</li>
             ))}
           </ul>
         );
@@ -117,7 +88,7 @@ const renderBody = (body?: string) => {
 
       return (
         <p key={idx} className="mt-4 leading-relaxed text-muted-foreground">
-          {renderInlineText(paragraph)}
+          {renderNewsInlineText(paragraph)}
         </p>
       );
     });
