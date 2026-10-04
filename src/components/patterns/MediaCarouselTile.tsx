@@ -26,8 +26,8 @@ export type MediaCarouselTileProps = {
 };
 
 const aspectClassMap: Record<NonNullable<MediaCarouselTileProps["aspect"]>, string> = {
-  landscape: "aspect-[4/3]",
-  portrait: "aspect-[3/4]",
+  landscape: "aspect-4/3",
+  portrait: "aspect-3/4",
   square: "aspect-square",
 };
 

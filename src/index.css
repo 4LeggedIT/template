@@ -1,6 +1,145 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss' source(none);
+
+/* v3 `content` parity: scan only app source, not package.json / docs / data files */
+@source './**/*.{ts,tsx}';
+
+@plugin 'tailwindcss-animate';
+
+@custom-variant dark (&:is(.dark *));
+
+@theme {
+  --color-border: hsl(var(--border));
+  --color-input: hsl(var(--input));
+  --color-ring: hsl(var(--ring));
+  --color-background: hsl(var(--background));
+  --color-foreground: hsl(var(--foreground));
+
+  --color-primary: hsl(var(--primary));
+  --color-primary-foreground: hsl(var(--primary-foreground));
+
+  --color-secondary: hsl(var(--secondary));
+  --color-secondary-foreground: hsl(var(--secondary-foreground));
+
+  --color-destructive: hsl(var(--destructive));
+  --color-destructive-foreground: hsl(var(--destructive-foreground));
+
+  --color-muted: hsl(var(--muted));
+  --color-muted-foreground: hsl(var(--muted-foreground));
+
+  --color-accent: hsl(var(--accent));
+  --color-accent-foreground: hsl(var(--accent-foreground));
+
+  --color-highlight: hsl(var(--highlight));
+  --color-highlight-foreground: hsl(var(--highlight-foreground));
+
+  --color-paw: hsl(var(--paw));
+  --color-paw-foreground: hsl(var(--paw-foreground));
+
+  --color-popover: hsl(var(--popover));
+  --color-popover-foreground: hsl(var(--popover-foreground));
+
+  --color-card: hsl(var(--card));
+  --color-card-foreground: hsl(var(--card-foreground));
+
+  --color-coral-50: hsl(10 78% 95%);
+  --color-coral-100: hsl(10 78% 90%);
+  --color-coral-200: hsl(10 78% 85%);
+  --color-coral-400: hsl(10 78% 70%);
+  --color-coral-500: hsl(10 78% 60%);
+  --color-coral-600: hsl(10 78% 50%);
+
+  --color-sage-50: hsl(142 31% 95%);
+  --color-sage-100: hsl(142 31% 90%);
+  --color-sage-200: hsl(142 31% 85%);
+  --color-sage-400: hsl(142 31% 60%);
+  --color-sage-500: hsl(142 31% 45%);
+  --color-sage-600: hsl(142 31% 35%);
+
+  --color-rose-50: hsl(349 77% 95%);
+  --color-rose-100: hsl(349 77% 90%);
+  --color-rose-200: hsl(349 77% 85%);
+  --color-rose-400: hsl(349 77% 55%);
+  --color-rose-500: hsl(349 77% 40%);
+  --color-rose-600: hsl(349 77% 35%);
+
+  --color-navy-800: hsl(222 47% 11%);
+  --color-navy-900: hsl(222 47% 8%);
+
+  --color-sidebar: hsl(var(--sidebar-background));
+  --color-sidebar-foreground: hsl(var(--sidebar-foreground));
+  --color-sidebar-primary: hsl(var(--sidebar-primary));
+  --color-sidebar-primary-foreground: hsl(var(--sidebar-primary-foreground));
+  --color-sidebar-accent: hsl(var(--sidebar-accent));
+  --color-sidebar-accent-foreground: hsl(var(--sidebar-accent-foreground));
+  --color-sidebar-border: hsl(var(--sidebar-border));
+  --color-sidebar-ring: hsl(var(--sidebar-ring));
+
+  --radius-lg: var(--radius);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-sm: calc(var(--radius) - 4px);
+
+  --animate-accordion-down: accordion-down 0.2s ease-out;
+  --animate-accordion-up: accordion-up 0.2s ease-out;
+
+  @keyframes accordion-down {
+    from {
+      height: 0;
+    }
+    to {
+      height: var(--radix-accordion-content-height);
+    }
+  }
+  @keyframes accordion-up {
+    from {
+      height: var(--radix-accordion-content-height);
+    }
+    to {
+      height: 0;
+    }
+  }
+}
+
+/*
+  The default border color has changed to `currentcolor` in Tailwind CSS v4,
+  so we've added these compatibility styles to make sure everything still
+  looks the same as it did with Tailwind CSS v3.
+
+  If we ever want to remove these styles, we need to add an explicit border
+  color utility to any element that depends on these defaults.
+*/
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentcolor);
+  }
+}
+
+@utility container {
+  @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+}
+
+@utility section {
+  @apply py-16 md:py-24;
+}
+
+@utility section-title {
+  @apply text-3xl md:text-4xl font-bold text-foreground;
+}
+
+@utility icon-sm {
+  @apply w-4 h-4;
+}
+
+@utility icon {
+  @apply w-5 h-5;
+}
+
+@utility icon-lg {
+  @apply w-8 h-8;
+}
 
 @layer base {
   :root {
@@ -103,31 +242,5 @@
 
   html {
     scroll-behavior: smooth;
-  }
-}
-
-@layer components {
-  .container {
-    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
-  }
-
-  .section {
-    @apply py-16 md:py-24;
-  }
-
-  .section-title {
-    @apply text-3xl md:text-4xl font-bold text-foreground;
-  }
-
-  .icon-sm {
-    @apply w-4 h-4;
-  }
-
-  .icon {
-    @apply w-5 h-5;
-  }
-
-  .icon-lg {
-    @apply w-8 h-8;
   }
 }

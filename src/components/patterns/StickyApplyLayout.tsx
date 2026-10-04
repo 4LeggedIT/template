@@ -37,7 +37,7 @@ const StickyApplyLayout = ({ sidebar, children, className, contentClassName }: S
               site header's h-28 (112px, Header.tsx) with a 16px gap. */}
           <aside className="hidden flex-col items-start gap-4 p-6 lg:sticky lg:top-32 lg:flex lg:self-start card-soft">
             {imageSrc ? (
-              <div className="image-frame aspect-[4/3] w-full">
+              <div className="image-frame aspect-4/3 w-full">
                 <img src={imageSrc} alt={imageAlt ?? ""} className="h-full w-full object-cover" />
               </div>
             ) : null}

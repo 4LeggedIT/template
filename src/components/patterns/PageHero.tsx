@@ -44,7 +44,7 @@ const PageHero = ({
   actionsClassName,
 }: PageHeroProps) => {
   return (
-    <section className={cn("border-b border-border bg-gradient-to-b from-card/80 to-background", className)}>
+    <section className={cn("border-b border-border bg-linear-to-b from-card/80 to-background", className)}>
       <div className="container px-4 py-10 sm:py-14">
         <div className="mx-auto max-w-4xl">
           {breadcrumbs?.length ? (

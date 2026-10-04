@@ -282,7 +282,7 @@ const TestimonialsSection = ({
 
       {layout === "longform" && featuredItem ? (
         <figure className="mx-auto max-w-3xl">
-          <Card className="relative overflow-hidden border-border/80 shadow-sm">
+          <Card className="relative overflow-hidden border-border/80 shadow-xs">
             <CardContent className="p-6 md:p-10 lg:p-12">
               <Quote
                 aria-hidden="true"
@@ -388,7 +388,7 @@ const TestimonialsSection = ({
         </figure>
       ) : layout === "featured" && featuredItem ? (
         <div className="max-w-3xl">
-          <Card className="relative border-border/80 shadow-sm">
+          <Card className="relative border-border/80 shadow-xs">
             <CardContent className="p-8 md:p-10">
               <Quote className="pointer-events-none absolute left-6 top-6 h-10 w-10 text-primary/20" />
               <div className="relative z-10 space-y-5">

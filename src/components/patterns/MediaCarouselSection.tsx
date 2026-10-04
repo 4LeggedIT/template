@@ -61,7 +61,7 @@ const TileLink = ({
   if (!safeHref) return <>{children}</>;
 
   const className =
-    "block rounded-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2";
+    "block rounded-xl focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2";
 
   if (safeHref.startsWith("/")) {
     return (
@@ -106,7 +106,7 @@ const MediaCarouselSection = ({ items, className, autoPlayDelayMs }: MediaCarous
             ) : null;
 
           const media = (
-            <div className="aspect-[3/4] overflow-hidden bg-muted">
+            <div className="aspect-3/4 overflow-hidden bg-muted">
               {item.kind === "video" ? (
                 <video controls playsInline preload="metadata" poster={item.poster} className="h-full w-full object-contain">
                   <source src={item.src} type="video/mp4" />

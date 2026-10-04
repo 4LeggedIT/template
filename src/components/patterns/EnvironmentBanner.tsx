@@ -86,7 +86,7 @@ const EnvironmentBanner = ({
           <button
             type="button"
             onClick={dismiss}
-            className="inline-flex h-8 w-8 items-center justify-center rounded-md text-accent-foreground/80 transition hover:bg-accent-foreground/10 hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            className="inline-flex h-8 w-8 items-center justify-center rounded-md text-accent-foreground/80 transition hover:bg-accent-foreground/10 hover:text-accent-foreground focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-ring"
             aria-label="Dismiss banner"
           >
             <X className="h-4 w-4" />

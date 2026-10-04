@@ -48,13 +48,13 @@ const DogSpotlightSection = ({
           return (
             <div
               key={dog.id}
-              className="flex flex-col overflow-hidden rounded-xl border border-border bg-card shadow-sm"
+              className="flex flex-col overflow-hidden rounded-xl border border-border bg-card shadow-xs"
             >
               {imageSrc ? (
                 <img
                   src={imageSrc}
                   alt={`Meet ${dog.name}`}
-                  className="aspect-[3/4] w-full bg-muted object-contain"
+                  className="aspect-3/4 w-full bg-muted object-contain"
                 />
               ) : null}
               <div className="flex flex-1 flex-col p-4">

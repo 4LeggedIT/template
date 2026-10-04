@@ -250,7 +250,7 @@ const MediaGallerySection = ({
                 setSelectedPhotoId(item.id);
               }}
             >
-              <div className={cn("relative overflow-hidden bg-muted", fit === "contain" ? "" : "aspect-[4/3]")}>
+              <div className={cn("relative overflow-hidden bg-muted", fit === "contain" ? "" : "aspect-4/3")}>
                 <img
                   src={item.src}
                   alt={item.alt}
