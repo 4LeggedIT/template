@@ -71,7 +71,9 @@ const PetfinderScrollerEmbed = ({
         </Helmet>
       ) : null}
 
-      <div className="space-y-4">
+      {/* flex gap, not space-y: <pet-scroller> is an inline custom element, and Tailwind 4's space-y puts
+          its margin on the previous sibling's bottom, which an inline element ignores. */}
+      <div className="flex flex-col gap-4">
         {title ? <h3 className="text-xl font-semibold tracking-tight">{title}</h3> : null}
 
         <pet-scroller

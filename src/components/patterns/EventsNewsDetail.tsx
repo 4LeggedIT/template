@@ -78,7 +78,7 @@ const renderBody = (body?: string) => {
 
       if (isList) {
         return (
-          <ul key={idx} className="mt-4 list-disc space-y-1 pl-6 leading-relaxed text-muted-foreground">
+          <ul key={idx} className="list-disc space-y-1 pl-6 leading-relaxed text-muted-foreground">
             {lines.map((line, lineIdx) => (
               <li key={`${idx}-${lineIdx}`}>{renderNewsInlineText(line.replace(/^- /, ""))}</li>
             ))}
@@ -87,7 +87,7 @@ const renderBody = (body?: string) => {
       }
 
       return (
-        <p key={idx} className="mt-4 leading-relaxed text-muted-foreground">
+        <p key={idx} className="leading-relaxed text-muted-foreground">
           {renderNewsInlineText(paragraph)}
         </p>
       );
@@ -97,7 +97,7 @@ const renderBody = (body?: string) => {
 const renderImages = (entry: EventsNewsEntry) => {
   if (entry.images?.length) {
     return (
-      <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {entry.images.map((img, idx) => (
           <a key={`${img.src}-${idx}`} href={img.src} target="_blank" rel="noopener noreferrer" className="block">
             <img
@@ -114,7 +114,7 @@ const renderImages = (entry: EventsNewsEntry) => {
 
   if (entry.imageSrc) {
     return (
-      <a href={entry.imageSrc} target="_blank" rel="noopener noreferrer" className="mt-6 flex justify-center">
+      <a href={entry.imageSrc} target="_blank" rel="noopener noreferrer" className="flex justify-center">
         <img
           src={entry.imageSrc}
           alt={entry.imageAlt ?? entry.title}
@@ -185,6 +185,8 @@ const EventsNewsDetail = ({
 
   return (
     <Card className={cn("overflow-hidden border-border/80", className)}>
+      {/* Direct children of this container take their vertical spacing ONLY from space-y-4. Do not add
+          mt-* to them: Tailwind 3 let space-y-* override such margins, Tailwind 4 adds them to it. */}
       <CardContent className="space-y-4 p-6 md:p-8">
         <div className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
           <Calendar className="h-4 w-4" />
@@ -266,9 +268,9 @@ const EventsNewsDetail = ({
           <div className="space-y-4">{contentBlocks.map((block, idx) => renderContentBlock(entry.id, block, idx))}</div>
         ) : (
           <>
-            {entry.body ? renderBody(entry.body) : <p className="mt-4 italic text-muted-foreground">{resolvedLabels.detailsComingSoon}</p>}
+            {entry.body ? renderBody(entry.body) : <p className="italic text-muted-foreground">{resolvedLabels.detailsComingSoon}</p>}
             {entry.highlights?.length ? (
-              <div className="mt-4 space-y-2">
+              <div className="space-y-2">
                 <p className="text-sm font-medium text-foreground">{resolvedLabels.highlightsTitle}</p>
                 <ul className="list-disc space-y-1 pl-6 text-sm text-muted-foreground">
                   {entry.highlights.map((item) => (
@@ -281,15 +283,15 @@ const EventsNewsDetail = ({
         )}
 
         {entry.videoSrc ? (
-          <div className="mt-6">{renderHostedVideo(entry.videoSrc, entry.imageSrc, entry.title, entry.videoAspectRatio)}</div>
+          <div>{renderHostedVideo(entry.videoSrc, entry.imageSrc, entry.title, entry.videoAspectRatio)}</div>
         ) : entry.videoEmbed ? (
-          <div className="mt-6">{renderVideoEmbed(entry.videoEmbed, entry.title)}</div>
+          <div>{renderVideoEmbed(entry.videoEmbed, entry.title)}</div>
         ) : (
           renderImages(entry)
         )}
 
         {previous || next ? (
-          <div className="mt-6 grid grid-cols-1 gap-4 border-t border-border pt-6 sm:grid-cols-2">
+          <div className="grid grid-cols-1 gap-4 border-t border-border pt-6 sm:grid-cols-2">
             {previous ? (
               <Link
                 to={previous.href}
@@ -321,7 +323,7 @@ const EventsNewsDetail = ({
           </div>
         ) : null}
 
-        <Button asChild variant="outline" size="sm" className="mt-2">
+        <Button asChild variant="outline" size="sm">
           <Link to={backHref}>
             <ArrowLeft className="h-4 w-4" />
             {resolvedLabels.backToIndex}
