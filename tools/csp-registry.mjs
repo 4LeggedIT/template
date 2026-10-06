@@ -119,11 +119,14 @@ export const patternCspRequirements = {
   },
   GivebutterWidget: {
     // GIVEBUTTER_WIDGETS_ORIGIN: latest.umd.cjs registers <givebutter-widget>.
-    // Observed 2026-10-06: the widget only contacts widgets.givebutter.com
-    // (script) and givebutter.com. Checkout/payment-processor hosts are
-    // unverified: widen from the Report-Only console if they show up.
+    // Observed 2026-10-06 on the live donate page, opening the donate modal:
+    // widgets.givebutter.com (script + /ping/<acct> fetch), givebutter.com
+    // (checkout iframe embed/c/<campaign> + "Powered by" logo). Payment-step
+    // hosts (processor frames) are unverified: widen from the Report-Only
+    // console if they show up.
     scriptSrc: ["https://widgets.givebutter.com"],
     frameSrc: ["https://givebutter.com"],
-    connectSrc: ["https://givebutter.com"],
+    connectSrc: ["https://givebutter.com", "https://widgets.givebutter.com"],
+    imgSrc: ["https://givebutter.com"],
   },
 };
