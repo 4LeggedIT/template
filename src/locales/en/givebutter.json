@@ -2,7 +2,7 @@
   "breadcrumb": "Givebutter Pattern",
   "hero": {
     "title": "Givebutter pattern",
-    "description": "Use the shared Givebutter widget, which renders a working link to the campaign by default and only switches to the live widget once Givebutter's script confirms it loaded."
+    "description": "Use the shared Givebutter widget, which renders a working link to the campaign by default and only switches to the live widget once it has rendered."
   },
   "example": {
     "title": "Example",
@@ -14,7 +14,7 @@
       "Render `GivebutterWidget` for a Givebutter campaign; never paste the vendor script tag into a page.",
       "`widgetId`, `accountId` and `campaignUrl` are required props. Keep the real values in one site-level constant shared by every call site.",
       "Template/example pages use clearly labeled dummy values only.",
-      "The first render is a plain link to the campaign (no JS required) and only switches to the live widget after Givebutter's script confirms it loaded, so it stays no-JS-safe and hydration-safe.",
+      "The first render is a plain link to the campaign (no JS required) and only hands over to the live widget once it has actually rendered (not merely once the script loaded), so there is never a blank gap, and it stays no-JS-safe and hydration-safe.",
       "Pass `lazy` on any page other than Donate (for example a home-page teaser) so the vendor script loads only when the widget nears the viewport.",
       "A static QR code for the same campaign is a separate image on the Donate page, not part of this component and not a `DONATION_METHODS` entry.",
       "Requires a `GivebutterWidget` entry in `tools/csp-registry.mjs`; widen frame/connect hosts from the Report-Only console on a live page.",

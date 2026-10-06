@@ -44,19 +44,48 @@ describe("GivebutterWidget", () => {
     expect(scripts()).toHaveLength(1);
   });
 
-  it("swaps to <givebutter-widget> with the id once the script loads", async () => {
-    const { container } = render(<GivebutterWidget {...props} />);
+  it("keeps the fallback link visible after the script loads until the widget has rendered, then hands over", async () => {
+    let rendered = false;
+    const rect = vi.spyOn(HTMLElement.prototype, "getBoundingClientRect").mockImplementation(function (this: HTMLElement) {
+      const size = rendered && this.tagName.toLowerCase() === "givebutter-widget" ? 86 : 0;
+      return { width: size, height: size ? 48 : 0, top: 0, left: 0, right: size, bottom: size ? 48 : 0, x: 0, y: 0, toJSON() {} };
+    });
 
+    const { container } = render(<GivebutterWidget {...props} />);
     fireScriptEvent("load");
 
+    // Script loaded: the element is mounted (hidden) with the id, but the
+    // fallback is still the only visible action and the helper link is absent.
     await waitFor(() => {
       expect(container.querySelector("givebutter-widget")).toHaveAttribute("id", "example-widget");
     });
-    expect(screen.queryByRole("link", { name: "Give on Givebutter" })).not.toBeInTheDocument();
+    expect(container.querySelector("givebutter-widget")?.parentElement).toHaveStyle({ visibility: "hidden" });
+    expect(screen.getByRole("link", { name: "Give on Givebutter" })).toBeInTheDocument();
+    expect(screen.queryByRole("link", { name: "Having trouble? Open the campaign in a new tab" })).not.toBeInTheDocument();
+
+    const widgetBefore = container.querySelector("givebutter-widget");
+    rendered = true;
+
+    await waitFor(() => {
+      expect(screen.queryByRole("link", { name: "Give on Givebutter" })).not.toBeInTheDocument();
+    });
+    expect(container.querySelector("givebutter-widget")).toBe(widgetBefore);
+    expect(container.querySelector("givebutter-widget")?.parentElement).not.toHaveStyle({ visibility: "hidden" });
     expect(screen.getByRole("link", { name: "Having trouble? Open the campaign in a new tab" })).toHaveAttribute(
       "href",
       CAMPAIGN,
     );
+    rect.mockRestore();
+  });
+
+  it("stays on the fallback link when the widget element never renders", async () => {
+    const { container } = render(<GivebutterWidget {...props} />);
+    fireScriptEvent("load");
+
+    await waitFor(() => expect(container.querySelector("givebutter-widget")).not.toBeNull());
+    await new Promise((resolve) => setTimeout(resolve, 400));
+
+    expect(screen.getByRole("link", { name: "Give on Givebutter" })).toBeInTheDocument();
   });
 
   it("keeps the fallback link and calls onError if the script fails", async () => {

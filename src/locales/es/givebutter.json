@@ -2,7 +2,7 @@
   "breadcrumb": "Patrón de Givebutter",
   "hero": {
     "title": "Patrón de Givebutter",
-    "description": "Usa el widget compartido de Givebutter, que muestra por defecto un enlace funcional a la campaña y solo cambia al widget en vivo cuando el script de Givebutter confirma que cargó."
+    "description": "Usa el widget compartido de Givebutter, que muestra por defecto un enlace funcional a la campaña y solo cambia al widget en vivo cuando este ya se mostró."
   },
   "example": {
     "title": "Ejemplo",
@@ -14,7 +14,7 @@
       "Usa `GivebutterWidget` para una campaña de Givebutter; nunca pegues la etiqueta script del proveedor en una página.",
       "`widgetId`, `accountId` y `campaignUrl` son props obligatorias. Guarda los valores reales en una sola constante del sitio compartida por todos los usos.",
       "Las páginas de plantilla y ejemplo usan solo valores ficticios claramente indicados.",
-      "El primer render es un enlace simple a la campaña (sin JS) y solo cambia al widget en vivo cuando el script de Givebutter confirma que cargó, por lo que es seguro sin JS y sin errores de hidratación.",
+      "El primer render es un enlace simple a la campaña (sin JS) y solo pasa al widget en vivo cuando este ya se mostró (no solo cuando cargó el script), por lo que nunca queda un espacio en blanco y es seguro sin JS y sin errores de hidratación.",
       "Usa `lazy` en cualquier página que no sea Donar (por ejemplo, una sección en el inicio) para que el script se cargue solo cuando el widget se acerque a la pantalla.",
       "Un código QR estático de la misma campaña es una imagen aparte en la página de donación, no parte de este componente ni una entrada de `DONATION_METHODS`.",
       "Requiere una entrada `GivebutterWidget` en `tools/csp-registry.mjs`; amplía los hosts de frame/connect según la consola Report-Only en una página real.",
