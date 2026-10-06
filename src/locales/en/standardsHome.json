@@ -29,6 +29,7 @@
     "faq": { "title": "FAQ Pattern", "description": "Native `<details>/<summary>` requirement for public FAQ/disclosure content." },
     "formEmbedModal": { "title": "FormEmbedModal Standard", "description": "Provider-agnostic form modal pattern with helper and no-JS fallbacks." },
     "paypalButtons": { "title": "PayPal Buttons Pattern", "description": "Two incompatible PayPal button products (Donate Button vs Hosted Buttons) — pick the mode matching the org's real button." },
+    "givebutter": { "title": "Givebutter Pattern", "description": "Givebutter campaign widget with a no-JS-safe link fallback and optional lazy loading." },
     "zeffyDonate": { "title": "Zeffy Donate Pattern", "description": "Zeffy donation form embed with a no-JS-safe working fallback as the default state." },
     "communityPartners": { "title": "Community Partners Pattern", "description": "Thanking rescue collaborators and local business supporters without implying favoritism." },
     "supporterRecognition": { "title": "Supporter Recognition Pattern", "description": "A flat, unranked thank-you list for individual donors and supporters." },

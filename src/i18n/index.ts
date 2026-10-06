@@ -35,6 +35,7 @@ import enPaypalButtons from "@/locales/en/paypalButtons.json";
 import enPaypalButtonsDonate from "@/locales/en/paypalButtonsDonate.json";
 import enPaypalButtonsHosted from "@/locales/en/paypalButtonsHosted.json";
 import enZeffyDonate from "@/locales/en/zeffyDonate.json";
+import enGivebutter from "@/locales/en/givebutter.json";
 import enCommunityPartners from "@/locales/en/communityPartners.json";
 import enSupporterRecognition from "@/locales/en/supporterRecognition.json";
 import enImpactStats from "@/locales/en/impactStats.json";
@@ -81,6 +82,7 @@ import esPaypalButtons from "@/locales/es/paypalButtons.json";
 import esPaypalButtonsDonate from "@/locales/es/paypalButtonsDonate.json";
 import esPaypalButtonsHosted from "@/locales/es/paypalButtonsHosted.json";
 import esZeffyDonate from "@/locales/es/zeffyDonate.json";
+import esGivebutter from "@/locales/es/givebutter.json";
 import esCommunityPartners from "@/locales/es/communityPartners.json";
 import esSupporterRecognition from "@/locales/es/supporterRecognition.json";
 import esImpactStats from "@/locales/es/impactStats.json";
@@ -133,6 +135,7 @@ i18n.use(initReactI18next).init({
       paypalButtonsDonate: enPaypalButtonsDonate,
       paypalButtonsHosted: enPaypalButtonsHosted,
       zeffyDonate: enZeffyDonate,
+      givebutter: enGivebutter,
       communityPartners: enCommunityPartners,
       supporterRecognition: enSupporterRecognition,
       impactStats: enImpactStats,
@@ -180,6 +183,7 @@ i18n.use(initReactI18next).init({
       paypalButtonsDonate: esPaypalButtonsDonate,
       paypalButtonsHosted: esPaypalButtonsHosted,
       zeffyDonate: esZeffyDonate,
+      givebutter: esGivebutter,
       communityPartners: esCommunityPartners,
       supporterRecognition: esSupporterRecognition,
       impactStats: esImpactStats,
@@ -230,6 +234,7 @@ i18n.use(initReactI18next).init({
     "paypalButtonsDonate",
     "paypalButtonsHosted",
     "zeffyDonate",
+    "givebutter",
     "communityPartners",
     "supporterRecognition",
     "impactStats",

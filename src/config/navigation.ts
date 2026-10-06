@@ -44,6 +44,7 @@ export const templateNavItems: NavItem[] = [
       { label: "FormEmbedModal", href: "/standards/form-embed-modal", group: "formsPayments" },
       { label: "PayPal Buttons", href: "/standards/paypal-buttons", group: "formsPayments" },
       { label: "Zeffy Donate", href: "/standards/zeffy-donate", group: "formsPayments" },
+      { label: "Givebutter", href: "/standards/givebutter", group: "formsPayments" },
       { label: "Community Partners", href: "/standards/community-partners", group: "community" },
       { label: "Supporter Recognition", href: "/standards/supporter-recognition", group: "community" },
       { label: "Impact Stats", href: "/standards/impact-stats", group: "community" },

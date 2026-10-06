@@ -42,6 +42,7 @@ import SuccessStoriesStandardPage from "@/pages/standards/SuccessStoriesStandard
 import TemplateStandardsHomePage from "@/pages/standards/TemplateStandardsHomePage";
 import TestimonialsStandardPage from "@/pages/standards/TestimonialsStandardPage";
 import ZeffyDonatePatternPage from "@/pages/standards/ZeffyDonatePatternPage";
+import GivebutterPatternPage from "@/pages/standards/GivebutterPatternPage";
 import KennelDisplayToolsStandardPage from "@/pages/standards/KennelDisplayToolsStandardPage";
 import DocumentsStandardPage from "@/pages/standards/DocumentsStandardPage";
 import BlogStandardPage from "@/pages/standards/BlogStandardPage";
@@ -134,6 +135,7 @@ const AppRoutes = () => {
         <Route path="/standards/paypal-buttons/donate-button" element={<PayPalButtonsDonateStandardPage />} />
         <Route path="/standards/paypal-buttons/hosted-buttons" element={<PayPalButtonsHostedStandardPage />} />
         <Route path="/standards/zeffy-donate" element={<ZeffyDonatePatternPage />} />
+        <Route path="/standards/givebutter" element={<GivebutterPatternPage />} />
         <Route path="/standards/placement-help" element={<PlacementHelpStandardPage />} />
         <Route path="/standards/success-stories" element={<SuccessStoriesStandardPage />} />
         <Route path="/standards/testimonials" element={<TestimonialsStandardPage />} />
