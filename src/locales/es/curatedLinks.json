@@ -19,10 +19,10 @@
     "title": "Estándar",
     "items": [
       "Para contenido que no es del sitio: un índice breve y con crédito de enlaces al original, nunca una copia. El sitio no se atribuye la autoría y el lector va con el autor.",
-      "Cada tarjeta es un solo enlace (`target=\"_blank\"`, `rel=\"noopener noreferrer\"`) con una línea de crédito visible (`sourceName`), una nota sr-only \"se abre en una pestaña nueva\" (`labels.opensInNewTab`), y una insignia `platform` opcional.",
+      "Cada tarjeta es un solo enlace (`target=\"_blank\"`, `rel=\"noopener noreferrer\"`) con una línea de crédito visible (`sourceName`), una nota sr-only \"se abre en una pestaña nueva\" (`labels.opensInNewTab`).",
       "`summary` es una línea escrita por el sitio que apunta al original. Nunca pegues ni parafrasees extensamente la fuente; no cites más allá de un título corto.",
       "`href` pasa por `safeContentUrl` y debe ser http(s). Cualquier otra cosa (`javascript:`, `mailto:`, una ruta relativa) se descarta, y una sección sin elementos válidos no renderiza nada.",
-      "Sin imágenes: nada del original se aloja ni se recorta aquí. El orden lo define quien llama; el patrón nunca ordena.",
+      "Sin imágenes ni insignias: nada del original se aloja ni se recorta aquí. Las tarjetas usan la misma cuadrícula de 1/2/3 columnas y el mismo estilo que la lista del blog (`columns` es 3 por defecto). El orden lo define quien llama; el patrón nunca ordena.",
       "Guarda los datos en su propio archivo (p. ej. `src/data/curated-links.ts`), no en `blog-posts.ts`, cuyos slugs generan rutas prerenderizadas. Agrega un comentario `// Source:` en línea por entrada.",
       "Componente: `template/src/components/patterns/CuratedLinksSection.tsx`"
     ]

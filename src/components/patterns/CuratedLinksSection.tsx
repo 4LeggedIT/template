@@ -12,8 +12,6 @@ export type CuratedLinkItem = {
   summary?: string;
   /** Who made the original, shown as the credit line (e.g. "Dogs Disclosed"). */
   sourceName: string;
-  /** Where it lives, as a small badge (e.g. "Facebook"). */
-  platform?: string;
 };
 
 export type CuratedLinksSectionLabels = {
@@ -25,7 +23,8 @@ type CuratedLinksSectionProps = {
   title?: string;
   description?: string;
   items: CuratedLinkItem[];
-  columns?: 1 | 2;
+  /** Blog-card grid: 1 column on mobile, 2 from `md`, 3 from `lg` (default 3). */
+  columns?: 1 | 2 | 3;
   className?: string;
   labels?: CuratedLinksSectionLabels;
 };
@@ -42,7 +41,7 @@ const CuratedLinksSection = ({
   title,
   description,
   items,
-  columns = 1,
+  columns = 3,
   className,
   labels,
 }: CuratedLinksSectionProps) => {
@@ -65,25 +64,26 @@ const CuratedLinksSection = ({
         </div>
       ) : null}
 
-      <ul className={cn("grid gap-4", columns === 2 && "md:grid-cols-2")}>
+      <ul
+        className={cn(
+          "grid grid-cols-1 gap-6",
+          columns === 2 && "md:grid-cols-2",
+          columns === 3 && "md:grid-cols-2 lg:grid-cols-3",
+        )}
+      >
         {links.map(({ item, href }) => (
           <li key={item.id} className="flex">
-            <Card className="w-full border-border/80 transition-shadow focus-within:shadow-md hover:shadow-md">
+            <Card className="group flex w-full flex-col overflow-hidden border-border/80 transition-shadow focus-within:shadow-md hover:shadow-md">
               <a
                 href={href}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="block h-full rounded-[inherit] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
               >
-                <CardContent className="flex h-full flex-col gap-3 p-5">
-                  {item.platform ? (
-                    <div className="flex w-fit items-center rounded-full border px-2.5 py-1 text-xs text-muted-foreground">
-                      {item.platform}
-                    </div>
-                  ) : null}
-                  <h4 className="text-lg font-semibold leading-snug">{item.title}</h4>
-                  {item.summary ? <p className="text-sm leading-6 text-muted-foreground">{item.summary}</p> : null}
-                  <p className="mt-auto inline-flex items-center gap-1.5 pt-1 text-sm font-semibold text-primary">
+                <CardContent className="flex h-full flex-1 flex-col gap-3 p-6">
+                  <h4 className="text-lg font-semibold leading-snug tracking-tight group-hover:underline">{item.title}</h4>
+                  {item.summary ? <p className="flex-1 text-sm text-muted-foreground">{item.summary}</p> : <div className="flex-1" />}
+                  <p className="inline-flex w-fit items-center gap-2 text-sm font-medium text-primary">
                     <span>
                       {sourcePrefix} {item.sourceName}
                     </span>

@@ -9,7 +9,6 @@ const items: CuratedLinkItem[] = [
     href: "https://example.org/a",
     summary: "Why the first post is worth your time.",
     sourceName: "Example Trainer",
-    platform: "Facebook",
   },
   { id: "b", title: "Second post", href: "https://example.org/b", sourceName: "Another Trainer" },
 ];
@@ -28,12 +27,11 @@ describe("CuratedLinksSection", () => {
     expect(link).toHaveAttribute("rel", "noopener noreferrer");
   });
 
-  it("shows title, summary, credit and platform", () => {
+  it("shows title, summary and credit", () => {
     render(<CuratedLinksSection items={items} />);
     expect(screen.getByText("First post")).toBeInTheDocument();
     expect(screen.getByText("Why the first post is worth your time.")).toBeInTheDocument();
     expect(screen.getByText("From Example Trainer")).toBeInTheDocument();
-    expect(screen.getByText("Facebook")).toBeInTheDocument();
   });
 
   it("announces that the link opens in a new tab, with an overridable label", () => {

@@ -14,7 +14,6 @@ const CuratedLinksStandardPage = () => {
       summary: t("curatedLinks:example.items.first.summary"),
       sourceName: t("curatedLinks:example.items.first.sourceName"),
       href: "https://example.org/first-post",
-      platform: "Facebook",
     },
     {
       id: "second",
@@ -22,7 +21,6 @@ const CuratedLinksStandardPage = () => {
       summary: t("curatedLinks:example.items.second.summary"),
       sourceName: t("curatedLinks:example.items.second.sourceName"),
       href: "https://example.org/second-post",
-      platform: "Facebook",
     },
   ];
 
@@ -51,7 +49,6 @@ const CuratedLinksStandardPage = () => {
             title={t("curatedLinks:example.sectionTitle")}
             description={t("curatedLinks:example.sectionDescription")}
             items={sampleItems}
-            columns={2}
             labels={{
               opensInNewTab: t("curatedLinks:example.opensInNewTab"),
               sourcePrefix: t("curatedLinks:example.sourcePrefix"),

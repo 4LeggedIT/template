@@ -19,10 +19,10 @@
     "title": "Standard",
     "items": [
       "For content that is not the site's own: a short, credited index of links to the original, never a copy. The site takes no credit for the writing, and the reader goes to the author.",
-      "Each card is one link (`target=\"_blank\"`, `rel=\"noopener noreferrer\"`) with a visible credit line (`sourceName`), an sr-only \"opens in a new tab\" note (`labels.opensInNewTab`) and an optional `platform` badge.",
+      "Each card is one link (`target=\"_blank\"`, `rel=\"noopener noreferrer\"`) with a visible credit line (`sourceName`), an sr-only \"opens in a new tab\" note (`labels.opensInNewTab`).",
       "`summary` is one line written by the site, pointing at the original. Never paste or paraphrase at length from the source; do not quote beyond a short title.",
       "`href` goes through `safeContentUrl` and must be http(s). Anything else (`javascript:`, `mailto:`, a relative path) is dropped, and a section with no valid items renders nothing.",
-      "No images: nothing from the original is hosted or cropped here. Order is the caller's; the pattern never sorts.",
+      "No images and no badges: nothing from the original is hosted or cropped here. The cards use the same 1/2/3-column grid and card styling as the blog list (`columns` defaults to 3). Order is the caller's; the pattern never sorts.",
       "Keep the data in its own file (e.g. `src/data/curated-links.ts`), not in `blog-posts.ts`, whose slugs generate prerendered routes. Add an inline `// Source:` comment per entry.",
       "Component: `template/src/components/patterns/CuratedLinksSection.tsx`"
     ]
