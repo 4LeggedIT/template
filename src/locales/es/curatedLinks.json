@@ -7,12 +7,13 @@
   "example": {
     "title": "Ejemplo",
     "opensInNewTab": "(se abre en una pestaña nueva)",
+    "allLabel": "Todos",
     "sourcePrefix": "De",
     "sectionTitle": "Vale la pena leer",
     "sectionDescription": "Textos de otras personas que seguimos, enlazados en su fuente.",
     "items": {
-      "first": { "title": "Por qué mover la cola es solo una parte de la historia", "summary": "Un recordatorio de una entrenadora: hay que leer al perro completo, no solo la cola.", "sourceName": "Entrenadora de Ejemplo" },
-      "second": { "title": "Pasear al perro no es momento para hacer varias cosas a la vez", "summary": "Sobre estar presente con tu perro y atento a los otros perros alrededor.", "sourceName": "Otra Página de Ejemplo" }
+      "first": { "title": "Por qué mover la cola es solo una parte de la historia", "summary": "Un recordatorio de una entrenadora: hay que leer al perro completo, no solo la cola.", "sourceName": "Entrenadora de Ejemplo", "topic": "Lenguaje corporal" },
+      "second": { "title": "Pasear al perro no es momento para hacer varias cosas a la vez", "summary": "Sobre estar presente con tu perro y atento a los otros perros alrededor.", "sourceName": "Otra Página de Ejemplo", "topic": "Paseos" }
     }
   },
   "standard": {
@@ -22,6 +23,7 @@
       "Cada tarjeta es un solo enlace (`target=\"_blank\"`, `rel=\"noopener noreferrer\"`) con una línea de crédito visible (`sourceName`), una nota sr-only \"se abre en una pestaña nueva\" (`labels.opensInNewTab`).",
       "`summary` es una línea escrita por el sitio que apunta al original. Nunca pegues ni parafrasees extensamente la fuente; no cites más allá de un título corto.",
       "`href` pasa por `safeContentUrl` y debe ser http(s). Cualquier otra cosa (`javascript:`, `mailto:`, una ruta relativa) se descarta, y una sección sin elementos válidos no renderiza nada.",
+      "El campo opcional `topic` (una etiqueta de texto por enlace) activa pastillas de filtro sobre la cuadrícula, como las categorías del blog: una pastilla \"Todos\" más una por cada tema distinto, ordenadas de la A a la Z; al hacer clic se reducen las tarjetas manteniendo el orden de quien llama. La fila solo aparece con dos o más temas distintos (o con `showFilters={false}` para suprimirla); localiza la primera pastilla con `labels.allLabel`. La página se lee completa sin JS porque lo que se prerenderiza es la vista sin filtrar.",
       "Sin imágenes ni insignias: nada del original se aloja ni se recorta aquí. Las tarjetas usan la misma cuadrícula de 1/2/3 columnas y el mismo estilo que la lista del blog (`columns` es 3 por defecto). El orden lo define quien llama; el patrón nunca ordena.",
       "Guarda los datos en su propio archivo (p. ej. `src/data/curated-links.ts`), no en `blog-posts.ts`, cuyos slugs generan rutas prerenderizadas. Agrega un comentario `// Source:` en línea por entrada.",
       "Componente: `template/src/components/patterns/CuratedLinksSection.tsx`"

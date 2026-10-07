@@ -13,6 +13,7 @@ const CuratedLinksStandardPage = () => {
       title: t("curatedLinks:example.items.first.title"),
       summary: t("curatedLinks:example.items.first.summary"),
       sourceName: t("curatedLinks:example.items.first.sourceName"),
+      topic: t("curatedLinks:example.items.first.topic"),
       href: "https://example.org/first-post",
     },
     {
@@ -20,6 +21,7 @@ const CuratedLinksStandardPage = () => {
       title: t("curatedLinks:example.items.second.title"),
       summary: t("curatedLinks:example.items.second.summary"),
       sourceName: t("curatedLinks:example.items.second.sourceName"),
+      topic: t("curatedLinks:example.items.second.topic"),
       href: "https://example.org/second-post",
     },
   ];
@@ -51,6 +53,7 @@ const CuratedLinksStandardPage = () => {
             items={sampleItems}
             labels={{
               opensInNewTab: t("curatedLinks:example.opensInNewTab"),
+              allLabel: t("curatedLinks:example.allLabel"),
               sourcePrefix: t("curatedLinks:example.sourcePrefix"),
             }}
           />

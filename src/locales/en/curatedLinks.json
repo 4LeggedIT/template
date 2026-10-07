@@ -7,12 +7,13 @@
   "example": {
     "title": "Example",
     "opensInNewTab": "(opens in a new tab)",
+    "allLabel": "All",
     "sourcePrefix": "From",
     "sectionTitle": "Worth a read",
     "sectionDescription": "Pieces from other people we follow, linked at the source.",
     "items": {
-      "first": { "title": "Why a wagging tail is only part of the story", "summary": "A trainer's reminder to read the whole dog, not just the tail.", "sourceName": "Example Trainer" },
-      "second": { "title": "Walking your dog is not a time to multitask", "summary": "On being present for your dog, and aware of other dogs around you.", "sourceName": "Another Example Page" }
+      "first": { "title": "Why a wagging tail is only part of the story", "summary": "A trainer's reminder to read the whole dog, not just the tail.", "sourceName": "Example Trainer", "topic": "Body language" },
+      "second": { "title": "Walking your dog is not a time to multitask", "summary": "On being present for your dog, and aware of other dogs around you.", "sourceName": "Another Example Page", "topic": "Walks" }
     }
   },
   "standard": {
@@ -22,6 +23,7 @@
       "Each card is one link (`target=\"_blank\"`, `rel=\"noopener noreferrer\"`) with a visible credit line (`sourceName`), an sr-only \"opens in a new tab\" note (`labels.opensInNewTab`).",
       "`summary` is one line written by the site, pointing at the original. Never paste or paraphrase at length from the source; do not quote beyond a short title.",
       "`href` goes through `safeContentUrl` and must be http(s). Anything else (`javascript:`, `mailto:`, a relative path) is dropped, and a section with no valid items renders nothing.",
+      "Optional `topic` (one plain-text label per link) turns on filter pills above the grid, like the blog's category pills: an \"All\" pill plus one pill per distinct topic, sorted A to Z, clicking one narrows the cards while keeping the caller's order. The row only appears with two or more distinct topics (or `showFilters={false}` to suppress it); localize the first pill with `labels.allLabel`. The page is fully readable without JS since the unfiltered view is what is prerendered.",
       "No images and no badges: nothing from the original is hosted or cropped here. The cards use the same 1/2/3-column grid and card styling as the blog list (`columns` defaults to 3). Order is the caller's; the pattern never sorts.",
       "Keep the data in its own file (e.g. `src/data/curated-links.ts`), not in `blog-posts.ts`, whose slugs generate prerendered routes. Add an inline `// Source:` comment per entry.",
       "Component: `template/src/components/patterns/CuratedLinksSection.tsx`"

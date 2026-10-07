@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { fireEvent, render, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 import CuratedLinksSection, { type CuratedLinkItem } from "@/components/patterns/CuratedLinksSection";
 
@@ -79,5 +79,57 @@ describe("CuratedLinksSection", () => {
     render(<CuratedLinksSection title="Worth a read" description="Linked at the source." items={items} />);
     expect(screen.getByRole("heading", { level: 3, name: "Worth a read" })).toBeInTheDocument();
     expect(screen.getByText("Linked at the source.")).toBeInTheDocument();
+  });
+
+  describe("topic filter pills", () => {
+    const topical: CuratedLinkItem[] = [
+      { id: "w", title: "Wag post", href: "https://example.org/w", sourceName: "X", topic: "Body language" },
+      { id: "c", title: "Crate post", href: "https://example.org/c", sourceName: "X", topic: "Crates" },
+      { id: "t", title: "Tail post", href: "https://example.org/t", sourceName: "X", topic: "Body language" },
+    ];
+    const titles = () => screen.getAllByRole("heading", { level: 4 }).map((el) => el.textContent);
+
+    it("shows All plus one pill per distinct topic, sorted A to Z, with All active", () => {
+      render(<CuratedLinksSection items={topical} />);
+      const pills = screen.getAllByRole("button").map((el) => el.textContent);
+      expect(pills).toEqual(["All", "Body language", "Crates"]);
+      expect(screen.getByRole("button", { name: "All" })).toHaveAttribute("aria-pressed", "true");
+      expect(titles()).toEqual(["Wag post", "Crate post", "Tail post"]);
+    });
+
+    it("filters to a topic and restores everything on All, keeping the caller's order", () => {
+      render(<CuratedLinksSection items={topical} />);
+      fireEvent.click(screen.getByRole("button", { name: "Body language" }));
+      expect(titles()).toEqual(["Wag post", "Tail post"]);
+      expect(screen.getByRole("button", { name: "Body language" })).toHaveAttribute("aria-pressed", "true");
+      fireEvent.click(screen.getByRole("button", { name: "All" }));
+      expect(titles()).toEqual(["Wag post", "Crate post", "Tail post"]);
+    });
+
+    it("renders no pill row for a single topic, no topics, or showFilters={false}", () => {
+      const { unmount } = render(<CuratedLinksSection items={[topical[0], topical[2]]} />);
+      expect(screen.queryByRole("button")).not.toBeInTheDocument();
+      unmount();
+      const none = render(<CuratedLinksSection items={items} />);
+      expect(screen.queryByRole("button")).not.toBeInTheDocument();
+      none.unmount();
+      render(<CuratedLinksSection items={topical} showFilters={false} />);
+      expect(screen.queryByRole("button")).not.toBeInTheDocument();
+      expect(titles()).toHaveLength(3);
+    });
+
+    it("localizes the All pill", () => {
+      render(<CuratedLinksSection items={topical} labels={{ allLabel: "Todos" }} />);
+      expect(screen.getByRole("button", { name: "Todos" })).toBeInTheDocument();
+    });
+
+    it("never builds a pill from an item that was dropped for an unsafe href", () => {
+      render(
+        <CuratedLinksSection
+          items={[...topical.slice(0, 1), { id: "x", title: "Bad", href: "javascript:alert(1)", sourceName: "X", topic: "Hidden" }]}
+        />,
+      );
+      expect(screen.queryByRole("button", { name: "Hidden" })).not.toBeInTheDocument();
+    });
   });
 });
