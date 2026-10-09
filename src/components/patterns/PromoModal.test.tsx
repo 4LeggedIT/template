@@ -42,9 +42,14 @@ const renderModal = (promos: PromoModalItem[], openDelayMs = 0) =>
 describe("PromoModal", () => {
   beforeEach(() => {
     vi.stubGlobal("localStorage", createMemoryStorage());
+    // Pin "now" inside the fixture promo window so the suite doesn't rot once the dates pass.
+    // Only Date is faked; waitFor/setTimeout keep running on real timers.
+    vi.useFakeTimers({ toFake: ["Date"] });
+    vi.setSystemTime(new Date("2026-09-15T12:00:00-07:00"));
   });
 
   afterEach(() => {
+    vi.useRealTimers();
     vi.unstubAllGlobals();
   });
 
