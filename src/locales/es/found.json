@@ -2,16 +2,12 @@
   "breadcrumb": "Patrón de Animales Encontrados",
   "hero": {
     "title": "Patrón de animales encontrados",
-    "description": "Use este módulo para avisos de mascotas encontradas, guía de lista de verificación de ingreso y comunicación de reunificación segura."
+    "description": "Use este módulo para listar perros encontrados: una cuadrícula de avisos con filtro por estado. Solo lista avisos; cualquier orientación que un rescate ofrezca al público es contenido propio de su página."
   },
   "example": {
     "title": "Ejemplo",
-    "descriptionBefore": "El título del CTA, los datos de contacto y el enlace de ayuda de abajo son todos props locales de la página que se pasan a",
-    "descriptionAfter": "— nunca están fijos en el componente compartido — de modo que cada sitio real coloca aquí su propia información de contacto de ingreso, sin editar el módulo.",
-    "ctaTitle": "Enviar un Aviso de Animal Encontrado",
-    "ctaDescription": "Use este bloque de contacto de ejemplo para probar su flujo local de ingreso y sus mensajes de respuesta.",
-    "emailCtaLabel": "Enviar detalles del aviso por correo",
-    "helpLinkLabel": "Ver guía de Animal Encontrado"
+    "descriptionBefore": "Este es todo el módulo: una lista de perros encontrados. La orientación para el público (consejos para mantenerlos a salvo, cómo enviar un aviso, pasos de reunificación, botones de contacto, consejos de captura) no forma parte de él. Un sitio que la ofrece la escribe como contenido propio de su página alrededor de",
+    "descriptionAfter": "y le pasa solo los avisos, las etiquetas y el mensaje de lista vacía."
   },
   "listings": {
     "notice1": {
@@ -28,49 +24,32 @@
     }
   },
   "section": {
-    "warningTitle": "Por favor, manténgalo a salvo",
-    "warningBody": "Si el perro está contenido de forma segura, siga cuidándolo mientras se busca a su dueño. No entregue un perro encontrado a nadie hasta verificar la propiedad.",
-    "checklistTitle": "Qué incluir en su aviso",
-    "checklistItems": [
-      "Fecha, hora y ubicación exacta donde se encontró al perro",
-      "Fotos o un video breve desde una distancia segura",
-      "Raza, tamaño y color estimados, y detalles del collar/arnés si tiene",
-      "Si el perro parece lesionado, asustado o accesible",
-      "Sus datos de contacto preferidos para localizar al dueño"
-    ],
-    "processTitle": "Cómo funciona la reunificación",
-    "processSteps": [
-      "Revisamos los detalles del perro encontrado y creamos un aviso local.",
-      "Los dueños se comunican con nosotros y proporcionan datos identificativos para su verificación.",
-      "Coordinamos el plan de entrega más seguro para el dueño y quien lo encontró."
-    ],
     "noticesTitle": "Avisos actuales de perros encontrados",
     "emptyMessage": "No hay avisos activos de animales encontrados en este momento.",
     "labels": {
       "imageOpenAriaLabelPrefix": "Abrir imagen a tamaño completo del aviso de perro encontrado ",
       "imageFallbackAltPrefix": "Aviso encontrado ",
-      "noticePrefix": "Aviso de Perro Encontrado #",
       "fieldGender": "Género:",
       "fieldFoundDate": "Fecha en que se encontró:",
       "fieldFoundLocation": "Lugar donde se encontró:",
       "fieldCrossStreets": "Calles cercanas:",
       "fieldMicrochip": "Microchip:",
       "viewSourceLabel": "Ver listado de origen",
-      "helpLinkIntro": "¿Necesita orientación sobre los primeros pasos?"
+      "noticeTitle": "Perro Encontrado"
     }
   },
   "standard": {
     "title": "Estándar",
     "items": [
-      "Use `FoundListingsSection` en todas las páginas de avisos de animales encontrados.",
+      "Use `FoundListingsSection` en todas las páginas de avisos de animales encontrados; solo lista perros encontrados.",
       "Mantenga los datos de los avisos normalizados en objetos `FoundListing` (`pet`, `location`, `source`, `status`).",
       "Use los controles de modo (`local`, `external`, `hybrid`) en lugar de lógica de filtrado local a la página.",
-      "Mantenga las advertencias y listas de verificación en las props del módulo, para que el contenido sea reutilizable y legible sin JS.",
+      "No agregue al módulo contenido de orientación pública (advertencias de resguardo, listas de verificación de avisos, pasos de reunificación, botones para enviar un aviso, consejos de captura). Un sitio que ofrece esos servicios los escribe como contenido propio de su página alrededor de la lista (Rovers Return Dog Rescue es la referencia).",
       "Los enlaces de fuente/medios deben abrirse en una pestaña nueva con atributos `rel` seguros.",
       "Use estilos neutros predeterminados (sin marca de color específica del sitio en los estándares compartidos).",
-      "Use `statusFilter` junto con `showReunited`/`showArchived` (ambos predeterminados en `false`) para controlar la visibilidad del ciclo de vida de los avisos — los avisos activos se muestran de forma predeterminada; los reunificados/archivados son opcionales.",
-      "Las tarjetas se renderizan a partir de metadatos normalizados de `FoundListing` (`pet`, `location`, `status`, `source`); los enlaces de imagen y de fuente se abren de forma segura en una pestaña nueva; los enlaces de soporte internos usan componentes `Link` y siguen siendo legibles como anclas sin JS.",
-      "Use `gender` en el perfil de la mascota — coincide con el nombre de campo usado en todos los demás patrones (`AdoptablePetsSection`, herramientas de exhibición de perreras).",
+      "Use `statusFilter` junto con `showReunited`/`showArchived` (ambos predeterminados en `false`) para controlar la visibilidad del ciclo de vida de los avisos: los avisos activos se muestran de forma predeterminada; los reunificados/archivados son opcionales.",
+      "Las tarjetas se renderizan a partir de metadatos normalizados de `FoundListing` con un encabezado genérico (`labels.noticeTitle`, sin número de aviso); los enlaces de imagen y de fuente se abren de forma segura en una pestaña nueva.",
+      "Use `gender` en el perfil de la mascota: coincide con el nombre de campo usado en todos los demás patrones (`AdoptablePetsSection`, herramientas de exhibición de perreras).",
       "Componente: `template/src/components/patterns/FoundListingsSection.tsx`"
     ]
   }

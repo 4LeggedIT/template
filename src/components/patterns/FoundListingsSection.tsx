@@ -1,6 +1,13 @@
-import { Link } from "react-router-dom";
-import { AlertTriangle, FileText, Mail, MapPin, Phone, ShieldCheck } from "lucide-react";
 import { cn } from "@/lib/utils";
+
+/**
+ * A plain list of found dogs: a card grid with status/mode filtering, field labels and an empty
+ * state. Nothing else. It deliberately does NOT render any "help people" content (keep-them-safe
+ * warnings, notice checklists, reunification steps, submit-a-notice buttons, trapping advice):
+ * that belongs to the site that actually offers those services (Rovers Return Dog Rescue), as
+ * page-local content around this list. Every string is passed in by the caller, so the pattern
+ * has no i18n or router dependency.
+ */
 
 export type FoundListingsMode = "local" | "external" | "hybrid";
 export type FoundListingStatus = "open" | "reunited" | "archived" | "hold";
@@ -10,6 +17,7 @@ export type FoundSpecies = "dog" | "cat" | "other";
 export interface FoundListingSource {
   type: FoundSourceType;
   name?: string;
+  /** When set, the card shows a "view source listing" link to it. Leave unset to link nowhere. */
   url?: string;
   externalId?: string;
 }
@@ -44,20 +52,8 @@ export interface FoundListingMedia {
   featured?: boolean;
 }
 
-export interface FoundListingContact {
-  rescuePhoneLabel?: string;
-  rescuePhoneHref?: string;
-  rescueEmailLabel?: string;
-  rescueEmailHref?: string;
-  claimFormHref?: string;
-}
-
-export interface FoundListingVerification {
-  ownershipVerificationRequired: boolean;
-  checklist?: string[];
-}
-
 export interface FoundListing {
+  /** React key and the image aria/alt fallback; not shown as a notice number. */
   id: string;
   source: FoundListingSource;
   status: FoundListingStatus;
@@ -69,27 +65,19 @@ export interface FoundListing {
   pet?: FoundListingPetProfile;
   notes: string;
   media: FoundListingMedia[];
-  contact?: FoundListingContact;
-  verification?: FoundListingVerification;
-}
-
-export interface FoundExternalProviderConfig {
-  providerId: string;
-  providerLabel?: string;
-  listingBaseUrl?: string;
 }
 
 export type FoundListingsSectionLabels = {
   imageOpenAriaLabelPrefix?: string;
   imageFallbackAltPrefix?: string;
-  noticePrefix?: string;
+  /** Generic card heading shown on every notice (no per-notice number). */
+  noticeTitle?: string;
   fieldGender?: string;
   fieldFoundDate?: string;
   fieldFoundLocation?: string;
   fieldCrossStreets?: string;
   fieldMicrochip?: string;
   viewSourceLabel?: string;
-  helpLinkIntro?: string;
 };
 
 type FoundListingsSectionProps = {
@@ -98,19 +86,7 @@ type FoundListingsSectionProps = {
   className?: string;
   mode: FoundListingsMode;
   listings: FoundListing[];
-  externalProviders?: FoundExternalProviderConfig[];
-  warningTitle?: string;
-  warningBody?: string;
-  checklistTitle?: string;
-  checklistItems?: string[];
-  processTitle?: string;
-  processSteps?: string[];
   noticesTitle?: string;
-  ctaTitle?: string;
-  ctaDescription?: string;
-  phoneCta?: { label: string; href: string };
-  emailCta?: { label: string; href: string };
-  helpLink?: { label: string; href: string; external?: boolean };
   statusFilter?: FoundListingStatus[];
   showReunited?: boolean;
   showArchived?: boolean;
@@ -118,38 +94,13 @@ type FoundListingsSectionProps = {
   labels?: FoundListingsSectionLabels;
 };
 
-const defaultChecklistItems = [
-  "Date, time, and exact location where the dog was found",
-  "Photos or short video from a safe distance",
-  "Estimated breed, size, color, and any collar/harness details",
-  "Whether the dog appears injured, frightened, or approachable",
-  "Your preferred contact details for owner outreach",
-];
-
-const defaultProcessSteps = [
-  "We review your found-dog details and create a local notice.",
-  "Owners contact us and provide identifying details for verification.",
-  "We coordinate the safest handoff plan for the owner and finder.",
-];
-
 const FoundListingsSection = ({
   title,
   description,
   className,
   mode,
   listings,
-  warningTitle = "Please Keep Them Safe",
-  warningBody = "If the dog is safely contained, keep holding them while owner matching is in progress. Do not hand a found dog to anyone unless ownership is verified.",
-  checklistTitle = "What to Include in Your Notice",
-  checklistItems = defaultChecklistItems,
-  processTitle = "How Reunification Works",
-  processSteps = defaultProcessSteps,
   noticesTitle = "Current Found Dog Notices",
-  ctaTitle = "Submit a Found Dog Notice",
-  ctaDescription = "Send the details and we will help connect verified owners with you as quickly as possible.",
-  phoneCta,
-  emailCta,
-  helpLink,
   statusFilter,
   showReunited = false,
   showArchived = false,
@@ -159,14 +110,13 @@ const FoundListingsSection = ({
   const {
     imageOpenAriaLabelPrefix = "Open full-size image for found dog notice ",
     imageFallbackAltPrefix = "Found notice ",
-    noticePrefix = "Found Dog Notice #",
+    noticeTitle = "Found Dog",
     fieldGender = "Gender:",
     fieldFoundDate = "Found date:",
     fieldFoundLocation = "Found location:",
     fieldCrossStreets = "Cross streets:",
     fieldMicrochip = "Microchip:",
     viewSourceLabel = "View source listing",
-    helpLinkIntro = "Need first-step guidance?",
   } = labels;
   const allowedStatuses = statusFilter ?? [
     "open",
@@ -190,54 +140,6 @@ const FoundListingsSection = ({
           {description ? <p className="mx-auto mt-3 max-w-3xl text-muted-foreground">{description}</p> : null}
         </div>
       ) : null}
-
-      <div className="rounded-xl border border-amber-200 bg-amber-50 px-5 py-4">
-        <div className="flex items-start gap-3">
-          <AlertTriangle className="mt-0.5 h-7 w-7 shrink-0 text-amber-600" />
-          <div>
-            <h3 className="text-lg font-bold text-amber-800">{warningTitle}</h3>
-            <p className="mt-1 text-sm text-amber-700">{warningBody}</p>
-          </div>
-        </div>
-      </div>
-
-      <div className="grid gap-6 md:grid-cols-2">
-        <article className="rounded-xl border bg-card p-6">
-          <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-full bg-primary/10">
-            <FileText className="h-5 w-5 text-primary" />
-          </div>
-          <h3 className="text-xl font-bold">{checklistTitle}</h3>
-          <ul className="mt-4 space-y-2">
-            {checklistItems.map((item) => (
-              <li key={item} className="flex items-start gap-2 text-sm text-muted-foreground">
-                <span className="mt-1.5 h-2 w-2 shrink-0 rounded-full bg-primary" />
-                <span>{item}</span>
-              </li>
-            ))}
-          </ul>
-        </article>
-
-        <article className="rounded-xl border bg-card p-6">
-          <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-full bg-primary/10">
-            <ShieldCheck className="h-5 w-5 text-primary" />
-          </div>
-          <h3 className="text-xl font-bold">{processTitle}</h3>
-          <ul className="mt-4 space-y-3 text-sm text-muted-foreground">
-            {processSteps.map((step, index) => (
-              <li key={`${index}-${step}`} className="flex items-start gap-2">
-                {index === 0 ? (
-                  <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
-                ) : index === 1 ? (
-                  <Mail className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
-                ) : (
-                  <Phone className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
-                )}
-                <span>{step}</span>
-              </li>
-            ))}
-          </ul>
-        </article>
-      </div>
 
       <div>
         <h3 className="mb-5 text-2xl font-bold">{noticesTitle}</h3>
@@ -273,7 +175,7 @@ const FoundListingsSection = ({
                   ) : null}
                   <div className="p-5">
                     <h4 className="text-lg font-bold text-foreground">
-                      {listing.pet?.name ? `${listing.pet.name} (${noticePrefix}${listing.id})` : `${noticePrefix}${listing.id}`}
+                      {listing.pet?.name ? `${listing.pet.name} (${noticeTitle})` : noticeTitle}
                     </h4>
                     <ul className="mt-3 space-y-1 text-sm text-muted-foreground">
                       {listing.pet?.gender ? (
@@ -322,54 +224,6 @@ const FoundListingsSection = ({
           <div className="rounded-xl border border-dashed p-4 text-sm text-muted-foreground">{emptyMessage}</div>
         )}
       </div>
-
-      {(phoneCta || emailCta || helpLink) ? (
-        <div className="rounded-2xl bg-primary px-6 py-10 text-center text-primary-foreground">
-          <h3 className="text-2xl font-bold">{ctaTitle}</h3>
-          <p className="mx-auto mt-3 max-w-2xl opacity-90">{ctaDescription}</p>
-          <div className="mt-6 flex flex-col justify-center gap-3 sm:flex-row">
-            {phoneCta ? (
-              <a
-                href={phoneCta.href}
-                className="inline-flex items-center justify-center gap-2 rounded-lg bg-white px-6 py-3 font-bold text-primary transition-colors hover:bg-gray-100"
-              >
-                <Phone className="h-5 w-5" />
-                {phoneCta.label}
-              </a>
-            ) : null}
-            {emailCta ? (
-              <a
-                href={emailCta.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center justify-center gap-2 rounded-lg border-2 border-primary-foreground bg-transparent px-6 py-3 font-bold text-primary-foreground transition-colors hover:bg-primary-foreground hover:text-primary"
-              >
-                <Mail className="h-5 w-5" />
-                {emailCta.label}
-              </a>
-            ) : null}
-          </div>
-          {helpLink ? (
-            <p className="mt-5 text-sm text-primary-foreground/90">
-              {helpLinkIntro}{" "}
-              {helpLink.external ? (
-                <a
-                  className="underline underline-offset-2 hover:no-underline"
-                  href={helpLink.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  {helpLink.label}
-                </a>
-              ) : (
-                <Link className="underline underline-offset-2 hover:no-underline" to={helpLink.href}>
-                  {helpLink.label}
-                </Link>
-              )}
-            </p>
-          ) : null}
-        </div>
-      ) : null}
     </section>
   );
 };
