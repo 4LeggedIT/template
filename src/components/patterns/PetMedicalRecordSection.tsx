@@ -33,6 +33,36 @@ const MedicalTable = ({ headers, rows }: { headers: string[]; rows: number }) =>
   </table>
 );
 
+const StickerTable = ({ rows }: { rows: number }) => (
+  <table className="med-table med-sticker-table">
+    <thead>
+      <tr>
+        <th>Vaccine sticker</th>
+        <th>Given / next due</th>
+      </tr>
+    </thead>
+    <tbody>
+      {Array.from({ length: rows }).map((_, index) => (
+        <tr key={index}>
+          <td></td>
+          <td>
+            <div className="med-sticker-date">Given</div>
+            <div className="med-sticker-date">Due</div>
+          </td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+);
+
+const DateGrid = ({ rows, columns = 3 }: { rows: number; columns?: number }) => (
+  <div className="med-date-grid" style={{ gridTemplateColumns: `repeat(${columns}, minmax(0, 1fr))` }}>
+    {Array.from({ length: rows * columns }).map((_, index) => (
+      <div key={index} className="med-date-cell">Date</div>
+    ))}
+  </div>
+);
+
 const Page = ({ children }: { children: React.ReactNode }) => (
   <section className="doc-page med-trifold-page">
     <div className="med-trifold-grid">{children}</div>
@@ -261,6 +291,42 @@ const PetMedicalRecordSection = ({ config, revisionDate }: PetMedicalRecordSecti
           height: 0.25in;
         }
 
+        .med-sticker-table { table-layout: fixed; }
+        .med-sticker-table th:first-child { width: 2.05in; }
+        .med-sticker-table tr { break-inside: avoid; page-break-inside: avoid; }
+        .med-sticker-table td { height: 1.05in; padding: 0; vertical-align: top; }
+        .med-sticker-date {
+          border-bottom: 1px dotted var(--doc-gray, hsl(212,15%,45%));
+          color: var(--doc-gray, hsl(212,15%,45%));
+          font-size: 6.4pt;
+          height: 0.5in;
+          padding: 3px;
+        }
+
+        .med-date-grid {
+          display: grid;
+          gap: 0 0.1in;
+        }
+
+        .med-date-cell {
+          border-bottom: 1px dotted var(--doc-gray, hsl(212,15%,45%));
+          color: var(--doc-gray, hsl(212,15%,45%));
+          font-size: 6.8pt;
+          font-weight: 800;
+          height: 0.36in;
+          line-height: 0.2in;
+        }
+
+        .med-note-lined {
+          background-image: repeating-linear-gradient(
+            to bottom,
+            transparent 0,
+            transparent calc(0.32in - 1px),
+            var(--doc-border, hsl(30,20%,84%)) calc(0.32in - 1px),
+            var(--doc-border, hsl(30,20%,84%)) 0.32in
+          );
+        }
+
         .med-note-box {
           border: 1px solid var(--doc-border, hsl(30,20%,84%));
           border-radius: 4px;
@@ -308,22 +374,7 @@ const PetMedicalRecordSection = ({ config, revisionDate }: PetMedicalRecordSecti
       />
 
       <Page>
-        <Panel title="Contact & Emergency">
-          <div className="med-field-grid-single">
-            <Field label="Owner / foster name" />
-            <Field label="Primary phone" />
-            <Field label="Alternate phone" />
-            <Field label="Email" />
-          </div>
-          <div className="med-field-grid-single">
-            <Field label="Primary vet / clinic" />
-            <Field label="Vet phone" />
-            <Field label="Emergency vet" />
-            <Field label="Emergency vet phone" />
-          </div>
-        </Panel>
-
-        <Panel title="Quick Profile">
+        <Panel title="Pets Information">
           <div className="med-field-grid">
             <Field label="Breed / mix" wide />
             <Field label="Color / markings" wide />
@@ -335,8 +386,26 @@ const PetMedicalRecordSection = ({ config, revisionDate }: PetMedicalRecordSecti
           </div>
           <div className="med-check-row" style={{ justifyContent: "flex-start" }}>
             <Check label="Spayed / neutered" />
-            <Check label="Not yet" />
           </div>
+          <div className="med-panel-title" style={{ marginTop: "0.02in" }}>Contact Info</div>
+          <div className="med-field-grid">
+            <Field label="Name" wide />
+            <Field label="Primary phone" />
+            <Field label="Alternate phone" />
+            <Field label="Email" wide />
+          </div>
+          <div className="med-panel-title" style={{ marginTop: "0.02in" }}>Vet Info</div>
+          <div className="med-field-grid">
+            <Field label="Primary vet / clinic" wide />
+            <Field label="Clinic address" wide />
+            <Field label="Vet phone" />
+            <Field label="Emergency vet phone" />
+            <Field label="Emergency vet" wide />
+          </div>
+        </Panel>
+
+        <Panel title="Notes">
+          <div className="med-note-box med-note-lined"></div>
           <p className="med-small-copy">
             Keep this record with adoption paperwork, vaccine receipts, and medication instructions.
           </p>
@@ -346,14 +415,8 @@ const PetMedicalRecordSection = ({ config, revisionDate }: PetMedicalRecordSecti
         <Panel cover>
           <img src={logoSrc} alt={orgName} className="med-logo" />
           <h1 className="med-cover-title">Pet Medical Record</h1>
-          <p className="med-cover-copy">A compact health and care reference for dogs, cats, and other pets.</p>
           <div className="med-field-grid-single" style={{ width: "100%", marginTop: "0.08in" }}>
             <Field label="Pet name" />
-          </div>
-          <div className="med-check-row">
-            <Check label="Dog" />
-            <Check label="Cat" />
-            <Check label="Other" />
           </div>
           <div className="med-emergency-note">
             In an emergency, contact the pet's veterinary clinic first. If this pet is in foster care, notify {orgName} as soon as possible.
@@ -369,34 +432,24 @@ const PetMedicalRecordSection = ({ config, revisionDate }: PetMedicalRecordSecti
 
       <Page>
         <Panel title="Vaccination Record">
-          <MedicalTable
-            headers={["Date", "Vaccine / care", "Provider", "Next due"]}
-            rows={8}
-          />
-          <p className="med-small-copy">
-            Common entries: Rabies, DHPP, Bordetella, FVRCP, deworming, flea/tick prevention, heartworm prevention, wellness exam.
-          </p>
+          <StickerTable rows={6} />
+          <p className="med-small-copy">Affix each vial label and write the dates.</p>
         </Panel>
 
-        <Panel title="Medication & Conditions">
+        <Panel title="Vaccination Record (cont.)">
+          <StickerTable rows={6} />
+        </Panel>
+
+        <Panel title="Flea & Tick Treatment">
           <div className="med-field-grid-single">
-            <Field label="Allergies" />
-            <Field label="Medical conditions" />
-            <Field label="Medication name" />
-            <Field label="Dose / schedule" />
-            <Field label="Prescribing vet" />
+            <Field label="Product" />
           </div>
-          <div className="med-panel-title" style={{ marginTop: "0.02in" }}>Instructions</div>
-          <div className="med-note-box"></div>
-        </Panel>
-
-        <Panel title="Visit Notes">
-          <MedicalTable
-            headers={["Date", "Clinic / provider", "Reason", "Follow-up"]}
-            rows={7}
-          />
-          <div className="med-panel-title" style={{ marginTop: "0.04in" }}>Notes</div>
-          <div className="med-note-box"></div>
+          <DateGrid rows={13} columns={2} />
+          <div className="med-panel-title" style={{ marginTop: "0.04in" }}>Deworming</div>
+          <div className="med-field-grid-single">
+            <Field label="Product" />
+          </div>
+          <DateGrid rows={3} columns={2} />
         </Panel>
       </Page>
     </div>

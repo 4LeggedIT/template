@@ -14,12 +14,12 @@
 ───────────────────────────────────────────── */
 
 :root {
-  --doc-primary:        hsl(10,  42%, 58%);
-  --doc-primary-light:  hsl(30,  45%, 90%);
-  --doc-accent:         hsl(30,  50%, 64%);
-  --doc-dark:           hsl(212, 30%, 20%);
-  --doc-gray:           hsl(212, 15%, 45%);
-  --doc-border:         hsl(30,  20%, 84%);
+  --doc-primary:        hsl(0, 0%, 0%);
+  --doc-primary-light:  hsl(0, 0%, 94%);
+  --doc-accent:         hsl(0, 0%, 0%);
+  --doc-dark:           hsl(0, 0%, 0%);
+  --doc-gray:           hsl(0, 0%, 33%);
+  --doc-border:         hsl(0, 0%, 62%);
 }
 
 .doc-body {
