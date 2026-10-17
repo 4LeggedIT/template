@@ -143,7 +143,8 @@ const PetMedicalRecordSection = ({ config, revisionDate }: PetMedicalRecordSecti
         }
 
         .med-logo {
-          height: 0.75in;
+          height: 1.5in;
+          max-width: 100%;
           object-fit: contain;
           width: auto;
         }
