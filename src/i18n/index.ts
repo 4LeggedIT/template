@@ -46,6 +46,7 @@ import enDetailedImpact from "@/locales/en/detailedImpact.json";
 import enKennelDisplayTools from "@/locales/en/kennelDisplayTools.json";
 import enDocuments from "@/locales/en/documents.json";
 import enFound from "@/locales/en/found.json";
+import enMissing from "@/locales/en/missing.json";
 import enPlacementHelp from "@/locales/en/placementHelp.json";
 import enBlog from "@/locales/en/blog.json";
 
@@ -94,6 +95,7 @@ import esDetailedImpact from "@/locales/es/detailedImpact.json";
 import esKennelDisplayTools from "@/locales/es/kennelDisplayTools.json";
 import esDocuments from "@/locales/es/documents.json";
 import esFound from "@/locales/es/found.json";
+import esMissing from "@/locales/es/missing.json";
 import esPlacementHelp from "@/locales/es/placementHelp.json";
 import esBlog from "@/locales/es/blog.json";
 
@@ -148,6 +150,7 @@ i18n.use(initReactI18next).init({
       kennelDisplayTools: enKennelDisplayTools,
       documents: enDocuments,
       found: enFound,
+      missing: enMissing,
       placementHelp: enPlacementHelp,
       blog: enBlog,
     },
@@ -197,6 +200,7 @@ i18n.use(initReactI18next).init({
       kennelDisplayTools: esKennelDisplayTools,
       documents: esDocuments,
       found: esFound,
+      missing: esMissing,
       placementHelp: esPlacementHelp,
       blog: esBlog,
     },
@@ -249,6 +253,7 @@ i18n.use(initReactI18next).init({
     "kennelDisplayTools",
     "documents",
     "found",
+    "missing",
     "placementHelp",
   ],
   defaultNS: "common",

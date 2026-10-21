@@ -1,0 +1,49 @@
+{
+  "breadcrumb": "Missing Pattern",
+  "hero": {
+    "title": "Missing pattern",
+    "description": "Use this module to list missing dogs: a card grid of notices with a flyer, a last-seen line, a safety line and an optional text-a-sighting link. It lists notices only; any guidance a rescue offers the public is its own page content."
+  },
+  "example": {
+    "title": "Example",
+    "descriptionBefore": "This is the whole module: a list of missing dogs. The flyer, the last-seen line, the safety line and the sightings link are each notice's own data. Page-level guidance and contact buttons are not part of it; a site that offers them writes them as page-local content around",
+    "descriptionAfter": "and passes in only the listings, labels and empty message."
+  },
+  "section": {
+    "noticesTitle": "Current Missing Dog Notices",
+    "emptyMessage": "No missing dog notices are posted right now.",
+    "sightingLabel": "Text a sighting to {{phone}}",
+    "labels": {
+      "imageOpenAriaLabelPrefix": "Open full-size flyer for missing dog ",
+      "imageFallbackAltPrefix": "Missing dog flyer for ",
+      "noticeTitle": "Missing Dog",
+      "fieldReported": "Posted:",
+      "fieldArea": "Last seen:"
+    }
+  },
+  "source": {
+    "title": "Source tracking",
+    "description": "Where a notice came from, such as a Facebook post, is recorded as an inline comment on the entry in the site's data file. It is never shown on the card, and the module has no field for it.",
+    "caption": "The sample data also holds a second notice flipped to found. It stays in the file as the record but is hidden by default, which is why only one dog is listed above."
+  },
+  "together": {
+    "title": "Using both patterns",
+    "description": "Missing and found are separate modules composed on one page. A site can render either, both or neither. Any call to action is written by the page, not by the modules.",
+    "pageLocalNote": "Page-local content goes here, for example one \"Is this your pet, or do you have a tip? Contact us\" call to action written by the site."
+  },
+  "standard": {
+    "title": "Standard",
+    "items": [
+      "Use `MissingListingsSection` for missing-dog notices; it only lists missing dogs. Use `FoundListingsSection` for found dogs. Compose them on a page; do not merge them.",
+      "A site uses only the pattern(s) it needs. There is no flag or registry: import the module you want and leave the other copy unused.",
+      "Keep listing data in `MissingListing` objects. Each notice carries its own flyer, last-seen line, safety line and optional sightings link.",
+      "The sightings link accepts `sms:`, `tel:`, `mailto:` or `http(s):` only. Pass the final button text, phone number included.",
+      "Do not add public-guidance content to the module (what-to-do checklists, process steps, contact buttons). Those are page-local.",
+      "By default only `missing` notices show. When a dog is home, flip `status` to `found` instead of deleting the entry; `found` and `archived` are opt-in through `showFound`/`showArchived` or `statusFilter`.",
+      "Source tracking: put the notice's source (for example a Facebook post) in an inline `// Source:` comment above the entry in the data file. It is never rendered.",
+      "Every string is passed in by the caller. Store bilingual text as `{ en, es }` in the data file and an ISO date formatted per locale at render time.",
+      "The flyer opens full-size in a new tab and is never cropped.",
+      "Component: `template/src/components/patterns/MissingListingsSection.tsx`"
+    ]
+  }
+}

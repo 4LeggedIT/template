@@ -10,7 +10,8 @@
   "sections": {
     "adoptablePets": { "title": "Patrón de Mascotas Adoptables", "description": "Estructura unificada de mascotas adoptables con adaptadores de proveedores y comportamiento de respaldo." },
     "dogSpotlight": { "title": "Patrón de Perros Destacados", "description": "Cuadrícula de inicio que destaca un conjunto seleccionado de perros, cuatro por fila en escritorio." },
-    "found": { "title": "Patrón de Animales Encontrados", "description": "Módulo de avisos de animales encontrados con lista de verificación de reunificación segura, filtrado de estado y guía de llamadas a la acción." },
+    "found": { "title": "Patrón de Animales Encontrados", "description": "Módulo que solo lista avisos de perros encontrados, con filtrado de estado. Cualquier orientación que un rescate ofrezca al público es contenido propio de su página." },
+    "missing": { "title": "Patrón de Animales Perdidos", "description": "Módulo que solo lista avisos de perros perdidos, con volante, línea de última vez visto, línea de seguridad y enlace opcional para enviar un avistamiento por mensaje. Las notas de fuente quedan en el archivo de datos." },
     "placement": { "title": "Patrón de Colocación", "description": "Listados de colocación con vencimiento predeterminado de tres meses y metadatos opcionales de mascotas." },
     "eventsNews": { "title": "Patrón de Eventos y Noticias", "description": "Feed unificado de eventos y noticias con comportamiento de archivo, soporte de recurrencia y guía de banners." },
     "newsHighlight": { "title": "Patrón de Destacado de Inicio", "description": "Tarjeta de inicio que muestra un solo evento, noticia o publicación de blog marcado por el editor, mediante el componente compartido HomeHighlightSection." },

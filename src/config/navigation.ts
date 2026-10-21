@@ -25,6 +25,7 @@ export const templateNavItems: NavItem[] = [
       { label: "Adoptable Pets", href: "/standards/adoptable-pets", group: "petsAdoption" },
       { label: "Dog Spotlight", href: "/standards/dog-spotlight", group: "petsAdoption" },
       { label: "Found", href: "/standards/found", group: "petsAdoption" },
+      { label: "Missing", href: "/standards/missing", group: "petsAdoption" },
       { label: "Placement", href: "/standards/placement-help", group: "petsAdoption" },
       { label: "Journey Timeline", href: "/standards/journey-timeline", group: "storiesJourneys" },
       { label: "Memorial", href: "/standards/memorial-section", group: "storiesJourneys" },

@@ -8,6 +8,9 @@ const FoundStandardPage = () => {
   const { t } = useTranslation(["found", "common"]);
 
   const foundNotices: FoundListing[] = [
+    // Source: Facebook post 2026-03-26 (sample found dog notice, not a real post) —
+    // https://www.facebook.com/example/posts/SAMPLE
+    // Keep the source here, in the data file; the card never renders it and `source.url` stays unset.
     {
       id: "SAMPLE-001",
       source: {
@@ -36,6 +39,8 @@ const FoundStandardPage = () => {
         },
       ],
     },
+    // Source: Facebook post 2026-03-29 (sample found dog notice, not a real post) —
+    // https://www.facebook.com/example/posts/SAMPLE
     {
       id: "SAMPLE-002",
       source: {

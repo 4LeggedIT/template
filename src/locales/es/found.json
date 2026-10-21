@@ -50,6 +50,7 @@
       "Use `statusFilter` junto con `showReunited`/`showArchived` (ambos predeterminados en `false`) para controlar la visibilidad del ciclo de vida de los avisos: los avisos activos se muestran de forma predeterminada; los reunificados/archivados son opcionales.",
       "Las tarjetas se renderizan a partir de metadatos normalizados de `FoundListing` con un encabezado genérico (`labels.noticeTitle`, sin número de aviso); los enlaces de imagen y de fuente se abren de forma segura en una pestaña nueva.",
       "Use `gender` en el perfil de la mascota: coincide con el nombre de campo usado en todos los demás patrones (`AdoptablePetsSection`, herramientas de exhibición de perreras).",
+      "Registro de la fuente: ponga la fuente del aviso (por ejemplo una publicación de Facebook) en un comentario `// Source:` sobre la entrada en el archivo de datos, y deje `source.url` sin definir para que la tarjeta no enlace a ningún sitio.",
       "Componente: `template/src/components/patterns/FoundListingsSection.tsx`"
     ]
   }

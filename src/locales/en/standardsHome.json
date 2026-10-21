@@ -10,7 +10,8 @@
   "sections": {
     "adoptablePets": { "title": "Adoptable Pets Pattern", "description": "Unified adoptable pets shell with provider adapters and fallback behavior." },
     "dogSpotlight": { "title": "Dog Spotlight Pattern", "description": "Homepage grid highlighting a hand-curated set of dogs, four across on desktop." },
-    "found": { "title": "Found Pattern", "description": "Found notices module with safe-reunification checklist, status filtering, and CTA guidance." },
+    "found": { "title": "Found Pattern", "description": "List-only found-dog notices module with status filtering. Any guidance a rescue offers the public is page-local content." },
+    "missing": { "title": "Missing Pattern", "description": "List-only missing-dog notices module with a flyer, last-seen line, safety line and optional text-a-sighting link. Source notes stay in the data file." },
     "placement": { "title": "Placement Pattern", "description": "Placement listings with default three-month expiry and optional pet metadata." },
     "eventsNews": { "title": "Events & News Pattern", "description": "Unified event/news feed with archive behavior, recurrence support, and banner guidance." },
     "newsHighlight": { "title": "Home Highlight Pattern", "description": "Homepage card that surfaces a single editor-flagged event, news entry, or blog post via the shared HomeHighlightSection component." },

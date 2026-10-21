@@ -1,0 +1,49 @@
+{
+  "breadcrumb": "Patrón de Animales Perdidos",
+  "hero": {
+    "title": "Patrón de animales perdidos",
+    "description": "Use este módulo para listar perros perdidos: una cuadrícula de avisos con volante, una línea de dónde se vio por última vez, una línea de seguridad y un enlace opcional para enviar un avistamiento por mensaje de texto. Solo lista avisos; cualquier orientación que un rescate ofrezca al público es contenido propio de su página."
+  },
+  "example": {
+    "title": "Ejemplo",
+    "descriptionBefore": "Este es todo el módulo: una lista de perros perdidos. El volante, la línea de última vez visto, la línea de seguridad y el enlace de avistamientos son datos propios de cada aviso. La orientación para el público y los botones de contacto no forman parte de él; un sitio que los ofrece los escribe como contenido propio de su página alrededor de",
+    "descriptionAfter": "y le pasa solo los avisos, las etiquetas y el mensaje de lista vacía."
+  },
+  "section": {
+    "noticesTitle": "Avisos Actuales de Perros Perdidos",
+    "emptyMessage": "No hay avisos de perros perdidos publicados en este momento.",
+    "sightingLabel": "Envía un avistamiento por mensaje al {{phone}}",
+    "labels": {
+      "imageOpenAriaLabelPrefix": "Abrir el volante en tamaño completo del perro perdido ",
+      "imageFallbackAltPrefix": "Volante de perro perdido de ",
+      "noticeTitle": "Perro Perdido",
+      "fieldReported": "Publicado:",
+      "fieldArea": "Visto por última vez:"
+    }
+  },
+  "source": {
+    "title": "Registro de la fuente",
+    "description": "De dónde viene un aviso, por ejemplo una publicación de Facebook, se registra como un comentario dentro de la entrada en el archivo de datos del sitio. Nunca se muestra en la tarjeta, y el módulo no tiene un campo para ello.",
+    "caption": "Los datos de ejemplo también incluyen un segundo aviso marcado como encontrado. Permanece en el archivo como registro pero queda oculto de forma predeterminada, por eso arriba solo aparece un perro."
+  },
+  "together": {
+    "title": "Uso de ambos patrones",
+    "description": "Perdidos y encontrados son módulos separados que se combinan en una misma página. Un sitio puede mostrar uno, ambos o ninguno. Cualquier llamada a la acción la escribe la página, no los módulos.",
+    "pageLocalNote": "Aquí va el contenido propio de la página, por ejemplo una sola llamada a la acción \"¿Es tu mascota o tienes información? Contáctanos\" escrita por el sitio."
+  },
+  "standard": {
+    "title": "Estándar",
+    "items": [
+      "Use `MissingListingsSection` para los avisos de perros perdidos; solo lista perros perdidos. Use `FoundListingsSection` para los perros encontrados. Combínelos en una página; no los fusione.",
+      "Un sitio usa solo el patrón o los patrones que necesita. No hay bandera ni registro: importe el módulo que quiere y deje la otra copia sin usar.",
+      "Mantenga los datos en objetos `MissingListing`. Cada aviso lleva su propio volante, línea de última vez visto, línea de seguridad y enlace opcional de avistamientos.",
+      "El enlace de avistamientos solo acepta `sms:`, `tel:`, `mailto:` o `http(s):`. Pase el texto final del botón, con el número de teléfono incluido.",
+      "No agregue al módulo contenido de orientación pública (listas de qué hacer, pasos de un proceso, botones de contacto). Eso es contenido propio de la página.",
+      "De forma predeterminada solo se muestran los avisos `missing`. Cuando un perro ya está en casa, cambie `status` a `found` en lugar de borrar la entrada; `found` y `archived` son opcionales mediante `showFound`/`showArchived` o `statusFilter`.",
+      "Registro de la fuente: ponga la fuente del aviso (por ejemplo una publicación de Facebook) en un comentario `// Source:` sobre la entrada en el archivo de datos. Nunca se muestra.",
+      "Cada texto lo pasa quien usa el módulo. Guarde el texto bilingüe como `{ en, es }` en el archivo de datos y una fecha ISO que se formatea según el idioma al mostrarla.",
+      "El volante se abre a tamaño completo en una pestaña nueva y nunca se recorta.",
+      "Componente: `template/src/components/patterns/MissingListingsSection.tsx`"
+    ]
+  }
+}

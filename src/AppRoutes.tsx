@@ -23,6 +23,7 @@ import PawPlacerStandardPage from "@/pages/standards/PawPlacerStandardPage";
 import FaqDisclosureStandardPage from "@/pages/standards/FaqDisclosureStandardPage";
 import FaqAccordionStandardPage from "@/pages/standards/FaqAccordionStandardPage";
 import FoundStandardPage from "@/pages/standards/FoundStandardPage";
+import MissingStandardPage from "@/pages/standards/MissingStandardPage";
 import FormEmbedModalStandardPage from "@/pages/standards/FormEmbedModalStandardPage";
 import FlyerLibraryStandardPage from "@/pages/standards/FlyerLibraryStandardPage";
 import CommunityPartnersStandardPage from "@/pages/standards/CommunityPartnersStandardPage";
@@ -121,6 +122,7 @@ const AppRoutes = () => {
         <Route path="/standards/faq-accordion" element={<FaqAccordionStandardPage />} />
         <Route path="/standards/faq-disclosure" element={<FaqDisclosureStandardPage />} />
         <Route path="/standards/found" element={<FoundStandardPage />} />
+        <Route path="/standards/missing" element={<MissingStandardPage />} />
         <Route path="/standards/form-embed-modal" element={<FormEmbedModalStandardPage />} />
         <Route path="/standards/flyer-library" element={<FlyerLibraryStandardPage />} />
         <Route path="/standards/community-partners" element={<CommunityPartnersStandardPage />} />

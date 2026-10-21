@@ -50,6 +50,7 @@
       "Use `statusFilter` plus `showReunited`/`showArchived` (both default `false`) to control found-notice lifecycle visibility: active notices show by default; reunited/archived are opt-in.",
       "Cards render from normalized `FoundListing` metadata with a generic heading (`labels.noticeTitle`, no notice number); image and source links open safely in a new tab.",
       "Use `gender` on the pet profile: it matches the field name used across every other pattern (`AdoptablePetsSection`, kennel-display tools).",
+      "Source tracking: put the notice's source (for example a Facebook post) in an inline `// Source:` comment above the entry in the data file, and leave `source.url` unset so the card links nowhere.",
       "Component: `template/src/components/patterns/FoundListingsSection.tsx`"
     ]
   }

@@ -14,6 +14,7 @@ const docSections: DocSection[] = [
   { key: "adoptablePets", href: "/standards/adoptable-pets", group: "petsAdoption" },
   { key: "dogSpotlight", href: "/standards/dog-spotlight", group: "petsAdoption" },
   { key: "found", href: "/standards/found", group: "petsAdoption" },
+  { key: "missing", href: "/standards/missing", group: "petsAdoption" },
   { key: "placement", href: "/standards/placement-help", group: "petsAdoption" },
   { key: "journeyTimeline", href: "/standards/journey-timeline", group: "storiesJourneys" },
   { key: "memorialSection", href: "/standards/memorial-section", group: "storiesJourneys" },
