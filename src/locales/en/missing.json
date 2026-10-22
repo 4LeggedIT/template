@@ -14,7 +14,6 @@
     "emptyMessage": "No missing dog notices are posted right now.",
     "sightingLabel": "Text a sighting to {{phone}}",
     "labels": {
-      "imageOpenAriaLabelPrefix": "Open full-size flyer for missing dog ",
       "imageFallbackAltPrefix": "Missing dog flyer for ",
       "noticeTitle": "Missing Dog",
       "fieldReported": "Posted:",
@@ -42,7 +41,7 @@
       "By default only `missing` notices show. When a dog is home, flip `status` to `found` instead of deleting the entry; `found` and `archived` are opt-in through `showFound`/`showArchived` or `statusFilter`.",
       "Source tracking: put the notice's source (for example a Facebook post) in an inline `// Source:` comment above the entry in the data file. It is never rendered.",
       "Every string is passed in by the caller. Store bilingual text as `{ en, es }` in the data file and an ISO date formatted per locale at render time.",
-      "The flyer opens full-size in a new tab and is never cropped.",
+      "Each notice can carry any number of images in `media` (a flyer, photos): one shows as a plain image, two or more become a carousel with arrows and a count (`MediaCarouselTile`). Clicking an image opens it full-size in a new tab, and images are never cropped.",
       "Component: `template/src/components/patterns/MissingListingsSection.tsx`"
     ]
   }

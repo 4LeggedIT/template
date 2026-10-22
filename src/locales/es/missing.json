@@ -14,7 +14,6 @@
     "emptyMessage": "No hay avisos de perros perdidos publicados en este momento.",
     "sightingLabel": "Envía un avistamiento por mensaje al {{phone}}",
     "labels": {
-      "imageOpenAriaLabelPrefix": "Abrir el volante en tamaño completo del perro perdido ",
       "imageFallbackAltPrefix": "Volante de perro perdido de ",
       "noticeTitle": "Perro Perdido",
       "fieldReported": "Publicado:",
@@ -42,7 +41,7 @@
       "De forma predeterminada solo se muestran los avisos `missing`. Cuando un perro ya está en casa, cambie `status` a `found` en lugar de borrar la entrada; `found` y `archived` son opcionales mediante `showFound`/`showArchived` o `statusFilter`.",
       "Registro de la fuente: ponga la fuente del aviso (por ejemplo una publicación de Facebook) en un comentario `// Source:` sobre la entrada en el archivo de datos. Nunca se muestra.",
       "Cada texto lo pasa quien usa el módulo. Guarde el texto bilingüe como `{ en, es }` en el archivo de datos y una fecha ISO que se formatea según el idioma al mostrarla.",
-      "El volante se abre a tamaño completo en una pestaña nueva y nunca se recorta.",
+      "Cada aviso puede llevar cualquier cantidad de imágenes en `media` (un volante, fotos): una se muestra como imagen simple, y dos o más forman un carrusel con flechas y un contador (`MediaCarouselTile`). Al hacer clic en una imagen se abre a tamaño completo en una pestaña nueva, y las imágenes nunca se recortan.",
       "Componente: `template/src/components/patterns/MissingListingsSection.tsx`"
     ]
   }

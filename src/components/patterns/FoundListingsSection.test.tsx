@@ -1,5 +1,5 @@
 import { render, screen } from "@testing-library/react";
-import { describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import FoundListingsSection, { type FoundListing } from "@/components/patterns/FoundListingsSection";
 
 const makeListing = (overrides: Partial<FoundListing> & Pick<FoundListing, "id">): FoundListing => ({
@@ -24,6 +24,10 @@ const listings: FoundListing[] = [
 ];
 
 describe("FoundListingsSection", () => {
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
   it("lists open and hold notices by default and hides reunited/archived", () => {
     render(<FoundListingsSection mode="hybrid" listings={listings} />);
 
@@ -74,5 +78,45 @@ describe("FoundListingsSection", () => {
     expect(screen.queryByText(/How Reunification Works/i)).not.toBeInTheDocument();
     expect(screen.queryByText(/What to Include/i)).not.toBeInTheDocument();
     expect(screen.queryByRole("link")).not.toBeInTheDocument();
+  });
+
+  it("shows every image as a carousel, featured first, and opens one full-size in a new tab", () => {
+    const open = vi.spyOn(window, "open").mockReturnValue(null);
+    render(
+      <FoundListingsSection
+        mode="local"
+        listings={[
+          makeListing({
+            id: "multi",
+            media: [
+              { id: "m1", src: "/a.webp", alt: "Photo A" },
+              { id: "m2", src: "/b.webp", alt: "Photo B", featured: true, href: "/b-full.webp" },
+              { id: "m3", src: "/c.webp", alt: "Photo C" },
+            ],
+          }),
+        ]}
+      />,
+    );
+
+    expect(screen.getAllByRole("img").map((img) => img.getAttribute("alt"))).toEqual(["Photo B", "Photo A", "Photo C"]);
+    expect(screen.getByText("3")).toBeInTheDocument();
+
+    screen.getByRole("button", { name: "Photo B" }).click();
+    expect(open).toHaveBeenLastCalledWith("/b-full.webp", "_blank", "noopener,noreferrer");
+    screen.getByRole("button", { name: "Photo C" }).click();
+    expect(open).toHaveBeenLastCalledWith("/c.webp", "_blank", "noopener,noreferrer");
+  });
+
+  it("shows a single image plain, with a generic alt fallback and no carousel count", () => {
+    render(
+      <FoundListingsSection
+        mode="local"
+        listings={[makeListing({ id: "solo", media: [{ id: "s1", src: "/s.webp" }] })]}
+        labels={{ imageFallbackAltPrefix: "Found notice " }}
+      />,
+    );
+
+    expect(screen.getByAltText("Found notice solo")).toBeInTheDocument();
+    expect(screen.queryByText("1")).not.toBeInTheDocument();
   });
 });

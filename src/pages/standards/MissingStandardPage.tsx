@@ -43,7 +43,6 @@ const MissingStandardPage = () => {
   };
 
   const labels = {
-    imageOpenAriaLabelPrefix: t("missing:section.labels.imageOpenAriaLabelPrefix"),
     imageFallbackAltPrefix: t("missing:section.labels.imageFallbackAltPrefix"),
     noticeTitle: t("missing:section.labels.noticeTitle"),
     fieldReported: t("missing:section.labels.fieldReported"),
@@ -108,7 +107,6 @@ const MissingStandardPage = () => {
               noticesTitle={t("found:section.noticesTitle")}
               emptyMessage={t("found:section.emptyMessage")}
               labels={{
-                imageOpenAriaLabelPrefix: t("found:section.labels.imageOpenAriaLabelPrefix"),
                 imageFallbackAltPrefix: t("found:section.labels.imageFallbackAltPrefix"),
                 noticeTitle: t("found:section.labels.noticeTitle"),
                 fieldGender: t("found:section.labels.fieldGender"),

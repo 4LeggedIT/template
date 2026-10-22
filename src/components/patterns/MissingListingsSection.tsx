@@ -1,3 +1,4 @@
+import MediaCarouselTile, { type MediaCarouselTileItem } from "@/components/patterns/MediaCarouselTile";
 import { cn } from "@/lib/utils";
 
 /**
@@ -6,7 +7,7 @@ import { cn } from "@/lib/utils";
  * neither). Like it, this is list-only: it does NOT render any page-level "help people" content
  * (what-to-do checklists, process steps, contact call-to-action buttons). That stays page-local
  * content around the list. What it does render is the notice's own facts, supplied by the caller:
- * a flyer that opens full-size, a last-seen line, a prominent safety line and one optional action
+ * images (a flyer, photos) shown by `MediaCarouselTile` that open full-size, a last-seen line, a prominent safety line and one optional action
  * link (for example a text-a-sighting `sms:` link with the number in its label).
  *
  * Where a notice came from (for example a Facebook post) is tracked in an inline `// Source:`
@@ -18,11 +19,13 @@ import { cn } from "@/lib/utils";
 /** `found` means the dog is home: flip the status instead of deleting the notice. */
 export type MissingListingStatus = "missing" | "found" | "archived";
 
-export interface MissingListingImage {
+export interface MissingListingMedia {
   src: string;
   alt?: string;
-  /** Where the image link goes; defaults to `src` so the flyer opens full-size. */
+  /** Where a click on the image goes; defaults to `src` so it opens full-size in a new tab. */
   href?: string;
+  /** The featured image shows first; the rest follow in the given order. */
+  featured?: boolean;
 }
 
 export interface MissingListingAction {
@@ -44,12 +47,12 @@ export interface MissingListing {
   /** Prominent safety line, for example "Very fearful. Please do not chase." */
   safetyNote?: string;
   notes?: string;
-  image?: MissingListingImage;
+  /** Any number of images (flyer, photos): one shows as a plain image, two or more get prev/next arrows and a count badge. */
+  media?: MissingListingMedia[];
   sightingsAction?: MissingListingAction;
 }
 
 export type MissingListingsSectionLabels = {
-  imageOpenAriaLabelPrefix?: string;
   imageFallbackAltPrefix?: string;
   /** Generic card heading: "<name> (<noticeTitle>)", or just this when the dog has no name. */
   noticeTitle?: string;
@@ -77,6 +80,10 @@ const safeActionHref = (href: string | undefined): string | undefined => {
   return trimmed && SAFE_ACTION_HREF.test(trimmed) ? trimmed : undefined;
 };
 
+const openFullSize = (href: string) => {
+  window.open(href, "_blank", "noopener,noreferrer");
+};
+
 const MissingListingsSection = ({
   title,
   description,
@@ -90,8 +97,7 @@ const MissingListingsSection = ({
   labels = {},
 }: MissingListingsSectionProps) => {
   const {
-    imageOpenAriaLabelPrefix = "Open full-size flyer for missing dog ",
-    imageFallbackAltPrefix = "Missing dog flyer for ",
+    imageFallbackAltPrefix = "Missing dog image for ",
     noticeTitle = "Missing Dog",
     fieldReported = "Posted:",
     fieldArea = "Last seen:",
@@ -119,27 +125,28 @@ const MissingListingsSection = ({
           <div className="grid gap-6 md:grid-cols-2">
             {visibleListings.map((listing) => {
               const label = listing.name ?? listing.id;
-              const imageHref = listing.image ? (listing.image.href ?? listing.image.src) : undefined;
+              const media = listing.media ?? [];
+              const featuredMedia = media.find((item) => item.featured) ?? media[0];
+              const orderedMedia = featuredMedia ? [featuredMedia, ...media.filter((item) => item !== featuredMedia)] : [];
+              const tileMedia: MediaCarouselTileItem[] = orderedMedia.map((item, index) => ({
+                id: `${listing.id}-${index}`,
+                kind: "photo",
+                src: item.src,
+                label: item.alt ?? `${imageFallbackAltPrefix}${label}`,
+              }));
               const actionHref = safeActionHref(listing.sightingsAction?.href);
 
               return (
                 <article key={listing.id} className="overflow-hidden rounded-xl border bg-card shadow-xs">
-                  {listing.image && imageHref ? (
-                    <a
-                      href={imageHref}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="block bg-muted/30 p-3"
-                      aria-label={`${imageOpenAriaLabelPrefix}${label}`}
-                    >
-                      <img
-                        src={listing.image.src}
-                        alt={listing.image.alt ?? `${imageFallbackAltPrefix}${label}`}
-                        className="h-96 w-full rounded-md object-contain"
-                        loading="lazy"
-                        decoding="async"
-                      />
-                    </a>
+                  {tileMedia.length ? (
+                    <MediaCarouselTile
+                      media={tileMedia}
+                      fit="contain"
+                      onPhotoClick={(item) => {
+                        const index = tileMedia.findIndex((entry) => entry.id === item.id);
+                        openFullSize(orderedMedia[index]?.href ?? item.src);
+                      }}
+                    />
                   ) : null}
                   <div className="p-5">
                     <h4 className="text-lg font-bold text-foreground">

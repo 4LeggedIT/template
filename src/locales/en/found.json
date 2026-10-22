@@ -14,7 +14,9 @@
       "gender": "Male",
       "microchipStatus": "Unknown",
       "notes": "Friendly tan dog found near a grocery parking lot wearing a blue collar and no tags.",
-      "mediaAlt": "Sample found dog notice 1"
+      "mediaAlt": "Sample found dog notice 1",
+      "mediaAlt2": "Sample found dog notice 1, side view",
+      "mediaAlt3": "Sample found dog notice 1, collar"
     },
     "notice2": {
       "gender": "Female",
@@ -27,7 +29,6 @@
     "noticesTitle": "Current Found Dog Notices",
     "emptyMessage": "No active found notices are posted right now.",
     "labels": {
-      "imageOpenAriaLabelPrefix": "Open full-size image for found dog notice ",
       "imageFallbackAltPrefix": "Found notice ",
       "fieldGender": "Gender:",
       "fieldFoundDate": "Found date:",
@@ -51,6 +52,7 @@
       "Cards render from normalized `FoundListing` metadata with a generic heading (`labels.noticeTitle`, no notice number); image and source links open safely in a new tab.",
       "Use `gender` on the pet profile: it matches the field name used across every other pattern (`AdoptablePetsSection`, kennel-display tools).",
       "Source tracking: put the notice's source (for example a Facebook post) in an inline `// Source:` comment above the entry in the data file, and leave `source.url` unset so the card links nowhere.",
+      "Each notice can carry any number of images in `media`: one shows as a plain image, two or more become a carousel with arrows and a count (`MediaCarouselTile`). Clicking an image opens it full-size in a new tab, and images are never cropped.",
       "Component: `template/src/components/patterns/FoundListingsSection.tsx`"
     ]
   }

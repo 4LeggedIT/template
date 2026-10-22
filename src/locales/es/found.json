@@ -14,7 +14,9 @@
       "gender": "Macho",
       "microchipStatus": "Desconocido",
       "notes": "Perro amigable de color canela encontrado cerca del estacionamiento de un supermercado, con collar azul y sin placas.",
-      "mediaAlt": "Aviso de ejemplo de perro encontrado 1"
+      "mediaAlt": "Aviso de ejemplo de perro encontrado 1",
+      "mediaAlt2": "Aviso de ejemplo de perro encontrado 1, vista lateral",
+      "mediaAlt3": "Aviso de ejemplo de perro encontrado 1, collar"
     },
     "notice2": {
       "gender": "Hembra",
@@ -27,7 +29,6 @@
     "noticesTitle": "Avisos actuales de perros encontrados",
     "emptyMessage": "No hay avisos activos de animales encontrados en este momento.",
     "labels": {
-      "imageOpenAriaLabelPrefix": "Abrir imagen a tamaño completo del aviso de perro encontrado ",
       "imageFallbackAltPrefix": "Aviso encontrado ",
       "fieldGender": "Género:",
       "fieldFoundDate": "Fecha en que se encontró:",
@@ -51,6 +52,7 @@
       "Las tarjetas se renderizan a partir de metadatos normalizados de `FoundListing` con un encabezado genérico (`labels.noticeTitle`, sin número de aviso); los enlaces de imagen y de fuente se abren de forma segura en una pestaña nueva.",
       "Use `gender` en el perfil de la mascota: coincide con el nombre de campo usado en todos los demás patrones (`AdoptablePetsSection`, herramientas de exhibición de perreras).",
       "Registro de la fuente: ponga la fuente del aviso (por ejemplo una publicación de Facebook) en un comentario `// Source:` sobre la entrada en el archivo de datos, y deje `source.url` sin definir para que la tarjeta no enlace a ningún sitio.",
+      "Cada aviso puede llevar cualquier cantidad de imágenes en `media`: una se muestra como imagen simple, y dos o más forman un carrusel con flechas y un contador (`MediaCarouselTile`). Al hacer clic en una imagen se abre a tamaño completo en una pestaña nueva, y las imágenes nunca se recortan.",
       "Componente: `template/src/components/patterns/FoundListingsSection.tsx`"
     ]
   }

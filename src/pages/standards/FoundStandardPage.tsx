@@ -37,6 +37,16 @@ const FoundStandardPage = () => {
           alt: t("found:listings.notice1.mediaAlt"),
           featured: true,
         },
+        {
+          id: "SAMPLE-001-image-2",
+          src: "https://placehold.co/1200x800?text=Sample+Found+Dog+1+Side",
+          alt: t("found:listings.notice1.mediaAlt2"),
+        },
+        {
+          id: "SAMPLE-001-image-3",
+          src: "https://placehold.co/1200x800?text=Sample+Found+Dog+1+Collar",
+          alt: t("found:listings.notice1.mediaAlt3"),
+        },
       ],
     },
     // Source: Facebook post 2026-03-29 (sample found dog notice, not a real post) —
@@ -102,7 +112,6 @@ const FoundStandardPage = () => {
             noticesTitle={t("found:section.noticesTitle")}
             emptyMessage={t("found:section.emptyMessage")}
             labels={{
-              imageOpenAriaLabelPrefix: t("found:section.labels.imageOpenAriaLabelPrefix"),
               imageFallbackAltPrefix: t("found:section.labels.imageFallbackAltPrefix"),
               noticeTitle: t("found:section.labels.noticeTitle"),
               fieldGender: t("found:section.labels.fieldGender"),

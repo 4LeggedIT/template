@@ -1,5 +1,5 @@
 import { render, screen } from "@testing-library/react";
-import { describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import MissingListingsSection, { type MissingListing } from "@/components/patterns/MissingListingsSection";
 
 const makeListing = (overrides: Partial<MissingListing> & Pick<MissingListing, "id">): MissingListing => ({
@@ -15,7 +15,7 @@ const listings: MissingListing[] = [
     reportedAt: "October 20, 2026",
     area: "Near Oak Tree Dr",
     safetyNote: "Very fearful. Please do not chase.",
-    image: { src: "/flyer.webp", alt: "Doris flyer" },
+    media: [{ src: "/flyer.webp", alt: "Doris flyer" }],
     sightingsAction: { label: "Text a sighting to (555) 555-0100", href: "sms:+15555550100" },
   }),
   makeListing({ id: "home-1", name: "Biscuit", status: "found" }),
@@ -23,6 +23,10 @@ const listings: MissingListing[] = [
 ];
 
 describe("MissingListingsSection", () => {
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
   it("lists only missing notices by default", () => {
     render(<MissingListingsSection listings={listings} />);
 
@@ -98,23 +102,60 @@ describe("MissingListingsSection", () => {
     expect(screen.queryByRole("link", { name: "Click me" })).not.toBeInTheDocument();
   });
 
-  it("opens the flyer full-size in a new tab, with an optional href override", () => {
+  it("opens an image full-size in a new tab, with an optional href override", () => {
+    const open = vi.spyOn(window, "open").mockReturnValue(null);
     render(
       <MissingListingsSection
         listings={[
           listings[0],
-          makeListing({ id: "big", name: "Big", image: { src: "/thumb.webp", href: "/full.webp" } }),
+          makeListing({ id: "big", name: "Big", media: [{ src: "/thumb.webp", alt: "Big thumb", href: "/full.webp" }] }),
         ]}
-        labels={{ imageOpenAriaLabelPrefix: "Open flyer for " }}
       />,
     );
 
-    const doris = screen.getByRole("link", { name: "Open flyer for Doris" });
-    expect(doris).toHaveAttribute("href", "/flyer.webp");
-    expect(doris).toHaveAttribute("target", "_blank");
-    expect(doris).toHaveAttribute("rel", "noopener noreferrer");
-    expect(screen.getByRole("link", { name: "Open flyer for Big" })).toHaveAttribute("href", "/full.webp");
-    expect(screen.getByAltText("Doris flyer")).toBeInTheDocument();
+    screen.getByRole("button", { name: "Doris flyer" }).click();
+    expect(open).toHaveBeenLastCalledWith("/flyer.webp", "_blank", "noopener,noreferrer");
+    screen.getByRole("button", { name: "Big thumb" }).click();
+    expect(open).toHaveBeenLastCalledWith("/full.webp", "_blank", "noopener,noreferrer");
+  });
+
+  it("shows several images as a carousel with the featured one first", () => {
+    render(
+      <MissingListingsSection
+        listings={[
+          makeListing({
+            id: "multi",
+            name: "Multi",
+            media: [
+              { src: "/a.webp", alt: "Photo A" },
+              { src: "/b.webp", alt: "Photo B", featured: true },
+              { src: "/c.webp", alt: "Photo C" },
+            ],
+          }),
+        ]}
+      />,
+    );
+
+    expect(screen.getAllByRole("img").map((img) => img.getAttribute("alt"))).toEqual(["Photo B", "Photo A", "Photo C"]);
+    expect(screen.getByText("3")).toBeInTheDocument();
+  });
+
+  it("shows a single image with no carousel count", () => {
+    render(<MissingListingsSection listings={[listings[0]]} />);
+
+    expect(screen.getAllByRole("img")).toHaveLength(1);
+    expect(screen.queryByText("1")).not.toBeInTheDocument();
+  });
+
+  it("falls back to a generic alt when an image has none", () => {
+    render(
+      <MissingListingsSection
+        listings={[makeListing({ id: "noalt", name: "Rex", media: [{ src: "/r.webp" }] })]}
+        labels={{ imageFallbackAltPrefix: "Flyer for " }}
+      />,
+    );
+
+    expect(screen.getByAltText("Flyer for Rex")).toBeInTheDocument();
   });
 
   it("shows the empty message when nothing is visible", () => {
@@ -136,6 +177,6 @@ describe("MissingListingsSection", () => {
     render(<MissingListingsSection listings={[listings[0]]} />);
 
     expect(screen.queryByText(/view source/i)).not.toBeInTheDocument();
-    expect(screen.getAllByRole("link")).toHaveLength(2); // flyer + sightings action only
+    expect(screen.getAllByRole("link")).toHaveLength(1); // the sightings action only
   });
 });

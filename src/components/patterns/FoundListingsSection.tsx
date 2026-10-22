@@ -1,8 +1,9 @@
+import MediaCarouselTile, { type MediaCarouselTileItem } from "@/components/patterns/MediaCarouselTile";
 import { cn } from "@/lib/utils";
 
 /**
  * A plain list of found dogs: a card grid with status/mode filtering, field labels and an empty
- * state. Nothing else. It deliberately does NOT render any "help people" content (keep-them-safe
+ * state. Each notice can carry several images, shown by `MediaCarouselTile`. Nothing else. It deliberately does NOT render any "help people" content (keep-them-safe
  * warnings, notice checklists, reunification steps, submit-a-notice buttons, trapping advice):
  * that belongs to the site that actually offers those services (Rovers Return Dog Rescue), as
  * page-local content around this list. Every string is passed in by the caller, so the pattern
@@ -49,6 +50,7 @@ export interface FoundListingMedia {
   src: string;
   alt?: string;
   href?: string;
+  /** The featured image shows first; the rest follow in the given order. */
   featured?: boolean;
 }
 
@@ -64,11 +66,11 @@ export interface FoundListing {
   location?: FoundListingLocation;
   pet?: FoundListingPetProfile;
   notes: string;
+  /** Any number of images: one shows as a plain image, two or more get prev/next arrows and a count badge. */
   media: FoundListingMedia[];
 }
 
 export type FoundListingsSectionLabels = {
-  imageOpenAriaLabelPrefix?: string;
   imageFallbackAltPrefix?: string;
   /** Generic card heading shown on every notice (no per-notice number). */
   noticeTitle?: string;
@@ -94,6 +96,10 @@ type FoundListingsSectionProps = {
   labels?: FoundListingsSectionLabels;
 };
 
+const openFullSize = (href: string) => {
+  window.open(href, "_blank", "noopener,noreferrer");
+};
+
 const FoundListingsSection = ({
   title,
   description,
@@ -108,7 +114,6 @@ const FoundListingsSection = ({
   labels = {},
 }: FoundListingsSectionProps) => {
   const {
-    imageOpenAriaLabelPrefix = "Open full-size image for found dog notice ",
     imageFallbackAltPrefix = "Found notice ",
     noticeTitle = "Found Dog",
     fieldGender = "Gender:",
@@ -147,7 +152,15 @@ const FoundListingsSection = ({
           <div className="grid gap-6 md:grid-cols-2">
             {visibleListings.map((listing) => {
               const featuredMedia = listing.media.find((item) => item.featured) ?? listing.media[0];
-              const imageHref = featuredMedia?.href ?? featuredMedia?.src;
+              const orderedMedia = featuredMedia
+                ? [featuredMedia, ...listing.media.filter((item) => item !== featuredMedia)]
+                : [];
+              const tileMedia: MediaCarouselTileItem[] = orderedMedia.map((item) => ({
+                id: item.id,
+                kind: "photo",
+                src: item.src,
+                label: item.alt ?? `${imageFallbackAltPrefix}${listing.id}`,
+              }));
               const locationLabel =
                 listing.location?.areaLabel ??
                 [listing.location?.city, listing.location?.state, listing.location?.postalCode]
@@ -156,22 +169,15 @@ const FoundListingsSection = ({
 
               return (
                 <article key={listing.id} className="overflow-hidden rounded-xl border bg-card shadow-xs">
-                  {featuredMedia && imageHref ? (
-                    <a
-                      href={imageHref}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="block bg-muted/30 p-3"
-                      aria-label={`${imageOpenAriaLabelPrefix}${listing.id}`}
-                    >
-                      <img
-                        src={featuredMedia.src}
-                        alt={featuredMedia.alt ?? `${imageFallbackAltPrefix}${listing.id}`}
-                        className="h-80 w-full rounded-md object-contain"
-                        loading="lazy"
-                        decoding="async"
-                      />
-                    </a>
+                  {tileMedia.length ? (
+                    <MediaCarouselTile
+                      media={tileMedia}
+                      fit="contain"
+                      onPhotoClick={(item) => {
+                        const source = orderedMedia.find((entry) => entry.id === item.id);
+                        openFullSize(source?.href ?? item.src);
+                      }}
+                    />
                   ) : null}
                   <div className="p-5">
                     <h4 className="text-lg font-bold text-foreground">
