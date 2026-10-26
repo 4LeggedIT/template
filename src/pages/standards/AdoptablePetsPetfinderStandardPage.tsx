@@ -1,5 +1,6 @@
 import { useTranslation } from "react-i18next";
 import AdoptablePetsSection from "@/components/patterns/AdoptablePetsSection";
+import StandardSnippet from "@/components/StandardSnippet";
 import PageHero from "@/components/patterns/PageHero";
 import SEOHead from "@/components/patterns/SEOHead";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -9,6 +10,18 @@ import {
   AFV_PETFINDER_ORG_ID,
   AFV_PETFINDER_URL,
 } from "@/data/afv-example-org";
+
+const snippetExample = `import AdoptablePetsSection from "@/components/patterns/AdoptablePetsSection";
+
+<AdoptablePetsSection
+  mode="petfinder"
+  title="Adoptable Dogs"
+  petfinder={{
+    organizationIds: ["CA1234"], // your Petfinder organization id(s)
+    limit: 12,
+    petfinderUrl: "https://www.petfinder.com/member/us/ca/example-city/example-rescue-ca1234/",
+  }}
+/>`;
 
 const AdoptablePetsPetfinderStandardPage = () => {
   const { t } = useTranslation(["adoptablePetsPetfinder", "common"]);
@@ -47,6 +60,8 @@ const AdoptablePetsPetfinderStandardPage = () => {
             footerCta={{ label: t("adoptablePetsPetfinder:footerCta.label"), href: "https://example.org/forms/adopt", external: true }}
           />
         </div>
+
+        <StandardSnippet code={snippetExample} />
 
         <Card>
           <CardHeader>

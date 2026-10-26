@@ -6,9 +6,10 @@
   "scripts": {
     "dev": "vite",
     "ports:check": "node ../internal-tools/4leggedit-websites/tools/check-port-registry.mjs --site template",
-    "build": "node tools/check-event-recurrence.mjs && node tools/check-internal-links.mjs && node tools/build.mjs",
+    "build": "node tools/check-event-recurrence.mjs && node tools/check-standards-pages.mjs && node tools/check-internal-links.mjs && node tools/build.mjs",
     "build:dev": "vite build --mode development",
     "check:recurrence": "node tools/check-event-recurrence.mjs",
+    "check:standards-pages": "node tools/check-standards-pages.mjs",
     "links:check": "node tools/check-internal-links.mjs",
     "links:check:all": "node tools/check-internal-links.mjs --external",
     "links:check:external": "node tools/check-internal-links.mjs --external-only",

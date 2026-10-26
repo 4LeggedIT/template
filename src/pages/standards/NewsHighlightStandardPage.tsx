@@ -1,5 +1,6 @@
 import { useTranslation } from "react-i18next";
 import HomeHighlightSection, { type HomeHighlightItem } from "@/components/patterns/HomeHighlightSection";
+import StandardSnippet from "@/components/StandardSnippet";
 import PageHero from "@/components/patterns/PageHero";
 import SEOHead from "@/components/patterns/SEOHead";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -7,6 +8,12 @@ import { getEventsNewsHighlightItems, type EventsNewsEntry } from "@/components/
 import { getBlogHighlightItems } from "@/components/patterns/BlogSection";
 import { eventsNewsExampleEntries } from "@/pages/examples/eventsNewsExampleData";
 import { blogExamplePosts } from "@/pages/examples/blogExampleData";
+
+const snippetExample = `import HomeHighlightSection from "@/components/patterns/HomeHighlightSection";
+import { getEventsNewsHighlightItems } from "@/components/patterns/EventsNewsSection";
+
+// Mark one entry highlightOnHome: true in its data file, then:
+<HomeHighlightSection items={getEventsNewsHighlightItems(eventsNewsEntries)} />`;
 
 const NewsHighlightStandardPage = () => {
   const { t } = useTranslation(["newsHighlight", "common"]);
@@ -97,6 +104,8 @@ const NewsHighlightStandardPage = () => {
           <p className="text-sm text-muted-foreground">{t("newsHighlight:sections.mixed.description")}</p>
           <HomeHighlightSection items={mixedItems} />
         </div>
+
+        <StandardSnippet code={snippetExample} />
 
         <Card>
           <CardHeader>

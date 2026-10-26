@@ -1,8 +1,25 @@
 import { useTranslation } from "react-i18next";
 import DogSpotlightSection, { type DogSpotlightItem } from "@/components/patterns/DogSpotlightSection";
+import StandardSnippet from "@/components/StandardSnippet";
 import PageHero from "@/components/patterns/PageHero";
 import SEOHead from "@/components/patterns/SEOHead";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+
+const snippetExample = `import DogSpotlightSection from "@/components/patterns/DogSpotlightSection";
+
+<DogSpotlightSection title="Meet the Dogs" dogs={spotlightDogs} labels={{ ctaPrefix: "Meet" }} />
+
+// spotlightDogs: DogSpotlightItem[] (the local adoptable manifest shape)
+{
+  id: "molly",
+  name: "Molly",
+  rescueId: "example-rescue",
+  rescueName: "Example Rescue",
+  image: "/pets/molly.webp",
+  breed: "Hound mix",
+  summary: "Sweet and gentle, loves walks.",
+  detailsUrl: "/adopt/molly",
+}`;
 
 const DogSpotlightStandardPage = () => {
   const { t } = useTranslation(["dogSpotlight", "common"]);
@@ -109,6 +126,8 @@ const DogSpotlightStandardPage = () => {
           </p>
           <DogSpotlightSection dogs={dogWithoutLink} />
         </div>
+
+        <StandardSnippet code={snippetExample} />
 
         <Card>
           <CardHeader>

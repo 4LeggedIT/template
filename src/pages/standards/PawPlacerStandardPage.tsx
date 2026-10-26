@@ -1,10 +1,19 @@
 import { Trans, useTranslation } from "react-i18next";
 import PawPlacerEmbed from "@/components/patterns/PawPlacerEmbed";
+import StandardSnippet from "@/components/StandardSnippet";
 import PageHero from "@/components/patterns/PageHero";
 import SEOHead from "@/components/patterns/SEOHead";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 const EXAMPLE_ORG_ID = "f2dde60b-b590-419c-8433-3df89bebf641";
+
+const snippetExample = `import PawPlacerEmbed from "@/components/patterns/PawPlacerEmbed";
+
+<PawPlacerEmbed
+  title="Adoptable Dogs"
+  organizationId="your-pawplacer-organization-id"
+  listingsUrl="https://pawplacer.com/your-organization"
+/>`;
 
 const PawPlacerStandardPage = () => {
   const { t } = useTranslation(["pawPlacer", "common"]);
@@ -50,6 +59,8 @@ const PawPlacerStandardPage = () => {
           </p>
           <PawPlacerEmbed organizationId={EXAMPLE_ORG_ID} species="dog" />
         </div>
+
+        <StandardSnippet code={snippetExample} />
 
         <Card>
           <CardHeader>

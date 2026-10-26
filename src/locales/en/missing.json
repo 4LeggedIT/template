@@ -21,11 +21,6 @@
       "viewSourceLabel": "View original post"
     }
   },
-  "source": {
-    "title": "Snippet",
-    "description": "Where a notice came from, such as a Facebook post, is recorded as an inline comment on the entry in the site's data file. When the original post or another source exists, set `sourceUrl` (and optionally `sourceName`) and the card links to it in a new tab; leave it unset to link nowhere.",
-    "caption": "A notice whose status is `found` (the dog is home) stays in the file as the record but is hidden by default, which is why only one dog is listed above."
-  },
   "standard": {
     "title": "Standard",
     "items": [

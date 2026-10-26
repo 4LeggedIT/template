@@ -5,6 +5,7 @@ import ImpactStatsSection, { type ImpactStatsPeriod } from "@/components/pattern
 import SpendBreakdownSection, {
   type SpendCategory,
 } from "@/components/patterns/SpendBreakdownSection";
+import StandardSnippet from "@/components/StandardSnippet";
 import PageHero from "@/components/patterns/PageHero";
 import SEOHead from "@/components/patterns/SEOHead";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -13,6 +14,19 @@ const relatedPages = [
   { key: "impactStats", href: "/standards/impact-stats" },
   { key: "spendBreakdown", href: "/standards/spend-breakdown" },
 ];
+
+const snippetExample = `import ImpactStatsSection from "@/components/patterns/ImpactStatsSection";
+import SpendBreakdownSection from "@/components/patterns/SpendBreakdownSection";
+
+<ImpactStatsSection lifetimeStats={[{ id: "adopted", value: 228, label: "Dogs adopted" }]} />
+<SpendBreakdownSection
+  periodLabel="2025 fiscal year"
+  categories={[
+    { id: "animalCare", label: "Animal care", amount: 52000 },
+    { id: "rescueOperations", label: "Rescue operations", amount: 18000 },
+  ]}
+  costPerOutcome={{ amountLabel: "$310", outcomeLabel: "per adoption" }}
+/>`;
 
 const ImpactAccountabilityStandardPage = () => {
   const { t } = useTranslation(["impactAccountability", "common"]);
@@ -120,6 +134,8 @@ const ImpactAccountabilityStandardPage = () => {
             ))}
           </div>
         </div>
+
+        <StandardSnippet code={snippetExample} />
 
         <Card>
           <CardHeader>

@@ -1,4 +1,5 @@
 import { useTranslation } from "react-i18next";
+import StandardSnippet from "@/components/StandardSnippet";
 import PageHero from "@/components/patterns/PageHero";
 import SEOHead from "@/components/patterns/SEOHead";
 import StructuredData from "@/components/patterns/StructuredData";
@@ -6,6 +7,20 @@ import FaqAccordion from "@/components/patterns/FaqAccordion";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { faqSections } from "@/data/faq";
 import { buildFaqJsonLd } from "@/lib/faq-json-ld";
+
+const snippetExample = `import FaqAccordion from "@/components/patterns/FaqAccordion";
+import StructuredData from "@/components/patterns/StructuredData";
+import { buildFaqJsonLd } from "@/lib/faq-json-ld";
+
+<StructuredData data={buildFaqJsonLd(faqSections)} /> // FAQ JSON-LD is derived from the same data
+<FaqAccordion sections={faqSections} title="Adoption" />
+
+// faqSections: FaqAccordionSection[]
+{
+  id: "adoption",
+  title: "Adoption",
+  items: [{ id: "fees", question: "What are your adoption fees?", answer: "Fees depend on the dog." }],
+}`;
 
 const FaqAccordionStandardPage = () => {
   const { t } = useTranslation(["faqAccordion", "common"]);
@@ -35,6 +50,8 @@ const FaqAccordionStandardPage = () => {
           <p className="text-sm text-muted-foreground">{t("faqAccordion:sections.sectioned.description")}</p>
           <FaqAccordion sections={faqSections} title={t("faqAccordion:sections.sectioned.sectionTitle")} />
         </div>
+
+        <StandardSnippet code={snippetExample} />
 
         <Card>
           <CardHeader>

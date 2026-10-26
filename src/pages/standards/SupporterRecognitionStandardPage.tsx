@@ -3,9 +3,20 @@ import SupporterRecognitionSection, {
   type Supporter,
   type SupporterRecognitionCategorySection,
 } from "@/components/patterns/SupporterRecognitionSection";
+import StandardSnippet from "@/components/StandardSnippet";
 import PageHero from "@/components/patterns/PageHero";
 import SEOHead from "@/components/patterns/SEOHead";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+
+const snippetExample = `import SupporterRecognitionSection from "@/components/patterns/SupporterRecognitionSection";
+
+<SupporterRecognitionSection
+  supporters={supporters}
+  sections={[{ category: "sponsors", title: "Sponsors" }]}
+/>
+
+// supporters: Supporter[]
+{ id: "example-sponsor", name: "Example Sponsor", category: "sponsors", note: "Hosted our October food drive." }`;
 
 const SupporterRecognitionStandardPage = () => {
   const { t } = useTranslation(["supporterRecognition", "common"]);
@@ -59,6 +70,8 @@ const SupporterRecognitionStandardPage = () => {
             omissionNoteHref="/standards"
           />
         </div>
+
+        <StandardSnippet code={snippetExample} />
 
         <Card>
           <CardHeader>

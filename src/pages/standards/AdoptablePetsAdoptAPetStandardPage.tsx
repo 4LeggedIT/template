@@ -1,5 +1,6 @@
 import { useTranslation } from "react-i18next";
 import AdoptablePetsSection from "@/components/patterns/AdoptablePetsSection";
+import StandardSnippet from "@/components/StandardSnippet";
 import PageHero from "@/components/patterns/PageHero";
 import SEOHead from "@/components/patterns/SEOHead";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -9,6 +10,17 @@ import {
   AFV_GETBUDDY_URL,
   AFV_PETFINDER_URL,
 } from "@/data/afv-example-org";
+
+const snippetExample = `import AdoptablePetsSection from "@/components/patterns/AdoptablePetsSection";
+
+<AdoptablePetsSection
+  mode="adoptapet"
+  title="Adoptable Dogs"
+  adoptAPet={{
+    listingsUrl: "https://www.adoptapet.com/shelter/12345-example-rescue",
+    shelterId: "12345",
+  }}
+/>`;
 
 const AdoptablePetsAdoptAPetStandardPage = () => {
   const { t } = useTranslation(["adoptablePetsAdoptAPet", "common"]);
@@ -48,6 +60,8 @@ const AdoptablePetsAdoptAPetStandardPage = () => {
             footerCta={{ label: t("adoptablePetsAdoptAPet:footerCta.label"), href: "https://example.org/forms/adopt", external: true }}
           />
         </div>
+
+        <StandardSnippet code={snippetExample} />
 
         <Card>
           <CardHeader>

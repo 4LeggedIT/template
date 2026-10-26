@@ -1,5 +1,6 @@
 import { useTranslation } from "react-i18next";
 import AdoptablePetsSection from "@/components/patterns/AdoptablePetsSection";
+import StandardSnippet from "@/components/StandardSnippet";
 import PageHero from "@/components/patterns/PageHero";
 import SEOHead from "@/components/patterns/SEOHead";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -12,6 +13,15 @@ import {
   AFV_PETFINDER_URL,
 } from "@/data/afv-example-org";
 import { toContentLocale } from "@/lib/localized-content";
+
+const snippetExample = `import AdoptablePetsSection from "@/components/patterns/AdoptablePetsSection";
+
+<AdoptablePetsSection
+  mode="hybrid" // local listings first, plus the external feed(s) you configure
+  title="Adoptable Dogs"
+  localPets={adoptablePets} // same AdoptablePetLocalItem[] as the local mode
+  petfinder={{ organizationIds: ["CA1234"], limit: 12 }}
+/>`;
 
 const AdoptablePetsHybridStandardPage = () => {
   const { t, i18n } = useTranslation(["adoptablePetsHybrid", "common"]);
@@ -55,6 +65,8 @@ const AdoptablePetsHybridStandardPage = () => {
             footerCta={{ label: t("adoptablePetsHybrid:footerCta.label"), href: "https://example.org/forms/adopt", external: true }}
           />
         </div>
+
+        <StandardSnippet code={snippetExample} />
 
         <Card>
           <CardHeader>

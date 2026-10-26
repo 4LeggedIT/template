@@ -1,10 +1,25 @@
 import { useTranslation } from "react-i18next";
 import FlyerLibrarySection, { type FlyerLibraryItem } from "@/components/patterns/FlyerLibrarySection";
+import StandardSnippet from "@/components/StandardSnippet";
 import PageHero from "@/components/patterns/PageHero";
 import SEOHead from "@/components/patterns/SEOHead";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import adoptionFridaysFlyer from "@/assets/flyers/adoption-fridays-flyer.svg";
 import basketRaffleFlyer from "@/assets/flyers/basket-raffle-flyer.svg";
+
+const snippetExample = `import FlyerLibrarySection from "@/components/patterns/FlyerLibrarySection";
+
+<FlyerLibrarySection title="Flyers" flyers={flyers} columns={3} showFilters />
+
+// flyers: FlyerLibraryItem[]
+{
+  id: "adoption-day-flyer",
+  src: "/flyers/adoption-day.webp",
+  alt: "Flyer for the November adoption day",
+  category: "promo", // foster | volunteer | spay-neuter | safety | promo | general
+  caption: "Adoption Day, Nov 14",
+  downloadHref: "/flyers/adoption-day.pdf",
+}`;
 
 const FlyerLibraryStandardPage = () => {
   const { t } = useTranslation(["flyerLibrary", "common"]);
@@ -55,6 +70,8 @@ const FlyerLibraryStandardPage = () => {
             flyers={sampleFlyers}
           />
         </div>
+
+        <StandardSnippet code={snippetExample} />
 
         <Card>
           <CardHeader>

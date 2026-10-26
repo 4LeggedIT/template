@@ -1,5 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
+import StandardSnippet from "@/components/StandardSnippet";
 import PageHero from "@/components/patterns/PageHero";
 import SEOHead from "@/components/patterns/SEOHead";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -12,6 +13,12 @@ const modePages = [
   { key: "pawPlacer", href: "/standards/pawplacer" },
   { key: "hybrid", href: "/standards/adoptable-pets/hybrid" },
 ];
+
+const snippetExample = `import AdoptablePetsSection from "@/components/patterns/AdoptablePetsSection";
+
+// One component, six modes: pick the one that matches where the site's listings live.
+// mode: "local" | "petfinder" | "adoptapet" | "getbuddy" | "pawplacer" | "hybrid"
+<AdoptablePetsSection mode="local" title="Adoptable Dogs" localPets={adoptablePets} />`;
 
 const AdoptablePetsStandardPage = () => {
   const { t } = useTranslation(["adoptablePets", "common"]);
@@ -49,6 +56,8 @@ const AdoptablePetsStandardPage = () => {
             </Link>
           ))}
         </div>
+
+        <StandardSnippet code={snippetExample} />
 
         <Card>
           <CardHeader>

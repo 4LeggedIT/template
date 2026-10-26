@@ -1,11 +1,19 @@
 import { useTranslation } from "react-i18next";
 import FaqAccordion, { type FaqAccordionItem, type FaqAccordionSection } from "@/components/patterns/FaqAccordion";
+import StandardSnippet from "@/components/StandardSnippet";
 import PageHero from "@/components/patterns/PageHero";
 import SEOHead from "@/components/patterns/SEOHead";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 type TranslatedFaqItem = { question: string; answer: string };
 type TranslatedFaqGroup = { title: string; items: TranslatedFaqItem[] };
+
+const snippetExample = `import FaqAccordion from "@/components/patterns/FaqAccordion";
+
+<FaqAccordion
+  items={[{ id: "fees", question: "What are your adoption fees?", answer: "Fees depend on the dog." }]}
+  title="Quick Questions"
+/>`;
 
 const FaqDisclosureStandardPage = () => {
   const { t } = useTranslation(["faqDisclosure", "common"]);
@@ -56,6 +64,8 @@ const FaqDisclosureStandardPage = () => {
           <p className="text-sm text-muted-foreground">{t("faqDisclosure:sections.sectioned.description")}</p>
           <FaqAccordion sections={sectionedFaqItems} />
         </div>
+
+        <StandardSnippet code={snippetExample} />
 
         <Card>
           <CardHeader>

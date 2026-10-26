@@ -2,6 +2,7 @@ import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import EventBanner, { type EventBannerItem } from "@/components/patterns/EventBanner";
 import EventsNewsSection from "@/components/patterns/EventsNewsSection";
+import StandardSnippet from "@/components/StandardSnippet";
 import PageHero from "@/components/patterns/PageHero";
 import SEOHead from "@/components/patterns/SEOHead";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -19,6 +20,35 @@ const imageLayoutPreviewEntries = eventsNewsExampleEntries.filter((entry) =>
     "news-field-rescue-2026-02-10",
   ].includes(entry.id),
 );
+
+const snippetExample = `import EventsNewsSection from "@/components/patterns/EventsNewsSection";
+
+<EventsNewsSection
+  title="Events and News"
+  entries={eventsNewsEntries}
+  eventDetailsBasePath="/events"
+  timeZone="America/Los_Angeles" // always set the site's zone so prerender and browser agree
+/>
+
+// eventsNewsEntries: EventsNewsEntry[]
+{
+  id: "adoption-day-2026-11-14",
+  kind: "event",
+  title: "Adoption Day",
+  summary: "Meet adoptable dogs.",
+  startAt: "2026-11-14T10:00:00-08:00",
+  startAtIso: "2026-11-14T10:00:00-08:00",
+  endAtIso: "2026-11-14T14:00:00-08:00",
+  locationLabel: "Example Park",
+  locationAddress: "123 Main St, Example City, CA",
+}
+{
+  id: "new-foster-program",
+  kind: "news",
+  title: "New Foster Program",
+  summary: "Foster-to-adopt is now open.",
+  dateLabel: "October 20, 2026",
+}`;
 
 const EventsNewsStandardPage = () => {
   const { t } = useTranslation(["eventsNews", "common"]);
@@ -140,6 +170,8 @@ const EventsNewsStandardPage = () => {
             eventDetailsBasePath="/examples/events-news/events"
           />
         </div>
+
+        <StandardSnippet code={snippetExample} />
 
         <Card>
           <CardHeader>

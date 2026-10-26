@@ -1,5 +1,6 @@
 import { useTranslation } from "react-i18next";
 import MissingListingsSection from "@/components/patterns/MissingListingsSection";
+import StandardSnippet from "@/components/StandardSnippet";
 import PageHero from "@/components/patterns/PageHero";
 import SEOHead from "@/components/patterns/SEOHead";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -9,15 +10,30 @@ import { toContentLocale } from "@/lib/localized-content";
 // Dated relative to today so the sample stays inside the default 60-day expiry and the snippet below matches it.
 const samplePostedISO = new Date(Date.now() - 10 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
 
-const sourceCommentExample = `{
+const snippetExample = `import MissingListingsSection from "@/components/patterns/MissingListingsSection";
+
+<MissingListingsSection
+  listings={missingDogNotices}
+  noticesTitle="Current Missing Dog Notices"
+  emptyMessage="No missing dog notices are posted right now."
+  dateLocale="en-US"
+  // expireAfterDays={60} is the default; raise or lower it for this site
+/>
+
+// missingDogNotices: MissingListing[]
+{
   id: "sample-missing-biscuit",
   name: "Biscuit",
   status: "missing", // flip to "found" when the dog is home
-  reportedAtISO: "${samplePostedISO}", // the post date: printed on the card, and the notice hides 60 days after it
-  sourceUrl: "https://www.facebook.com/example/posts/SAMPLE", // optional: the card links to the original post
+  reportedAtISO: "${samplePostedISO}", // the Facebook post date: printed on the card, and the notice hides 60 days after it
+  area: "Near Juniper Ave in Eastgate",
+  safetyNote: "Very fearful. Please do not chase.",
+  notes: "Brown terrier mix, red collar.",
+  media: [{ src: "/missing/biscuit.webp", alt: "Missing dog flyer for Biscuit", featured: true }],
+  sightingsAction: { label: "Text a sighting to (555) 555-0100", href: "sms:+15555550100" },
+  sourceUrl: "https://www.facebook.com/example/posts/SAMPLE", // optional link to the original post
   sourceName: "Facebook",
-  ...
-},`;
+}`;
 
 const MissingStandardPage = () => {
   const { t, i18n } = useTranslation(["missing", "common"]);
@@ -66,14 +82,7 @@ const MissingStandardPage = () => {
           />
         </div>
 
-        <div className="space-y-3">
-          <h2 className="text-lg font-semibold">{t("missing:source.title")}</h2>
-          <p className="text-sm text-muted-foreground">{t("missing:source.description")}</p>
-          <pre className="overflow-x-auto rounded-md border bg-muted/30 p-4 text-xs">
-            <code>{sourceCommentExample}</code>
-          </pre>
-          <p className="text-sm text-muted-foreground">{t("missing:source.caption")}</p>
-        </div>
+        <StandardSnippet code={snippetExample} />
 
         <Card>
           <CardHeader>

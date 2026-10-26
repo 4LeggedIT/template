@@ -1,8 +1,17 @@
 import { useTranslation } from "react-i18next";
+import StandardSnippet from "@/components/StandardSnippet";
 import PageHero from "@/components/patterns/PageHero";
 import SEOHead from "@/components/patterns/SEOHead";
 import GivebutterWidget from "@/components/patterns/GivebutterWidget";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+
+const snippetExample = `import GivebutterWidget from "@/components/patterns/GivebutterWidget";
+
+<GivebutterWidget
+  widgetId="your-widget-id"
+  accountId="your-account-id"
+  campaignUrl="https://givebutter.com/your-campaign"
+/>`;
 
 const GivebutterPatternPage = () => {
   const { t } = useTranslation(["givebutter", "common"]);
@@ -36,6 +45,8 @@ const GivebutterPatternPage = () => {
           />
           <p className="text-sm text-muted-foreground">{t("givebutter:example.configNote")}</p>
         </div>
+
+        <StandardSnippet code={snippetExample} />
 
         <Card>
           <CardHeader>

@@ -1,9 +1,29 @@
 import { useTranslation } from "react-i18next";
 import PlacementHelpSection, { type PlacementNeedItem } from "@/components/patterns/PlacementHelpSection";
 import { placementListings } from "@/data/placement-listings";
+import StandardSnippet from "@/components/StandardSnippet";
 import PageHero from "@/components/patterns/PageHero";
 import SEOHead from "@/components/patterns/SEOHead";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+
+const snippetExample = `import PlacementHelpSection from "@/components/patterns/PlacementHelpSection";
+
+<PlacementHelpSection
+  title="Help Place a Dog"
+  listings={placementListings}
+  needs={[{ id: "foster", title: "Foster homes", description: "Short-term homes while we find adopters.", icon: "home" }]}
+  primaryCta={{ label: "Offer help", href: "/contact" }}
+/>
+
+// placementListings: PlacementListingItem[] (a PetCardItem)
+{
+  id: "buddy",
+  name: "Buddy",
+  imageSrc: "/pets/buddy.webp",
+  placementType: "owner-surrender",
+  summary: "Needs a new home by the end of the month.",
+  postedAt: "2026-10-10",
+}`;
 
 const PlacementHelpStandardPage = () => {
   const { t } = useTranslation(["placementHelp", "common"]);
@@ -78,6 +98,8 @@ const PlacementHelpStandardPage = () => {
             needs={placementNeeds}
           />
         </div>
+
+        <StandardSnippet code={snippetExample} />
 
         <Card>
           <CardHeader>

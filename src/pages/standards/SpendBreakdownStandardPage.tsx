@@ -3,9 +3,22 @@ import { Briefcase, HandCoins, Megaphone, Stethoscope, Truck } from "lucide-reac
 import SpendBreakdownSection, {
   type SpendCategory,
 } from "@/components/patterns/SpendBreakdownSection";
+import StandardSnippet from "@/components/StandardSnippet";
 import PageHero from "@/components/patterns/PageHero";
 import SEOHead from "@/components/patterns/SEOHead";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+
+const snippetExample = `import SpendBreakdownSection from "@/components/patterns/SpendBreakdownSection";
+
+<SpendBreakdownSection
+  title="Where the Money Goes"
+  periodLabel="2025 fiscal year"
+  categories={[
+    { id: "animalCare", label: "Animal care", amount: 52000 },
+    { id: "rescueOperations", label: "Rescue operations", amount: 18000 },
+  ]}
+  costPerOutcome={{ amountLabel: "$310", outcomeLabel: "per adoption" }}
+/>`;
 
 const SpendBreakdownStandardPage = () => {
   const { t } = useTranslation(["spendBreakdown", "common"]);
@@ -65,6 +78,8 @@ const SpendBreakdownStandardPage = () => {
             }}
           />
         </div>
+
+        <StandardSnippet code={snippetExample} />
 
         <Card>
           <CardHeader>

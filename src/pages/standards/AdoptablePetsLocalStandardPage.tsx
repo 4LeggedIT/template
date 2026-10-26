@@ -1,11 +1,36 @@
 import { useTranslation } from "react-i18next";
 import AdoptablePetsSection from "@/components/patterns/AdoptablePetsSection";
+import StandardSnippet from "@/components/StandardSnippet";
 import PageHero from "@/components/patterns/PageHero";
 import SEOHead from "@/components/patterns/SEOHead";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { resolveLocalPets } from "@/data/adoptable-pets";
 import { AFV_PETFINDER_URL } from "@/data/afv-example-org";
 import { toContentLocale } from "@/lib/localized-content";
+
+const snippetExample = `import AdoptablePetsSection from "@/components/patterns/AdoptablePetsSection";
+
+<AdoptablePetsSection
+  mode="local"
+  title="Adoptable Dogs"
+  localPets={adoptablePets}
+  localSort="urgency"
+/>
+
+// adoptablePets: AdoptablePetLocalItem[]
+{
+  id: "molly",
+  name: "Molly",
+  imageSrc: "/pets/molly.webp",
+  imageAlt: "Molly, a tan and white hound mix",
+  breed: "Hound mix",
+  gender: "Female",
+  ageLabel: "2 years",
+  size: "Medium",
+  summary: "Sweet and gentle, loves walks.",
+  goodWithDogs: true,
+  postedAt: "2026-10-01", // listings expire 3 months after this unless expiresAt is set
+}`;
 
 const AdoptablePetsLocalStandardPage = () => {
   const { t, i18n } = useTranslation(["adoptablePetsLocal", "common"]);
@@ -47,6 +72,8 @@ const AdoptablePetsLocalStandardPage = () => {
             footerCta={{ label: t("adoptablePetsLocal:footerCta.label"), href: "https://example.org/forms/adopt", external: true }}
           />
         </div>
+
+        <StandardSnippet code={snippetExample} />
 
         <Card>
           <CardHeader>

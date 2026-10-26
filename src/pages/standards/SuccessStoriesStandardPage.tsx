@@ -1,5 +1,6 @@
 import { Heart } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import StandardSnippet from "@/components/StandardSnippet";
 import PageHero from "@/components/patterns/PageHero";
 import SEOHead from "@/components/patterns/SEOHead";
 import SuccessStoriesSection, { type SuccessStoryItem } from "@/components/patterns/SuccessStoriesSection";
@@ -10,6 +11,21 @@ import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious
 // site-owned field, not part of SuccessStoryItem itself — a real site's own extended story type
 // carries it the same way.
 type DemoStoryItem = SuccessStoryItem & { status: "available" | "adopted" };
+
+const snippetExample = `import SuccessStoriesSection from "@/components/patterns/SuccessStoriesSection";
+
+<SuccessStoriesSection title="Success Stories" stories={stories} columns={3} fit="contain" />
+
+// stories: SuccessStoryItem[]
+{
+  id: "molly",
+  name: "Molly",
+  imageSrc: "/stories/molly.webp",
+  summary: "Molly found her family in October.",
+  badgeLabel: "Adopted",
+  adoptedDateLabel: "October 2026",
+  storyHref: "/stories/molly",
+}`;
 
 const SuccessStoriesStandardPage = () => {
   const { t } = useTranslation(["successStories", "common"]);
@@ -214,6 +230,8 @@ const STORY_STATUS_BADGES = {
 // both the badge pill text and which CTA button(s) to render, in order.`}</code>
           </pre>
         </div>
+
+        <StandardSnippet code={snippetExample} />
 
         <Card>
           <CardHeader>

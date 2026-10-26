@@ -1,8 +1,17 @@
 import { useTranslation } from "react-i18next";
 import MediaCarouselSection, { type MediaCarouselItem } from "@/components/patterns/MediaCarouselSection";
+import StandardSnippet from "@/components/StandardSnippet";
 import PageHero from "@/components/patterns/PageHero";
 import SEOHead from "@/components/patterns/SEOHead";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+
+const snippetExample = `import MediaCarouselSection from "@/components/patterns/MediaCarouselSection";
+
+<MediaCarouselSection items={carouselItems} autoPlayDelayMs={6000} /> // omit autoPlayDelayMs for a static carousel
+
+// carouselItems: MediaCarouselItem[]
+{ id: "kennel-1", kind: "image", src: "/media/kennel-1.webp", alt: "Dogs playing in the yard" }
+{ id: "walk-1", kind: "video", src: "/media/walk-1.mp4", poster: "/media/walk-1.webp", alt: "A volunteer walking a dog" }`;
 
 const MediaCarouselStandardPage = () => {
   const { t } = useTranslation(["mediaCarousel", "common"]);
@@ -71,6 +80,8 @@ const MediaCarouselStandardPage = () => {
             <p className="text-sm text-muted-foreground">{t("mediaCarousel:anchors.two")}</p>
           </div>
         </div>
+
+        <StandardSnippet code={snippetExample} />
 
         <Card>
           <CardHeader>

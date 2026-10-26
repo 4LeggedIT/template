@@ -3,9 +3,27 @@ import CommunityPartnersSection, {
   type CommunityPartner,
   type CommunityPartnersCategorySection,
 } from "@/components/patterns/CommunityPartnersSection";
+import StandardSnippet from "@/components/StandardSnippet";
 import PageHero from "@/components/patterns/PageHero";
 import SEOHead from "@/components/patterns/SEOHead";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+
+const snippetExample = `import CommunityPartnersSection from "@/components/patterns/CommunityPartnersSection";
+
+<CommunityPartnersSection
+  partners={partners}
+  sections={[{ category: "veterinary", title: "Veterinary Partners" }]}
+/>
+
+// partners: CommunityPartner[]
+{
+  id: "example-vet",
+  name: "Example Veterinary Clinic",
+  category: "veterinary", // matches a sections[].category
+  description: "Discounted spay and neuter surgeries for our rescue dogs.",
+  logoSrc: "/partners/example-vet.webp",
+  url: "https://example.com",
+}`;
 
 const CommunityPartnersStandardPage = () => {
   const { t } = useTranslation(["communityPartners", "common"]);
@@ -117,6 +135,8 @@ const CommunityPartnersStandardPage = () => {
             sections={sections}
           />
         </div>
+
+        <StandardSnippet code={snippetExample} />
 
         <Card>
           <CardHeader>

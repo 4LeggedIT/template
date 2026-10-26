@@ -1,5 +1,6 @@
 import { useTranslation } from "react-i18next";
 import MediaCarouselTile, { type MediaCarouselTileItem } from "@/components/patterns/MediaCarouselTile";
+import StandardSnippet from "@/components/StandardSnippet";
 import PageHero from "@/components/patterns/PageHero";
 import SEOHead from "@/components/patterns/SEOHead";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -9,6 +10,17 @@ const PHOTOS = [
   "https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?auto=format&fit=crop&w=1200&q=80",
   "https://images.unsplash.com/photo-1548199973-03cce0bbc87b?auto=format&fit=crop&w=1200&q=80",
 ];
+
+const snippetExample = `import MediaCarouselTile from "@/components/patterns/MediaCarouselTile";
+
+<MediaCarouselTile
+  media={[
+    { id: "a", kind: "photo", src: "/media/a.webp", label: "Molly at the park" },
+    { id: "b", kind: "video", src: "/media/b.mp4", poster: "/media/b.webp", label: "Molly playing" },
+  ]}
+  fit="contain" // never crop
+  aspect="landscape"
+/>`;
 
 const MediaCarouselTileStandardPage = () => {
   const { t } = useTranslation(["mediaCarouselTile", "common"]);
@@ -66,6 +78,8 @@ const MediaCarouselTileStandardPage = () => {
             <MediaCarouselTile media={groupedItems} fit="contain" aspect="portrait" />
           </div>
         </div>
+
+        <StandardSnippet code={snippetExample} />
 
         <Card>
           <CardHeader>

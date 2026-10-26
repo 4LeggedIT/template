@@ -1,8 +1,13 @@
 import { useTranslation } from "react-i18next";
+import StandardSnippet from "@/components/StandardSnippet";
 import PageHero from "@/components/patterns/PageHero";
 import PayPalHostedButton from "@/components/patterns/PayPalHostedButton";
 import SEOHead from "@/components/patterns/SEOHead";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+
+const snippetExample = `import PayPalHostedButton from "@/components/patterns/PayPalHostedButton";
+
+<PayPalHostedButton clientId="YOUR_PAYPAL_CLIENT_ID" hostedButtonId="YOUR_HOSTED_BUTTON_ID" currency="USD" />`;
 
 const PayPalButtonsHostedStandardPage = () => {
   const { t } = useTranslation(["paypalButtonsHosted", "common"]);
@@ -51,6 +56,8 @@ const PayPalButtonsHostedStandardPage = () => {
             <p>{t("paypalButtonsHosted:gotcha.text")}</p>
           </CardContent>
         </Card>
+
+        <StandardSnippet code={snippetExample} />
 
         <Card>
           <CardHeader>

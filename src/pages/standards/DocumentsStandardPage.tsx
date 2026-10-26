@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import StandardSnippet from "@/components/StandardSnippet";
 import PageHero from "@/components/patterns/PageHero";
 import SEOHead from "@/components/patterns/SEOHead";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -42,6 +43,21 @@ const tools = [
   },
 ];
 
+const snippetExample = `import AdoptionCertificateSection from "@/components/patterns/AdoptionCertificateSection";
+import type { PrintableDocConfig } from "@/components/patterns/printable-doc-config";
+
+// One config object feeds every printable document
+const printableDocConfig: PrintableDocConfig = {
+  orgName: "Example Rescue",
+  orgTagline: "Every Animal Deserves a Home",
+  logoSrc: "/logo.webp",
+  adoptUrl: "https://example.org/adopt",
+  contact: { email: "hello@example.org", website: "https://example.org", city: "Example City", state: "CA" },
+};
+
+// A standalone, full-viewport page mounted outside the site layout, e.g. at /tools/adoption-certificate
+<AdoptionCertificateSection config={printableDocConfig} />`;
+
 const DocumentsStandardPage = () => {
   const { t } = useTranslation(["documents", "common"]);
 
@@ -79,6 +95,8 @@ const DocumentsStandardPage = () => {
             </Card>
           ))}
         </div>
+
+        <StandardSnippet code={snippetExample} />
 
         <Card>
           <CardHeader>

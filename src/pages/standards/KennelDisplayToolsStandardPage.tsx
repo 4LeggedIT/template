@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import StandardSnippet from "@/components/StandardSnippet";
 import PageHero from "@/components/patterns/PageHero";
 import SEOHead from "@/components/patterns/SEOHead";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -21,6 +22,15 @@ const tools = [
     component: "KennelCards2UpSection.tsx",
   },
 ];
+
+const snippetExample = `import KennelCards2UpSection from "@/components/patterns/KennelCards2UpSection";
+
+// A standalone, full-viewport print page mounted outside the site layout, e.g. at /tools/kennel-cards-2up
+<KennelCards2UpSection
+  pets={kennelPets} // the same local adoptable manifest items used by AdoptablePetsSection
+  orgName="Example Rescue"
+  adoptUrl="https://example.org/adoptable-pets"
+/>`;
 
 const KennelDisplayToolsStandardPage = () => {
   const { t } = useTranslation(["kennelDisplayTools", "common"]);
@@ -61,6 +71,8 @@ const KennelDisplayToolsStandardPage = () => {
             </Card>
           ))}
         </div>
+
+        <StandardSnippet code={snippetExample} />
 
         <Card>
           <CardHeader>

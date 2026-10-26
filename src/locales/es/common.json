@@ -31,5 +31,9 @@
     "en": "EN",
     "es": "ES",
     "toggleLabel": "Idioma"
+  },
+  "snippet": {
+    "title": "Fragmento de código",
+    "description": "La importación, el componente con sus propiedades obligatorias y una entrada de datos de ejemplo. Cópielo y reemplace los valores de ejemplo."
   }
 }

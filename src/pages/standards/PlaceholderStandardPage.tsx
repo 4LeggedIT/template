@@ -6,11 +6,23 @@
 // to supply a section) is internal — it lives in internal-tools
 // placeholder-module-wiring-contract.md §5, not here (David, 2026-09-15).
 import { useTranslation } from "react-i18next";
+import StandardSnippet from "@/components/StandardSnippet";
 import PageHero from "@/components/patterns/PageHero";
 import Placeholder from "@/components/patterns/Placeholder";
 import PlaceholderSection from "@/components/patterns/PlaceholderSection";
 import SEOHead from "@/components/patterns/SEOHead";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+
+const snippetExample = `import Placeholder from "@/components/patterns/Placeholder";
+import PlaceholderSection from "@/components/patterns/PlaceholderSection";
+
+// Inline: wraps copy WE drafted that the client has not confirmed (shows a visible badge)
+<Placeholder note="Drafted by 4leggedIT; awaiting client confirmation">We respond within two business days.</Placeholder>
+
+// Block: a whole section that is provisional
+<PlaceholderSection title="Volunteer Orientation" publicText="Details coming soon.">
+  Orientation runs the first Saturday of each month.
+</PlaceholderSection>`;
 
 const PlaceholderStandardPage = () => {
   const { t } = useTranslation(["placeholder", "common"]);
@@ -82,6 +94,8 @@ const PlaceholderStandardPage = () => {
           </CardHeader>
           <CardContent className="space-y-2 text-sm text-muted-foreground">{list("placeholder:whenToUse.items")}</CardContent>
         </Card>
+
+        <StandardSnippet code={snippetExample} />
 
         <Card>
           <CardHeader>

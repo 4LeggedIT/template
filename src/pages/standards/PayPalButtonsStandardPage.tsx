@@ -1,5 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
+import StandardSnippet from "@/components/StandardSnippet";
 import PageHero from "@/components/patterns/PageHero";
 import SEOHead from "@/components/patterns/SEOHead";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -8,6 +9,13 @@ const modePages = [
   { key: "donateButton", href: "/standards/paypal-buttons/donate-button" },
   { key: "hostedButtons", href: "/standards/paypal-buttons/hosted-buttons" },
 ];
+
+const snippetExample = `import PayPalDonateButton from "@/components/patterns/PayPalDonateButton";
+import PayPalHostedButton from "@/components/patterns/PayPalHostedButton";
+
+// Pick the one that matches the button PayPal gave you:
+<PayPalDonateButton hostedButtonId="YOUR_HOSTED_BUTTON_ID" /> // classic donate button
+<PayPalHostedButton clientId="YOUR_PAYPAL_CLIENT_ID" hostedButtonId="YOUR_HOSTED_BUTTON_ID" /> // hosted button`;
 
 const PayPalButtonsStandardPage = () => {
   const { t } = useTranslation(["paypalButtons", "common"]);
@@ -45,6 +53,8 @@ const PayPalButtonsStandardPage = () => {
             </Link>
           ))}
         </div>
+
+        <StandardSnippet code={snippetExample} />
 
         <Card>
           <CardHeader>

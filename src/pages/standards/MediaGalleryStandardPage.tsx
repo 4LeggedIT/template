@@ -1,9 +1,17 @@
 import { useTranslation } from "react-i18next";
 import MediaGallerySection, { type MediaGalleryItem } from "@/components/patterns/MediaGallerySection";
 import SplitMediaGallerySection from "@/components/patterns/SplitMediaGallerySection";
+import StandardSnippet from "@/components/StandardSnippet";
 import PageHero from "@/components/patterns/PageHero";
 import SEOHead from "@/components/patterns/SEOHead";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+
+const snippetExample = `import MediaGallerySection from "@/components/patterns/MediaGallerySection";
+
+<MediaGallerySection title="Gallery" items={galleryItems} columns={3} showFilters enablePhotoLightbox />
+
+// galleryItems: MediaGalleryItem[]
+{ id: "p1", kind: "photo", src: "/gallery/p1.webp", alt: "Volunteers at adoption day", category: "events" }`;
 
 const MediaGalleryStandardPage = () => {
   const { t } = useTranslation(["mediaGallery", "common"]);
@@ -158,6 +166,8 @@ const MediaGalleryStandardPage = () => {
             showFilters={false}
           />
         </div>
+
+        <StandardSnippet code={snippetExample} />
 
         <Card>
           <CardHeader>

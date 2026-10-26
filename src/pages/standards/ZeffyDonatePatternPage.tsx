@@ -1,8 +1,13 @@
 import { useTranslation } from "react-i18next";
+import StandardSnippet from "@/components/StandardSnippet";
 import PageHero from "@/components/patterns/PageHero";
 import SEOHead from "@/components/patterns/SEOHead";
 import ZeffyDonateEmbed from "@/components/patterns/ZeffyDonateEmbed";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+
+const snippetExample = `import ZeffyDonateEmbed from "@/components/patterns/ZeffyDonateEmbed";
+
+<ZeffyDonateEmbed formSlug="your-zeffy-form-slug" title="Donate" height={900} />`;
 
 const ZeffyDonatePatternPage = () => {
   const { t } = useTranslation(["zeffyDonate", "common"]);
@@ -31,6 +36,8 @@ const ZeffyDonatePatternPage = () => {
           <ZeffyDonateEmbed className="max-w-md" formSlug="DUMMY-FORM-SLUG-EXAMPLE-ONLY" />
           <p className="text-sm text-muted-foreground">{t("zeffyDonate:example.configNote")}</p>
         </div>
+
+        <StandardSnippet code={snippetExample} />
 
         <Card>
           <CardHeader>

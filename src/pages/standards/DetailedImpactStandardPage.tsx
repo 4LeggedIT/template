@@ -7,9 +7,31 @@ import DetailedImpactSection, {
   getImpactLifetimeStats,
 } from "@/components/patterns/DetailedImpactSection";
 import ImpactStatsSection from "@/components/patterns/ImpactStatsSection";
+import StandardSnippet from "@/components/StandardSnippet";
 import PageHero from "@/components/patterns/PageHero";
 import SEOHead from "@/components/patterns/SEOHead";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+
+const snippetExample = `import DetailedImpactSection from "@/components/patterns/DetailedImpactSection";
+
+<DetailedImpactSection
+  title="Our Impact"
+  entries={impactEntries}
+  categories={impactCategories}
+  locale="en-US"
+/>
+
+// impactCategories: ImpactCategory[]
+{ id: "feeding-supplies", label: "Feeding and supplies", description: "Pounds of food donated." }
+
+// impactEntries: DetailedImpactEntry[]
+{
+  id: "october-food-drive",
+  title: "October Food Drive",
+  date: "2026-10-12",
+  summary: "Neighbors filled our pantry shelves.",
+  contributions: [{ categoryId: "feeding-supplies", amount: 450, unit: "lbs" }],
+}`;
 
 const DetailedImpactStandardPage = () => {
   const { t } = useTranslation(["impactLog", "common"]);
@@ -116,6 +138,8 @@ const DetailedImpactStandardPage = () => {
             lifetimeStats={getImpactLifetimeStats(entries, categories)}
           />
         </div>
+
+        <StandardSnippet code={snippetExample} />
 
         <Card>
           <CardHeader>

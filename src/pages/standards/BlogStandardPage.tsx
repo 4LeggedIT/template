@@ -2,6 +2,7 @@ import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import BlogPostDetail from "@/components/patterns/BlogPostDetail";
 import BlogSection, { getRelatedBlogPosts } from "@/components/patterns/BlogSection";
+import StandardSnippet from "@/components/StandardSnippet";
 import PageHero from "@/components/patterns/PageHero";
 import SEOHead from "@/components/patterns/SEOHead";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -9,6 +10,24 @@ import { blogExampleCategories, blogExamplePosts } from "@/pages/examples/blogEx
 
 const fullPost = blogExamplePosts.find((post) => post.slug === "lunas-journey-home")!;
 const relatedPosts = getRelatedBlogPosts(blogExamplePosts, fullPost.slug);
+
+const snippetExample = `import BlogSection from "@/components/patterns/BlogSection";
+import BlogPostDetail from "@/components/patterns/BlogPostDetail";
+
+<BlogSection title="Blog" posts={blogPosts} postBasePath="/blog" />
+<BlogPostDetail post={post} backHref="/blog" postBasePath="/blog" />
+
+// blogPosts: BlogPostEntry[]
+{
+  id: "first-foster-week",
+  slug: "first-foster-week",
+  title: "Your First Foster Week",
+  excerpt: "What to expect when a foster dog comes home.",
+  publishedAt: "2026-10-01",
+  content: "Paragraph one.\\n\\nParagraph two.",
+  category: "fostering",
+  readTime: "4 min read",
+}`;
 
 const BlogStandardPage = () => {
   const { t } = useTranslation(["blog", "common"]);
@@ -81,6 +100,8 @@ const BlogStandardPage = () => {
             .
           </p>
         </div>
+
+        <StandardSnippet code={snippetExample} />
 
         <Card>
           <CardHeader>

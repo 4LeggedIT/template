@@ -31,5 +31,9 @@
     "en": "EN",
     "es": "ES",
     "toggleLabel": "Language"
+  },
+  "snippet": {
+    "title": "Snippet",
+    "description": "The import, the component with its required props, and one sample data entry. Copy it and replace the sample values."
   }
 }

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
+import StandardSnippet from "@/components/StandardSnippet";
 import PageHero from "@/components/patterns/PageHero";
 import SEOHead from "@/components/patterns/SEOHead";
 import FormEmbedModal from "@/components/patterns/FormEmbedModal";
@@ -8,6 +9,12 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 const EXAMPLE_FORM_URL =
   "https://docs.google.com/forms/d/e/1FAIpQLScTemplateExampleGoogleForm/viewform?embedded=true";
+
+const snippetExample = `import FormEmbedModal from "@/components/patterns/FormEmbedModal";
+
+<FormEmbedModal formUrl="https://docs.google.com/forms/d/e/EXAMPLE/viewform?embedded=true" title="Volunteer Application">
+  Apply to Volunteer
+</FormEmbedModal>`;
 
 const FormEmbedModalStandardPage = () => {
   const { t } = useTranslation(["formEmbedModal", "common"]);
@@ -72,6 +79,8 @@ const FormEmbedModalStandardPage = () => {
             onOpenChange={setControlledOpen}
           />
         </div>
+
+        <StandardSnippet code={snippetExample} />
 
         <Card>
           <CardHeader>

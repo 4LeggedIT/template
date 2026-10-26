@@ -1,8 +1,22 @@
 import { useTranslation } from "react-i18next";
+import StandardSnippet from "@/components/StandardSnippet";
 import PageHero from "@/components/patterns/PageHero";
 import SEOHead from "@/components/patterns/SEOHead";
 import TestimonialsSection, { type TestimonialItem } from "@/components/patterns/TestimonialsSection";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+
+const snippetExample = `import TestimonialsSection from "@/components/patterns/TestimonialsSection";
+
+<TestimonialsSection title="What Adopters Say" testimonials={testimonials} />
+
+// testimonials: TestimonialItem[]
+{
+  id: "adopter-1",
+  quote: "Molly is the best thing that ever happened to us.",
+  author: "Sam R.",
+  authorMeta: "Adopted Molly, 2026",
+  rating: 5,
+}`;
 
 const TestimonialsStandardPage = () => {
   const { t } = useTranslation(["testimonials", "common"]);
@@ -115,6 +129,8 @@ const TestimonialsStandardPage = () => {
             }}
           />
         </div>
+
+        <StandardSnippet code={snippetExample} />
 
         <Card>
           <CardHeader>

@@ -1,8 +1,23 @@
 import { useTranslation } from "react-i18next";
 import CuratedLinksSection, { type CuratedLinkItem } from "@/components/patterns/CuratedLinksSection";
+import StandardSnippet from "@/components/StandardSnippet";
 import PageHero from "@/components/patterns/PageHero";
 import SEOHead from "@/components/patterns/SEOHead";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+
+const snippetExample = `import CuratedLinksSection from "@/components/patterns/CuratedLinksSection";
+
+<CuratedLinksSection title="Worth Reading" items={curatedLinks} showFilters />
+
+// curatedLinks: CuratedLinkItem[]
+{
+  id: "loose-leash-walking",
+  title: "Loose-Leash Walking Basics",
+  href: "https://example.com/loose-leash-walking", // http(s) only; links straight to the original
+  sourceName: "Example Dog Training", // credit shown on the card
+  summary: "One line we write about why it helps.",
+  topic: "Training",
+}`;
 
 const CuratedLinksStandardPage = () => {
   const { t } = useTranslation(["curatedLinks", "common"]);
@@ -58,6 +73,8 @@ const CuratedLinksStandardPage = () => {
             }}
           />
         </div>
+
+        <StandardSnippet code={snippetExample} />
 
         <Card>
           <CardHeader>

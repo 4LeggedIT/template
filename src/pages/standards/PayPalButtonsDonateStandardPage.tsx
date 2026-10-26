@@ -1,8 +1,13 @@
 import { useTranslation } from "react-i18next";
+import StandardSnippet from "@/components/StandardSnippet";
 import PageHero from "@/components/patterns/PageHero";
 import PayPalDonateButton from "@/components/patterns/PayPalDonateButton";
 import SEOHead from "@/components/patterns/SEOHead";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+
+const snippetExample = `import PayPalDonateButton from "@/components/patterns/PayPalDonateButton";
+
+<PayPalDonateButton hostedButtonId="YOUR_HOSTED_BUTTON_ID" env="production" />`;
 
 const PayPalButtonsDonateStandardPage = () => {
   const { t } = useTranslation(["paypalButtonsDonate", "common"]);
@@ -50,6 +55,8 @@ const PayPalButtonsDonateStandardPage = () => {
             </a>
           </p>
         </div>
+
+        <StandardSnippet code={snippetExample} />
 
         <Card>
           <CardHeader>

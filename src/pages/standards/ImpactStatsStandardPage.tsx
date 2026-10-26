@@ -14,9 +14,23 @@ import ImpactStatsSection, {
   type ImpactStat,
   type ImpactStatsPeriod,
 } from "@/components/patterns/ImpactStatsSection";
+import StandardSnippet from "@/components/StandardSnippet";
 import PageHero from "@/components/patterns/PageHero";
 import SEOHead from "@/components/patterns/SEOHead";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+
+const snippetExample = `import ImpactStatsSection from "@/components/patterns/ImpactStatsSection";
+
+<ImpactStatsSection
+  title="Our Impact"
+  lifetimeStats={[
+    { id: "adopted", value: 228, label: "Dogs adopted" },
+    { id: "fostered", value: 140, label: "Dogs fostered" },
+  ]}
+  // Optional: periods + periodMetrics add the per-period chart
+  periods={[{ id: "2026-q3", label: "Q3 2026", metrics: { adopted: 31, fostered: 18 } }]}
+  periodMetrics={{ adopted: { label: "Adopted" }, fostered: { label: "Fostered" } }}
+/>`;
 
 const ImpactStatsStandardPage = () => {
   const { t } = useTranslation(["impactStats", "common"]);
@@ -113,6 +127,8 @@ const ImpactStatsStandardPage = () => {
             periodMetrics={periodMetrics}
           />
         </div>
+
+        <StandardSnippet code={snippetExample} />
 
         <Card>
           <CardHeader>

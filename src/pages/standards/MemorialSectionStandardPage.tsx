@@ -1,8 +1,22 @@
 import { useTranslation } from "react-i18next";
 import MemorialSection, { type MemorialEntry } from "@/components/patterns/MemorialSection";
+import StandardSnippet from "@/components/StandardSnippet";
 import PageHero from "@/components/patterns/PageHero";
 import SEOHead from "@/components/patterns/SEOHead";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+
+const snippetExample = `import MemorialSection from "@/components/patterns/MemorialSection";
+
+<MemorialSection title="In Loving Memory" entries={memorials} />
+
+// memorials: MemorialEntry[]
+{
+  id: "reggie",
+  name: "Reggie",
+  photos: ["/memorial/reggie-1.webp"],
+  dates: "2019 to 2026",
+  message: ["Reggie taught us what second chances look like."],
+}`;
 
 const MemorialSectionStandardPage = () => {
   const { t } = useTranslation(["memorialSection", "common"]);
@@ -67,6 +81,8 @@ const MemorialSectionStandardPage = () => {
             </CardContent>
           </Card>
         </div>
+
+        <StandardSnippet code={snippetExample} />
 
         <Card>
           <CardHeader>

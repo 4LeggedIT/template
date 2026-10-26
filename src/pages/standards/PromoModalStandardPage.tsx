@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import PromoModal, { type PromoModalItem } from "@/components/patterns/PromoModal";
+import StandardSnippet from "@/components/StandardSnippet";
 import PageHero from "@/components/patterns/PageHero";
 import SEOHead from "@/components/patterns/SEOHead";
 import { Button } from "@/components/ui/button";
@@ -8,6 +9,22 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 const EXAMPLE_STORAGE_KEY_PREFIX = "standards_promo_modal_example_dismissed_until";
 const EXAMPLE_PROMO_ID = "back-to-school-example";
+
+const snippetExample = `import PromoModal from "@/components/patterns/PromoModal";
+
+<PromoModal promos={promos} openDelayMs={2000} />
+
+// promos: PromoModalItem[]
+{
+  id: "adoption-day-2026-11",
+  imageSrc: "/promos/adoption-day.webp",
+  imageAlt: "Adoption day flyer",
+  headline: "Adoption Day, Nov 14",
+  ctaLabel: "Learn more",
+  ctaHref: "/events",
+  startsAtIso: "2026-11-01T00:00:00-08:00",
+  expiresAtIso: "2026-11-14T14:00:00-08:00", // stops showing after this
+}`;
 
 const PromoModalStandardPage = () => {
   const { t } = useTranslation(["promoModal", "common"]);
@@ -67,6 +84,8 @@ const PromoModalStandardPage = () => {
             </CardContent>
           </Card>
         </div>
+
+        <StandardSnippet code={snippetExample} />
 
         <Card>
           <CardHeader>

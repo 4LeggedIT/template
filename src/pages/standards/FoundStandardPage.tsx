@@ -1,5 +1,6 @@
 import { useTranslation } from "react-i18next";
 import FoundListingsSection, { type FoundListing } from "@/components/patterns/FoundListingsSection";
+import StandardSnippet from "@/components/StandardSnippet";
 import PageHero from "@/components/patterns/PageHero";
 import SEOHead from "@/components/patterns/SEOHead";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -9,13 +10,29 @@ const daysAgoISO = (days: number) => new Date(Date.now() - days * 24 * 60 * 60 *
 const notice1Date = daysAgoISO(5);
 const notice2Date = daysAgoISO(2);
 
-const sourceCommentExample = `{
+const snippetExample = `import FoundListingsSection from "@/components/patterns/FoundListingsSection";
+
+<FoundListingsSection
+  mode="local"
+  listings={foundDogNotices}
+  noticesTitle="Current Found Dog Notices"
+  emptyMessage="No active found notices are posted right now."
+  dateLocale="en-US"
+  // expireAfterDays={30} is the default; raise or lower it for this site
+/>
+
+// foundDogNotices: FoundListing[]
+{
   id: "sample-found-buddy",
-  source: { type: "local", name: "Facebook", url: "https://www.facebook.com/example/posts/SAMPLE" }, // optional: the card links to the original post
+  source: { type: "local", name: "Facebook", url: "https://www.facebook.com/example/posts/SAMPLE" }, // optional link to the original post
   status: "open", // flip to "reunited" when the dog is home
-  foundAtISO: "${notice1Date}", // the post date: printed on the card, and the notice hides 30 days after it
-  ...
-},`;
+  foundAtISO: "${notice1Date}", // the Facebook post date: printed on the card, and the notice hides 30 days after it
+  foundAt: "Found on March 26, 2026", // optional display text for the day the dog was found
+  location: { areaLabel: "Eastgate", crossStreets: "Juniper Ave and 3rd St" },
+  pet: { species: "dog", gender: "Male", microchipStatus: "None" },
+  notes: "Friendly, wearing a blue collar.",
+  media: [{ id: "sample-found-buddy-1", src: "/found/buddy.webp", alt: "Found dog Buddy", featured: true }],
+}`;
 
 const FoundStandardPage = () => {
   const { t, i18n } = useTranslation(["found", "common"]);
@@ -139,13 +156,7 @@ const FoundStandardPage = () => {
           />
         </div>
 
-        <div className="space-y-3">
-          <h2 className="text-lg font-semibold">{t("found:source.title")}</h2>
-          <p className="text-sm text-muted-foreground">{t("found:source.description")}</p>
-          <pre className="overflow-x-auto rounded-md border bg-muted/30 p-4 text-xs">
-            <code>{sourceCommentExample}</code>
-          </pre>
-        </div>
+        <StandardSnippet code={snippetExample} />
 
         <Card>
           <CardHeader>

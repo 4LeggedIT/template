@@ -1,10 +1,24 @@
 import { useTranslation } from "react-i18next";
 import JourneyTimeline, { type JourneyTimelineStage } from "@/components/patterns/JourneyTimeline";
+import StandardSnippet from "@/components/StandardSnippet";
 import PageHero from "@/components/patterns/PageHero";
 import SEOHead from "@/components/patterns/SEOHead";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+
+const snippetExample = `import JourneyTimeline from "@/components/patterns/JourneyTimeline";
+
+<JourneyTimeline stages={journeyStages} />
+
+// journeyStages: JourneyTimelineStage[]
+{
+  label: "Rescued",
+  date: "2026-09-02",
+  description: "Molly was pulled from the shelter.",
+  imageSrc: "/journeys/molly-rescued.webp",
+  imageAlt: "Molly on her first day",
+}`;
 
 const JourneyTimelineStandardPage = () => {
   const { t } = useTranslation(["journeyTimeline", "common"]);
@@ -90,6 +104,8 @@ const JourneyTimelineStandardPage = () => {
             </CardContent>
           </Card>
         </div>
+
+        <StandardSnippet code={snippetExample} />
 
         <Card>
           <CardHeader>
