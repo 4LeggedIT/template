@@ -17,12 +17,13 @@
       "imageFallbackAltPrefix": "Missing dog flyer for ",
       "noticeTitle": "Missing Dog",
       "fieldReported": "Posted:",
-      "fieldArea": "Last seen:"
+      "fieldArea": "Last seen:",
+      "viewSourceLabel": "View original post"
     }
   },
   "source": {
     "title": "Source tracking",
-    "description": "Where a notice came from, such as a Facebook post, is recorded as an inline comment on the entry in the site's data file. It is never shown on the card, and the module has no field for it.",
+    "description": "Where a notice came from, such as a Facebook post, is recorded as an inline comment on the entry in the site's data file. When the original post or another source exists, set `sourceUrl` (and optionally `sourceName`) and the card links to it in a new tab; leave it unset to link nowhere.",
     "caption": "The sample data also holds a second notice flipped to found. It stays in the file as the record but is hidden by default, which is why only one dog is listed above."
   },
   "together": {
@@ -38,6 +39,7 @@
       "Keep listing data in `MissingListing` objects. Each notice carries its own flyer, last-seen line, safety line and optional sightings link.",
       "The sightings link accepts `sms:`, `tel:`, `mailto:` or `http(s):` only. Pass the final button text, phone number included.",
       "Do not add public-guidance content to the module (what-to-do checklists, process steps, contact buttons). Those are page-local.",
+      "Expiry is mandatory: every notice carries a required ISO `reportedAtISO`, and a `missing` notice stops rendering 60 days after it (hidden, never deleted; the entry stays in the data file). Missing dogs get a longer window than found dogs (30 days) because searches run longer. A site changes the window for its whole list with `expireAfterDays` (a positive whole number; it cannot be turned off), and a single notice can override it with `expiresAt` (ISO date, hidden after that day). `found`/`archived` notices shown through `showFound`/`showArchived` are not expired.",
       "By default only `missing` notices show. When a dog is home, flip `status` to `found` instead of deleting the entry; `found` and `archived` are opt-in through `showFound`/`showArchived` or `statusFilter`.",
       "Source tracking: put the notice's source (for example a Facebook post) in an inline `// Source:` comment above the entry in the data file. It is never rendered.",
       "Every string is passed in by the caller. Store bilingual text as `{ en, es }` in the data file and an ISO date formatted per locale at render time.",

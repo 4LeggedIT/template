@@ -1,3 +1,4 @@
+import { useState } from "react";
 import MediaCarouselTile, { type MediaCarouselTileItem } from "@/components/patterns/MediaCarouselTile";
 import { cn } from "@/lib/utils";
 
@@ -11,13 +12,18 @@ import { cn } from "@/lib/utils";
  * link (for example a text-a-sighting `sms:` link with the number in its label).
  *
  * Where a notice came from (for example a Facebook post) is tracked in an inline `// Source:`
- * comment on the entry in the site's data file. There is deliberately no field for it, so the card
- * never links out. Every string is passed in by the caller, so the pattern has no i18n or router
+ * comment on the entry in the site's data file, and, when the original post or another source exists,
+ * `sourceUrl` adds a "view original post" link on the card (http(s) only, new tab). Leave it unset to
+ * link nowhere. The card also prints `reportedAtISO` (the date that starts the expiry clock). Every string is passed in by the caller, so the pattern has no i18n or router
  * dependency.
  */
 
 /** `found` means the dog is home: flip the status instead of deleting the notice. */
 export type MissingListingStatus = "missing" | "found" | "archived";
+
+/** How long a `missing` notice stays visible after `reportedAtISO`. Sites can override it per list. */
+export const DEFAULT_MISSING_LISTING_EXPIRY_DAYS = 60;
+const DAY_MS = 24 * 60 * 60 * 1000;
 
 export interface MissingListingMedia {
   src: string;
@@ -40,8 +46,17 @@ export interface MissingListing {
   id: string;
   status: MissingListingStatus;
   name?: string;
-  /** Printed as-is: pass a locale-formatted string (store an ISO date and format per locale). */
-  reportedAt?: string;
+  /**
+   * Required ISO date (`YYYY-MM-DD`) the notice was posted (the Facebook post date unless the client says
+   * otherwise). It is printed on the card (formatted with the `dateLocale` prop) and starts the expiry
+   * clock (see `expireAfterDays`), so the date people see is the date the notice expires from.
+   */
+  reportedAtISO: string;
+  /**
+   * Optional ISO date that replaces `reportedAtISO + expireAfterDays` for this notice, to keep a long
+   * search visible (later date) or retire one early (earlier date). The notice hides after that day ends.
+   */
+  expiresAt?: string;
   /** Where the dog was last seen, as area-level text rather than an exact address. */
   area?: string;
   /** Prominent safety line, for example "Very fearful. Please do not chase." */
@@ -50,6 +65,10 @@ export interface MissingListing {
   /** Any number of images (flyer, photos): one shows as a plain image, two or more get prev/next arrows and a count badge. */
   media?: MissingListingMedia[];
   sightingsAction?: MissingListingAction;
+  /** Link to the original post (Facebook or another source), http(s) only; anything else is dropped. Leave unset when there is none. */
+  sourceUrl?: string;
+  /** Optional name of the source, for example "Facebook", appended to the link text. */
+  sourceName?: string;
 }
 
 export type MissingListingsSectionLabels = {
@@ -58,6 +77,7 @@ export type MissingListingsSectionLabels = {
   noticeTitle?: string;
   fieldReported?: string;
   fieldArea?: string;
+  viewSourceLabel?: string;
 };
 
 type MissingListingsSectionProps = {
@@ -69,8 +89,32 @@ type MissingListingsSectionProps = {
   statusFilter?: MissingListingStatus[];
   showFound?: boolean;
   showArchived?: boolean;
+  /**
+   * Days a `missing` notice stays visible after `reportedAtISO` before it is hidden (not deleted).
+   * Expiry cannot be switched off; the default is `DEFAULT_MISSING_LISTING_EXPIRY_DAYS` (60). A site
+   * overrides it with a positive whole number. A listing's own `expiresAt` wins over it.
+   */
+  expireAfterDays?: number;
+  /** BCP 47 locale used to print `reportedAtISO` (default "en-US"). */
+  dateLocale?: string;
   emptyMessage?: string;
   labels?: MissingListingsSectionLabels;
+};
+
+const parseISODate = (value: string | undefined): number => (value ? Date.parse(`${value.slice(0, 10)}T00:00:00Z`) : Number.NaN);
+
+/** True when a `missing` notice is past its expiry. Unparseable dates never expire (they stay visible). */
+const isMissingListingExpired = (listing: MissingListing, expireAfterDays: number, now: number): boolean => {
+  const explicitEnd = parseISODate(listing.expiresAt);
+  const endMs = Number.isFinite(explicitEnd)
+    ? explicitEnd + DAY_MS
+    : parseISODate(listing.reportedAtISO) + expireAfterDays * DAY_MS;
+  return Number.isFinite(endMs) && now >= endMs;
+};
+
+const formatReportedDate = (iso: string, locale: string): string | undefined => {
+  const ms = parseISODate(iso);
+  return Number.isFinite(ms) ? new Intl.DateTimeFormat(locale, { dateStyle: "long", timeZone: "UTC" }).format(new Date(ms)) : undefined;
 };
 
 const SAFE_ACTION_HREF = /^(sms:|tel:|mailto:|https?:\/\/)/i;
@@ -93,6 +137,8 @@ const MissingListingsSection = ({
   statusFilter,
   showFound = false,
   showArchived = false,
+  expireAfterDays = DEFAULT_MISSING_LISTING_EXPIRY_DAYS,
+  dateLocale = "en-US",
   emptyMessage = "No missing dog notices are posted right now.",
   labels = {},
 }: MissingListingsSectionProps) => {
@@ -101,6 +147,7 @@ const MissingListingsSection = ({
     noticeTitle = "Missing Dog",
     fieldReported = "Posted:",
     fieldArea = "Last seen:",
+    viewSourceLabel = "View original post",
   } = labels;
   const allowedStatuses = statusFilter ?? [
     "missing",
@@ -108,7 +155,14 @@ const MissingListingsSection = ({
     ...(showArchived ? (["archived"] as MissingListingStatus[]) : []),
   ];
 
-  const visibleListings = listings.filter((listing) => allowedStatuses.includes(listing.status));
+  const [now] = useState(() => Date.now());
+  const days =
+    Number.isFinite(expireAfterDays) && expireAfterDays > 0 ? expireAfterDays : DEFAULT_MISSING_LISTING_EXPIRY_DAYS;
+  const visibleListings = listings.filter(
+    (listing) =>
+      allowedStatuses.includes(listing.status) &&
+      !(listing.status === "missing" && isMissingListingExpired(listing, days, now)),
+  );
 
   return (
     <section className={cn("space-y-10", className)}>
@@ -135,6 +189,8 @@ const MissingListingsSection = ({
                 label: item.alt ?? `${imageFallbackAltPrefix}${label}`,
               }));
               const actionHref = safeActionHref(listing.sightingsAction?.href);
+              const sourceHref = safeActionHref(listing.sourceUrl);
+              const reportedLabel = formatReportedDate(listing.reportedAtISO, dateLocale);
 
               return (
                 <article key={listing.id} className="overflow-hidden rounded-xl border bg-card shadow-xs">
@@ -158,9 +214,9 @@ const MissingListingsSection = ({
                       </p>
                     ) : null}
                     <ul className="mt-3 space-y-1 text-sm text-muted-foreground">
-                      {listing.reportedAt ? (
+                      {reportedLabel ? (
                         <li>
-                          <strong className="text-foreground">{fieldReported}</strong> {listing.reportedAt}
+                          <strong className="text-foreground">{fieldReported}</strong> {reportedLabel}
                         </li>
                       ) : null}
                       {listing.area ? (
@@ -170,6 +226,16 @@ const MissingListingsSection = ({
                       ) : null}
                     </ul>
                     {listing.notes ? <p className="mt-3 text-sm text-muted-foreground">{listing.notes}</p> : null}
+                    {sourceHref && /^https?:\/\//i.test(sourceHref) ? (
+                      <a
+                        href={sourceHref}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="mt-3 block text-sm font-medium text-primary underline underline-offset-2"
+                      >
+                        {listing.sourceName ? `${viewSourceLabel} (${listing.sourceName})` : viewSourceLabel}
+                      </a>
+                    ) : null}
                     {listing.sightingsAction && actionHref ? (
                       <a
                         href={actionHref}

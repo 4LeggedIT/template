@@ -17,6 +17,9 @@ const sourceCommentExample = `// Source: Facebook post 2026-03-26 (sample missin
   ...
 },`;
 
+// Dated relative to today so the sample never ages past the default 30-day expiry.
+const sampleFoundAtISO = new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
+
 const MissingStandardPage = () => {
   const { t, i18n } = useTranslation(["missing", "found", "common"]);
   const locale = toContentLocale(i18n.resolvedLanguage);
@@ -24,8 +27,9 @@ const MissingStandardPage = () => {
 
   const foundNotice: FoundListing = {
     id: "SAMPLE-001",
-    source: { type: "local" },
+    source: { type: "local", name: "Facebook", url: "https://www.facebook.com" },
     status: "open",
+    foundAtISO: sampleFoundAtISO,
     pet: {
       species: "dog",
       gender: t("found:listings.notice1.gender"),
@@ -47,6 +51,7 @@ const MissingStandardPage = () => {
     noticeTitle: t("missing:section.labels.noticeTitle"),
     fieldReported: t("missing:section.labels.fieldReported"),
     fieldArea: t("missing:section.labels.fieldArea"),
+    viewSourceLabel: t("missing:section.labels.viewSourceLabel"),
   };
 
   return (
@@ -79,6 +84,7 @@ const MissingStandardPage = () => {
             noticesTitle={t("missing:section.noticesTitle")}
             emptyMessage={t("missing:section.emptyMessage")}
             labels={labels}
+            dateLocale={i18n.language}
           />
         </div>
 
@@ -100,6 +106,7 @@ const MissingStandardPage = () => {
               noticesTitle={t("missing:section.noticesTitle")}
               emptyMessage={t("missing:section.emptyMessage")}
               labels={labels}
+              dateLocale={i18n.language}
             />
             <FoundListingsSection
               mode="local"
@@ -109,12 +116,15 @@ const MissingStandardPage = () => {
               labels={{
                 imageFallbackAltPrefix: t("found:section.labels.imageFallbackAltPrefix"),
                 noticeTitle: t("found:section.labels.noticeTitle"),
+                fieldPosted: t("found:section.labels.fieldPosted"),
                 fieldGender: t("found:section.labels.fieldGender"),
                 fieldFoundDate: t("found:section.labels.fieldFoundDate"),
                 fieldFoundLocation: t("found:section.labels.fieldFoundLocation"),
                 fieldCrossStreets: t("found:section.labels.fieldCrossStreets"),
                 fieldMicrochip: t("found:section.labels.fieldMicrochip"),
+                viewSourceLabel: t("found:section.labels.viewSourceLabel"),
               }}
+              dateLocale={i18n.language}
             />
             <p className="rounded-md border border-dashed p-3 text-sm text-muted-foreground">
               {t("missing:together.pageLocalNote")}

@@ -1,9 +1,9 @@
 import type { MissingListing } from "@/components/patterns/MissingListingsSection";
-import { type ContentLocale, type LocalizedText, resolveText, toIntlLocaleTag } from "@/lib/localized-content";
+import { type ContentLocale, type LocalizedText, resolveText } from "@/lib/localized-content";
 
 /**
  * Example missing-dog notices for the `/standards/missing` demo, in the shape a real site authors them:
- * `{ en, es }` text, a plain ISO date formatted per locale at render time, and an inline `// Source:` comment
+ * `{ en, es }` text, a required plain ISO date (the card prints it in the page's locale), and an inline `// Source:` comment
  * above every entry saying where the notice came from. The source is NEVER rendered: the pattern has no field
  * for it, so the card links nowhere. See `docs/governance/facebook-source-attribution.md` in internal-tools.
  *
@@ -13,8 +13,12 @@ type SampleMissingNotice = {
   id: string;
   name: string;
   status: MissingListing["status"];
-  /** Plain ISO date (YYYY-MM-DD) the notice was posted. */
+  /** Required plain ISO date (YYYY-MM-DD) the notice was posted; starts the expiry clock. */
   reportedAtISO: string;
+  expiresAt?: string;
+  /** Link to the original post (Facebook or another source); the card shows a "view original post" link when set. */
+  sourceUrl?: string;
+  sourceName?: string;
   area?: LocalizedText;
   safetyNote?: LocalizedText;
   notes: LocalizedText;
@@ -22,6 +26,9 @@ type SampleMissingNotice = {
   sightingsPhone?: { display: string; href: string };
   media: { src: string; alt: LocalizedText; featured?: boolean }[];
 };
+
+// Dated relative to today so the demo notice never ages past the default 60-day expiry.
+const daysAgoISO = (days: number) => new Date(Date.now() - days * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
 
 export const sampleMissingNotices: SampleMissingNotice[] = [
   // Source: Facebook post 2026-03-26 (sample missing dog flyer, not a real post; replace with the real post's date and
@@ -31,7 +38,9 @@ export const sampleMissingNotices: SampleMissingNotice[] = [
     id: "sample-missing-biscuit",
     name: "Biscuit",
     status: "missing",
-    reportedAtISO: "2026-03-26",
+    reportedAtISO: daysAgoISO(10),
+    sourceUrl: "https://www.facebook.com",
+    sourceName: "Facebook",
     area: { en: "Near Juniper Ave in Eastgate", es: "Cerca de Juniper Ave en Eastgate" },
     safetyNote: {
       en: "Very fearful. Please do not chase.",
@@ -83,24 +92,13 @@ export const sampleMissingNotices: SampleMissingNotice[] = [
   },
 ];
 
-const dateFormatters: Record<ContentLocale, Intl.DateTimeFormat> = {
-  en: new Intl.DateTimeFormat(toIntlLocaleTag("en"), { dateStyle: "long", timeZone: "UTC" }),
-  es: new Intl.DateTimeFormat(toIntlLocaleTag("es"), { dateStyle: "long", timeZone: "UTC" }),
-};
-
-const formatDate = (dateISO: string, locale: ContentLocale): string | undefined => {
-  const ms = Date.parse(`${dateISO}T12:00:00Z`);
-  return Number.isFinite(ms) ? dateFormatters[locale].format(new Date(ms)) : undefined;
-};
-
 /** `sightingsLabel` turns the phone number into the final button text (the page owns that copy). */
 export const getLocalizedSampleMissingNotices = (
   locale: ContentLocale,
   sightingsLabel: (phone: string) => string,
 ): MissingListing[] =>
-  sampleMissingNotices.map(({ reportedAtISO, area, safetyNote, notes, sightingsPhone, media, ...rest }) => ({
+  sampleMissingNotices.map(({ area, safetyNote, notes, sightingsPhone, media, ...rest }) => ({
     ...rest,
-    reportedAt: formatDate(reportedAtISO, locale),
     area: resolveText(area, locale),
     safetyNote: resolveText(safetyNote, locale),
     notes: resolveText(notes, locale),

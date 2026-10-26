@@ -1,9 +1,13 @@
 import { render, screen } from "@testing-library/react";
-import { afterEach, describe, expect, it, vi } from "vitest";
-import MissingListingsSection, { type MissingListing } from "@/components/patterns/MissingListingsSection";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import MissingListingsSection, {
+  DEFAULT_MISSING_LISTING_EXPIRY_DAYS,
+  type MissingListing,
+} from "@/components/patterns/MissingListingsSection";
 
 const makeListing = (overrides: Partial<MissingListing> & Pick<MissingListing, "id">): MissingListing => ({
   status: "missing",
+  reportedAtISO: "2026-10-20",
   notes: `Notes for ${overrides.id}`,
   ...overrides,
 });
@@ -12,7 +16,6 @@ const listings: MissingListing[] = [
   makeListing({
     id: "doris",
     name: "Doris",
-    reportedAt: "October 20, 2026",
     area: "Near Oak Tree Dr",
     safetyNote: "Very fearful. Please do not chase.",
     media: [{ src: "/flyer.webp", alt: "Doris flyer" }],
@@ -23,8 +26,92 @@ const listings: MissingListing[] = [
 ];
 
 describe("MissingListingsSection", () => {
+  beforeEach(() => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date("2026-10-26T12:00:00Z"));
+  });
+
   afterEach(() => {
+    vi.useRealTimers();
     vi.restoreAllMocks();
+  });
+
+  it("prints the posted date from reportedAtISO and links to the original post only when sourceUrl is http(s)", () => {
+    render(
+      <MissingListingsSection
+        dateLocale="en-US"
+        listings={[
+          makeListing({ id: "linked", reportedAtISO: "2026-10-20", sourceUrl: "https://www.facebook.com/x", sourceName: "Facebook" }),
+          makeListing({ id: "unsafe", sourceUrl: "javascript:alert(1)" }),
+          makeListing({ id: "none" }),
+        ]}
+      />,
+    );
+
+    expect(screen.getAllByText("October 20, 2026").length).toBeGreaterThan(0);
+    const links = screen.getAllByRole("link", { name: /View original post/ });
+    expect(links).toHaveLength(1);
+    expect(links[0]).toHaveAttribute("href", "https://www.facebook.com/x");
+    expect(links[0]).toHaveAttribute("target", "_blank");
+    expect(links[0]).toHaveTextContent("View original post (Facebook)");
+  });
+
+  describe("expiry", () => {
+    const aged = (id: string, reportedAtISO: string, extra: Partial<MissingListing> = {}) =>
+      makeListing({ id, reportedAtISO, ...extra });
+
+    it("defaults to 60 days and hides (does not delete) older missing notices", () => {
+      expect(DEFAULT_MISSING_LISTING_EXPIRY_DAYS).toBe(60);
+      const items = [aged("fresh", "2026-10-20"), aged("edge-visible", "2026-08-28"), aged("edge-expired", "2026-08-27")];
+      render(<MissingListingsSection listings={items} />);
+
+      expect(screen.getByText("Notes for fresh")).toBeInTheDocument();
+      expect(screen.getByText("Notes for edge-visible")).toBeInTheDocument();
+      expect(screen.queryByText("Notes for edge-expired")).not.toBeInTheDocument();
+      expect(items).toHaveLength(3);
+    });
+
+    it("lets a site change the window with expireAfterDays", () => {
+      render(
+        <MissingListingsSection
+          listings={[aged("six-days", "2026-10-20"), aged("two-days", "2026-10-24")]}
+          expireAfterDays={3}
+        />,
+      );
+
+      expect(screen.queryByText("Notes for six-days")).not.toBeInTheDocument();
+      expect(screen.getByText("Notes for two-days")).toBeInTheDocument();
+    });
+
+    it("cannot be disabled: a non-positive or invalid expireAfterDays falls back to 60", () => {
+      for (const bad of [0, -5, Number.NaN]) {
+        const { unmount } = render(
+          <MissingListingsSection listings={[aged("old", "2026-06-01")]} expireAfterDays={bad} />,
+        );
+        expect(screen.queryByText("Notes for old")).not.toBeInTheDocument();
+        unmount();
+      }
+    });
+
+    it("honors a per-notice expiresAt over the window, through the end of that day", () => {
+      render(
+        <MissingListingsSection
+          listings={[
+            aged("extended", "2026-06-01", { expiresAt: "2026-10-26" }),
+            aged("retired-early", "2026-10-25", { expiresAt: "2026-10-25" }),
+          ]}
+        />,
+      );
+
+      expect(screen.getByText("Notes for extended")).toBeInTheDocument();
+      expect(screen.queryByText("Notes for retired-early")).not.toBeInTheDocument();
+    });
+
+    it("does not expire found/archived notices that a site opted in to show", () => {
+      render(<MissingListingsSection listings={[aged("old-home", "2026-06-01", { status: "found" })]} showFound />);
+
+      expect(screen.getByText("Notes for old-home")).toBeInTheDocument();
+    });
   });
 
   it("lists only missing notices by default", () => {
@@ -71,10 +158,10 @@ describe("MissingListingsSection", () => {
     expect(screen.getByText("Near Oak Tree Dr")).toBeInTheDocument();
   });
 
-  it("omits the safety line and detail rows when not set", () => {
+  it("omits the safety line and optional detail rows when not set (the posted date always shows)", () => {
     render(<MissingListingsSection listings={[makeListing({ id: "bare", name: "Bare" })]} />);
 
-    expect(screen.queryByText("Posted:")).not.toBeInTheDocument();
+    expect(screen.getByText("Posted:")).toBeInTheDocument();
     expect(screen.queryByText("Last seen:")).not.toBeInTheDocument();
     expect(screen.queryByRole("link")).not.toBeInTheDocument();
   });

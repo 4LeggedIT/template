@@ -17,12 +17,13 @@
       "imageFallbackAltPrefix": "Volante de perro perdido de ",
       "noticeTitle": "Perro Perdido",
       "fieldReported": "Publicado:",
-      "fieldArea": "Visto por última vez:"
+      "fieldArea": "Visto por última vez:",
+      "viewSourceLabel": "Ver publicación original"
     }
   },
   "source": {
     "title": "Registro de la fuente",
-    "description": "De dónde viene un aviso, por ejemplo una publicación de Facebook, se registra como un comentario dentro de la entrada en el archivo de datos del sitio. Nunca se muestra en la tarjeta, y el módulo no tiene un campo para ello.",
+    "description": "De dónde viene un aviso, por ejemplo una publicación de Facebook, se registra como un comentario dentro de la entrada en el archivo de datos del sitio. Cuando existe la publicación original u otra fuente, defina `sourceUrl` (y opcionalmente `sourceName`) y la tarjeta enlaza a ella en una pestaña nueva; déjelo sin definir para no enlazar a ningún sitio.",
     "caption": "Los datos de ejemplo también incluyen un segundo aviso marcado como encontrado. Permanece en el archivo como registro pero queda oculto de forma predeterminada, por eso arriba solo aparece un perro."
   },
   "together": {
@@ -38,6 +39,7 @@
       "Mantenga los datos en objetos `MissingListing`. Cada aviso lleva su propio volante, línea de última vez visto, línea de seguridad y enlace opcional de avistamientos.",
       "El enlace de avistamientos solo acepta `sms:`, `tel:`, `mailto:` o `http(s):`. Pase el texto final del botón, con el número de teléfono incluido.",
       "No agregue al módulo contenido de orientación pública (listas de qué hacer, pasos de un proceso, botones de contacto). Eso es contenido propio de la página.",
+      "La caducidad es obligatoria: cada aviso lleva un `reportedAtISO` (fecha ISO) requerido, y un aviso `missing` deja de mostrarse 60 días después (se oculta, nunca se borra; la entrada permanece en el archivo de datos). Los perros perdidos tienen un plazo más largo que los encontrados (30 días) porque las búsquedas duran más. Un sitio cambia el plazo de toda su lista con `expireAfterDays` (un número entero positivo; no se puede desactivar), y un aviso individual puede reemplazarlo con `expiresAt` (fecha ISO, se oculta después de ese día). Los avisos `found`/`archived` mostrados mediante `showFound`/`showArchived` no caducan.",
       "De forma predeterminada solo se muestran los avisos `missing`. Cuando un perro ya está en casa, cambie `status` a `found` en lugar de borrar la entrada; `found` y `archived` son opcionales mediante `showFound`/`showArchived` o `statusFilter`.",
       "Registro de la fuente: ponga la fuente del aviso (por ejemplo una publicación de Facebook) en un comentario `// Source:` sobre la entrada en el archivo de datos. Nunca se muestra.",
       "Cada texto lo pasa quien usa el módulo. Guarde el texto bilingüe como `{ en, es }` en el archivo de datos y una fecha ISO que se formatea según el idioma al mostrarla.",

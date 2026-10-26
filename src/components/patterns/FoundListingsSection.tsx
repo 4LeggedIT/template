@@ -1,3 +1,4 @@
+import { useState } from "react";
 import MediaCarouselTile, { type MediaCarouselTileItem } from "@/components/patterns/MediaCarouselTile";
 import { cn } from "@/lib/utils";
 
@@ -14,6 +15,10 @@ export type FoundListingsMode = "local" | "external" | "hybrid";
 export type FoundListingStatus = "open" | "reunited" | "archived" | "hold";
 export type FoundSourceType = "local" | "external";
 export type FoundSpecies = "dog" | "cat" | "other";
+
+/** How long an `open`/`hold` notice stays visible after `foundAtISO`. Sites can override it per list. */
+export const DEFAULT_FOUND_LISTING_EXPIRY_DAYS = 30;
+const DAY_MS = 24 * 60 * 60 * 1000;
 
 export interface FoundListingSource {
   type: FoundSourceType;
@@ -59,9 +64,20 @@ export interface FoundListing {
   id: string;
   source: FoundListingSource;
   status: FoundListingStatus;
+  /** Display text printed under the "found date" label; pass a locale-formatted string. */
   foundAt?: string;
+  /**
+   * Required ISO date (`YYYY-MM-DD`) the notice was posted (the Facebook post date unless the client says
+   * otherwise). It is printed on the card as the posted date (formatted with the `dateLocale` prop) and
+   * starts the expiry clock (see `expireAfterDays`), so the date people see is the date the notice expires from.
+   */
+  foundAtISO: string;
   publishedAt?: string;
   updatedAt?: string;
+  /**
+   * Optional ISO date that replaces `foundAtISO + expireAfterDays` for this notice, to keep a long
+   * case visible (later date) or retire one early (earlier date). The notice hides after this day ends.
+   */
   expiresAt?: string;
   location?: FoundListingLocation;
   pet?: FoundListingPetProfile;
@@ -75,6 +91,7 @@ export type FoundListingsSectionLabels = {
   /** Generic card heading shown on every notice (no per-notice number). */
   noticeTitle?: string;
   fieldGender?: string;
+  fieldPosted?: string;
   fieldFoundDate?: string;
   fieldFoundLocation?: string;
   fieldCrossStreets?: string;
@@ -92,8 +109,32 @@ type FoundListingsSectionProps = {
   statusFilter?: FoundListingStatus[];
   showReunited?: boolean;
   showArchived?: boolean;
+  /**
+   * Days an `open`/`hold` notice stays visible after `foundAtISO` before it is hidden (not deleted).
+   * Expiry cannot be switched off; the default is `DEFAULT_FOUND_LISTING_EXPIRY_DAYS` (30). A site
+   * overrides it with a positive whole number. A listing's own `expiresAt` wins over it.
+   */
+  expireAfterDays?: number;
+  /** BCP 47 locale used to print `foundAtISO` as the posted date (default "en-US"). */
+  dateLocale?: string;
   emptyMessage?: string;
   labels?: FoundListingsSectionLabels;
+};
+
+const parseISODate = (value: string | undefined): number => (value ? Date.parse(`${value.slice(0, 10)}T00:00:00Z`) : Number.NaN);
+
+const formatPostedDate = (iso: string, locale: string): string | undefined => {
+  const ms = parseISODate(iso);
+  return Number.isFinite(ms) ? new Intl.DateTimeFormat(locale, { dateStyle: "long", timeZone: "UTC" }).format(new Date(ms)) : undefined;
+};
+
+/** True when an open/hold notice is past its expiry. Unparseable dates never expire (they stay visible). */
+const isFoundListingExpired = (listing: FoundListing, expireAfterDays: number, now: number): boolean => {
+  const explicitEnd = parseISODate(listing.expiresAt);
+  const endMs = Number.isFinite(explicitEnd)
+    ? explicitEnd + DAY_MS
+    : parseISODate(listing.foundAtISO) + expireAfterDays * DAY_MS;
+  return Number.isFinite(endMs) && now >= endMs;
 };
 
 const openFullSize = (href: string) => {
@@ -110,6 +151,8 @@ const FoundListingsSection = ({
   statusFilter,
   showReunited = false,
   showArchived = false,
+  expireAfterDays = DEFAULT_FOUND_LISTING_EXPIRY_DAYS,
+  dateLocale = "en-US",
   emptyMessage = "No active found notices are posted right now.",
   labels = {},
 }: FoundListingsSectionProps) => {
@@ -117,6 +160,7 @@ const FoundListingsSection = ({
     imageFallbackAltPrefix = "Found notice ",
     noticeTitle = "Found Dog",
     fieldGender = "Gender:",
+    fieldPosted = "Posted:",
     fieldFoundDate = "Found date:",
     fieldFoundLocation = "Found location:",
     fieldCrossStreets = "Cross streets:",
@@ -135,7 +179,13 @@ const FoundListingsSection = ({
     return listing.source.type === mode;
   });
 
-  const visibleListings = modeFiltered.filter((listing) => allowedStatuses.includes(listing.status));
+  const [now] = useState(() => Date.now());
+  const days = Number.isFinite(expireAfterDays) && expireAfterDays > 0 ? expireAfterDays : DEFAULT_FOUND_LISTING_EXPIRY_DAYS;
+  const visibleListings = modeFiltered.filter(
+    (listing) =>
+      allowedStatuses.includes(listing.status) &&
+      !((listing.status === "open" || listing.status === "hold") && isFoundListingExpired(listing, days, now)),
+  );
 
   return (
     <section className={cn("space-y-10", className)}>
@@ -189,6 +239,12 @@ const FoundListingsSection = ({
                           <strong className="text-foreground">{fieldGender}</strong> {listing.pet.gender}
                         </li>
                       ) : null}
+                      {formatPostedDate(listing.foundAtISO, dateLocale) ? (
+                        <li>
+                          <strong className="text-foreground">{fieldPosted}</strong>{" "}
+                          {formatPostedDate(listing.foundAtISO, dateLocale)}
+                        </li>
+                      ) : null}
                       {listing.foundAt ? (
                         <li>
                           <strong className="text-foreground">{fieldFoundDate}</strong> {listing.foundAt}
@@ -211,9 +267,9 @@ const FoundListingsSection = ({
                       ) : null}
                     </ul>
                     <p className="mt-3 text-sm text-muted-foreground">{listing.notes}</p>
-                    {listing.source.url ? (
+                    {listing.source.url && /^https?:\/\//i.test(listing.source.url.trim()) ? (
                       <a
-                        href={listing.source.url}
+                        href={listing.source.url.trim()}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="mt-3 inline-block text-sm font-medium text-primary underline underline-offset-2"

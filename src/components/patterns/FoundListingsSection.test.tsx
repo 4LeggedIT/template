@@ -1,10 +1,14 @@
 import { render, screen } from "@testing-library/react";
-import { afterEach, describe, expect, it, vi } from "vitest";
-import FoundListingsSection, { type FoundListing } from "@/components/patterns/FoundListingsSection";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import FoundListingsSection, {
+  DEFAULT_FOUND_LISTING_EXPIRY_DAYS,
+  type FoundListing,
+} from "@/components/patterns/FoundListingsSection";
 
 const makeListing = (overrides: Partial<FoundListing> & Pick<FoundListing, "id">): FoundListing => ({
   source: { type: "local" },
   status: "open",
+  foundAtISO: "2026-10-20",
   notes: `Notes for ${overrides.id}`,
   media: [],
   ...overrides,
@@ -24,7 +28,13 @@ const listings: FoundListing[] = [
 ];
 
 describe("FoundListingsSection", () => {
+  beforeEach(() => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date("2026-10-26T12:00:00Z"));
+  });
+
   afterEach(() => {
+    vi.useRealTimers();
     vi.restoreAllMocks();
   });
 
@@ -78,6 +88,87 @@ describe("FoundListingsSection", () => {
     expect(screen.queryByText(/How Reunification Works/i)).not.toBeInTheDocument();
     expect(screen.queryByText(/What to Include/i)).not.toBeInTheDocument();
     expect(screen.queryByRole("link")).not.toBeInTheDocument();
+  });
+
+  it("prints the posted date from foundAtISO and only links http(s) sources", () => {
+    render(
+      <FoundListingsSection
+        mode="hybrid"
+        dateLocale="en-US"
+        listings={[
+          makeListing({ id: "linked", source: { type: "local", name: "Facebook", url: "https://www.facebook.com/x" } }),
+          makeListing({ id: "unsafe", source: { type: "local", url: "javascript:alert(1)" } }),
+        ]}
+      />,
+    );
+
+    expect(screen.getAllByText("October 20, 2026")).toHaveLength(2);
+    const links = screen.getAllByRole("link", { name: /View source listing/ });
+    expect(links).toHaveLength(1);
+    expect(links[0]).toHaveAttribute("href", "https://www.facebook.com/x");
+  });
+
+  describe("expiry", () => {
+    const aged = (id: string, foundAtISO: string, extra: Partial<FoundListing> = {}) =>
+      makeListing({ id, foundAtISO, ...extra });
+
+    it("defaults to 30 days and hides (does not delete) older open/hold notices", () => {
+      expect(DEFAULT_FOUND_LISTING_EXPIRY_DAYS).toBe(30);
+      const items = [
+        aged("fresh", "2026-10-20"),
+        aged("edge-visible", "2026-09-27"),
+        aged("edge-expired", "2026-09-26"),
+        aged("old-hold", "2026-08-01", { status: "hold" }),
+      ];
+      render(<FoundListingsSection mode="local" listings={items} />);
+
+      expect(screen.getByText("Notes for fresh")).toBeInTheDocument();
+      expect(screen.getByText("Notes for edge-visible")).toBeInTheDocument();
+      expect(screen.queryByText("Notes for edge-expired")).not.toBeInTheDocument();
+      expect(screen.queryByText("Notes for old-hold")).not.toBeInTheDocument();
+      expect(items).toHaveLength(4);
+    });
+
+    it("lets a site change the window with expireAfterDays", () => {
+      const items = [aged("six-days", "2026-10-20"), aged("two-days", "2026-10-24")];
+      render(<FoundListingsSection mode="local" listings={items} expireAfterDays={3} />);
+
+      expect(screen.queryByText("Notes for six-days")).not.toBeInTheDocument();
+      expect(screen.getByText("Notes for two-days")).toBeInTheDocument();
+    });
+
+    it("cannot be disabled: a non-positive or invalid expireAfterDays falls back to 30", () => {
+      for (const bad of [0, -5, Number.NaN]) {
+        const { unmount } = render(
+          <FoundListingsSection mode="local" listings={[aged("old", "2026-08-01")]} expireAfterDays={bad} />,
+        );
+        expect(screen.queryByText("Notes for old")).not.toBeInTheDocument();
+        unmount();
+      }
+    });
+
+    it("honors a per-notice expiresAt over the window, through the end of that day", () => {
+      const items = [
+        aged("extended", "2026-08-01", { expiresAt: "2026-10-26" }),
+        aged("retired-early", "2026-10-25", { expiresAt: "2026-10-25" }),
+      ];
+      render(<FoundListingsSection mode="local" listings={items} />);
+
+      expect(screen.getByText("Notes for extended")).toBeInTheDocument();
+      expect(screen.queryByText("Notes for retired-early")).not.toBeInTheDocument();
+    });
+
+    it("does not expire reunited/archived notices that a site opted in to show", () => {
+      render(
+        <FoundListingsSection
+          mode="local"
+          listings={[aged("old-reunited", "2026-08-01", { status: "reunited" })]}
+          showReunited
+        />,
+      );
+
+      expect(screen.getByText("Notes for old-reunited")).toBeInTheDocument();
+    });
   });
 
   it("shows every image as a carousel, featured first, and opens one full-size in a new tab", () => {

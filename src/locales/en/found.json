@@ -31,11 +31,12 @@
     "labels": {
       "imageFallbackAltPrefix": "Found notice ",
       "fieldGender": "Gender:",
+      "fieldPosted": "Posted:",
       "fieldFoundDate": "Found date:",
       "fieldFoundLocation": "Found location:",
       "fieldCrossStreets": "Cross streets:",
       "fieldMicrochip": "Microchip:",
-      "viewSourceLabel": "View source listing",
+      "viewSourceLabel": "View original post",
       "noticeTitle": "Found Dog"
     }
   },
@@ -50,8 +51,9 @@
       "Use neutral styling defaults (no site-specific color branding in shared standards).",
       "Use `statusFilter` plus `showReunited`/`showArchived` (both default `false`) to control found-notice lifecycle visibility: active notices show by default; reunited/archived are opt-in.",
       "Cards render from normalized `FoundListing` metadata with a generic heading (`labels.noticeTitle`, no notice number); image and source links open safely in a new tab.",
+      "Expiry is mandatory: every notice carries a required ISO `foundAtISO` (the Facebook post date, printed on the card as \"Posted:\" and the date the expiry counts from), and an `open`/`hold` notice stops rendering 30 days after it (hidden, never deleted; the entry stays in the data file). A site changes the window for its whole list with `expireAfterDays` (a positive whole number; it cannot be turned off), and a single notice can override it with `expiresAt` (ISO date, hidden after that day). `reunited`/`archived` notices shown through `showReunited`/`showArchived` are not expired.",
       "Use `gender` on the pet profile: it matches the field name used across every other pattern (`AdoptablePetsSection`, kennel-display tools).",
-      "Source tracking: put the notice's source (for example a Facebook post) in an inline `// Source:` comment above the entry in the data file, and leave `source.url` unset so the card links nowhere.",
+      "Source tracking: put the notice's source (for example a Facebook post) in an inline `// Source:` comment above the entry in the data file, and set `source.url` (and `source.name`, for example \"Facebook\") to the original post when it exists so the card links to it in a new tab; leave it unset to link nowhere.",
       "Each notice can carry any number of images in `media`: one shows as a plain image, two or more become a carousel with arrows and a count (`MediaCarouselTile`). Clicking an image opens it full-size in a new tab, and images are never cropped.",
       "Component: `template/src/components/patterns/FoundListingsSection.tsx`"
     ]

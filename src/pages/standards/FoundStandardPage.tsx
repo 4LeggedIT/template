@@ -4,8 +4,15 @@ import PageHero from "@/components/patterns/PageHero";
 import SEOHead from "@/components/patterns/SEOHead";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
+// The demo notices are dated relative to today so they never age past the default 30-day expiry.
+const daysAgoISO = (days: number) => new Date(Date.now() - days * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
+const notice1Date = daysAgoISO(5);
+const notice2Date = daysAgoISO(2);
+
 const FoundStandardPage = () => {
-  const { t } = useTranslation(["found", "common"]);
+  const { t, i18n } = useTranslation(["found", "common"]);
+  const formatFoundDate = (iso: string) =>
+    new Intl.DateTimeFormat(i18n.language, { dateStyle: "long", timeZone: "UTC" }).format(new Date(`${iso}T12:00:00Z`));
 
   const foundNotices: FoundListing[] = [
     // Source: Facebook post 2026-03-26 (sample found dog notice, not a real post) —
@@ -15,10 +22,12 @@ const FoundStandardPage = () => {
       id: "SAMPLE-001",
       source: {
         type: "local",
-        name: "Template Intake Board",
+        name: "Facebook",
+        url: "https://www.facebook.com",
       },
       status: "open",
-      foundAt: "3/26/2026",
+      foundAtISO: notice1Date,
+      foundAt: formatFoundDate(notice1Date),
       location: {
         areaLabel: "Eastgate, Example City 90210",
         crossStreets: "Juniper Ave and 3rd St",
@@ -58,7 +67,8 @@ const FoundStandardPage = () => {
         name: "Template Intake Board",
       },
       status: "open",
-      foundAt: "3/29/2026",
+      foundAtISO: notice2Date,
+      foundAt: formatFoundDate(notice2Date),
       location: {
         areaLabel: "North Hills, Example City 90211",
         crossStreets: "Olive Dr and Canyon Rd",
@@ -114,6 +124,7 @@ const FoundStandardPage = () => {
             labels={{
               imageFallbackAltPrefix: t("found:section.labels.imageFallbackAltPrefix"),
               noticeTitle: t("found:section.labels.noticeTitle"),
+              fieldPosted: t("found:section.labels.fieldPosted"),
               fieldGender: t("found:section.labels.fieldGender"),
               fieldFoundDate: t("found:section.labels.fieldFoundDate"),
               fieldFoundLocation: t("found:section.labels.fieldFoundLocation"),
@@ -121,6 +132,7 @@ const FoundStandardPage = () => {
               fieldMicrochip: t("found:section.labels.fieldMicrochip"),
               viewSourceLabel: t("found:section.labels.viewSourceLabel"),
             }}
+            dateLocale={i18n.language}
           />
         </div>
 
