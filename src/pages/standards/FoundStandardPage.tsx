@@ -9,9 +9,7 @@ const daysAgoISO = (days: number) => new Date(Date.now() - days * 24 * 60 * 60 *
 const notice1Date = daysAgoISO(5);
 const notice2Date = daysAgoISO(2);
 
-const sourceCommentExample = `// Source: Facebook post ${notice1Date} (sample found dog flyer) —
-// https://www.facebook.com/example/posts/SAMPLE
-{
+const sourceCommentExample = `{
   id: "sample-found-buddy",
   source: { type: "local", name: "Facebook", url: "https://www.facebook.com/example/posts/SAMPLE" }, // optional: the card links to the original post
   status: "open", // flip to "reunited" when the dog is home

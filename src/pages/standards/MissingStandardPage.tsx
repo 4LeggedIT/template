@@ -9,9 +9,7 @@ import { toContentLocale } from "@/lib/localized-content";
 // Dated relative to today so the sample stays inside the default 60-day expiry and the snippet below matches it.
 const samplePostedISO = new Date(Date.now() - 10 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
 
-const sourceCommentExample = `// Source: Facebook post ${samplePostedISO} (sample missing dog flyer) —
-// https://www.facebook.com/example/posts/SAMPLE
-{
+const sourceCommentExample = `{
   id: "sample-missing-biscuit",
   name: "Biscuit",
   status: "missing", // flip to "found" when the dog is home
