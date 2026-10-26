@@ -9,6 +9,16 @@ const daysAgoISO = (days: number) => new Date(Date.now() - days * 24 * 60 * 60 *
 const notice1Date = daysAgoISO(5);
 const notice2Date = daysAgoISO(2);
 
+const sourceCommentExample = `// Source: Facebook post ${notice1Date} (sample found dog flyer) —
+// https://www.facebook.com/example/posts/SAMPLE
+{
+  id: "sample-found-buddy",
+  source: { type: "local", name: "Facebook", url: "https://www.facebook.com/example/posts/SAMPLE" }, // optional: the card links to the original post
+  status: "open", // flip to "reunited" when the dog is home
+  foundAtISO: "${notice1Date}", // the post date: printed on the card, and the notice hides 30 days after it
+  ...
+},`;
+
 const FoundStandardPage = () => {
   const { t, i18n } = useTranslation(["found", "common"]);
   const formatFoundDate = (iso: string) =>
@@ -134,6 +144,14 @@ const FoundStandardPage = () => {
             }}
             dateLocale={i18n.language}
           />
+        </div>
+
+        <div className="space-y-3">
+          <h2 className="text-lg font-semibold">{t("found:source.title")}</h2>
+          <p className="text-sm text-muted-foreground">{t("found:source.description")}</p>
+          <pre className="overflow-x-auto rounded-md border bg-muted/30 p-4 text-xs">
+            <code>{sourceCommentExample}</code>
+          </pre>
         </div>
 
         <Card>

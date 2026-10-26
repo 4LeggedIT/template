@@ -40,6 +40,10 @@
       "noticeTitle": "Found Dog"
     }
   },
+  "source": {
+    "title": "Source tracking",
+    "description": "Where a notice came from, such as a Facebook post, is recorded as an inline comment on the entry in the site's data file. When the original post or another source exists, set `source.url` (and optionally `source.name`) and the card links to it in a new tab; leave it unset to link nowhere."
+  },
   "standard": {
     "title": "Standard",
     "items": [

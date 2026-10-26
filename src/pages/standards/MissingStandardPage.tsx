@@ -1,5 +1,4 @@
 import { useTranslation } from "react-i18next";
-import FoundListingsSection, { type FoundListing } from "@/components/patterns/FoundListingsSection";
 import MissingListingsSection from "@/components/patterns/MissingListingsSection";
 import PageHero from "@/components/patterns/PageHero";
 import SEOHead from "@/components/patterns/SEOHead";
@@ -7,44 +6,25 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { getLocalizedSampleMissingNotices } from "@/data/missing-dog-example-notices";
 import { toContentLocale } from "@/lib/localized-content";
 
-const sourceCommentExample = `// Source: Facebook post 2026-03-26 (sample missing dog flyer) —
+// Dated relative to today so the sample stays inside the default 60-day expiry and the snippet below matches it.
+const samplePostedISO = new Date(Date.now() - 10 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
+
+const sourceCommentExample = `// Source: Facebook post ${samplePostedISO} (sample missing dog flyer) —
 // https://www.facebook.com/example/posts/SAMPLE
 {
   id: "sample-missing-biscuit",
   name: "Biscuit",
   status: "missing", // flip to "found" when the dog is home
-  reportedAtISO: "2026-03-26",
+  reportedAtISO: "${samplePostedISO}", // the post date: printed on the card, and the notice hides 60 days after it
+  sourceUrl: "https://www.facebook.com/example/posts/SAMPLE", // optional: the card links to the original post
+  sourceName: "Facebook",
   ...
 },`;
 
-// Dated relative to today so the sample never ages past the default 30-day expiry.
-const sampleFoundAtISO = new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
-
 const MissingStandardPage = () => {
-  const { t, i18n } = useTranslation(["missing", "found", "common"]);
+  const { t, i18n } = useTranslation(["missing", "common"]);
   const locale = toContentLocale(i18n.resolvedLanguage);
   const notices = getLocalizedSampleMissingNotices(locale, (phone) => t("missing:section.sightingLabel", { phone }));
-
-  const foundNotice: FoundListing = {
-    id: "SAMPLE-001",
-    source: { type: "local", name: "Facebook", url: "https://www.facebook.com" },
-    status: "open",
-    foundAtISO: sampleFoundAtISO,
-    pet: {
-      species: "dog",
-      gender: t("found:listings.notice1.gender"),
-      microchipStatus: t("found:listings.notice1.microchipStatus"),
-    },
-    notes: t("found:listings.notice1.notes"),
-    media: [
-      {
-        id: "SAMPLE-001-image-1",
-        src: "https://placehold.co/1200x800?text=Sample+Found+Dog+1",
-        alt: t("found:listings.notice1.mediaAlt"),
-        featured: true,
-      },
-    ],
-  };
 
   const labels = {
     imageFallbackAltPrefix: t("missing:section.labels.imageFallbackAltPrefix"),
@@ -95,41 +75,6 @@ const MissingStandardPage = () => {
             <code>{sourceCommentExample}</code>
           </pre>
           <p className="text-sm text-muted-foreground">{t("missing:source.caption")}</p>
-        </div>
-
-        <div className="space-y-3">
-          <h2 className="text-lg font-semibold">{t("missing:together.title")}</h2>
-          <p className="text-sm text-muted-foreground">{t("missing:together.description")}</p>
-          <div className="space-y-10 rounded-xl border p-4">
-            <MissingListingsSection
-              listings={notices}
-              noticesTitle={t("missing:section.noticesTitle")}
-              emptyMessage={t("missing:section.emptyMessage")}
-              labels={labels}
-              dateLocale={i18n.language}
-            />
-            <FoundListingsSection
-              mode="local"
-              listings={[foundNotice]}
-              noticesTitle={t("found:section.noticesTitle")}
-              emptyMessage={t("found:section.emptyMessage")}
-              labels={{
-                imageFallbackAltPrefix: t("found:section.labels.imageFallbackAltPrefix"),
-                noticeTitle: t("found:section.labels.noticeTitle"),
-                fieldPosted: t("found:section.labels.fieldPosted"),
-                fieldGender: t("found:section.labels.fieldGender"),
-                fieldFoundDate: t("found:section.labels.fieldFoundDate"),
-                fieldFoundLocation: t("found:section.labels.fieldFoundLocation"),
-                fieldCrossStreets: t("found:section.labels.fieldCrossStreets"),
-                fieldMicrochip: t("found:section.labels.fieldMicrochip"),
-                viewSourceLabel: t("found:section.labels.viewSourceLabel"),
-              }}
-              dateLocale={i18n.language}
-            />
-            <p className="rounded-md border border-dashed p-3 text-sm text-muted-foreground">
-              {t("missing:together.pageLocalNote")}
-            </p>
-          </div>
         </div>
 
         <Card>

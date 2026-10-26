@@ -40,6 +40,10 @@
       "noticeTitle": "Perro Encontrado"
     }
   },
+  "source": {
+    "title": "Registro de la fuente",
+    "description": "De dónde viene un aviso, por ejemplo una publicación de Facebook, se registra como un comentario dentro de la entrada en el archivo de datos del sitio. Cuando existe la publicación original u otra fuente, defina `source.url` (y opcionalmente `source.name`) y la tarjeta enlaza a ella en una pestaña nueva; déjelo sin definir para no enlazar a ningún sitio."
+  },
   "standard": {
     "title": "Estándar",
     "items": [
