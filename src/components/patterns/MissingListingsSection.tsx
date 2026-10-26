@@ -11,10 +11,8 @@ import { cn } from "@/lib/utils";
  * images (a flyer, photos) shown by `MediaCarouselTile` that open full-size, a last-seen line, a prominent safety line and one optional action
  * link (for example a text-a-sighting `sms:` link with the number in its label).
  *
- * Where a notice came from (for example a Facebook post) is tracked in an inline `// Source:`
- * comment on the entry in the site's data file, and, when the original post or another source exists,
- * `sourceUrl` adds a "view original post" link on the card (http(s) only, new tab). Leave it unset to
- * link nowhere. The card also prints `reportedAtISO` (the date that starts the expiry clock). Every string is passed in by the caller, so the pattern has no i18n or router
+ * When the original post or another source exists, `sourceUrl` adds a "view original post" link on the
+ * card (http(s) only, new tab); no `// Source:` comment is needed. Leave it unset to link nowhere. The card also prints `reportedAtISO` (the date that starts the expiry clock). Every string is passed in by the caller, so the pattern has no i18n or router
  * dependency.
  */
 

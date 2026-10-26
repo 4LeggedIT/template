@@ -23,9 +23,6 @@ const FoundStandardPage = () => {
     new Intl.DateTimeFormat(i18n.language, { dateStyle: "long", timeZone: "UTC" }).format(new Date(`${iso}T12:00:00Z`));
 
   const foundNotices: FoundListing[] = [
-    // Source: Facebook post 2026-03-26 (sample found dog notice, not a real post) —
-    // https://www.facebook.com/example/posts/SAMPLE
-    // Keep the source here, in the data file; the card never renders it and `source.url` stays unset.
     {
       id: "SAMPLE-001",
       source: {
@@ -66,8 +63,6 @@ const FoundStandardPage = () => {
         },
       ],
     },
-    // Source: Facebook post 2026-03-29 (sample found dog notice, not a real post) —
-    // https://www.facebook.com/example/posts/SAMPLE
     {
       id: "SAMPLE-002",
       source: {
