@@ -22,7 +22,7 @@
     }
   },
   "source": {
-    "title": "Registro de la fuente",
+    "title": "Fragmento de código",
     "description": "De dónde viene un aviso, por ejemplo una publicación de Facebook, se registra como un comentario dentro de la entrada en el archivo de datos del sitio. Cuando existe la publicación original u otra fuente, defina `sourceUrl` (y opcionalmente `sourceName`) y la tarjeta enlaza a ella en una pestaña nueva; déjelo sin definir para no enlazar a ningún sitio.",
     "caption": "Un aviso con estado `found` (el perro ya está en casa) permanece en el archivo como registro pero queda oculto de forma predeterminada, por eso arriba solo aparece un perro."
   },
