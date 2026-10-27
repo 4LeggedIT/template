@@ -191,7 +191,10 @@ const MissingListingsSection = ({
               const reportedLabel = formatReportedDate(listing.reportedAtISO, dateLocale);
 
               return (
-                <article key={listing.id} className="overflow-hidden rounded-xl border bg-card shadow-xs">
+                <article
+                  key={listing.id}
+                  className="grid grid-rows-subgrid gap-y-0 row-span-4 overflow-hidden rounded-xl border bg-card shadow-xs"
+                >
                   {tileMedia.length ? (
                     <MediaCarouselTile
                       media={tileMedia}
@@ -201,8 +204,10 @@ const MissingListingsSection = ({
                         openFullSize(orderedMedia[index]?.href ?? item.src);
                       }}
                     />
-                  ) : null}
-                  <div className="p-5">
+                  ) : (
+                    <div />
+                  )}
+                  <div className="px-5 pt-5">
                     <h4 className="text-lg font-bold text-foreground">
                       {listing.name ? `${listing.name} (${noticeTitle})` : noticeTitle}
                     </h4>
@@ -211,6 +216,8 @@ const MissingListingsSection = ({
                         {listing.safetyNote}
                       </p>
                     ) : null}
+                  </div>
+                  <div className="px-5">
                     <ul className="mt-3 space-y-1 text-sm text-muted-foreground">
                       {reportedLabel ? (
                         <li>
@@ -224,6 +231,8 @@ const MissingListingsSection = ({
                       ) : null}
                     </ul>
                     {listing.notes ? <p className="mt-3 text-sm text-muted-foreground">{listing.notes}</p> : null}
+                  </div>
+                  <div className="px-5 pb-5">
                     {sourceHref && /^https?:\/\//i.test(sourceHref) ? (
                       <a
                         href={sourceHref}

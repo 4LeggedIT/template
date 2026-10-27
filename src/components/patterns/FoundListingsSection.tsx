@@ -218,7 +218,10 @@ const FoundListingsSection = ({
                   .join(", ");
 
               return (
-                <article key={listing.id} className="overflow-hidden rounded-xl border bg-card shadow-xs">
+                <article
+                  key={listing.id}
+                  className="grid grid-rows-subgrid gap-y-0 row-span-4 overflow-hidden rounded-xl border bg-card shadow-xs"
+                >
                   {tileMedia.length ? (
                     <MediaCarouselTile
                       media={tileMedia}
@@ -228,11 +231,15 @@ const FoundListingsSection = ({
                         openFullSize(source?.href ?? item.src);
                       }}
                     />
-                  ) : null}
-                  <div className="p-5">
+                  ) : (
+                    <div />
+                  )}
+                  <div className="px-5 pt-5">
                     <h4 className="text-lg font-bold text-foreground">
                       {listing.pet?.name ? `${listing.pet.name} (${noticeTitle})` : noticeTitle}
                     </h4>
+                  </div>
+                  <div className="px-5">
                     <ul className="mt-3 space-y-1 text-sm text-muted-foreground">
                       {listing.pet?.gender ? (
                         <li>
@@ -266,6 +273,8 @@ const FoundListingsSection = ({
                         </li>
                       ) : null}
                     </ul>
+                  </div>
+                  <div className="px-5 pb-5">
                     <p className="mt-3 text-sm text-muted-foreground">{listing.notes}</p>
                     {listing.source.url && /^https?:\/\//i.test(listing.source.url.trim()) ? (
                       <a
