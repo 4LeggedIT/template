@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { ExternalLink } from "lucide-react";
+import { Clock, ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
@@ -16,6 +16,8 @@ export type CuratedLinkItem = {
   sourceName: string;
   /** One topic label (e.g. "Body language") that groups links under a filter pill. Plain display text; no pill row appears unless two or more distinct topics exist. */
   topic?: string;
+  /** How long the original takes, as display text (e.g. "2 min read", "13 min watch"). Shown with a clock icon, like the blog's read time. Omit and nothing renders. */
+  timeNeeded?: string;
 };
 
 export type CuratedLinksSectionLabels = {
@@ -136,6 +138,12 @@ const CuratedLinksSection = ({
                 <CardContent className="flex h-full flex-1 flex-col gap-3 p-6">
                   <h4 className="text-lg font-semibold leading-snug tracking-tight group-hover:underline">{item.title}</h4>
                   {item.summary ? <p className="flex-1 text-sm text-muted-foreground">{item.summary}</p> : <div className="flex-1" />}
+                  {item.timeNeeded ? (
+                    <p className="inline-flex items-center gap-1 text-xs text-muted-foreground">
+                      <Clock aria-hidden="true" className="h-3 w-3" />
+                      {item.timeNeeded}
+                    </p>
+                  ) : null}
                   <p className="inline-flex w-fit items-center gap-2 text-sm font-medium text-primary">
                     <span>
                       {sourcePrefix} {item.sourceName}

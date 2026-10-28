@@ -29,6 +29,7 @@ const CuratedLinksStandardPage = () => {
       summary: t("curatedLinks:example.items.first.summary"),
       sourceName: t("curatedLinks:example.items.first.sourceName"),
       topic: t("curatedLinks:example.items.first.topic"),
+      timeNeeded: t("curatedLinks:example.items.first.timeNeeded"),
       href: "https://example.org/first-post",
     },
     {
@@ -37,6 +38,7 @@ const CuratedLinksStandardPage = () => {
       summary: t("curatedLinks:example.items.second.summary"),
       sourceName: t("curatedLinks:example.items.second.sourceName"),
       topic: t("curatedLinks:example.items.second.topic"),
+      timeNeeded: t("curatedLinks:example.items.second.timeNeeded"),
       href: "https://example.org/second-post",
     },
   ];

@@ -9,6 +9,7 @@ const items: CuratedLinkItem[] = [
     href: "https://example.org/a",
     summary: "Why the first post is worth your time.",
     sourceName: "Example Trainer",
+    timeNeeded: "2 min read",
   },
   { id: "b", title: "Second post", href: "https://example.org/b", sourceName: "Another Trainer" },
 ];
@@ -32,6 +33,12 @@ describe("CuratedLinksSection", () => {
     expect(screen.getByText("First post")).toBeInTheDocument();
     expect(screen.getByText("Why the first post is worth your time.")).toBeInTheDocument();
     expect(screen.getByText("From Example Trainer")).toBeInTheDocument();
+  });
+
+  it("shows the time needed when given, and nothing when omitted", () => {
+    render(<CuratedLinksSection items={items} />);
+    expect(screen.getByText("2 min read")).toBeInTheDocument();
+    expect(screen.getAllByText(/min (read|watch)/)).toHaveLength(1);
   });
 
   it("announces that the link opens in a new tab, with an overridable label", () => {
