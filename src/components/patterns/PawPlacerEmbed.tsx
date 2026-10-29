@@ -1,12 +1,19 @@
 import { useEffect, useId } from "react";
 
+type PawPlacerEmbedOptions = {
+  species?: string;
+  limit?: number;
+  sort_by?: string;
+  sort_dir?: "asc" | "desc";
+};
+
 declare global {
   interface Window {
     embedPawPlacerComponent?: (
       component: string,
       organizationId: string,
       targetId: string,
-      options?: { species?: string },
+      options?: PawPlacerEmbedOptions,
     ) => void;
   }
 }
@@ -17,6 +24,9 @@ type PawPlacerEmbedProps = {
   title?: string;
   organizationId: string;
   species?: string;
+  limit?: number;
+  sortBy?: string;
+  sortDir?: "asc" | "desc";
   listingsUrl?: string;
   showEmbed?: boolean;
   className?: string;
@@ -36,6 +46,9 @@ const PawPlacerEmbed = ({
   title = "PawPlacer Listings",
   organizationId,
   species,
+  limit,
+  sortBy,
+  sortDir,
   listingsUrl,
   showEmbed = true,
   className,
@@ -69,7 +82,18 @@ const PawPlacerEmbed = ({
     if (!showEmbed) return;
 
     const mount = () => {
-      window.embedPawPlacerComponent?.("pets", organizationId, targetId, species ? { species } : undefined);
+      const options: PawPlacerEmbedOptions = {
+        ...(species ? { species } : {}),
+        ...(limit ? { limit } : {}),
+        ...(sortBy ? { sort_by: sortBy } : {}),
+        ...(sortDir ? { sort_dir: sortDir } : {}),
+      };
+      window.embedPawPlacerComponent?.(
+        "pets",
+        organizationId,
+        targetId,
+        Object.keys(options).length > 0 ? options : undefined,
+      );
     };
 
     if (window.embedPawPlacerComponent) {
@@ -88,7 +112,7 @@ const PawPlacerEmbed = ({
     script.async = true;
     script.addEventListener("load", mount, { once: true });
     document.body.appendChild(script);
-  }, [organizationId, species, showEmbed, targetId]);
+  }, [organizationId, species, limit, sortBy, sortDir, showEmbed, targetId]);
 
   return (
     <section className={className}>

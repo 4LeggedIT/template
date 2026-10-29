@@ -99,6 +99,9 @@ type AdoptablePetsSectionProps = {
     title?: string;
     organizationId: string;
     species?: string;
+    limit?: number;
+    sortBy?: string;
+    sortDir?: "asc" | "desc";
     listingsUrl?: string;
     showEmbed?: boolean;
     petfinderUrl?: string;
@@ -369,6 +372,9 @@ const AdoptablePetsSection = ({
               title={pawPlacer.title ?? (mode === "hybrid" ? "PawPlacer Listings" : "")}
               organizationId={pawPlacer.organizationId}
               species={pawPlacer.species}
+              limit={pawPlacer.limit}
+              sortBy={pawPlacer.sortBy}
+              sortDir={pawPlacer.sortDir}
               listingsUrl={pawPlacer.listingsUrl}
               showEmbed={pawPlacer.showEmbed}
               petfinderUrl={pawPlacer.petfinderUrl}
