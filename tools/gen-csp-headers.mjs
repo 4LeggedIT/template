@@ -219,7 +219,7 @@ function mergeRequirement(target, requirement) {
  * @param {string} rootDir - repo root (contains src/, dist/)
  * @param {object} [options]
  * @param {object} [options.extraRequirements] - site-specific, non-pattern
- *   requirement (e.g. 4leggedit's Supabase connect-src), same shape as a
+ *   requirement (e.g. 4leggedit's api.4leggedit.com connect-src), same shape as a
  *   patternCspRequirements entry. Comes from tools/site-build-config.mjs's
  *   optional EXTRA_CSP_REQUIREMENTS export.
  */
