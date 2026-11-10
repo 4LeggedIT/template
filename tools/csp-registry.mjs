@@ -103,11 +103,14 @@ export const patternCspRequirements = {
   FacebookPostEmbed: {
     // loadSdk() -> connect.facebook.net/en_US/sdk.js (renders the .fb-post/.fb-video markup into an iframe on
     // www.facebook.com). lib/facebook-post-status.ts (outside the patterns scan) calls graph.facebook.com's
-    // tokenless oEmbed endpoint with fetch(). Composed by JourneyTimeline (embedUrl), which expands automatically.
+    // tokenless oEmbed endpoint with fetch(). Composed by JourneyTimeline (embedUrl).
     scriptSrc: ["https://connect.facebook.net"],
     connectSrc: ["https://graph.facebook.com"],
     frameSrc: ["https://www.facebook.com", "https://web.facebook.com"],
   },
+  // No origins of its own; registered so the composition scan sees that it renders <FacebookPostEmbed> (embedUrl)
+  // and pulls that entry in for any site that uses it. Unregistered patterns are invisible to the scan.
+  JourneyTimeline: {},
   EventsNewsSection: {
     // getFacebookVideoEmbedSrc() -> facebook.com/plugins/video.php iframe
     frameSrc: ["https://www.facebook.com"],
