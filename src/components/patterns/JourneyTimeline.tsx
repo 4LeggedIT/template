@@ -1,6 +1,9 @@
 import { ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
 import { cn } from "@/lib/utils";
+import { useCallback, useState } from "react";
+import FacebookPostEmbed from "@/components/patterns/FacebookPostEmbed";
+import { useCachedFacebookVerdict } from "@/lib/facebook-post-status";
 
 export type JourneyTimelineStage = {
   label: string;
@@ -18,6 +21,8 @@ export type JourneyTimelineStage = {
    * organizations named in the stage's text: these are follow-the-story actions, so an internal
    * href (starting with "/") renders as a client-side <Link> rather than a new tab. */
   relatedLinks?: { label: string; href: string }[];
+  /** Original Facebook post; when set the stage shows the post instead of the stored copy, and the whole stage is dropped if the post is gone or Facebook refuses to embed it (see facebook-post-status.ts). */
+  embedUrl?: string;
 };
 
 const isExternalContentHref = (href: string) => !href.startsWith("/");
@@ -25,22 +30,38 @@ const isExternalContentHref = (href: string) => !href.startsWith("/");
 type JourneyTimelineProps = {
   stages: JourneyTimelineStage[];
   className?: string;
+  /** Site-owned seed list of `embedUrl`s already confirmed deleted; those stages are dropped without any
+   * live check. Optional: without it every stage is still verified live (see lib/facebook-post-status.ts). */
+  knownUnavailableEmbeds?: ReadonlySet<string>;
 };
 
-const JourneyTimeline = ({ stages, className }: JourneyTimelineProps) => {
+const JourneyTimeline = ({ stages, className, knownUnavailableEmbeds }: JourneyTimelineProps) => {
   if (!stages.length) return null;
 
   return (
     <ol className={cn("relative space-y-8 border-l border-border pl-8", className)}>
       {stages.map((stage, index) => (
-        <li key={`${stage.label}-${index}`} className="relative">
+        <Stage key={`${stage.label}-${index}`} stage={stage} knownUnavailableEmbeds={knownUnavailableEmbeds} />
+      ))}
+    </ol>
+  );
+};
+
+const Stage = ({ stage, knownUnavailableEmbeds }: { stage: JourneyTimelineStage; knownUnavailableEmbeds?: ReadonlySet<string> }) => {
+  const [dropped, setDropped] = useState(false);
+  const drop = useCallback(() => setDropped(true), []);
+  const known = useCachedFacebookVerdict(stage.embedUrl, knownUnavailableEmbeds);
+  const pointer = Boolean(stage.embedUrl);
+  if (dropped || (known && known !== "ok")) return null;
+  return (
+        <li className="relative">
           <span className="absolute -left-[calc(2rem+5px)] top-1 flex h-[10px] w-[10px] items-center justify-center rounded-full bg-primary ring-4 ring-background" />
           <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
             <h3 className="text-lg font-semibold tracking-tight">{stage.label}</h3>
             {stage.date ? <span className="text-xs font-medium uppercase tracking-wide text-muted-foreground">{stage.date}</span> : null}
           </div>
-          <p className="mt-2 text-sm text-muted-foreground">{stage.description}</p>
-          {stage.partnerLinks?.length ? (
+          {pointer ? <FacebookPostEmbed url={stage.embedUrl!} onUnavailable={drop} knownGone={knownUnavailableEmbeds} /> : <p className="mt-2 text-sm text-muted-foreground">{stage.description}</p>}
+          {!pointer && stage.partnerLinks?.length ? (
             <p className="mt-2 flex flex-wrap gap-x-1.5 gap-y-1 text-sm text-muted-foreground">
               {stage.partnerLinks.map((partner, partnerIndex) => (
                 <span key={partner.href}>
@@ -57,7 +78,7 @@ const JourneyTimeline = ({ stages, className }: JourneyTimelineProps) => {
               ))}
             </p>
           ) : null}
-          {stage.relatedLinks?.length ? (
+          {!pointer && stage.relatedLinks?.length ? (
             <ul className="mt-3 space-y-1">
               {stage.relatedLinks.map((related) => {
                 const linkClassName = "inline-flex items-center gap-1.5 text-sm font-semibold text-primary hover:underline";
@@ -79,7 +100,7 @@ const JourneyTimeline = ({ stages, className }: JourneyTimelineProps) => {
               })}
             </ul>
           ) : null}
-          {stage.videoSrc ? (
+          {pointer ? null : stage.videoSrc ? (
             <figure className="mt-4 flex justify-center overflow-hidden rounded-2xl border border-border bg-card sm:max-w-sm">
               <video
                 controls
@@ -102,8 +123,6 @@ const JourneyTimeline = ({ stages, className }: JourneyTimelineProps) => {
             </figure>
           ) : null}
         </li>
-      ))}
-    </ol>
   );
 };
 

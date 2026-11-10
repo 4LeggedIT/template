@@ -100,6 +100,14 @@ export const patternCspRequirements = {
     // www.zeffy.com: event ticketing, registrationUrl = zeffy.com/embed/ticketing/<slug>.
     frameSrc: ["https://form.jotform.com", "https://docs.google.com", "https://www.zeffy.com"],
   },
+  FacebookPostEmbed: {
+    // loadSdk() -> connect.facebook.net/en_US/sdk.js (renders the .fb-post/.fb-video markup into an iframe on
+    // www.facebook.com). lib/facebook-post-status.ts (outside the patterns scan) calls graph.facebook.com's
+    // tokenless oEmbed endpoint with fetch(). Composed by JourneyTimeline (embedUrl), which expands automatically.
+    scriptSrc: ["https://connect.facebook.net"],
+    connectSrc: ["https://graph.facebook.com"],
+    frameSrc: ["https://www.facebook.com", "https://web.facebook.com"],
+  },
   EventsNewsSection: {
     // getFacebookVideoEmbedSrc() -> facebook.com/plugins/video.php iframe
     frameSrc: ["https://www.facebook.com"],

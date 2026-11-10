@@ -106,3 +106,23 @@ describe("JourneyTimeline", () => {
     expect(link).toHaveAttribute("rel", "noopener noreferrer");
   });
 });
+
+describe("JourneyTimeline embedUrl", () => {
+  const embedStages: JourneyTimelineStage[] = [
+    { label: "Rescued", description: "Stored copy A.", embedUrl: "https://www.facebook.com/reel/1" },
+    { label: "Today", description: "Stored copy B." },
+  ];
+
+  it("shows the Facebook post link instead of the stored copy for a stage with embedUrl", () => {
+    render(<JourneyTimeline stages={embedStages} />);
+    expect(screen.queryByText("Stored copy A.")).not.toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /View on Facebook/ })).toHaveAttribute("href", "https://www.facebook.com/reel/1");
+    expect(screen.getByText("Stored copy B.")).toBeInTheDocument();
+  });
+
+  it("drops a stage whose embedUrl is on knownUnavailableEmbeds, keeping the others", () => {
+    render(<JourneyTimeline stages={embedStages} knownUnavailableEmbeds={new Set(["https://www.facebook.com/reel/1"])} />);
+    expect(screen.queryByText("Rescued")).not.toBeInTheDocument();
+    expect(screen.getByText("Today")).toBeInTheDocument();
+  });
+});

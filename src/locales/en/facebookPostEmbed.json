@@ -1,0 +1,37 @@
+{
+  "breadcrumb": "Facebook Post Embed Pattern",
+  "hero": {
+    "title": "Facebook post embed pattern",
+    "description": "Use FacebookPostEmbed to show a public Facebook post, photo, video or reel exactly as posted, instead of keeping a copy of it. It loads lazily and tells you when the post is gone."
+  },
+  "example": {
+    "standaloneTitle": "Standalone embed",
+    "timelineTitle": "On a JourneyTimeline stage (embedUrl)",
+    "linkLabel": "View on Facebook",
+    "stage": {
+      "label": "A stage backed by a Facebook post",
+      "date": "July 17, 2026",
+      "fallback": "Stored copy: not shown while the post is available."
+    },
+    "plainStage": {
+      "label": "A stage with no post",
+      "description": "Stages without an embedUrl keep showing their own text and media."
+    }
+  },
+  "standard": {
+    "title": "Standard",
+    "items": [
+      "Source of truth for a story is the original post: link to it, embed it, never keep a paraphrased copy that can go stale. If the post is removed from Facebook, the site stops showing it.",
+      "Lazy and light: nothing loads until the block is within about 600px of the viewport, and the Facebook SDK is loaded once per page. Posts use `.fb-post`; `/reel/` and `/videos/` URLs use `.fb-video`.",
+      "No-JS safe: the plain \"View on Facebook\" link (`linkLabel`, localize it) is always in the HTML under the embed.",
+      "Two kinds of unavailable, both reported through `onUnavailable` so the parent can drop the whole item (keep the callback stable with `useCallback`): (1) deleted or non-public posts, detected live with Meta's tokenless oEmbed endpoint (`oembed_post` answering HTTP 400, code 100); (2) posts Facebook refuses to embed (licensed music, \"content owned by someone else\"), which oEmbed reports as fine, detected by the placeholder box's fixed 400x225 size once the embed settles.",
+      "Only a definite answer is a verdict. A rate limit (HTTP 403, code 4), a network error or a timeout never hides anything. Verdicts are cached in `localStorage` for 24 hours; reads are in `try/catch` and the pattern works without storage.",
+      "Use `oembed_post` only, for reels too. `oembed_video` returns success for any URL, including non-Facebook ones, so it can never detect a missing post.",
+      "Optional `knownGone` / `knownUnavailableEmbeds`: a site-owned seed list of URLs already confirmed deleted (e.g. `src/data/fb-unavailable-posts.ts`) that are dropped with no network call. Refresh it by probing small batches; Meta's limit tripped after roughly 90 calls in a few minutes.",
+      "The 400x225 size test is a heuristic: a genuine 16:9 landscape video embeds at the same size and would be dropped. Check a sample of dropped stages when adopting it on a content set with landscape video.",
+      "On `JourneyTimeline`, `embedUrl` replaces the stage's description and media with the post and is dormant when unset, so existing sites are unaffected. Keep the stored text in the data file as the record.",
+      "CSP: registered in `tools/csp-registry.mjs` (`connect.facebook.net` script, `graph.facebook.com` connect, `www.facebook.com` and `web.facebook.com` frame); `JourneyTimeline` composes it, so `gen-csp-headers.mjs` picks it up automatically.",
+      "Component: `template/src/components/patterns/FacebookPostEmbed.tsx`; helpers: `template/src/lib/facebook-post-status.ts`"
+    ]
+  }
+}
