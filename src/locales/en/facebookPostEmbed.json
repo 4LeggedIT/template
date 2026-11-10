@@ -6,17 +6,7 @@
   },
   "example": {
     "standaloneTitle": "Standalone embed",
-    "timelineTitle": "On a JourneyTimeline stage (embedUrl)",
-    "linkLabel": "View on Facebook",
-    "stage": {
-      "label": "A stage backed by a Facebook post",
-      "date": "July 17, 2026",
-      "fallback": "Stored copy: not shown while the post is available."
-    },
-    "plainStage": {
-      "label": "A stage with no post",
-      "description": "Stages without an embedUrl keep showing their own text and media."
-    }
+    "linkLabel": "View on Facebook"
   },
   "standard": {
     "title": "Standard",
@@ -29,8 +19,7 @@
       "Use `oembed_post` only, for reels too. `oembed_video` returns success for any URL, including non-Facebook ones, so it can never detect a missing post.",
       "Optional `knownGone` / `knownUnavailableEmbeds`: a site-owned seed list of URLs already confirmed deleted (e.g. `src/data/fb-unavailable-posts.ts`) that are dropped with no network call. Refresh it by probing small batches; Meta's limit tripped after roughly 90 calls in a few minutes.",
       "The 400x225 size test is a heuristic: a genuine 16:9 landscape video embeds at the same size and would be dropped. Check a sample of dropped stages when adopting it on a content set with landscape video.",
-      "On `JourneyTimeline`, `embedUrl` replaces the stage's description and media with the post and is dormant when unset, so existing sites are unaffected. Keep the stored text in the data file as the record.",
-      "CSP: registered in `tools/csp-registry.mjs` (`connect.facebook.net` script, `graph.facebook.com` connect, `www.facebook.com` and `web.facebook.com` frame); `JourneyTimeline` composes it, so `gen-csp-headers.mjs` picks it up automatically.",
+      "CSP: registered in `tools/csp-registry.mjs` (`connect.facebook.net` script, `graph.facebook.com` connect, `www.facebook.com` and `web.facebook.com` frame); `gen-csp-headers.mjs` picks it up whenever a pattern that renders it is used.",
       "Component: `template/src/components/patterns/FacebookPostEmbed.tsx`; helpers: `template/src/lib/facebook-post-status.ts`"
     ]
   }

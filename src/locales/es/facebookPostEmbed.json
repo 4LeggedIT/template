@@ -6,17 +6,7 @@
   },
   "example": {
     "standaloneTitle": "Publicación incrustada sola",
-    "timelineTitle": "En una etapa de JourneyTimeline (embedUrl)",
-    "linkLabel": "Ver en Facebook",
-    "stage": {
-      "label": "Una etapa respaldada por una publicación de Facebook",
-      "date": "17 de julio de 2026",
-      "fallback": "Copia guardada: no se muestra mientras la publicación esté disponible."
-    },
-    "plainStage": {
-      "label": "Una etapa sin publicación",
-      "description": "Las etapas sin embedUrl siguen mostrando su propio texto y medios."
-    }
+    "linkLabel": "Ver en Facebook"
   },
   "standard": {
     "title": "Estándar",
@@ -29,8 +19,7 @@
       "Usa solo `oembed_post`, también para reels. `oembed_video` responde correctamente a cualquier URL, incluso ajena a Facebook, por lo que nunca puede detectar una publicación eliminada.",
       "`knownGone` / `knownUnavailableEmbeds` opcional: una lista inicial propia del sitio con URL ya confirmadas como eliminadas (p. ej. `src/data/fb-unavailable-posts.ts`) que se descartan sin llamada de red. Actualízala sondeando en lotes pequeños; el límite de Meta se activó tras unas 90 llamadas en pocos minutos.",
       "La prueba de tamaño 400x225 es una heurística: un video horizontal 16:9 real se incrusta con el mismo tamaño y se descartaría. Revisa una muestra de etapas descartadas al adoptarla con contenido de video horizontal.",
-      "En `JourneyTimeline`, `embedUrl` reemplaza la descripción y los medios de la etapa por la publicación y queda inactivo si no se define, por lo que los sitios existentes no se ven afectados. Conserva el texto guardado en el archivo de datos como registro.",
-      "CSP: registrado en `tools/csp-registry.mjs` (script `connect.facebook.net`, conexión `graph.facebook.com`, marco `www.facebook.com` y `web.facebook.com`); `JourneyTimeline` lo compone, por lo que `gen-csp-headers.mjs` lo detecta automáticamente.",
+      "CSP: registrado en `tools/csp-registry.mjs` (script `connect.facebook.net`, conexión `graph.facebook.com`, marco `www.facebook.com` y `web.facebook.com`); `gen-csp-headers.mjs` lo detecta cuando un patrón que lo usa se renderiza.",
       "Componente: `template/src/components/patterns/FacebookPostEmbed.tsx`; utilidades: `template/src/lib/facebook-post-status.ts`"
     ]
   }
