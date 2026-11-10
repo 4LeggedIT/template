@@ -43,6 +43,23 @@ describe("FlyerLibrarySection", () => {
     expect(screen.queryByRole("button", { name: "Volunteer" })).not.toBeInTheDocument();
   });
 
+  it("never crops by default: images keep their natural proportions inside an unconstrained tile", () => {
+    render(<FlyerLibrarySection flyers={flyers} />);
+
+    const image = screen.getByAltText("Foster recruitment flyer");
+    expect(image).toHaveClass("h-auto");
+    expect(image).not.toHaveClass("object-cover");
+    expect(image.parentElement).not.toHaveClass("aspect-3/4");
+  });
+
+  it('crops to a fixed-aspect tile only when fit="cover" is explicitly requested', () => {
+    render(<FlyerLibrarySection flyers={flyers} fit="cover" />);
+
+    const image = screen.getByAltText("Foster recruitment flyer");
+    expect(image).toHaveClass("object-cover");
+    expect(image.parentElement).toHaveClass("aspect-3/4");
+  });
+
   it("opens the lightbox on click and closes on Escape", () => {
     render(<FlyerLibrarySection flyers={flyers} />);
 

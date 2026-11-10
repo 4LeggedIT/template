@@ -45,6 +45,8 @@ type FlyerLibrarySectionProps = {
   categoryFilter?: FlyerLibraryCategory;
   showFilters?: boolean;
   enableLightbox?: boolean;
+  /** `"contain"` (default) shows each flyer whole at its natural proportions, never cropped. `"cover"` fills a fixed-aspect tile and clips the edges — opt-in only, for decorative imagery. */
+  fit?: "cover" | "contain";
   labels?: FlyerLibrarySectionLabels;
 };
 
@@ -69,6 +71,7 @@ const FlyerLibrarySection = ({
   categories,
   categoryFilter,
   showFilters = true,
+  fit = "contain",
   enableLightbox = true,
   labels = {},
 }: FlyerLibrarySectionProps) => {
@@ -214,13 +217,23 @@ const FlyerLibrarySection = ({
                       openLightbox(index);
                     }}
                   >
-                    <div className={cn("relative overflow-hidden", isFeatured ? "aspect-16/10" : "aspect-3/4")}>
+                    <div
+                      className={cn(
+                        "relative overflow-hidden",
+                        fit === "contain" ? "" : isFeatured ? "aspect-16/10" : "aspect-3/4",
+                      )}
+                    >
                       <img
                         src={flyer.src}
                         alt={flyer.alt}
                         loading="lazy"
                         decoding="async"
-                        className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.03]"
+                        className={cn(
+                          "w-full",
+                          fit === "contain"
+                            ? "h-auto"
+                            : "h-full object-cover transition-transform duration-300 group-hover:scale-[1.03]",
+                        )}
                       />
                       <div className="pointer-events-none absolute inset-0 bg-linear-to-t from-black/70 via-black/0 to-black/0 opacity-0 transition-opacity duration-200 group-hover:opacity-100" />
                       {enableLightbox ? (
