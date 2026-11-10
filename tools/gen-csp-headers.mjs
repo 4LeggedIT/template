@@ -154,13 +154,23 @@ function expandTransitively(directlyUsed, compositionMap) {
 // components/ui/ themselves (definitions, not call sites) from the
 // top-level scan.
 async function findUsedPatterns(srcDir, patternNames) {
-  const siteFiles = await collectSourceFiles(srcDir);
-  const directlyUsed = await findJsxUsage(siteFiles, patternNames);
-
   const patternsDir = path.join(srcDir, "components", "patterns");
-  const compositionMap = await buildCompositionMap(patternsDir, patternNames);
-
-  return expandTransitively(directlyUsed, compositionMap);
+  // Walk EVERY pattern file, not just the registered ones: a pattern with no
+  // third-party origins of its own (e.g. JourneyTimeline) can still compose a
+  // registered one (FacebookPostEmbed). Requirements belong to the pattern that
+  // loads the origin; composers never need their own registry entry.
+  let allNames = patternNames;
+  try {
+    const files = await fs.readdir(patternsDir);
+    allNames = [...new Set([...patternNames, ...files.filter((f) => f.endsWith(".tsx") && !/\.test\./.test(f)).map((f) => f.replace(/\.tsx$/, ""))])];
+  } catch {
+    /* no patterns dir: registered names only */
+  }
+  const siteFiles = await collectSourceFiles(srcDir);
+  const directlyUsed = await findJsxUsage(siteFiles, allNames);
+  const compositionMap = await buildCompositionMap(patternsDir, allNames);
+  const expanded = expandTransitively(directlyUsed, compositionMap);
+  return new Set([...expanded].filter((name) => patternNames.includes(name)));
 }
 
 // Chrome enforces script-src against <script type="application/ld+json">
