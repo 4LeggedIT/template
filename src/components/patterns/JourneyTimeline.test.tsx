@@ -113,11 +113,33 @@ describe("JourneyTimeline embedUrl", () => {
     { label: "Today", description: "Stored copy B." },
   ];
 
-  it("shows the Facebook post link instead of the stored copy for a stage with embedUrl", () => {
+  it("shows the post link instead of the stored copy for a stage with embedUrl", () => {
     render(<JourneyTimeline stages={embedStages} />);
     expect(screen.queryByText("Stored copy A.")).not.toBeInTheDocument();
-    expect(screen.getByRole("link", { name: /View on Facebook/ })).toHaveAttribute("href", "https://www.facebook.com/reel/1");
+    expect(screen.getByRole("link", { name: /View original post/ })).toHaveAttribute("href", "https://www.facebook.com/reel/1");
     expect(screen.getByText("Stored copy B.")).toBeInTheDocument();
+  });
+
+  it("accepts Instagram and TikTok post URLs and a localized embedLinkLabel", () => {
+    const stages: JourneyTimelineStage[] = [
+      { label: "IG", description: "Copy IG.", embedUrl: "https://www.instagram.com/p/Dd5daDbKuc8/" },
+      { label: "TT", description: "Copy TT.", embedUrl: "https://www.tiktok.com/@a.b/video/7707299972596698399" },
+    ];
+    render(<JourneyTimeline stages={stages} embedLinkLabel="Ver publicación original" />);
+    expect(screen.queryByText("Copy IG.")).not.toBeInTheDocument();
+    expect(screen.queryByText("Copy TT.")).not.toBeInTheDocument();
+    expect(screen.getAllByRole("link", { name: /Ver publicación original/ })).toHaveLength(2);
+  });
+
+  it("keeps the stored copy when embedUrl cannot be embedded (an Instagram story, a TikTok short link)", () => {
+    const stages: JourneyTimelineStage[] = [
+      { label: "Story", description: "Copy story.", embedUrl: "https://www.instagram.com/stories/someone/123" },
+      { label: "Short", description: "Copy short.", embedUrl: "https://vm.tiktok.com/ZMabc123/" },
+    ];
+    render(<JourneyTimeline stages={stages} />);
+    expect(screen.getByText("Copy story.")).toBeInTheDocument();
+    expect(screen.getByText("Copy short.")).toBeInTheDocument();
+    expect(screen.queryByRole("link", { name: /View original post/ })).not.toBeInTheDocument();
   });
 
   it("drops a stage whose embedUrl is on knownUnavailableEmbeds, keeping the others", () => {

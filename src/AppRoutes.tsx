@@ -19,7 +19,7 @@ import JourneyTimelineStandardPage from "@/pages/standards/JourneyTimelineStanda
 import MemorialSectionStandardPage from "@/pages/standards/MemorialSectionStandardPage";
 import PromoModalStandardPage from "@/pages/standards/PromoModalStandardPage";
 import CuratedLinksStandardPage from "@/pages/standards/CuratedLinksStandardPage";
-import FacebookPostEmbedStandardPage from "@/pages/standards/FacebookPostEmbedStandardPage";
+import SocialPostEmbedStandardPage from "@/pages/standards/SocialPostEmbedStandardPage";
 import PawPlacerStandardPage from "@/pages/standards/PawPlacerStandardPage";
 import FaqDisclosureStandardPage from "@/pages/standards/FaqDisclosureStandardPage";
 import FaqAccordionStandardPage from "@/pages/standards/FaqAccordionStandardPage";
@@ -119,7 +119,7 @@ const AppRoutes = () => {
         <Route path="/standards/memorial-section" element={<MemorialSectionStandardPage />} />
         <Route path="/standards/promo-modal" element={<PromoModalStandardPage />} />
         <Route path="/standards/curated-links" element={<CuratedLinksStandardPage />} />
-        <Route path="/standards/facebook-post-embed" element={<FacebookPostEmbedStandardPage />} />
+        <Route path="/standards/social-post-embed" element={<SocialPostEmbedStandardPage />} />
         <Route path="/standards/pawplacer" element={<PawPlacerStandardPage />} />
         <Route path="/standards/faq-accordion" element={<FaqAccordionStandardPage />} />
         <Route path="/standards/faq-disclosure" element={<FaqDisclosureStandardPage />} />

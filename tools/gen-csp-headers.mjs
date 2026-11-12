@@ -157,7 +157,7 @@ async function findUsedPatterns(srcDir, patternNames) {
   const patternsDir = path.join(srcDir, "components", "patterns");
   // Walk EVERY pattern file, not just the registered ones: a pattern with no
   // third-party origins of its own (e.g. JourneyTimeline) can still compose a
-  // registered one (FacebookPostEmbed). Requirements belong to the pattern that
+  // registered one (SocialPostEmbed). Requirements belong to the pattern that
   // loads the origin; composers never need their own registry entry.
   let allNames = patternNames;
   try {

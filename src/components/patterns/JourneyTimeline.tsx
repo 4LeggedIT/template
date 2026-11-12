@@ -2,8 +2,8 @@ import { ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { useCallback, useState } from "react";
-import FacebookPostEmbed from "@/components/patterns/FacebookPostEmbed";
-import { useCachedFacebookVerdict } from "@/lib/facebook-post-status";
+import SocialPostEmbed from "@/components/patterns/SocialPostEmbed";
+import { parseSocialPost, useCachedSocialVerdict } from "@/lib/social-post";
 
 export type JourneyTimelineStage = {
   label: string;
@@ -21,7 +21,7 @@ export type JourneyTimelineStage = {
    * organizations named in the stage's text: these are follow-the-story actions, so an internal
    * href (starting with "/") renders as a client-side <Link> rather than a new tab. */
   relatedLinks?: { label: string; href: string }[];
-  /** Original Facebook post; when set the stage shows the post instead of the stored copy, and the whole stage is dropped if the post is gone or Facebook refuses to embed it (see facebook-post-status.ts). */
+  /** Original public Facebook, Instagram or TikTok post; when set the stage shows the post instead of the stored copy, and the whole stage is dropped if the post is gone or the platform refuses to embed it (see lib/social-post-checks.ts). A URL that cannot be embedded (an Instagram story, a TikTok short link) is ignored and the stored copy is shown. */
   embedUrl?: string;
 };
 
@@ -31,27 +31,30 @@ type JourneyTimelineProps = {
   stages: JourneyTimelineStage[];
   className?: string;
   /** Site-owned seed list of `embedUrl`s already confirmed deleted; those stages are dropped without any
-   * live check. Optional: without it every stage is still verified live (see lib/facebook-post-status.ts). */
+   * live check. Optional: without it every stage is still verified live (see lib/social-post-checks.ts). */
   knownUnavailableEmbeds?: ReadonlySet<string>;
+  /** Localized text of the link under an embedded post; defaults to the English "View original post". */
+  embedLinkLabel?: string;
 };
 
-const JourneyTimeline = ({ stages, className, knownUnavailableEmbeds }: JourneyTimelineProps) => {
+const JourneyTimeline = ({ stages, className, knownUnavailableEmbeds, embedLinkLabel }: JourneyTimelineProps) => {
   if (!stages.length) return null;
 
   return (
     <ol className={cn("relative space-y-8 border-l border-border pl-8", className)}>
       {stages.map((stage, index) => (
-        <Stage key={`${stage.label}-${index}`} stage={stage} knownUnavailableEmbeds={knownUnavailableEmbeds} />
+        <Stage key={`${stage.label}-${index}`} stage={stage} knownUnavailableEmbeds={knownUnavailableEmbeds} embedLinkLabel={embedLinkLabel} />
       ))}
     </ol>
   );
 };
 
-const Stage = ({ stage, knownUnavailableEmbeds }: { stage: JourneyTimelineStage; knownUnavailableEmbeds?: ReadonlySet<string> }) => {
+const Stage = ({ stage, knownUnavailableEmbeds, embedLinkLabel }: { stage: JourneyTimelineStage; knownUnavailableEmbeds?: ReadonlySet<string>; embedLinkLabel?: string }) => {
   const [dropped, setDropped] = useState(false);
   const drop = useCallback(() => setDropped(true), []);
-  const known = useCachedFacebookVerdict(stage.embedUrl, knownUnavailableEmbeds);
-  const pointer = Boolean(stage.embedUrl);
+  const embeddable = stage.embedUrl && parseSocialPost(stage.embedUrl) ? stage.embedUrl : undefined;
+  const known = useCachedSocialVerdict(embeddable, knownUnavailableEmbeds);
+  const pointer = Boolean(embeddable);
   if (dropped || (known && known !== "ok")) return null;
   return (
         <li className="relative">
@@ -60,7 +63,7 @@ const Stage = ({ stage, knownUnavailableEmbeds }: { stage: JourneyTimelineStage;
             <h3 className="text-lg font-semibold tracking-tight">{stage.label}</h3>
             {stage.date ? <span className="text-xs font-medium uppercase tracking-wide text-muted-foreground">{stage.date}</span> : null}
           </div>
-          {pointer ? <FacebookPostEmbed url={stage.embedUrl!} onUnavailable={drop} knownGone={knownUnavailableEmbeds} /> : <p className="mt-2 text-sm text-muted-foreground">{stage.description}</p>}
+          {pointer ? <SocialPostEmbed url={embeddable!} linkLabel={embedLinkLabel} onUnavailable={drop} knownGone={knownUnavailableEmbeds} /> : <p className="mt-2 text-sm text-muted-foreground">{stage.description}</p>}
           {!pointer && stage.partnerLinks?.length ? (
             <p className="mt-2 flex flex-wrap gap-x-1.5 gap-y-1 text-sm text-muted-foreground">
               {stage.partnerLinks.map((partner, partnerIndex) => (

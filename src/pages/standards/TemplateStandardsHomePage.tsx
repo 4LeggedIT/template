@@ -28,7 +28,7 @@ const docSections: DocSection[] = [
   { key: "placeholder", href: "/standards/placeholder", group: "contentEngagement" },
   { key: "promoModal", href: "/standards/promo-modal", group: "contentEngagement" },
   { key: "curatedLinks", href: "/standards/curated-links", group: "contentEngagement" },
-  { key: "facebookPostEmbed", href: "/standards/facebook-post-embed", group: "contentEngagement" },
+  { key: "socialPostEmbed", href: "/standards/social-post-embed", group: "contentEngagement" },
   { key: "flyerLibrary", href: "/standards/flyer-library", group: "mediaLibraries" },
   { key: "mediaCarousel", href: "/standards/media-carousel", group: "mediaLibraries" },
   { key: "mediaCarouselTile", href: "/standards/media-carousel-tile", group: "mediaLibraries" },

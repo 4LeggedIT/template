@@ -21,7 +21,7 @@ import enJourneyTimeline from "@/locales/en/journeyTimeline.json";
 import enMemorialSection from "@/locales/en/memorialSection.json";
 import enPromoModal from "@/locales/en/promoModal.json";
 import enCuratedLinks from "@/locales/en/curatedLinks.json";
-import enFacebookPostEmbed from "@/locales/en/facebookPostEmbed.json";
+import enSocialPostEmbed from "@/locales/en/socialPostEmbed.json";
 import enSuccessStories from "@/locales/en/successStories.json";
 import enTestimonials from "@/locales/en/testimonials.json";
 import enFlyerLibrary from "@/locales/en/flyerLibrary.json";
@@ -71,7 +71,7 @@ import esJourneyTimeline from "@/locales/es/journeyTimeline.json";
 import esMemorialSection from "@/locales/es/memorialSection.json";
 import esPromoModal from "@/locales/es/promoModal.json";
 import esCuratedLinks from "@/locales/es/curatedLinks.json";
-import esFacebookPostEmbed from "@/locales/es/facebookPostEmbed.json";
+import esSocialPostEmbed from "@/locales/es/socialPostEmbed.json";
 import esSuccessStories from "@/locales/es/successStories.json";
 import esTestimonials from "@/locales/es/testimonials.json";
 import esFlyerLibrary from "@/locales/es/flyerLibrary.json";
@@ -127,7 +127,7 @@ i18n.use(initReactI18next).init({
       memorialSection: enMemorialSection,
       promoModal: enPromoModal,
       curatedLinks: enCuratedLinks,
-      facebookPostEmbed: enFacebookPostEmbed,
+      socialPostEmbed: enSocialPostEmbed,
       successStories: enSuccessStories,
       testimonials: enTestimonials,
       flyerLibrary: enFlyerLibrary,
@@ -178,7 +178,7 @@ i18n.use(initReactI18next).init({
       memorialSection: esMemorialSection,
       promoModal: esPromoModal,
       curatedLinks: esCuratedLinks,
-      facebookPostEmbed: esFacebookPostEmbed,
+      socialPostEmbed: esSocialPostEmbed,
       successStories: esSuccessStories,
       testimonials: esTestimonials,
       flyerLibrary: esFlyerLibrary,
@@ -232,7 +232,7 @@ i18n.use(initReactI18next).init({
     "memorialSection",
     "promoModal",
     "curatedLinks",
-    "facebookPostEmbed",
+    "socialPostEmbed",
     "successStories",
     "testimonials",
     "flyerLibrary",

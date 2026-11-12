@@ -1,0 +1,31 @@
+{
+  "breadcrumb": "Social Post Embed Pattern",
+  "hero": {
+    "title": "Social post embed pattern",
+    "description": "Use SocialPostEmbed to show a public Facebook, Instagram or TikTok post, photo, reel or video exactly as posted, instead of keeping a copy of it. It loads lazily and tells you when the post is gone."
+  },
+  "example": {
+    "facebookTitle": "Facebook",
+    "instagramTitle": "Instagram",
+    "tiktokTitle": "TikTok",
+    "linkLabel": "View original post",
+    "dropped": "This post is unavailable, so the pattern dropped it (the parent is told through onUnavailable)."
+  },
+  "standard": {
+    "title": "Standard",
+    "items": [
+      "Source of truth for a story is the original post: link to it, embed it, never keep a paraphrased copy that can go stale. If the post is removed, made private or its account is closed, the site stops showing it. Public content only.",
+      "Accepted URLs: Facebook posts, photos, videos and reels; Instagram `/p/`, `/reel/` and `/tv/` (with or without the account segment); TikTok `/@user/video/<id>` and `/@user/photo/<id>`. Anything else (an Instagram story or profile, a `vm.tiktok.com` short link) cannot be embedded: the pattern renders only the plain link and never calls `onUnavailable`, and `JourneyTimeline` keeps the stage's stored copy. Stories vanish after 24 hours and have no embed; resolve a TikTok short link to its long form before using it.",
+      "Lazy and light: nothing loads until the block is within about 600px of the viewport, and the Facebook SDK loads once per page (`.fb-post`, or `.fb-video` for `/reel/` and `/videos/`). Instagram and TikTok need no script: Instagram is the official embed page in an iframe (`/p/<id>/embed/captioned/`), sized from the height message it sends its parent, and TikTok is the official player iframe (`/player/v1/<id>`). Do not use Instagram's `embed.js`: it silently fails to initialise when the Facebook SDK loaded first on the same page.",
+      "No-JS safe: the plain link under the embed is always in the HTML. It reads \"View original post\" by default for every platform; pass `linkLabel` to localize it (`JourneyTimeline` forwards `embedLinkLabel`).",
+      "Unavailable posts are reported through `onUnavailable` so the parent can drop the whole item (keep the callback stable with `useCallback`). Facebook: deleted or non-public posts are detected live with Meta's tokenless `oembed_post` (HTTP 400, code 100); posts Facebook refuses to embed (licensed music) are detected by the placeholder box's fixed 400x225 size once the embed settles. Instagram: Meta's tokenless `instagram_oembed` answers HTTP 400 with `error_subcode` 2207045 (media not found) or 2207046 (private media). TikTok: its oEmbed answers 200 even for an invented id, so there is no live pre-check; the player reports a missing video itself through `postMessage` (`onPlayerError`, code 1001 `INVALID_VIDEO`).",
+      "Only a definite answer is a verdict. A rate limit (HTTP 403, code 4), a network error, a timeout or any other player error (for example TikTok 2001 `SERVER_ERROR`) never hides anything. Verdicts are cached in `localStorage` (`social-post-verdicts-v1`) for 24 hours; reads are in `try/catch` and the pattern works without storage. Meta calls are serialised about 1.2 seconds apart, because its limit tripped after roughly 90 calls in a few minutes.",
+      "Use `oembed_post` only for Facebook, reels too. `oembed_video` returns success for any URL, so it can never detect a missing post.",
+      "The post's account must be public. Instagram reports every post of a private or restricted account as \"private media\", and the pattern then drops all of them. Check the account's privacy setting before adopting it for a site.",
+      "Optional `knownGone` / `knownUnavailableEmbeds`: a site-owned seed list of URLs already confirmed unavailable (e.g. `src/data/unavailable-social-posts.ts`) that are dropped with no network call. Refresh it by probing small batches; never trust a 400 seen while rate-limited.",
+      "The 400x225 size test (Facebook only) is a heuristic: a genuine 16:9 landscape video embeds at the same size and would be dropped. Check a sample of dropped items when adopting it on landscape-video content. No equivalent was found for Instagram or TikTok.",
+      "CSP: registered in `tools/csp-registry.mjs` as `SocialPostEmbed`: script `connect.facebook.net`, connect `graph.facebook.com`, frame `www.facebook.com`, `web.facebook.com`, `www.instagram.com` and `www.tiktok.com`. `gen-csp-headers.mjs` picks it up whenever a pattern that renders it is used.",
+      "Components: `template/src/components/patterns/SocialPostEmbed.tsx`; helpers: `template/src/lib/social-post.ts` (URL parsing, verdict cache) and `template/src/lib/social-post-checks.ts` (per-platform checks). Replaces `FacebookPostEmbed` and `facebook-post-status` (TPL-060)."
+    ]
+  }
+}

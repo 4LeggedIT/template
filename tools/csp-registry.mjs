@@ -100,13 +100,17 @@ export const patternCspRequirements = {
     // www.zeffy.com: event ticketing, registrationUrl = zeffy.com/embed/ticketing/<slug>.
     frameSrc: ["https://form.jotform.com", "https://docs.google.com", "https://www.zeffy.com"],
   },
-  FacebookPostEmbed: {
-    // loadSdk() -> connect.facebook.net/en_US/sdk.js (renders the .fb-post/.fb-video markup into an iframe on
-    // www.facebook.com). lib/facebook-post-status.ts (outside the patterns scan) calls graph.facebook.com's
-    // tokenless oEmbed endpoint with fetch(). Any pattern that renders <FacebookPostEmbed> (e.g. JourneyTimeline via embedUrl) picks this up through the composition scan.
+  SocialPostEmbed: {
+    // Facebook: loadScript() -> connect.facebook.net/en_US/sdk.js (renders the .fb-post/.fb-video markup into an
+    // iframe on www.facebook.com). Instagram: a plain iframe on www.instagram.com/p/<id>/embed/captioned/ (no
+    // script; embed.js is not used because it fails to initialise after the Facebook SDK). TikTok: a plain iframe on
+    // www.tiktok.com/player/v1/<id> (no script). lib/social-post-checks.ts (outside the patterns scan) calls
+    // graph.facebook.com's tokenless oEmbed endpoints (oembed_post, instagram_oembed) with fetch(); TikTok has
+    // no fetch. Any pattern that renders <SocialPostEmbed> (e.g. JourneyTimeline via embedUrl) picks this up
+    // through the composition scan.
     scriptSrc: ["https://connect.facebook.net"],
     connectSrc: ["https://graph.facebook.com"],
-    frameSrc: ["https://www.facebook.com", "https://web.facebook.com"],
+    frameSrc: ["https://www.facebook.com", "https://web.facebook.com", "https://www.instagram.com", "https://www.tiktok.com"],
   },
   EventsNewsSection: {
     // getFacebookVideoEmbedSrc() -> facebook.com/plugins/video.php iframe
