@@ -1,11 +1,11 @@
 import { Home, Mail, ShieldCheck, Truck } from "lucide-react";
-import { Link } from "react-router-dom";
 import AdoptablePetsSection from "@/components/patterns/AdoptablePetsSection";
 import { type PetCardItem, type PetCardLabels } from "@/components/patterns/PetCard";
 import { toExpiryMs } from "@/lib/pet-expiry";
 import { Button } from "@/components/ui/button";
 import type { PetProfile } from "@/types/petProfile";
 import { cn } from "@/lib/utils";
+import ContentLink from "./ContentLink";
 
 export type PlacementListingItem = PetProfile & PetCardItem;
 
@@ -145,34 +145,19 @@ const PlacementHelpSection = ({
           {(primaryCta || secondaryCta) ? (
             <div className="space-y-3 pt-2">
               {primaryCta ? (
-                primaryCta.external ? (
-                  <Button asChild className="w-full">
-                    <a href={primaryCta.href} target="_blank" rel="noreferrer">
-                      <Mail className="mr-2 h-4 w-4" />
-                      {primaryCta.label}
-                    </a>
-                  </Button>
-                ) : (
-                  <Button asChild className="w-full">
-                    <Link to={primaryCta.href}>
-                      <Mail className="mr-2 h-4 w-4" />
-                      {primaryCta.label}
-                    </Link>
-                  </Button>
-                )
+                <Button asChild className="w-full">
+                  <ContentLink href={primaryCta.href} external={Boolean(primaryCta.external)}>
+                    <Mail className="mr-2 h-4 w-4" />
+                    {primaryCta.label}
+                  </ContentLink>
+                </Button>
               ) : null}
               {secondaryCta ? (
-                secondaryCta.external ? (
-                  <Button asChild variant="outline" className="w-full">
-                    <a href={secondaryCta.href} target="_blank" rel="noreferrer">
-                      {secondaryCta.label}
-                    </a>
-                  </Button>
-                ) : (
-                  <Button asChild variant="outline" className="w-full">
-                    <Link to={secondaryCta.href}>{secondaryCta.label}</Link>
-                  </Button>
-                )
+                <Button asChild variant="outline" className="w-full">
+                  <ContentLink href={secondaryCta.href} external={Boolean(secondaryCta.external)}>
+                    {secondaryCta.label}
+                  </ContentLink>
+                </Button>
               ) : null}
             </div>
           ) : null}

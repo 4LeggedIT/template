@@ -10,6 +10,7 @@ import {
 } from "@/components/patterns/BlogSection";
 import { cn } from "@/lib/utils";
 import { safeContentUrl } from "@/lib/safe-url";
+import ContentLink from "./ContentLink";
 
 export type BlogPostDetailLabels = {
   backLabel?: string;
@@ -339,13 +340,10 @@ const BlogPostDetail = ({
 
   return (
     <article className={cn("mx-auto max-w-3xl", className)}>
-      <Link
-        to={backHref}
-        className="mb-8 inline-flex items-center gap-2 text-sm font-medium text-muted-foreground transition-colors hover:text-primary"
-      >
+      <ContentLink href={backHref} external={false} className="mb-8 inline-flex items-center gap-2 text-sm font-medium text-muted-foreground transition-colors hover:text-primary">
         <ArrowLeft className="h-4 w-4" />
         {backLabel}
-      </Link>
+      </ContentLink>
 
       <header className="mb-8">
         {post.category ? (
@@ -401,13 +399,9 @@ const BlogPostDetail = ({
             {cta.title ? <h2 className="text-2xl font-bold tracking-tight">{cta.title}</h2> : null}
             {cta.description ? <p className="max-w-md text-muted-foreground">{cta.description}</p> : null}
             <Button asChild size="lg">
-              {cta.external === false ? (
-                <Link to={cta.ctaHref}>{cta.ctaLabel}</Link>
-              ) : (
-                <a href={cta.ctaHref} target="_blank" rel="noopener noreferrer">
-                  {cta.ctaLabel}
-                </a>
-              )}
+              <ContentLink href={cta.ctaHref} external={cta.external !== false}>
+                {cta.ctaLabel}
+              </ContentLink>
             </Button>
           </CardContent>
         </Card>

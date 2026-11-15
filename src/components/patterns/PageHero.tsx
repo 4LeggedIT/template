@@ -1,5 +1,4 @@
 import { Fragment, type ReactNode } from "react";
-import { Link } from "react-router-dom";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -9,6 +8,7 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import { cn } from "@/lib/utils";
+import ContentLink from "./ContentLink";
 
 type BreadcrumbEntry = {
   label: string;
@@ -58,7 +58,7 @@ const PageHero = ({
                       <BreadcrumbItem key={`item-${item.label}-${index}`}>
                         {item.href && !isLast ? (
                           <BreadcrumbLink asChild>
-                            <Link to={item.href}>{item.label}</Link>
+                            <ContentLink href={item.href} external={false}>{item.label}</ContentLink>
                           </BreadcrumbLink>
                         ) : (
                           <BreadcrumbPage>{item.label}</BreadcrumbPage>

@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
+import ContentLink from "./ContentLink";
 
 export type PromoModalItem = {
   id: string;
@@ -138,13 +138,7 @@ const PromoModal = ({
               )}
               {activePromo.ctaHref ? (
                 <Button asChild onClick={dismiss}>
-                  {activePromo.ctaHref.startsWith("/") ? (
-                    <Link to={activePromo.ctaHref}>{activePromo.ctaLabel ?? "Learn more"}</Link>
-                  ) : (
-                    <a href={activePromo.ctaHref} target="_blank" rel="noopener noreferrer">
-                      {activePromo.ctaLabel ?? "Learn more"}
-                    </a>
-                  )}
+                  <ContentLink href={activePromo.ctaHref}>{activePromo.ctaLabel ?? "Learn more"}</ContentLink>
                 </Button>
               ) : null}
             </div>

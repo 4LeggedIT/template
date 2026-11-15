@@ -3,6 +3,7 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { CalendarPlus, Check, Copy, Facebook, Mail, MapPin, MessageCircle, Share2, Ticket, Twitter } from "lucide-react";
 import FormEmbedModal from "@/components/patterns/FormEmbedModal";
+import ContentLink from "./ContentLink";
 
 type ShareChannel = "maps" | "calendar" | "facebook" | "x" | "whatsapp" | "email" | "copy-url" | "copy-message" | "copy";
 
@@ -194,18 +195,18 @@ const EventActions = ({
           ) : null}
           {showMaps ? (
             <Button asChild variant="outline" size="sm">
-              <a href={mapsUrl} target="_blank" rel="noopener noreferrer">
+              <ContentLink href={mapsUrl} external>
                 <MapPin className="h-4 w-4" />
                 {openInMapsLabel}
-              </a>
+              </ContentLink>
             </Button>
           ) : null}
           {showCalendar ? (
             <Button asChild variant="outline" size="sm">
-              <a href={calendarUrl} target="_blank" rel="noopener noreferrer">
+              <ContentLink href={calendarUrl} external>
                 <CalendarPlus className="h-4 w-4" />
                 {addToCalendarLabel}
-              </a>
+              </ContentLink>
             </Button>
           ) : null}
         </div>
@@ -220,6 +221,7 @@ const EventActions = ({
           ) : null}
           {normalizedChannels.includes("facebook") ? (
             <Button asChild variant="outline" size="sm">
+              {/* safe-url-ok: built from a fixed https:// share-endpoint prefix */}
               <a href={facebookUrl} target="_blank" rel="noopener noreferrer">
                 <Facebook className="h-4 w-4" />
                 {facebookLabel}
@@ -228,6 +230,7 @@ const EventActions = ({
           ) : null}
           {normalizedChannels.includes("x") ? (
             <Button asChild variant="outline" size="sm">
+              {/* safe-url-ok: built from a fixed https:// share-endpoint prefix */}
               <a href={xUrl} target="_blank" rel="noopener noreferrer">
                 <Twitter className="h-4 w-4" />
                 {xLabel}
@@ -236,6 +239,7 @@ const EventActions = ({
           ) : null}
           {normalizedChannels.includes("whatsapp") ? (
             <Button asChild variant="outline" size="sm">
+              {/* safe-url-ok: built from a fixed https:// share-endpoint prefix */}
               <a href={whatsappUrl} target="_blank" rel="noopener noreferrer">
                 <MessageCircle className="h-4 w-4" />
                 {whatsappLabel}
@@ -244,6 +248,7 @@ const EventActions = ({
           ) : null}
           {normalizedChannels.includes("email") ? (
             <Button asChild variant="outline" size="sm">
+              {/* safe-url-ok: built from a fixed mailto: prefix */}
               <a href={emailUrl}>
                 <Mail className="h-4 w-4" />
                 {emailLabel}

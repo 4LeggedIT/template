@@ -148,6 +148,7 @@ const ZeffyDonateEmbed = ({
             which JSX can't emit cleanly. */}
         <iframe
           title={title}
+          // safe-url-ok: fixed ZEFFY_ORIGIN prefix
           src={iframeSrc}
           allow="payment"
           style={{ position: "absolute", border: 0, inset: 0, width: "100%", height: "100%" }}
@@ -155,6 +156,7 @@ const ZeffyDonateEmbed = ({
       </div>
       {showHelperLink ? (
         <a
+          // safe-url-ok: fixed ZEFFY_ORIGIN prefix
           href={fullPageUrl}
           target="_blank"
           rel="noopener noreferrer"

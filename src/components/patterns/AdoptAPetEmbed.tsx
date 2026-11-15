@@ -1,6 +1,7 @@
 import { ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { safeContentUrl } from "@/lib/safe-url";
+import ContentLink from "./ContentLink";
 
 type AdoptAPetEmbedProps = {
   title?: string;
@@ -90,10 +91,10 @@ const AdoptAPetEmbed = ({
         <div className="flex flex-wrap items-center justify-between gap-3">
           {title ? <h3 className="text-xl font-semibold tracking-tight">{title}</h3> : <span />}
           <Button asChild variant="outline" size="sm">
-            <a href={listingsUrl} target="_blank" rel="noreferrer">
+            <ContentLink href={listingsUrl} external>
               {openButton}
               <ExternalLink className="ml-2 h-4 w-4" />
-            </a>
+            </ContentLink>
           </Button>
         </div>
 
@@ -125,14 +126,9 @@ const AdoptAPetEmbed = ({
           {viewAllPrefix}{" "}
           {platforms.map((platform, idx) => (
             <span key={platform.name}>
-              <a
-                href={platform.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="underline underline-offset-4 hover:text-foreground"
-              >
+              <ContentLink href={platform.url} external className="underline underline-offset-4 hover:text-foreground">
                 {platform.name}
-              </a>
+              </ContentLink>
               {idx < platforms.length - 2 ? ", " : idx < platforms.length - 1 ? listConjunction : ""}
             </span>
           ))}

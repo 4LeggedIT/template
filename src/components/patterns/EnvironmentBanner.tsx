@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { siteConfig } from "@/config/site";
 import { X } from "lucide-react";
+import ContentLink from "./ContentLink";
 
 type EnvironmentBannerProps = {
   productionUrl?: string;
@@ -73,14 +74,9 @@ const EnvironmentBanner = ({
       <div className="mx-auto flex max-w-5xl items-center justify-center gap-3">
         <div className="flex flex-1 flex-wrap items-center justify-center gap-x-2 gap-y-1 text-center">
           <span>{messagePrefix}</span>
-          <a
-            href={productionUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="font-semibold underline transition-colors hover:text-primary-foreground"
-          >
+          <ContentLink href={productionUrl} external className="font-semibold underline transition-colors hover:text-primary-foreground">
             {linkLabel ?? productionUrl}
-          </a>
+          </ContentLink>
         </div>
         {dismissible ? (
           <button

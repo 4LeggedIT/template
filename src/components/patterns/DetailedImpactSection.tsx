@@ -5,6 +5,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import type { ImpactStat } from "./ImpactStatsSection";
+import ContentLink from "./ContentLink";
 
 /**
  * Recommended starting taxonomy, kept open for a site to add categories as its program grows
@@ -105,7 +106,6 @@ type DetailedImpactSectionProps = {
   imageLayout?: DetailedImpactImageLayout;
 };
 
-const isExternalContentHref = (href: string) => !href.startsWith("/");
 
 const DEFAULT_LOCALE = "en-US";
 
@@ -253,7 +253,6 @@ const DetailedImpactSection = ({
               ? entry.contributions.find((c) => c.categoryId === totalForCategoryId)
               : undefined;
             const bodyText = activeContribution?.note ?? entry.summary;
-            const external = entry.relatedHref ? isExternalContentHref(entry.relatedHref) : false;
             const isTopLayout = imageLayout === "top";
             const imageOnRight = imageLayout === "alternating" && index % 2 === 1;
 
@@ -294,17 +293,10 @@ const DetailedImpactSection = ({
                 </div>
                 {entry.relatedHref ? (
                   <Button asChild variant="link" className="w-fit px-0">
-                    {external ? (
-                      <a href={entry.relatedHref} target="_blank" rel="noopener noreferrer" className="gap-2">
-                        {readMoreLabel}
-                        <ArrowRight className="h-4 w-4" />
-                      </a>
-                    ) : (
-                      <Link to={entry.relatedHref} className="gap-2">
-                        {readMoreLabel}
-                        <ArrowRight className="h-4 w-4" />
-                      </Link>
-                    )}
+                    <ContentLink href={entry.relatedHref} className="gap-2">
+                      {readMoreLabel}
+                      <ArrowRight className="h-4 w-4" />
+                    </ContentLink>
                   </Button>
                 ) : null}
               </CardContent>

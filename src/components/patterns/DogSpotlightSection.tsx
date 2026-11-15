@@ -2,6 +2,7 @@ import type { LocalAdoptableManifestItem } from "@/components/patterns/adoptable
 import { resolvePetAgeLabel } from "@/lib/pet-age";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import ContentLink from "./ContentLink";
 
 export type DogSpotlightItem = LocalAdoptableManifestItem;
 
@@ -64,9 +65,9 @@ const DogSpotlightSection = ({
                 <div className="flex-1" />
                 {dog.detailsUrl ? (
                   <Button asChild className="mt-4 w-full">
-                    <a href={dog.detailsUrl} target="_blank" rel="noreferrer">
+                    <ContentLink href={dog.detailsUrl} external>
                       {ctaPrefix} {dog.name}
-                    </a>
+                    </ContentLink>
                   </Button>
                 ) : null}
               </div>

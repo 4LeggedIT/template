@@ -5,6 +5,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import type { ReactNode } from "react";
+import ContentLink from "./ContentLink";
 
 // Structurally identical to HomeHighlightSection.tsx's `HomeHighlightItem` — declared locally
 // (rather than imported) so this module has no dependency on the highlight-card pattern.
@@ -436,13 +437,9 @@ const BlogSection = ({
               <p className="max-w-md text-sm text-muted-foreground">{subscribeCta.description}</p>
             ) : null}
             <Button asChild>
-              {subscribeCta.external === false ? (
-                <Link to={subscribeCta.href}>{subscribeCta.ctaLabel}</Link>
-              ) : (
-                <a href={subscribeCta.href} target="_blank" rel="noopener noreferrer">
-                  {subscribeCta.ctaLabel}
-                </a>
-              )}
+              <ContentLink href={subscribeCta.href} external={subscribeCta.external !== false}>
+                {subscribeCta.ctaLabel}
+              </ContentLink>
             </Button>
           </CardContent>
         </Card>

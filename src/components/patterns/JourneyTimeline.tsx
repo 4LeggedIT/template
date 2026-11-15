@@ -4,6 +4,7 @@ import { cn } from "@/lib/utils";
 import { useCallback, useState } from "react";
 import SocialPostEmbed from "@/components/patterns/SocialPostEmbed";
 import { parseSocialPost, useCachedSocialVerdict } from "@/lib/social-post";
+import ContentLink from "./ContentLink";
 
 export type JourneyTimelineStage = {
   label: string;
@@ -25,7 +26,6 @@ export type JourneyTimelineStage = {
   embedUrl?: string;
 };
 
-const isExternalContentHref = (href: string) => !href.startsWith("/");
 
 type JourneyTimelineProps = {
   stages: JourneyTimelineStage[];
@@ -68,14 +68,13 @@ const Stage = ({ stage, knownUnavailableEmbeds, embedLinkLabel }: { stage: Journ
             <p className="mt-2 flex flex-wrap gap-x-1.5 gap-y-1 text-sm text-muted-foreground">
               {stage.partnerLinks.map((partner, partnerIndex) => (
                 <span key={partner.href}>
-                  <a
+                  <ContentLink
                     href={partner.href}
-                    target="_blank"
-                    rel="noreferrer"
+                    external
                     className="font-medium text-primary underline underline-offset-4 hover:text-primary/80"
                   >
                     {partner.label}
-                  </a>
+                  </ContentLink>
                   {partnerIndex < stage.partnerLinks!.length - 1 ? "," : ""}
                 </span>
               ))}
@@ -87,17 +86,10 @@ const Stage = ({ stage, knownUnavailableEmbeds, embedLinkLabel }: { stage: Journ
                 const linkClassName = "inline-flex items-center gap-1.5 text-sm font-semibold text-primary hover:underline";
                 return (
                   <li key={related.href}>
-                    {isExternalContentHref(related.href) ? (
-                      <a href={related.href} target="_blank" rel="noopener noreferrer" className={linkClassName}>
-                        {related.label}
-                        <ArrowRight className="h-4 w-4" aria-hidden="true" />
-                      </a>
-                    ) : (
-                      <Link to={related.href} className={linkClassName}>
-                        {related.label}
-                        <ArrowRight className="h-4 w-4" aria-hidden="true" />
-                      </Link>
-                    )}
+                    <ContentLink href={related.href} className={linkClassName}>
+                      {related.label}
+                      <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                    </ContentLink>
                   </li>
                 );
               })}

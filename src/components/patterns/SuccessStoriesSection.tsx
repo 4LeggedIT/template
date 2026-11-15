@@ -1,11 +1,11 @@
 import { Heart } from "lucide-react";
-import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import type { PetProfile } from "@/types/petProfile";
 import { resolvePetAgeLabel } from "@/lib/pet-age";
 import { cn } from "@/lib/utils";
+import ContentLink from "./ContentLink";
 
 export type SuccessStoryItem = PetProfile & {
   id: string;
@@ -131,15 +131,13 @@ const SuccessStoriesSection = ({
                         </AspectRatio>
                       );
                     return story.storyHref ? (
-                      story.storyHref.startsWith("/") ? (
-                        <Link to={story.storyHref} aria-label={story.storyCtaLabel ?? readStoryLabel}>
-                          {image}
-                        </Link>
-                      ) : (
-                        <a href={story.storyHref} target="_blank" rel="noreferrer" aria-label={story.storyCtaLabel ?? readStoryLabel}>
-                          {image}
-                        </a>
-                      )
+                      <ContentLink
+                        href={story.storyHref}
+                        whenUnsafe="children"
+                        aria-label={story.storyCtaLabel ?? readStoryLabel}
+                      >
+                        {image}
+                      </ContentLink>
                     ) : (
                       image
                     );
@@ -184,30 +182,16 @@ const SuccessStoriesSection = ({
                     {showStoryCtas && (story.ctaLinks?.length || story.storyHref) ? (
                       <div className="mt-auto flex flex-wrap gap-2 pt-3">
                         {story.ctaLinks?.map((cta) =>
-                          cta.external ? (
-                            <Button key={cta.href} asChild size="sm">
-                              <a href={cta.href} target="_blank" rel="noreferrer">
-                                {cta.label}
-                              </a>
-                            </Button>
-                          ) : (
-                            <Button key={cta.href} asChild size="sm">
-                              <Link to={cta.href}>{cta.label}</Link>
-                            </Button>
-                          ),
+                          <Button key={cta.href} asChild size="sm">
+                            <ContentLink href={cta.href} external={Boolean(cta.external)}>
+                              {cta.label}
+                            </ContentLink>
+                          </Button>,
                         )}
                         {story.storyHref ? (
-                          story.storyHref.startsWith("/") ? (
-                            <Button asChild variant="outline" size="sm">
-                              <Link to={story.storyHref}>{story.storyCtaLabel ?? readStoryLabel}</Link>
-                            </Button>
-                          ) : (
-                            <Button asChild variant="outline" size="sm">
-                              <a href={story.storyHref} target="_blank" rel="noreferrer">
-                                {story.storyCtaLabel ?? readStoryLabel}
-                              </a>
-                            </Button>
-                          )
+                          <Button asChild variant="outline" size="sm">
+                            <ContentLink href={story.storyHref}>{story.storyCtaLabel ?? readStoryLabel}</ContentLink>
+                          </Button>
                         ) : null}
                       </div>
                     ) : null}

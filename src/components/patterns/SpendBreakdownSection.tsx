@@ -1,5 +1,6 @@
 import type { LucideIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
+import ContentLink from "./ContentLink";
 
 export type SpendCategoryId =
   | "animalCare"
@@ -105,14 +106,13 @@ const SpendBreakdownSection = ({
 
       {sourceHref ? (
         <div className="text-center">
-          <a
+          <ContentLink
             href={sourceHref}
-            target="_blank"
-            rel="noreferrer"
+            external
             className="text-sm font-medium text-primary underline-offset-4 hover:underline"
           >
             {sourceLabel}
-          </a>
+          </ContentLink>
         </div>
       ) : null}
     </section>

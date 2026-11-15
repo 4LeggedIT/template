@@ -1,5 +1,4 @@
 import type { LucideIcon } from "lucide-react";
-import { Link } from "react-router-dom";
 import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts";
 import {
   ChartContainer,
@@ -11,6 +10,7 @@ import {
 } from "@/components/ui/chart";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import ContentLink from "./ContentLink";
 
 export type ImpactStat = {
   id: string;
@@ -56,8 +56,6 @@ type ImpactStatsSectionProps = {
   className?: string;
   labels?: ImpactStatsSectionLabels;
 };
-
-const isExternalContentHref = (href: string) => !href.startsWith("/");
 
 const DEFAULT_METRIC_COLORS = [
   "hsl(var(--primary))",
@@ -152,20 +150,15 @@ const ImpactStatsSection = ({
               );
             }
 
-            return isExternalContentHref(stat.href) ? (
-              <a
+            return (
+              <ContentLink
                 key={stat.id}
                 href={stat.href}
-                target="_blank"
-                rel="noopener noreferrer"
+                whenUnsafe="children"
                 className={cn(tileClassName, "transition-colors hover:bg-muted")}
               >
                 {tileContent}
-              </a>
-            ) : (
-              <Link key={stat.id} to={stat.href} className={cn(tileClassName, "transition-colors hover:bg-muted")}>
-                {tileContent}
-              </Link>
+              </ContentLink>
             );
           })}
         </div>
@@ -210,13 +203,7 @@ const ImpactStatsSection = ({
       {ctaHref && ctaLabel ? (
         <div className="text-center">
           <Button asChild>
-            {isExternalContentHref(ctaHref) ? (
-              <a href={ctaHref} target="_blank" rel="noopener noreferrer">
-                {ctaLabel}
-              </a>
-            ) : (
-              <Link to={ctaHref}>{ctaLabel}</Link>
-            )}
+            <ContentLink href={ctaHref}>{ctaLabel}</ContentLink>
           </Button>
         </div>
       ) : null}

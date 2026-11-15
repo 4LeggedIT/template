@@ -3,6 +3,7 @@ import { ChevronLeft, ChevronRight, Download, Expand, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
+import ContentLink from "./ContentLink";
 
 export type FlyerLibraryCategory = "foster" | "volunteer" | "spay-neuter" | "safety" | "promo" | "general";
 
@@ -206,10 +207,11 @@ const FlyerLibrarySection = ({
                 )}
               >
                 <CardContent className="p-0">
-                  <a
+                  <ContentLink
                     href={imageHref}
-                    target="_blank"
-                    rel="noreferrer"
+                    external
+                    imageLink
+                    whenUnsafe="children"
                     className="block"
                     onClick={(event) => {
                       if (!enableLightbox) return;
@@ -247,7 +249,7 @@ const FlyerLibrarySection = ({
                         </div>
                       ) : null}
                     </div>
-                  </a>
+                  </ContentLink>
                   {flyer.caption ? (
                     <div className="border-t border-border/70 px-4 py-3 text-sm text-muted-foreground">
                       {flyer.caption}
@@ -324,14 +326,17 @@ const FlyerLibrarySection = ({
             ) : null}
             <div className="mt-3 text-center">
               <Button asChild size="sm" variant="secondary">
-                <a
+                <ContentLink
                   href={activeFlyer.downloadHref ?? activeFlyer.src}
-                  download={activeFlyer.downloadFileName ?? true}
+                  external
+                  imageLink
+                  target={undefined}
                   rel="noreferrer"
+                  download={activeFlyer.downloadFileName ?? true}
                 >
                   <Download className="mr-2 h-4 w-4" />
                   {downloadLabel}
-                </a>
+                </ContentLink>
               </Button>
             </div>
           </div>

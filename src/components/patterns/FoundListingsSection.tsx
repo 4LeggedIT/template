@@ -1,6 +1,7 @@
 import { useState } from "react";
 import MediaCarouselTile, { type MediaCarouselTileItem } from "@/components/patterns/MediaCarouselTile";
 import { cn } from "@/lib/utils";
+import ContentLink from "./ContentLink";
 
 /**
  * A plain list of found dogs: a card grid with status/mode filtering, field labels and an empty
@@ -277,14 +278,9 @@ const FoundListingsSection = ({
                   <div className="px-5 pb-5">
                     <p className="mt-3 text-sm text-muted-foreground">{listing.notes}</p>
                     {listing.source.url && /^https?:\/\//i.test(listing.source.url.trim()) ? (
-                      <a
-                        href={listing.source.url.trim()}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="mt-3 inline-block text-sm font-medium text-primary underline underline-offset-2"
-                      >
+                      <ContentLink href={listing.source.url.trim()} external className="mt-3 inline-block text-sm font-medium text-primary underline underline-offset-2">
                         {listing.source.name ? `${viewSourceLabel} (${listing.source.name})` : viewSourceLabel}
-                      </a>
+                      </ContentLink>
                     ) : null}
                   </div>
                 </article>

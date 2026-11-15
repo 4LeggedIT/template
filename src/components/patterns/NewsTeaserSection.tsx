@@ -1,7 +1,7 @@
 import { CalendarDays, Newspaper } from "lucide-react";
-import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import ContentLink from "./ContentLink";
 
 export type NewsTeaserEntry = {
   id: string;
@@ -59,7 +59,7 @@ const NewsTeaserSection = ({
         ) : null}
         {viewAllHref ? (
           <Button asChild variant="outline" size="sm">
-            <Link to={viewAllHref}>{viewAllLabel}</Link>
+            <ContentLink href={viewAllHref} external={false}>{viewAllLabel}</ContentLink>
           </Button>
         ) : null}
       </div>
@@ -77,9 +77,9 @@ const NewsTeaserSection = ({
                 <span>{featured.type === "news" ? newsBadge : eventBadge}</span>
               </div>
               <CardTitle className="text-lg">
-                <Link to={featured.href} className="hover:underline">
+                <ContentLink href={featured.href} external={false} className="hover:underline">
                   {featured.title}
-                </Link>
+                </ContentLink>
               </CardTitle>
               {(featured.dateLabel || featured.locationLabel) ? (
                 <CardDescription>
@@ -91,7 +91,7 @@ const NewsTeaserSection = ({
               <CardContent className="pt-0">
                 <p className="text-sm text-muted-foreground">{featured.summary}</p>
                 <Button asChild variant="link" className="mt-3 px-0">
-                  <Link to={featured.href}>{featured.ctaLabel ?? readDetailsFallback}</Link>
+                  <ContentLink href={featured.href} external={false}>{featured.ctaLabel ?? readDetailsFallback}</ContentLink>
                 </Button>
               </CardContent>
             ) : null}
@@ -105,9 +105,9 @@ const NewsTeaserSection = ({
                     <p className="text-xs uppercase tracking-wide text-muted-foreground">
                       {entry.type === "news" ? newsBadge : eventBadge}
                     </p>
-                    <Link to={entry.href} className="line-clamp-2 text-sm font-medium hover:underline">
+                    <ContentLink href={entry.href} external={false} className="line-clamp-2 text-sm font-medium hover:underline">
                       {entry.title}
-                    </Link>
+                    </ContentLink>
                     {(entry.dateLabel || entry.locationLabel) ? (
                       <p className="mt-1 text-xs text-muted-foreground">
                         {[entry.dateLabel, entry.locationLabel].filter(Boolean).join(" • ")}
@@ -115,7 +115,7 @@ const NewsTeaserSection = ({
                     ) : null}
                   </div>
                   <Button asChild variant="ghost" size="sm">
-                    <Link to={entry.href}>{entry.ctaLabel ?? openFallback}</Link>
+                    <ContentLink href={entry.href} external={false}>{entry.ctaLabel ?? openFallback}</ContentLink>
                   </Button>
                 </CardContent>
               </Card>

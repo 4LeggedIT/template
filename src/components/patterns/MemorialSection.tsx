@@ -1,6 +1,7 @@
 import { PawPrint } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import ContentLink from "./ContentLink";
 
 /**
  * Content-authoring rule: never assign blame for how the animal came to be
@@ -109,9 +110,9 @@ const MemorialSection = ({
                 {entry.externalHref ? (
                   <div className="mt-6">
                     <Button variant="outline" asChild>
-                      <a href={entry.externalHref.href} target="_blank" rel="noreferrer">
+                      <ContentLink href={entry.externalHref.href} external>
                         {entry.externalHref.label || externalLinkDefaultLabel}
-                      </a>
+                      </ContentLink>
                     </Button>
                   </div>
                 ) : null}

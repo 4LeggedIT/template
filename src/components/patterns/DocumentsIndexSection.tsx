@@ -1,5 +1,5 @@
-import { Link } from "react-router-dom";
 import "@/styles/documents.css";
+import ContentLink from "./ContentLink";
 
 export type DocumentsIndexGroup = {
   title: string;
@@ -32,7 +32,7 @@ const DocumentsIndexSection = ({ orgName, logoSrc, groups }: DocumentsIndexSecti
           <ul className="doc-index-list">
             {g.items.map((item) => (
               <li key={item.to} className="doc-index-item">
-                <Link to={item.to} className="doc-index-link">{item.label}</Link>
+                <ContentLink href={item.to} external={false} className="doc-index-link">{item.label}</ContentLink>
               </li>
             ))}
           </ul>

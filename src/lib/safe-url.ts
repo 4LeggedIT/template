@@ -35,3 +35,26 @@ export function safeContentUrl(href: string | undefined | null): string | undefi
     return undefined;
   }
 }
+
+/**
+ * True when a (safe) href is a same-site path. `//host` is protocol-relative
+ * and navigates off-site, so a bare `startsWith("/")` check is not enough.
+ */
+export function isInternalPath(href: string): boolean {
+  return href.startsWith("/") && !href.startsWith("//");
+}
+
+const SAFE_DATA_IMAGE = /^data:image\/(png|jpe?g|gif|webp|avif);base64,[a-z0-9+/=]+$/i;
+
+/**
+ * Like safeContentUrl, for links that wrap or open an image the site itself
+ * ships. Bundlers inline small assets as `data:image/...;base64,` URLs, so
+ * those raster data URLs are accepted here. `data:text/html`, SVG and every
+ * other non-web scheme still return undefined.
+ */
+export function safeMediaUrl(href: string | undefined | null): string | undefined {
+  const safe = safeContentUrl(href);
+  if (safe) return safe;
+  const trimmed = href?.trim();
+  return trimmed && SAFE_DATA_IMAGE.test(trimmed) ? trimmed : undefined;
+}

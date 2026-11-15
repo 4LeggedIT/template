@@ -129,6 +129,7 @@ const CuratedLinksSection = ({
         {visible.map(({ item, href }) => (
           <li key={item.id} className="flex">
             <Card className="group flex w-full flex-col overflow-hidden border-border/80 transition-shadow focus-within:shadow-md hover:shadow-md">
+              {/* safe-url-ok: href comes from externalHref(), which validates with safeContentUrl() */}
               <a
                 href={href}
                 target="_blank"

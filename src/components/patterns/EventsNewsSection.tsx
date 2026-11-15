@@ -8,7 +8,7 @@ import FormEmbedModal from "@/components/patterns/FormEmbedModal";
 import EventActions from "@/components/patterns/EventActions";
 import SocialFollowCta, { type SocialFollowCtaProps } from "@/components/patterns/SocialFollowCta";
 import { cn } from "@/lib/utils";
-import { safeContentUrl } from "@/lib/safe-url";
+import { isInternalPath, safeContentUrl } from "@/lib/safe-url";
 import {
   type EventRecurrence,
   buildRrule,
@@ -19,6 +19,7 @@ import {
   resolveOccurrenceStartIso,
 } from "@/lib/event-recurrence";
 import { useEffect, useState, type ReactNode } from "react";
+import ContentLink from "./ContentLink";
 
 // Structurally identical to HomeHighlightSection.tsx's `HomeHighlightItem` — declared locally
 // (rather than imported) so this module has no dependency on the highlight-card pattern. Sites
@@ -376,7 +377,7 @@ export const resolveEventsNewsDateImage = <
 // expanded occurrence of a recurring event deep-links to itself instead of every occurrence
 // (past, ongoing, upcoming) sharing one URL that always resolves to the live occurrence.
 const withOccurrenceDateParam = (href: string | undefined, dateYmd: string): string | undefined => {
-  if (!href || !href.startsWith("/")) return href;
+  if (!href || !isInternalPath(href)) return href;
   const separator = href.includes("?") ? "&" : "?";
   return `${href}${separator}date=${dateYmd}`;
 };
@@ -1143,6 +1144,7 @@ export const renderVideoEmbed = (embed: EventsNewsVideoEmbed, fallbackTitle: str
       )}
     >
       <iframe
+        // safe-url-ok: fixed https://www.facebook.com/plugins/video.php prefix, url is a query param
         src={getFacebookVideoEmbedSrc(embed.url)}
         title={embed.title ?? fallbackTitle}
         className="h-full w-full border-0"
@@ -1357,14 +1359,10 @@ const renderEntryCard = (
   // no detailsHref to point to.
   const renderImageLink = (children: ReactNode, className: string) => {
     if (!detailsHref) return <div className={className}>{children}</div>;
-    return detailsHref.startsWith("/") ? (
-      <Link to={detailsHref} className={className}>
+    return (
+      <ContentLink href={detailsHref} className={className} whenUnsafe="children">
         {children}
-      </Link>
-    ) : (
-      <a href={detailsHref} target="_blank" rel="noopener noreferrer" className={className}>
-        {children}
-      </a>
+      </ContentLink>
     );
   };
 
@@ -1429,17 +1427,9 @@ const renderEntryCard = (
         {!isIndexMode && contentBlocks.length ? <div className="space-y-4">{contentBlocks.map((block, idx) => renderContentBlock(entry.id, block, idx))}</div> : null}
         <div className="flex flex-wrap items-center gap-3">
           {detailsHref ? (
-            detailsHref.startsWith("/") ? (
-              <Button asChild size="sm" variant="outline">
-                <Link to={detailsHref}>{labels.detailsLabel}</Link>
-              </Button>
-            ) : (
-              <Button asChild size="sm" variant="outline">
-                <a href={detailsHref} target="_blank" rel="noopener noreferrer">
-                  {labels.detailsLabel}
-                </a>
-              </Button>
-            )
+            <Button asChild size="sm" variant="outline">
+              <ContentLink href={detailsHref}>{labels.detailsLabel}</ContentLink>
+            </Button>
           ) : null}
           {!isIndexMode && entry.kind === "event" && registrationUrl && !shareUrl && eventStatus !== "past" ? (
             <FormEmbedModal
@@ -1455,15 +1445,14 @@ const renderEntryCard = (
             </FormEmbedModal>
           ) : null}
           {!isIndexMode && entry.kind === "event" && moreInfoUrl ? (
-            <a
+            <ContentLink
               href={moreInfoUrl}
-              target="_blank"
-              rel="noopener noreferrer"
+              external
               className="inline-flex items-center gap-2 text-sm font-medium text-primary hover:underline"
             >
               {labels.moreInfo}
               <ExternalLink className="h-3.5 w-3.5" />
-            </a>
+            </ContentLink>
           ) : null}
           {!isIndexMode && entry.kind === "event" && shareUrl ? (
             <EventActions

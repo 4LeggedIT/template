@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import SocialFollowCta, { type SocialFollowCtaLink, type SocialFollowCtaProps } from "@/components/patterns/SocialFollowCta";
 import MediaCarouselTile, { type MediaCarouselTileItem } from "@/components/patterns/MediaCarouselTile";
+import ContentLink from "./ContentLink";
 
 export type MediaGalleryItem =
   | {
@@ -239,10 +240,11 @@ const MediaGallerySection = ({
       <Card key={item.id} className="overflow-hidden border-border/80">
         {item.kind === "photo" ? (
           <CardContent className="p-0">
-            <a
+            <ContentLink
               href={item.href ?? item.src}
-              target="_blank"
-              rel="noreferrer"
+              external
+              imageLink
+              whenUnsafe="children"
               className="group block"
               onClick={(event) => {
                 if (!enablePhotoLightbox) return;
@@ -268,7 +270,7 @@ const MediaGallerySection = ({
                   </div>
                 ) : null}
               </div>
-            </a>
+            </ContentLink>
             {item.caption ? (
               <div className="border-t border-border/70 px-4 py-3 text-sm text-muted-foreground">{item.caption}</div>
             ) : null}
@@ -404,10 +406,10 @@ const MediaGallerySection = ({
             ) : null}
             <div className="mt-3 text-center">
               <Button asChild size="sm" variant="secondary">
-                <a href={activePhoto.href ?? activePhoto.src} target="_blank" rel="noreferrer">
+                <ContentLink href={activePhoto.href ?? activePhoto.src} external imageLink>
                   {openOriginal}
                   <ExternalLink className="ml-2 h-4 w-4" />
-                </a>
+                </ContentLink>
               </Button>
             </div>
             {hasAdjacentPhotos ? (

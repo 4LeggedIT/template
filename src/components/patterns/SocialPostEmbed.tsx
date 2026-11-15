@@ -14,6 +14,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { cachedVerdict, parseSocialPost, rememberVerdict, type SocialPost } from "@/lib/social-post";
 import { checkExists, detectBlockedEmbed } from "@/lib/social-post-checks";
+import ContentLink from "./ContentLink";
 
 const scripts = new Map<string, Promise<void>>();
 function loadScript(src: string, before?: () => void): Promise<void> {
@@ -169,9 +170,9 @@ const SocialPostEmbed = ({ url, linkLabel, onUnavailable, knownGone, className =
   return (
     <div className={className}>
       <div ref={box} className="min-h-[120px]">{post && Body ? <Body post={post} box={box} onGone={onGone} /> : null}</div>
-      <a href={url} target="_blank" rel="noopener noreferrer" className="mt-2 inline-block text-sm font-semibold text-primary hover:underline">
+      <ContentLink href={url} external className="mt-2 inline-block text-sm font-semibold text-primary hover:underline">
         {label} ↗
-      </a>
+      </ContentLink>
     </div>
   );
 };

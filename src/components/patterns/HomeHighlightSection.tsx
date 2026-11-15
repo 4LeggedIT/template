@@ -1,8 +1,8 @@
 import type { ReactNode } from "react";
-import { Link } from "react-router-dom";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import ContentLink from "./ContentLink";
 
 export const MAX_HOME_HIGHLIGHT_ITEMS = 3;
 
@@ -73,9 +73,9 @@ const FeaturedHighlightCard = ({
           </div>
           <CardTitle className="text-xl">
             {item.href ? (
-              <Link to={item.href} className="hover:underline">
+              <ContentLink href={item.href} external={false} className="hover:underline">
                 {item.title}
-              </Link>
+              </ContentLink>
             ) : (
               item.title
             )}
@@ -85,9 +85,9 @@ const FeaturedHighlightCard = ({
         {item.href ? (
           <CardContent className="pt-0">
             <Button asChild variant="link" className="px-0">
-              <Link to={item.href} aria-label={`${ctaLabel}: ${item.title}`}>
+              <ContentLink href={item.href} external={false} aria-label={`${ctaLabel}: ${item.title}`}>
                 {ctaLabel}
-              </Link>
+              </ContentLink>
             </Button>
           </CardContent>
         ) : null}
@@ -122,9 +122,9 @@ const CompactHighlightCard = ({
       </div>
       <CardTitle className="text-base">
         {item.href ? (
-          <Link to={item.href} className="hover:underline">
+          <ContentLink href={item.href} external={false} className="hover:underline">
             {item.title}
-          </Link>
+          </ContentLink>
         ) : (
           item.title
         )}
@@ -134,9 +134,9 @@ const CompactHighlightCard = ({
     {item.href ? (
       <CardContent className="pt-0">
         <Button asChild variant="link" className="px-0">
-          <Link to={item.href} aria-label={`${ctaLabel}: ${item.title}`}>
+          <ContentLink href={item.href} external={false} aria-label={`${ctaLabel}: ${item.title}`}>
             {ctaLabel}
-          </Link>
+          </ContentLink>
         </Button>
       </CardContent>
     ) : null}

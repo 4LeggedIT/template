@@ -1,5 +1,4 @@
 import { ArrowLeft, Calendar, ChevronLeft, ChevronRight, ExternalLink, MapPin, Ticket } from "lucide-react";
-import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import EventActions from "@/components/patterns/EventActions";
@@ -18,6 +17,7 @@ import {
   type EventsNewsEntry,
 } from "@/components/patterns/EventsNewsSection";
 import { cn } from "@/lib/utils";
+import ContentLink from "./ContentLink";
 
 export type EventsNewsDetailLabels = {
   backToIndex?: string;
@@ -99,14 +99,14 @@ const renderImages = (entry: EventsNewsEntry) => {
     return (
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {entry.images.map((img, idx) => (
-          <a key={`${img.src}-${idx}`} href={img.src} target="_blank" rel="noopener noreferrer" className="block">
+          <ContentLink key={`${img.src}-${idx}`} href={img.src} external imageLink whenUnsafe="children" className="block">
             <img
               src={img.src}
               alt={img.alt ?? entry.title}
               className="max-h-[520px] w-full rounded-xl border border-border bg-background object-cover"
               loading="lazy"
             />
-          </a>
+          </ContentLink>
         ))}
       </div>
     );
@@ -114,14 +114,14 @@ const renderImages = (entry: EventsNewsEntry) => {
 
   if (entry.imageSrc) {
     return (
-      <a href={entry.imageSrc} target="_blank" rel="noopener noreferrer" className="flex justify-center">
+      <ContentLink href={entry.imageSrc} external imageLink whenUnsafe="children" className="flex justify-center">
         <img
           src={entry.imageSrc}
           alt={entry.imageAlt ?? entry.title}
           className="max-h-[520px] max-w-full rounded-xl border border-border bg-background object-contain"
           loading="lazy"
         />
-      </a>
+      </ContentLink>
     );
   }
 
@@ -204,9 +204,9 @@ const EventsNewsDetail = ({
         </h1>
 
         {relatedHref ? (
-          <Link to={relatedHref} className="inline-flex items-center gap-2 text-sm font-semibold text-primary hover:underline">
+          <ContentLink href={relatedHref} external={false} className="inline-flex items-center gap-2 text-sm font-semibold text-primary hover:underline">
             {resolvedLabels.relatedNews}
-          </Link>
+          </ContentLink>
         ) : null}
 
         {/* Registration normally renders as the primary button inside EventActions below; this
@@ -225,15 +225,14 @@ const EventsNewsDetail = ({
         ) : null}
 
         {moreInfoUrl ? (
-          <a
+          <ContentLink
             href={moreInfoUrl}
-            target="_blank"
-            rel="noopener noreferrer"
+            external
             className="inline-flex items-center gap-2 text-sm font-semibold text-primary hover:underline"
           >
             {resolvedLabels.moreInfo}
             <ExternalLink className="h-3.5 w-3.5 opacity-70" />
-          </a>
+          </ContentLink>
         ) : null}
 
         {shareUrl && !isPastEvent ? (
@@ -293,41 +292,35 @@ const EventsNewsDetail = ({
         {previous || next ? (
           <div className="grid grid-cols-1 gap-4 border-t border-border pt-6 sm:grid-cols-2">
             {previous ? (
-              <Link
-                to={previous.href}
-                className="group flex items-center gap-3 rounded-lg border border-border p-3 text-left transition-colors hover:border-primary/40"
-              >
+              <ContentLink href={previous.href} external={false} className="group flex items-center gap-3 rounded-lg border border-border p-3 text-left transition-colors hover:border-primary/40">
                 <ChevronLeft className="h-4 w-4 shrink-0 text-muted-foreground transition-colors group-hover:text-primary" />
                 <span className="min-w-0">
                   <span className="block text-xs text-muted-foreground">{resolvedLabels.previousLabel}</span>
                   <span className="block truncate text-sm font-semibold text-foreground">{previous.dateLabel}</span>
                   <span className="block truncate text-sm text-muted-foreground">{previous.title}</span>
                 </span>
-              </Link>
+              </ContentLink>
             ) : (
               <div />
             )}
             {next ? (
-              <Link
-                to={next.href}
-                className="group flex items-center justify-end gap-3 rounded-lg border border-border p-3 text-right transition-colors hover:border-primary/40 sm:col-start-2"
-              >
+              <ContentLink href={next.href} external={false} className="group flex items-center justify-end gap-3 rounded-lg border border-border p-3 text-right transition-colors hover:border-primary/40 sm:col-start-2">
                 <span className="min-w-0">
                   <span className="block text-xs text-muted-foreground">{resolvedLabels.nextLabel}</span>
                   <span className="block truncate text-sm font-semibold text-foreground">{next.dateLabel}</span>
                   <span className="block truncate text-sm text-muted-foreground">{next.title}</span>
                 </span>
                 <ChevronRight className="h-4 w-4 shrink-0 text-muted-foreground transition-colors group-hover:text-primary" />
-              </Link>
+              </ContentLink>
             ) : null}
           </div>
         ) : null}
 
         <Button asChild variant="outline" size="sm">
-          <Link to={backHref}>
+          <ContentLink href={backHref} external={false}>
             <ArrowLeft className="h-4 w-4" />
             {resolvedLabels.backToIndex}
-          </Link>
+          </ContentLink>
         </Button>
       </CardContent>
     </Card>

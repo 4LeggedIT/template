@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { Heart, MessageCircle } from "lucide-react";
-import { Link } from "react-router-dom";
 import AdoptAPetEmbed from "@/components/patterns/AdoptAPetEmbed";
 import GetBuddyEmbed from "@/components/patterns/GetBuddyEmbed";
 import PawPlacerEmbed from "@/components/patterns/PawPlacerEmbed";
@@ -10,6 +9,7 @@ import { parseYmdUtc, toExpiryMs } from "@/lib/pet-expiry";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
+import ContentLink from "./ContentLink";
 
 export type AdoptablePetLocalItem = PetCardItem;
 
@@ -274,17 +274,11 @@ const AdoptablePetsSection = ({
       {ctas.length ? (
         <div className="mb-6 flex flex-wrap gap-3">
           {ctas.map((cta) =>
-            cta.external ? (
-              <Button key={`${cta.label}-${cta.href}`} asChild variant={cta.variant ?? "default"} size="sm">
-                <a href={cta.href} target="_blank" rel="noreferrer">
-                  {cta.label}
-                </a>
-              </Button>
-            ) : (
-              <Button key={`${cta.label}-${cta.href}`} asChild variant={cta.variant ?? "default"} size="sm">
-                <Link to={cta.href}>{cta.label}</Link>
-              </Button>
-            ),
+            <Button key={`${cta.label}-${cta.href}`} asChild variant={cta.variant ?? "default"} size="sm">
+              <ContentLink href={cta.href} external={Boolean(cta.external)}>
+                {cta.label}
+              </ContentLink>
+            </Button>,
           )}
         </div>
       ) : null}
@@ -401,14 +395,13 @@ const AdoptablePetsSection = ({
               .filter((platform): platform is { name: string; url: string } => Boolean(platform))
               .map((platform, idx, arr) => (
                 <span key={platform.name}>
-                  <a
+                  <ContentLink
                     href={platform.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
+                    external
                     className="underline underline-offset-4 hover:text-foreground"
                   >
                     {platform.name}
-                  </a>
+                  </ContentLink>
                   {idx < arr.length - 1 ? " or " : ""}
                 </span>
               ))}
@@ -418,21 +411,12 @@ const AdoptablePetsSection = ({
 
       {footerCta ? (
         <div className="mt-8 flex justify-center">
-          {footerCta.external ? (
-            <Button asChild variant={footerCta.variant ?? "default"} size="lg">
-              <a href={footerCta.href} target="_blank" rel="noreferrer">
-                <Heart className="mr-2 h-5 w-5" />
-                {footerCta.label}
-              </a>
-            </Button>
-          ) : (
-            <Button asChild variant={footerCta.variant ?? "default"} size="lg">
-              <Link to={footerCta.href}>
-                <Heart className="mr-2 h-5 w-5" />
-                {footerCta.label}
-              </Link>
-            </Button>
-          )}
+          <Button asChild variant={footerCta.variant ?? "default"} size="lg">
+            <ContentLink href={footerCta.href} external={Boolean(footerCta.external)}>
+              <Heart className="mr-2 h-5 w-5" />
+              {footerCta.label}
+            </ContentLink>
+          </Button>
         </div>
       ) : null}
     </section>

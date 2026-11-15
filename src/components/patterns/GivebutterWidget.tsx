@@ -1,5 +1,6 @@
 import { createElement, useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
+import ContentLink from "./ContentLink";
 
 const GIVEBUTTER_WIDGETS_ORIGIN = "https://widgets.givebutter.com";
 
@@ -158,24 +159,22 @@ const GivebutterWidget = ({
         </div>
       ) : null}
       {state !== "ready" ? (
-        <a
+        <ContentLink
           href={campaignUrl}
-          target="_blank"
-          rel="noopener noreferrer"
+          external
           className="inline-flex items-center justify-center rounded-md bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground hover:bg-primary/90"
         >
           {fallbackLabel}
-        </a>
+        </ContentLink>
       ) : null}
       {showHelperLink && state === "ready" ? (
-        <a
+        <ContentLink
           href={campaignUrl}
-          target="_blank"
-          rel="noopener noreferrer"
+          external
           className="block text-sm text-muted-foreground underline underline-offset-4 hover:text-foreground"
         >
           {helperLinkLabel}
-        </a>
+        </ContentLink>
       ) : null}
     </div>
   );

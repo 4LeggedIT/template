@@ -2,6 +2,7 @@ import { ExternalLink, PlayCircle } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import ContentLink from "./ContentLink";
 
 export type MediaStripItem =
   | {
@@ -96,7 +97,7 @@ const MediaStripSection = ({
                 ) : (
                   <>
                     {item.thumbnailSrc ? (
-                      <a href={item.href} target="_blank" rel="noreferrer" className="block">
+                      <ContentLink href={item.href} external whenUnsafe="children" className="block">
                         <div className="relative aspect-video overflow-hidden bg-muted">
                           <img
                             src={item.thumbnailSrc}
@@ -110,7 +111,7 @@ const MediaStripSection = ({
                             <PlayCircle className="h-10 w-10" />
                           </div>
                         </div>
-                      </a>
+                      </ContentLink>
                     ) : null}
                     <CardHeader className="pb-2">
                       <CardTitle className="text-base">{item.title}</CardTitle>
@@ -120,10 +121,10 @@ const MediaStripSection = ({
                         <p className="text-sm text-muted-foreground">{item.description}</p>
                       ) : null}
                       <Button asChild variant="outline" size="sm">
-                        <a href={item.href} target="_blank" rel="noreferrer">
+                        <ContentLink href={item.href} external>
                           {item.ctaLabel ?? defaultCtaLabel}
                           <ExternalLink className="ml-2 h-4 w-4" />
-                        </a>
+                        </ContentLink>
                       </Button>
                     </CardContent>
                   </>

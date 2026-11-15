@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Calendar, Clock, X } from "lucide-react";
-import { Link } from "react-router-dom";
+import ContentLink from "./ContentLink";
 import { cn } from "@/lib/utils";
 import { type EventRecurrence, getNextOccurrence } from "@/lib/event-recurrence";
 
@@ -202,27 +202,13 @@ const EventBanner = ({
                 </div>
 
                 <div className="flex items-center gap-3">
-                  {event.ctaHref ? (
-                    event.ctaHref.startsWith("/") ? (
-                      <Link
-                        to={event.ctaHref}
-                        aria-label={`${event.ctaLabel ?? detailsFallback}: ${event.calendarTitle ?? event.title}`}
-                        className="text-sm font-semibold text-primary hover:underline"
-                      >
-                        {event.ctaLabel ?? detailsFallback}
-                      </Link>
-                    ) : (
-                      <a
-                        href={event.ctaHref}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        aria-label={`${event.ctaLabel ?? detailsFallback}: ${event.calendarTitle ?? event.title}`}
-                        className="text-sm font-semibold text-primary hover:underline"
-                      >
-                        {event.ctaLabel ?? detailsFallback}
-                      </a>
-                    )
-                  ) : null}
+                  <ContentLink
+                    href={event.ctaHref}
+                    aria-label={`${event.ctaLabel ?? detailsFallback}: ${event.calendarTitle ?? event.title}`}
+                    className="text-sm font-semibold text-primary hover:underline"
+                  >
+                    {event.ctaLabel ?? detailsFallback}
+                  </ContentLink>
                   <button
                     type="button"
                     onClick={() => dismissEvent(event)}

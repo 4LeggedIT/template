@@ -1,4 +1,5 @@
 import { safeContentUrl } from "@/lib/safe-url";
+import ContentLink from "./ContentLink";
 
 type GetBuddyEmbedProps = {
   title?: string;
@@ -69,14 +70,9 @@ const GetBuddyEmbed = ({
           {viewAllPrefix}{" "}
           {platforms.map((platform, idx) => (
             <span key={platform.name}>
-              <a
-                href={platform.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="underline underline-offset-4 hover:text-foreground"
-              >
+              <ContentLink href={platform.url} external className="underline underline-offset-4 hover:text-foreground">
                 {platform.name}
-              </a>
+              </ContentLink>
               {idx < platforms.length - 2 ? ", " : idx < platforms.length - 1 ? listConjunction : ""}
             </span>
           ))}

@@ -235,6 +235,7 @@ const MissingListingsSection = ({
                   <div className="px-5 pb-5">
                     {sourceHref && /^https?:\/\//i.test(sourceHref) ? (
                       <a
+                        // safe-url-ok: sourceHref passes safeActionHref() (http/https only)
                         href={sourceHref}
                         target="_blank"
                         rel="noopener noreferrer"
@@ -245,6 +246,7 @@ const MissingListingsSection = ({
                     ) : null}
                     {listing.sightingsAction && actionHref ? (
                       <a
+                        // safe-url-ok: actionHref passes safeActionHref()
                         href={actionHref}
                         className="mt-4 inline-flex rounded-full bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground shadow-md shadow-primary/30 hover:bg-primary/90"
                       >

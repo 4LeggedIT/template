@@ -1,6 +1,8 @@
 import { useEffect } from "react";
 import { Helmet } from "react-helmet-async";
 import { siteConfig } from "@/config/site";
+import ContentLink from "./ContentLink";
+import { safeContentUrl } from "@/lib/safe-url";
 
 export type FormQuickLinkKind =
   | "adoption"
@@ -57,9 +59,11 @@ const FormQuickLink = ({ formUrl, kind, path, overrides }: FormQuickLinkProps) =
     : { title: `Online Form | ${name}`, description: `This link opens an online form from ${name}.` };
   const meta = { ...base, ...overrides };
 
+  const safeFormUrl = safeContentUrl(formUrl);
+
   useEffect(() => {
-    window.location.replace(formUrl);
-  }, [formUrl]);
+    if (safeFormUrl) window.location.replace(safeFormUrl);
+  }, [safeFormUrl]);
 
   return (
     <>
@@ -67,15 +71,15 @@ const FormQuickLink = ({ formUrl, kind, path, overrides }: FormQuickLinkProps) =
         <title>{meta.title}</title>
         <meta name="description" content={meta.description} />
         <link rel="canonical" href={`${siteConfig.siteUrl}${path}`} />
-        <meta httpEquiv="refresh" content={`0;url=${formUrl}`} />
+        {safeFormUrl ? <meta httpEquiv="refresh" content={`0;url=${safeFormUrl}`} /> : null}
         <meta name="robots" content="noindex,nofollow" />
       </Helmet>
       <div className="flex min-h-screen items-center justify-center">
         <p className="text-muted-foreground">
           Redirecting…{" "}
-          <a href={formUrl} className="underline underline-offset-4 hover:text-foreground">
+          <ContentLink href={safeFormUrl} external target="_self" className="underline underline-offset-4 hover:text-foreground">
             Click here if you are not redirected automatically.
-          </a>
+          </ContentLink>
         </p>
       </div>
     </>
