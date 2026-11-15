@@ -1,3 +1,5 @@
+import { safeContentUrl } from "@/lib/safe-url";
+
 type GetBuddyEmbedProps = {
   title?: string;
   embedUrl: string;
@@ -19,7 +21,7 @@ type GetBuddyEmbedProps = {
 
 const GetBuddyEmbed = ({
   title = "GetBuddy Listings",
-  embedUrl,
+  embedUrl: rawEmbedUrl,
   listingsUrl,
   iframeHeight = 900,
   showIframe = true,
@@ -37,6 +39,7 @@ const GetBuddyEmbed = ({
     listConjunction = " or ",
   } = labels;
 
+  const embedUrl = safeContentUrl(rawEmbedUrl) ?? "about:blank";
   const openUrl = listingsUrl?.trim() || embedUrl;
   const platforms = [
     { name: "GetBuddy", url: openUrl },

@@ -59,4 +59,18 @@ describe("SupporterRecognitionSection", () => {
     expect(screen.getByText("Become a Supporter")).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "Donate Today" })).toHaveAttribute("href", "/donate");
   });
+
+  it("drops an unsafe javascript: CTA href", () => {
+    render(
+      <SupporterRecognitionSection
+        supporters={supporters}
+        sections={sections}
+        ctaTitle="Become a Supporter"
+        ctaHref="javascript:alert(1)"
+        ctaLabel="Donate Today"
+      />,
+    );
+    expect(screen.queryByRole("link", { name: "Donate Today" })).not.toBeInTheDocument();
+    expect(document.querySelector('a[href^="javascript:"]')).toBeNull();
+  });
 });

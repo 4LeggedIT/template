@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { safeContentUrl } from "@/lib/safe-url";
 
 export type Supporter = {
   id: string;
@@ -42,10 +43,10 @@ const SupporterRecognitionSection = ({
   ctaTitle,
   ctaDescription,
   ctaLabel,
-  ctaHref,
+  ctaHref: rawCtaHref,
   omissionNoteText,
   omissionNoteLinkLabel,
-  omissionNoteHref,
+  omissionNoteHref: rawOmissionNoteHref,
   className,
 }: SupporterRecognitionSectionProps) => {
   const groups = sections
@@ -57,6 +58,9 @@ const SupporterRecognitionSection = ({
     }))
     .filter((group) => group.items.length > 0);
 
+  // Validate content-authored URLs (TPL-036 follow-up): rejects javascript:/data: etc.
+  const ctaHref = safeContentUrl(rawCtaHref);
+  const omissionNoteHref = safeContentUrl(rawOmissionNoteHref);
   const showOmissionNote = Boolean(omissionNoteText && omissionNoteLinkLabel && omissionNoteHref);
 
   if (!groups.length && !ctaHref && !showOmissionNote) return null;

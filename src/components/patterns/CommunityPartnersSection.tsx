@@ -57,10 +57,10 @@ const CommunityPartnersSection = ({
   ctaTitle,
   ctaDescription,
   ctaLabel,
-  ctaHref,
+  ctaHref: rawCtaHref,
   omissionNoteText,
   omissionNoteLinkLabel,
-  omissionNoteHref,
+  omissionNoteHref: rawOmissionNoteHref,
   className,
   labels = {},
 }: CommunityPartnersSectionProps) => {
@@ -75,6 +75,9 @@ const CommunityPartnersSection = ({
     }))
     .filter((group) => group.items.length > 0);
 
+  // Validate content-authored URLs (TPL-036 follow-up): rejects javascript:/data: etc.
+  const ctaHref = safeContentUrl(rawCtaHref);
+  const omissionNoteHref = safeContentUrl(rawOmissionNoteHref);
   const showOmissionNote = Boolean(omissionNoteText && omissionNoteLinkLabel && omissionNoteHref);
 
   if (!groups.length && !ctaHref && !showOmissionNote) return null;

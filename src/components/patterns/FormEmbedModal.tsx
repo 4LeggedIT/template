@@ -9,6 +9,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { cn } from "@/lib/utils";
+import { safeContentUrl } from "@/lib/safe-url";
 
 type ButtonVariant = "default" | "destructive" | "outline" | "secondary" | "ghost" | "link";
 type ButtonSize = "default" | "sm" | "lg" | "icon";
@@ -36,7 +37,7 @@ type FormEmbedModalProps = {
 };
 
 const FormEmbedModal = ({
-  formUrl,
+  formUrl: rawFormUrl,
   title,
   children,
   triggerClassName,
@@ -57,6 +58,8 @@ const FormEmbedModal = ({
     formDescription = "Complete the form below.",
     googleAccountNotice = "This form requires a Google account to submit. It opens in a new tab.",
   } = labels;
+  // Unsafe schemes (javascript:, data:) fall back to an inert blank target.
+  const formUrl = safeContentUrl(rawFormUrl) ?? "about:blank";
   const [internalOpen, setInternalOpen] = useState(false);
   const isControlled = typeof open === "boolean" && typeof onOpenChange === "function";
   const isLegacyControlled = typeof isOpen === "boolean";

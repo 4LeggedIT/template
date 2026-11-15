@@ -1,5 +1,6 @@
 import { ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { safeContentUrl } from "@/lib/safe-url";
 
 type AdoptAPetEmbedProps = {
   title?: string;
@@ -56,7 +57,7 @@ const AdoptAPetEmbed = ({
   shelterId,
   scrollerWidth = 450,
   scrollerHeight = 320,
-  iframeUrl,
+  iframeUrl: rawIframeUrl,
   iframeHeight = 760,
   showIframe = false,
   className,
@@ -67,6 +68,7 @@ const AdoptAPetEmbed = ({
   rockyKanakaUrl,
   labels = {},
 }: AdoptAPetEmbedProps) => {
+  const iframeUrl = safeContentUrl(rawIframeUrl);
   const {
     openButton = "Open Adopt-a-Pet",
     viewAllPrefix = "Or view all pets on",

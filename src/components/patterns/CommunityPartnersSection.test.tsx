@@ -115,4 +115,22 @@ describe("CommunityPartnersSection", () => {
     expect(screen.getByText("Want to Partner?")).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "Reach Out" })).toHaveAttribute("href", "/contact");
   });
+
+  it("drops unsafe javascript: CTA and omission-note hrefs", () => {
+    render(
+      <CommunityPartnersSection
+        partners={partners}
+        sections={sections}
+        ctaTitle="Want to Partner?"
+        ctaHref="javascript:void(document.title='XSS')"
+        ctaLabel="Reach Out"
+        omissionNoteText="Not listed?"
+        omissionNoteLinkLabel="Tell us"
+        omissionNoteHref="javascript:alert(1)"
+      />,
+    );
+    expect(screen.queryByRole("link", { name: "Reach Out" })).not.toBeInTheDocument();
+    expect(screen.queryByRole("link", { name: "Tell us" })).not.toBeInTheDocument();
+    expect(document.querySelector('a[href^="javascript:"]')).toBeNull();
+  });
 });
