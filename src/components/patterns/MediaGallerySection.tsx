@@ -221,6 +221,11 @@ const MediaGallerySection = ({
 
   const renderTile = (tile: { key: string; items: MediaGalleryItem[] }) => {
     if (tile.items.length > 1) {
+      // A grouped tile is captioned by its first captioned photo (or titled video), so a carousel
+      // reads like a single tile: the picture(s) above, the title below.
+      const groupCaption = tile.items
+        .map((groupItem) => (groupItem.kind === "photo" ? groupItem.caption : groupItem.title))
+        .find((text) => Boolean(text));
       return (
         <Card key={tile.key} className="overflow-hidden border-border/80">
           <CardContent className="p-0">
@@ -230,6 +235,9 @@ const MediaGallerySection = ({
               videoFallback={videoFallback}
               onPhotoClick={enablePhotoLightbox ? (mediaItem) => setSelectedPhotoId(mediaItem.id) : undefined}
             />
+            {groupCaption ? (
+              <div className="border-t border-border/70 px-4 py-3 text-sm text-muted-foreground">{groupCaption}</div>
+            ) : null}
           </CardContent>
         </Card>
       );
