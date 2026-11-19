@@ -54,6 +54,8 @@ export type MediaGallerySectionProps = {
   emptyMessage?: string;
   /** Grid photo tile rendering. "cover" (default) crops to a fixed aspect ratio; "contain" shows the full uncropped image at its natural aspect ratio. Applies to the whole gallery, not per item. */
   fit?: "cover" | "contain";
+  /** How a photo tile's caption (single photo or carousel group) is drawn. "muted" (default) is the small gray strip; "title" draws it as the bold title video tiles use, so photo and video tiles read alike in a mixed gallery. */
+  captionStyle?: "muted" | "title";
   shuffleOnLoad?: boolean;
   maxPhotos?: number;
   maxVideos?: number;
@@ -93,6 +95,7 @@ const MediaGallerySection = ({
   enablePhotoLightbox = true,
   emptyMessage = "Media items coming soon.",
   fit = "cover",
+  captionStyle = "muted",
   shuffleOnLoad = false,
   maxPhotos,
   maxVideos,
@@ -219,6 +222,15 @@ const MediaGallerySection = ({
     return () => window.removeEventListener("keydown", onKeyDown);
   }, [activePhoto, goToNextPhoto, goToPreviousPhoto]);
 
+  const renderCaption = (text: string) =>
+    captionStyle === "title" ? (
+      <CardHeader className="pb-2">
+        <CardTitle className="text-base">{text}</CardTitle>
+      </CardHeader>
+    ) : (
+      <div className="border-t border-border/70 px-4 py-3 text-sm text-muted-foreground">{text}</div>
+    );
+
   const renderTile = (tile: { key: string; items: MediaGalleryItem[] }) => {
     if (tile.items.length > 1) {
       // A grouped tile is captioned by its first captioned photo (or titled video), so a carousel
@@ -235,9 +247,7 @@ const MediaGallerySection = ({
               videoFallback={videoFallback}
               onPhotoClick={enablePhotoLightbox ? (mediaItem) => setSelectedPhotoId(mediaItem.id) : undefined}
             />
-            {groupCaption ? (
-              <div className="border-t border-border/70 px-4 py-3 text-sm text-muted-foreground">{groupCaption}</div>
-            ) : null}
+            {groupCaption ? renderCaption(groupCaption) : null}
           </CardContent>
         </Card>
       );
@@ -279,9 +289,7 @@ const MediaGallerySection = ({
                 ) : null}
               </div>
             </ContentLink>
-            {item.caption ? (
-              <div className="border-t border-border/70 px-4 py-3 text-sm text-muted-foreground">{item.caption}</div>
-            ) : null}
+            {item.caption ? renderCaption(item.caption) : null}
           </CardContent>
         ) : (
           <>
