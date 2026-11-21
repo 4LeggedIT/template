@@ -123,15 +123,11 @@ const EventBanner = ({
     dismissAriaLabel = "Dismiss event banner",
     detailsFallback = "Details",
   } = labels;
-  const [visibleEvents, setVisibleEvents] = useState<EventBannerItem[]>(() => {
-    const now = Date.now();
-    return getRenderableEvents(events, now)
-      .filter((event) => {
-        const expiresAtMs = getExpiryMs(event);
-        return typeof expiresAtMs === "number" ? now < expiresAtMs : true;
-      })
-      .slice(0, maxVisible);
-  });
+  // Deliberately empty until mounted (TPL-064): this page is statically prerendered, so deciding
+  // visibility from Date.now() during render froze a build-time banner into the HTML (still there
+  // after the event ended, until JS loaded) and made hydration disagree with it. The effect below
+  // computes the real list right after hydration, the same approach EventsNewsSection uses.
+  const [visibleEvents, setVisibleEvents] = useState<EventBannerItem[]>([]);
   const expiryTimeoutRef = useRef<number | null>(null);
 
   useEffect(() => {

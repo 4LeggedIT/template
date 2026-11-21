@@ -75,3 +75,15 @@ describe("EventBanner multi-day events (TPL-064)", () => {
     expect(screen.queryByText(/Dec 5\s*–/)).not.toBeInTheDocument();
   });
 });
+
+describe("EventBanner prerender (TPL-064)", () => {
+  it("renders nothing on the server so a build-time banner never reaches the static HTML", async () => {
+    const { renderToString } = await import("react-dom/server");
+    const html = renderToString(
+      <MemoryRouter>
+        <EventBanner events={[thanksgiving]} timeZone="America/Los_Angeles" storageKeyPrefix="test_banner" />
+      </MemoryRouter>,
+    );
+    expect(html).toBe("");
+  });
+});
