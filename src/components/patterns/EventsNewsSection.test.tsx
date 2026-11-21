@@ -1,5 +1,7 @@
-import { describe, expect, it } from "vitest";
-import {
+import { render } from "@testing-library/react";
+import { MemoryRouter } from "react-router-dom";
+import { afterEach, describe, expect, it, vi } from "vitest";
+import EventsNewsSection, {
   formatFallbackDateLabel,
   getAdjacentEntries,
   type EventsNewsEventEntry,
@@ -92,5 +94,54 @@ describe("getAdjacentEntries", () => {
   it("threads timeZone through to a neighbor's computed dateLabel", () => {
     const { previous } = getAdjacentEntries(entries, "halloween-paint-and-sip", undefined, undefined, "America/Los_Angeles");
     expect(previous?.dateLabel).toContain("October 29, 2026");
+  });
+});
+
+describe("EventsNewsSection future-events banner (TPL-064)", () => {
+  const multiDay: EventsNewsEventEntry = {
+    id: "adopt-a-thon",
+    kind: "event",
+    title: "Home for Thanksgiving Adopt-A-Thon",
+    startAt: "2026-11-21",
+    endAt: "2026-11-29",
+    startAtIso: "2026-11-21T00:00:00-08:00",
+    endAtIso: "2026-11-29T23:59:00-08:00",
+  };
+
+  const store = new Map<string, string>();
+  const memoryStorage = {
+    getItem: (key: string) => store.get(key) ?? null,
+    setItem: (key: string, value: string) => void store.set(key, String(value)),
+    removeItem: (key: string) => void store.delete(key),
+    clear: () => store.clear(),
+    key: () => null,
+    length: 0,
+  } as Storage;
+
+  const renderAt = (iso: string) => {
+    vi.stubGlobal("localStorage", memoryStorage);
+    vi.useFakeTimers({ toFake: ["Date"] });
+    vi.setSystemTime(new Date(iso));
+    return render(
+      <MemoryRouter>
+        <EventsNewsSection entries={[multiDay]} showFutureEventsBanner futureEventsBannerTimeZone="America/Los_Angeles" />
+      </MemoryRouter>,
+    );
+  };
+
+  afterEach(() => {
+    vi.useRealTimers();
+    vi.unstubAllGlobals();
+    store.clear();
+  });
+
+  it("keeps an in-progress multi-day event in the banner", () => {
+    const { container } = renderAt("2026-11-24T12:00:00-08:00");
+    expect(container.querySelector("[aria-label='Dismiss event banner']")).not.toBeNull();
+  });
+
+  it("drops the event from the banner once it has ended", () => {
+    const { container } = renderAt("2026-11-30T09:00:00-08:00");
+    expect(container.querySelector("[aria-label='Dismiss event banner']")).toBeNull();
   });
 });

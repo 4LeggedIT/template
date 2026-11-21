@@ -75,6 +75,22 @@ const formatTime = (iso: string, timeZone: string, locale: string) =>
     minute: "2-digit",
   }).format(new Date(iso));
 
+const DAY_MS = 24 * 60 * 60 * 1000;
+
+const toDayKey = (iso: string, timeZone: string) =>
+  new Intl.DateTimeFormat("en-CA", { timeZone, year: "numeric", month: "2-digit", day: "2-digit" }).format(new Date(iso));
+
+// A multi-day event (TPL-064): lasts a day or more AND ends on a different calendar day than it
+// starts, in the banner's time zone. Shown as a date range, because the banner now stays up while
+// the event is in progress and a lone start date ("Sat, Nov 21") would read as today-only. An
+// overnight event shorter than 24 hours (6 PM to 1 AM) keeps its single date plus time range.
+const isMultiDayEvent = (event: EventBannerItem, timeZone: string) => {
+  const start = toMs(event.startsAtIso);
+  const end = toMs(event.endsAtIso);
+  if (start === null || end === null || end - start < DAY_MS) return false;
+  return toDayKey(event.startsAtIso!, timeZone) !== toDayKey(event.endsAtIso!, timeZone);
+};
+
 const getExpiryMs = (event: EventBannerItem) => {
   if (event.expiresAtIso) return toMs(event.expiresAtIso);
   if (event.endsAtIso) return toMs(event.endsAtIso);
@@ -176,7 +192,8 @@ const EventBanner = ({
       <div className="container px-4 py-2">
         <div className="flex flex-col gap-2">
           {visibleEvents.map((event) => {
-            const hasTime = !event.allDay && event.startsAtIso && event.endsAtIso;
+            const multiDay = isMultiDayEvent(event, timeZone);
+            const hasTime = !multiDay && !event.allDay && event.startsAtIso && event.endsAtIso;
             return (
               <div
                 key={event.id}
@@ -189,6 +206,7 @@ const EventBanner = ({
                       <span className="inline-flex items-center gap-1">
                         <Calendar className="h-4 w-4" />
                         {formatDate(event.startsAtIso, timeZone, locale)}
+                        {multiDay ? <> – {formatDate(event.endsAtIso!, timeZone, locale)}</> : null}
                       </span>
                     ) : null}
                     {hasTime ? (
