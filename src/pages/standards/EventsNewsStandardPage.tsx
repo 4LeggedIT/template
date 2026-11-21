@@ -134,6 +134,8 @@ const EventsNewsStandardPage = () => {
             {t("eventsNews:sections.homeBanner.part5")} <code>showFutureEventsBanner</code>{" "}
             {t("eventsNews:sections.homeBanner.part6")}
           </p>
+          <p className="text-sm text-muted-foreground">{t("eventsNews:sections.homeBanner.windowNote")}</p>
+          <p className="text-sm text-muted-foreground">{t("eventsNews:sections.homeBanner.timeZoneNote")}</p>
           <EventBanner events={homeBannerEvents} storageKeyPrefix="template_events_news_example_banner" />
         </div>
 

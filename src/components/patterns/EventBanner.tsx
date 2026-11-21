@@ -3,6 +3,7 @@ import { Calendar, Clock, X } from "lucide-react";
 import ContentLink from "./ContentLink";
 import { cn } from "@/lib/utils";
 import { type EventRecurrence, getNextOccurrence } from "@/lib/event-recurrence";
+import { siteConfig } from "@/config/site";
 
 export type EventBannerRecurrence = EventRecurrence;
 
@@ -36,6 +37,8 @@ type EventBannerProps = {
   labels?: EventBannerLabels;
 };
 
+// Fallback when a site sets no `siteConfig.timeZone`. A site outside Pacific time sets that field
+// once in config/site.ts instead of passing `timeZone` at every banner.
 const DEFAULT_TIME_ZONE = "America/Los_Angeles";
 const DEFAULT_LOCALE = "en-US";
 
@@ -111,7 +114,7 @@ const EventBanner = ({
   events,
   storageKeyPrefix = "template_event_banner_dismissed_until",
   maxVisible = 2,
-  timeZone = DEFAULT_TIME_ZONE,
+  timeZone = siteConfig.timeZone ?? DEFAULT_TIME_ZONE,
   locale = DEFAULT_LOCALE,
   className,
   labels = {},
