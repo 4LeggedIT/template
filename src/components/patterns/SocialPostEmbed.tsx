@@ -11,7 +11,7 @@
 // short links) renders only the plain link and never calls `onUnavailable`.
 // CSP: facebook = connect.facebook.net (script), graph.facebook.com (connect), www.facebook.com (frame);
 // instagram = www.instagram.com (frame) and graph.facebook.com (connect); tiktok = www.tiktok.com (frame).
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { cachedVerdict, parseSocialPost, rememberVerdict, type SocialPost } from "@/lib/social-post";
 import { checkExists, detectBlockedEmbed } from "@/lib/social-post-checks";
 import ContentLink from "./ContentLink";
@@ -42,6 +42,9 @@ type Win = { FB?: { XFBML: { parse: (el?: Element | null) => void } } };
 type BodyProps = { post: SocialPost; box: React.RefObject<HTMLDivElement>; onGone: (verdict: "gone" | "blocked") => void };
 
 const FacebookBody = ({ post, box, onGone }: BodyProps) => {
+  // Latest callback via ref so an unstable `onUnavailable` from the parent cannot re-run the parse effect.
+  const gone = useRef(onGone);
+  useEffect(() => { gone.current = onGone; }, [onGone]);
   useEffect(() => {
     let live = true;
     loadScript(FACEBOOK_SDK, () => {
@@ -55,10 +58,10 @@ const FacebookBody = ({ post, box, onGone }: BodyProps) => {
         (window as unknown as Win).FB?.XFBML.parse(box.current);
         return box.current ? detectBlockedEmbed(box.current) : false;
       })
-      .then((blocked) => { if (live && blocked) onGone("blocked"); })
+      .then((blocked) => { if (live && blocked) gone.current("blocked"); })
       .catch(() => undefined);
     return () => { live = false; };
-  }, [post, box, onGone]);
+  }, [post, box]);
   return <div className={post.isVideo ? "fb-video" : "fb-post"} data-href={post.url} data-width="400" />;
 };
 
@@ -131,7 +134,10 @@ type Props = {
 };
 
 const SocialPostEmbed = ({ url, linkLabel, onUnavailable, knownGone, className = "mt-4 sm:max-w-md" }: Props) => {
-  const post = parseSocialPost(url);
+  // Memoized per URL: effects below (and FacebookBody's FB.XFBML.parse) depend on `post`, so a fresh object each
+  // render would re-parse and rebuild the platform iframe on every parent re-render (a loop if the parent reacts
+  // to the iframe resizing).
+  const post = useMemo(() => parseSocialPost(url), [url]);
   const box = useRef<HTMLDivElement>(null);
   const [near, setNear] = useState(false);
   const [show, setShow] = useState(false);

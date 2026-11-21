@@ -94,4 +94,19 @@ describe("SocialPostEmbed", () => {
     send({ errorCode: 1001, errorType: "INVALID_VIDEO" });
     expect(onUnavailable).toHaveBeenCalledTimes(1);
   });
+
+  it("Facebook: re-rendering with the same url (even with a fresh onUnavailable) parses the SDK once, not per render", async () => {
+    nearViewport();
+    vi.stubGlobal("fetch", vi.fn().mockResolvedValue({ ok: true, status: 200, json: async () => ({ html: "<blockquote/>" }) }));
+    const parse = vi.fn();
+    (window as unknown as { FB?: unknown }).FB = { XFBML: { parse } };
+    const { rerender } = render(<SocialPostEmbed url={FB} onUnavailable={() => undefined} />);
+    await vi.waitFor(() => expect(document.querySelector(".fb-video, .fb-post")).not.toBeNull(), { timeout: 3000 });
+    (document.querySelector("script[src*='connect.facebook.net']") as HTMLScriptElement).onload?.(new Event("load"));
+    await vi.waitFor(() => expect(parse).toHaveBeenCalledTimes(1));
+    for (let i = 0; i < 5; i++) rerender(<SocialPostEmbed url={FB} onUnavailable={() => undefined} />);
+    await new Promise((r) => setTimeout(r, 50));
+    expect(parse).toHaveBeenCalledTimes(1);
+    delete (window as unknown as { FB?: unknown }).FB;
+  });
 });
