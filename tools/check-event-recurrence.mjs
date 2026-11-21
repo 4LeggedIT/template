@@ -5,8 +5,7 @@
 // wraps it — and (2) render a recurrence badge/summary built from describeRecurrence() — both
 // from lib/event-recurrence.ts — never just the frozen seed date. Resolution may happen in the
 // page itself (calling getNextOccurrence()/resolveEventOccurrence() directly — the common case
-// since resolveEventOccurrence() was added) or in a src/data/*.ts accessor the page calls through
-// (feedingperrisstrays' getEffectiveEvent(), used for its non-detail-page listing helpers) — this
+// since resolveEventOccurrence() was added) or in a src/data/*.ts accessor the page calls through — this
 // check follows local imports from src/data and src/lib to find getNextOccurrence() either way,
 // so every valid pattern in the fleet passes. resolveEventOccurrence() itself is checked only as
 // a direct page-level call (not followed transitively), since it lives under components/patterns/
@@ -138,8 +137,7 @@ if (dateViolations.length > 0 || badgeViolations.length > 0) {
     console.error(
       "  Fix: resolve the entry through getNextOccurrence() from @/lib/event-recurrence before\n" +
         "  passing it to <EventsNewsDetail>, or confirm the entry-fetching accessor already does this.\n" +
-        "  Reference: fosterpawsnetwork/src/pages/NewsEntry.tsx (page-level resolveEntry()) or\n" +
-        "  feedingperrisstrays/src/data/events.ts's getEffectiveEvent() (data-layer resolution).\n",
+        "  Reference: resolveEventOccurrence() exported from components/patterns/EventsNewsSection.tsx.\n",
     );
   }
 
