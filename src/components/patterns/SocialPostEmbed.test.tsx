@@ -100,13 +100,21 @@ describe("SocialPostEmbed", () => {
     vi.stubGlobal("fetch", vi.fn().mockResolvedValue({ ok: true, status: 200, json: async () => ({ html: "<blockquote/>" }) }));
     const parse = vi.fn();
     (window as unknown as { FB?: unknown }).FB = { XFBML: { parse } };
+    // Keep the SDK <script> out of the DOM (some jsdom setups fire onerror for it) and fire its onload by hand.
+    const append = document.body.appendChild.bind(document.body);
+    const sdk: HTMLScriptElement[] = [];
+    vi.spyOn(document.body, "appendChild").mockImplementation(((n: Node) => {
+      if (n instanceof HTMLScriptElement && n.src.includes("connect.facebook.net")) { sdk.push(n); return n; }
+      return append(n);
+    }) as typeof document.body.appendChild);
     const { rerender } = render(<SocialPostEmbed url={FB} onUnavailable={() => undefined} />);
-    await vi.waitFor(() => expect(document.querySelector(".fb-video, .fb-post")).not.toBeNull(), { timeout: 3000 });
-    (document.querySelector("script[src*='connect.facebook.net']") as HTMLScriptElement).onload?.(new Event("load"));
+    await vi.waitFor(() => expect(sdk).toHaveLength(1), { timeout: 3000 });
+    sdk[0].onload?.(new Event("load"));
     await vi.waitFor(() => expect(parse).toHaveBeenCalledTimes(1));
     for (let i = 0; i < 5; i++) rerender(<SocialPostEmbed url={FB} onUnavailable={() => undefined} />);
     await new Promise((r) => setTimeout(r, 50));
     expect(parse).toHaveBeenCalledTimes(1);
     delete (window as unknown as { FB?: unknown }).FB;
+    vi.restoreAllMocks();
   });
 });
