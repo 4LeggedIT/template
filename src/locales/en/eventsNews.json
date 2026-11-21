@@ -32,7 +32,9 @@
       "part3": "element, shown here in isolation (no listing, no archive) to make that clear — never enable it on the same instance used for a News/Events index or archive page, as shown above. In practice, a real site computes this same event list from its own entries via",
       "part4": "'s internal",
       "part5": "helper (by passing",
-      "part6": "on the home page's own instance); the array below is constructed directly only so this example can render the banner with nothing else underneath it."
+      "part6": "on the home page's own instance); the array below is constructed directly only so this example can render the banner with nothing else underneath it.",
+      "windowNote": "An event stays in the banner until it ends, not until it starts: a site that builds its own banner list filters it with getActiveBannerEvents() from lib/event-banner-window.ts (recurring events are always kept; the banner computes their next occurrence). An event of a day or more that spans calendar days shows a date range.",
+      "timeZoneNote": "The banner formats dates and times in siteConfig.timeZone (config/site.ts), falling back to America/Los_Angeles when it is unset. Set it once in the site config; never hard-code a timeZone on each banner or fork the pattern file."
     },
     "structuredContent": {
       "title": "Structured content blocks (cardMode=\"full\")",

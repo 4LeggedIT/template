@@ -889,7 +889,8 @@ export const getEventsNewsHighlightItems = (
 const getBannerUpcomingEvents = (entries: EventsNewsRenderableEntry[], now: number = Date.now()) => {
   const eventEntries = entries
     .filter((entry): entry is EventsNewsRenderableEventEntry => entry.kind === "event")
-    .filter((entry) => getEventStartMs(entry) > now);
+    // Keep an event until it ends, not until it starts (TPL-064), so an in-progress multi-day event stays.
+    .filter((entry) => (getEventEndMs(entry) ?? getEventStartMs(entry)) > now);
 
   const recurringBySeries = new Map<string, EventsNewsRenderableEventEntry[]>();
   const singleEvents: EventsNewsRenderableEventEntry[] = [];
@@ -931,6 +932,7 @@ const toBannerEvents = (
         title: entry.calendarTitle ?? entry.title,
         startsAtIso: entry.startAtIso ?? `${entry.startAt}T12:00:00Z`,
         endsAtIso: entry.endAtIso ?? (entry.endAt ? `${entry.endAt}T23:59:59Z` : undefined),
+        allDay: entry.allDay ?? !entry.startAtIso,
         locationLabel: entry.locationLabel,
         ctaHref: detailsHref,
         ctaLabel: detailsHref ? detailsLabel : undefined,

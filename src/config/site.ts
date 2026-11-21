@@ -37,6 +37,8 @@ export type SiteConfig = {
   eventBannerMaxVisible?: number;
   name: string;
   description: string;
+  /** IANA time zone `EventBanner` formats dates and times in when no `timeZone` prop is passed (e.g. "America/New_York"). Unset falls back to the pattern's "America/Los_Angeles". */
+  timeZone?: string;
 };
 
 export const siteConfig: SiteConfig = {

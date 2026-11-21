@@ -32,7 +32,9 @@
       "part3": ", mostrado aquí de forma aislada (sin listado, sin archivo) para dejar eso claro — nunca lo active en la misma instancia usada para una página índice o de archivo de Noticias/Eventos, como se muestra arriba. En la práctica, un sitio real calcula esta misma lista de eventos a partir de sus propias entradas mediante el asistente interno",
       "part4": "de",
       "part5": "(pasando",
-      "part6": "en la instancia propia de la página de inicio); el arreglo de abajo se construye directamente solo para que este ejemplo pueda mostrar el banner sin nada más debajo."
+      "part6": "en la instancia propia de la página de inicio); el arreglo de abajo se construye directamente solo para que este ejemplo pueda mostrar el banner sin nada más debajo.",
+      "windowNote": "Un evento permanece en el banner hasta que termina, no hasta que empieza: un sitio que arma su propia lista del banner la filtra con getActiveBannerEvents() de lib/event-banner-window.ts (los eventos recurrentes siempre se conservan; el banner calcula su próxima ocurrencia). Un evento de un día o más que abarca varios días calendario muestra un rango de fechas.",
+      "timeZoneNote": "El banner da formato a fechas y horas en siteConfig.timeZone (config/site.ts) y usa America/Los_Angeles cuando no está definido. Defínalo una sola vez en la configuración del sitio; nunca fije un timeZone en cada banner ni bifurque el archivo del patrón."
     },
     "structuredContent": {
       "title": "Bloques de contenido estructurado (cardMode=\"full\")",
