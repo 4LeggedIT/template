@@ -1,0 +1,28 @@
+{
+  "hero": {
+    "title": "Lista de verificación de respaldo sin JS",
+    "description": "Use esta página como lista de verificación al migrar CTA, divulgaciones e incrustaciones a los estándares de la plantilla. Esta es una lista de verificación transversal, no la documentación de patrón de un solo componente — consulte la página propia de cada patrón para su estándar a nivel de componente."
+  },
+  "breadcrumb": "Respaldos sin JS",
+  "sections": {
+    "requiredChecks": {
+      "title": "Verificaciones obligatorias (todas las migraciones)",
+      "items": [
+        "Desactive JavaScript, recargue y verifique que los CTA principales sigan navegando.",
+        "Los enlaces que activan modales deben usar `target=\"_blank\"` + `rel=\"noopener noreferrer\"`.",
+        "Los enlaces de respaldo auxiliares que solo se muestran en modo JS deben tener `className=\"js-only\"`.",
+        "Los enlaces de respaldo <noscript> no deben duplicar enlaces auxiliares visibles en modo sin JS.",
+        "El contenido de preguntas frecuentes/divulgación debe seguir siendo interactivo mediante <details>/<summary> nativos."
+      ]
+    },
+    "commonMisses": {
+      "title": "Errores comunes en la limpieza de migración",
+      "items": [
+        "Desviación del texto auxiliar (redacción de \"¿Tiene problemas?\" no estandarizada).",
+        "Falta la regla de ocultamiento sin JS `.js-only` en `index.html`.",
+        "El nuevo enlace de respaldo se abre en la misma pestaña cuando el activador del modal es un enlace.",
+        "Quedan importaciones antiguas del acordeón en páginas públicas de preguntas frecuentes/divulgación."
+      ]
+    }
+  }
+}

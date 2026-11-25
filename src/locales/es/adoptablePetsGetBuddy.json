@@ -1,0 +1,31 @@
+{
+  "hero": {
+    "title": "Mascotas Adoptables — GetBuddy",
+    "description": "El iframe de listados incrustable de GetBuddy, vinculado a un ID de organización."
+  },
+  "breadcrumb": {
+    "parent": "Mascotas Adoptables",
+    "current": "GetBuddy"
+  },
+  "example": {
+    "title": "Ejemplo"
+  },
+  "disclosure": "Animal Friends of the Valleys (Wildomar, CA) es un rescate real cuyos listados públicos se usan a continuación para demostrar este adaptador con datos del mundo real. Esta plantilla y 4leggedIT no están afiliados con Animal Friends of the Valleys.",
+  "getBuddy": {
+    "title": "Listados de GetBuddy"
+  },
+  "footerCta": {
+    "label": "Solicitar Adopción"
+  },
+  "standard": {
+    "title": "Estándar",
+    "items": [
+      "Use `mode=\"getbuddy\"` (o el componente independiente `GetBuddyEmbed`) para un sitio cuyos listados se gestionan en GetBuddy.",
+      "`organizationId` es el ID de organización propio de GetBuddy — se encuentra en la URL de la página del refugio de la organización en GetBuddy.",
+      "`species` filtra la inserción (por ejemplo, `\"dog\"`); `iframeHeight` controla la altura del iframe montado, `showIframe=false` renderiza solo el enlace de salida.",
+      "`listingsUrl` (opcional) es la propia página del refugio de la organización en GetBuddy — se usa para el enlace \"Or view all pets on GetBuddy\" y como destino de alternativa sin JS.",
+      "La línea auxiliar estándar forma parte del adaptador (`Or view all pets on GetBuddy`) — los enlaces cruzados a `petfinderUrl`/`adoptAPetUrl`/`pawPlacerUrl` se muestran junto a ella automáticamente cuando esas props están configuradas.",
+      "Componente: `template/src/components/patterns/GetBuddyEmbed.tsx`, integrado en `AdoptablePetsSection.tsx` como el modo `\"getbuddy\"`."
+    ]
+  }
+}

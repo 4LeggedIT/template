@@ -1,0 +1,69 @@
+{
+  "breadcrumb": "Patrón de Socios Comunitarios",
+  "hero": {
+    "title": "Patrón de socios comunitarios",
+    "description": "Use CommunityPartnersSection para reconocer públicamente a otros rescates y comercios locales que apoyan a la organización."
+  },
+  "categories": {
+    "rescuePartners": {
+      "title": "Socios de Rescate y de Campo",
+      "description": "Otros rescates y organizaciones de bienestar animal con los que colaboramos."
+    },
+    "veterinaryPartners": {
+      "title": "Socios Veterinarios y Médicos",
+      "description": "Clínicas y profesionales de confianza que ayudan a mantener sanos a nuestros perros."
+    },
+    "businessPartners": {
+      "title": "Socios Comerciales y Comunitarios",
+      "description": "Comercios y organizaciones comunitarias locales que apoyan generosamente nuestro trabajo. Este reconocimiento refleja nuestro aprecio por su generosidad y no constituye un respaldo a ningún producto o servicio."
+    },
+    "technologyPartners": {
+      "title": "Socios Tecnológicos",
+      "description": "El equipo detrás de la plataforma de este sitio y su soporte técnico continuo."
+    }
+  },
+  "partners": {
+    "cedarHollow": {
+      "description": "Un refugio seguro que brinda cuidado y rehabilitación de por vida, coordinando colocaciones con nosotros."
+    },
+    "brightMeadow": {
+      "description": "Rescate aliado con el que conectamos perros para apoyo de ingreso, acogida y transporte."
+    },
+    "exampleVeterinary": {
+      "description": "Ofrece esterilización, vacunación y atención de emergencia con descuento para los perros de nuestro programa."
+    },
+    "exampleSandwich": {
+      "description": "Obsequia un sándwich gratis a cada acogedor recién aprobado, como agradecimiento por abrir su hogar."
+    },
+    "fourLeggedIt": {
+      "description": "Brinda soporte tecnológico gratuito a organizaciones de rescate — sitios web claros, formularios y sistemas de flujo de trabajo que reducen los mensajes perdidos y el trabajo manual."
+    }
+  },
+  "example": {
+    "title": "Ejemplo",
+    "ctaTitle": "¿Quiere asociarse con nosotros?",
+    "ctaDescription": "Si su organización o comercio desea apoyar nuestra misión, nos encantaría saber de usted.",
+    "ctaLabel": "Póngase en contacto",
+    "omissionNoteText": "¿Falta en esta lista, o algo está desactualizado?",
+    "omissionNoteLinkLabel": "Avísenos"
+  },
+  "oneCategoryNoCta": {
+    "title": "Una sola categoría, sin CTA",
+    "description": "Solo los socios de la categoría <0>businessPartners</0>, y sin pasar <1>ctaHref</1>. Las categorías sin socios coincidentes (aquí <2>rescuePartners</2> y <3>veterinaryPartners</3>) no renderizan nada — ni encabezado ni marcador de posición — y la tarjeta de CTA final se omite por completo en lugar de mostrarse vacía."
+  },
+  "standard": {
+    "title": "Estándar",
+    "items": [
+      "`category` distingue a los colaboradores de rescate/bienestar animal (`rescuePartners`) de los comercios y organizaciones comunitarias, como clubes y grupos cívicos (`businessPartners`, titulada \"Socios Comerciales y Comunitarios\") — son dos relaciones genuinamente distintas, no una jerarquía. Un sitio puede definir sus propias claves de categoría siempre que `sections` y `partners` usen valores coincidentes.",
+      "`veterinaryPartners` (\"Socios Veterinarios y Médicos\") es una tercera categoría recomendada para clínicas y profesionales médicos — una relación genuinamente distinta tanto de la colaboración de rescate general como del apoyo comercial general, por lo que tiene su propio encabezado en lugar de incluirse en `businessPartners`. Aun así, se rige por la regla de cumplimiento de `businessPartners` que sigue cuando el socio es una clínica con fines de lucro: mantenga la descripción neutral y factual.",
+      "**Sin favoritismo, nunca.** El componente siempre ordena a los socios alfabéticamente por nombre dentro de una categoría — nunca por fecha de alta, nunca manualmente. No agregue un campo `featured`/`order` para evitar esto; si un sitio desea un programa formal de patrocinio por niveles, eso requiere un umbral objetivo definido (por ejemplo, un programa real de donaciones por monto) y está fuera del alcance de este patrón.",
+      "**Una categoría sin socios coincidentes no renderiza nada** — ni encabezado ni marcador de posición de \"próximamente\". Esto evita una subsección muerta junto a contenido real; la sección aparece automáticamente en cuanto el archivo de datos del sitio recibe su primera entrada en esa categoría.",
+      "La tarjeta de CTA final solo se renderiza cuando se proporciona `ctaHref`, y se muestra sin importar qué secciones de categoría estén pobladas.",
+      "Los campos opcionales `omissionNoteText`/`omissionNoteLinkLabel`/`omissionNoteHref` muestran una línea discreta bajo la lista reconociendo que se pudo haber omitido un socio o que un dato quedó desactualizado, enlazando a la página `/contact` del sitio. Los tres deben estar definidos para que se muestre. Es intencionalmente más discreta que la tarjeta de CTA anterior — trata sobre socios existentes, no busca captar nuevos — así que mantenga el texto breve, y omítala si la lista de socios del sitio es lo bastante pequeña y curada como para que esto rara vez ocurra.",
+      "`logoSrc` y `url` son ambos opcionales; la tarjeta se degrada correctamente a un tratamiento de solo nombre cuando aún no hay un logotipo disponible. Cuando se define `url`, el logotipo enlaza a ella (si existe un logotipo) y se omite el enlace de texto \"Visitar sitio web\" (una sola superficie de enlace es suficiente); el enlace de texto solo se renderiza como respaldo cuando hay `url` pero no `logoSrc`.",
+      "`logoBackgroundClassName` es un color de fondo opcional (por ejemplo, `\"bg-slate-900\"`) para logotipos cuyo diseño necesita un fondo específico para seguir siendo legible — una marca clara o blanca desaparece en el fondo predeterminado de la tarjeta si no. Omítalo en logotipos que ya se vean bien tal cual; la mayoría no lo necesitará.",
+      "**Localización (sitios bilingües):** defina `src/data/partners.ts` como `partnerRecords: PartnerRecord[]` (el tipo exportado `Omit<CommunityPartner, \"name\" | \"description\">`) en lugar de `CommunityPartner[]` — `name`/`description` viven en el JSON de idioma, no en el archivo de datos. En la página, resuelva cada registro en un `CommunityPartner` completo con `t(\"items.\" + id + \".name\")`/`t(\"items.\" + id + \".description\")` (ruta de clave plana — los ítems se ubican directamente bajo `items`, no anidados bajo su categoría) antes de pasarlo al componente. Vea `partners-module-wiring-contract.md` §3.",
+      "Componente: `template/src/components/patterns/CommunityPartnersSection.tsx`"
+    ]
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "hero": {
+    "title": "Mascotas Adoptables — modo híbrido",
+    "description": "Listados locales mostrados junto con uno o más adaptadores de proveedor a la vez — para un sitio que cura sus propias mascotas destacadas pero también extrae un feed en vivo."
+  },
+  "breadcrumb": {
+    "parent": "Mascotas Adoptables",
+    "current": "Híbrido"
+  },
+  "example": {
+    "title": "Ejemplo"
+  },
+  "disclosure": "Animal Friends of the Valleys (Wildomar, CA) es un rescate real cuyos listados públicos se usan a continuación para demostrar este adaptador con datos del mundo real. Esta plantilla y 4leggedIT no están afiliados con Animal Friends of the Valleys.",
+  "footerCta": {
+    "label": "Solicitar Adopción"
+  },
+  "standard": {
+    "title": "Estándar",
+    "items": [
+      "Use `mode=\"hybrid\"` cuando un sitio cure sus propias mascotas destacadas localmente pero también quiera uno o más feeds de proveedor en vivo en la misma página.",
+      "Combine `localPets` con cualquiera de `petfinder`, `adoptAPet`, `getBuddy` — cada uno renderiza su propia sección en el orden: local, luego Petfinder, luego Adopt-a-Pet, luego GetBuddy.",
+      "Cada adaptador de proveedor usado en modo hybrid sigue necesitando su propia `listingsUrl`/URLs de enlace cruzado hermanas — hybrid no relaja el requisito de alternativa sin JS (la línea \"Or view all pets on...\") para ningún adaptador individual.",
+      "Mantenga las acciones de conversión a nivel de sección (`ctas` + `footerCta`) en lugar de botones de aplicar por tarjeta — esto aplica en todos los modos, incluidas las múltiples subsecciones de hybrid.",
+      "`headless=true` renderiza solo los listados/tarjetas locales, omitiendo las inserciones de proveedor y el título de la sección, para incrustarlo dentro de un layout personalizado.",
+      "`labels` sobrescribe el texto de la sección (texto de estado vacío, nombres de feed) para personalización de i18n/sitio.",
+      "Componente: `template/src/components/patterns/AdoptablePetsSection.tsx`"
+    ]
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "breadcrumb": "Patrón de Publicación de Redes Sociales",
+  "hero": {
+    "title": "Patrón de publicación de redes sociales incrustada",
+    "description": "Usa SocialPostEmbed para mostrar una publicación, foto, reel o video público de Facebook, Instagram o TikTok tal como se publicó, en lugar de guardar una copia. Se carga de forma diferida y avisa cuando la publicación ya no existe."
+  },
+  "example": {
+    "facebookTitle": "Facebook",
+    "instagramTitle": "Instagram",
+    "tiktokTitle": "TikTok",
+    "linkLabel": "Ver publicación original",
+    "dropped": "Esta publicación no está disponible, así que el patrón la descartó (el componente padre lo sabe mediante onUnavailable)."
+  },
+  "standard": {
+    "title": "Estándar",
+    "items": [
+      "La fuente de verdad de una historia es la publicación original: enlázala, incrústala y no guardes una copia parafraseada que pueda quedar desactualizada. Si la publicación se elimina, se vuelve privada o se cierra su cuenta, el sitio deja de mostrarla. Solo contenido público.",
+      "URL aceptadas: publicaciones, fotos, videos y reels de Facebook; `/p/`, `/reel/` y `/tv/` de Instagram (con o sin el segmento de la cuenta); `/@usuario/video/<id>` y `/@usuario/photo/<id>` de TikTok. Cualquier otra (una historia o perfil de Instagram, un enlace corto `vm.tiktok.com`) no se puede incrustar: el patrón muestra solo el enlace simple y nunca llama a `onUnavailable`, y `JourneyTimeline` conserva el texto guardado de la etapa. Las historias desaparecen a las 24 horas y no tienen código para incrustar; convierte el enlace corto de TikTok a su forma larga antes de usarlo.",
+      "Diferida y ligera: nada se carga hasta que el bloque está a unos 600 px de la pantalla, y el SDK de Facebook se carga una sola vez por página (`.fb-post`, o `.fb-video` para `/reel/` y `/videos/`). Instagram y TikTok no necesitan script: Instagram es la página de inserción oficial dentro de un iframe (`/p/<id>/embed/captioned/`), con la altura que ella misma informa al componente padre, y TikTok es el iframe del reproductor oficial (`/player/v1/<id>`). No uses `embed.js` de Instagram: falla sin avisar si el SDK de Facebook se cargó antes en la misma página.",
+      "Funciona sin JS: el enlace simple bajo la publicación siempre está en el HTML. Por defecto dice \"View original post\" para todas las plataformas; pasa `linkLabel` para traducirlo (`JourneyTimeline` lo recibe como `embedLinkLabel`).",
+      "Las publicaciones no disponibles se informan con `onUnavailable` para que el componente padre elimine el elemento completo (mantén el callback estable con `useCallback`). Facebook: las publicaciones eliminadas o no públicas se detectan en vivo con `oembed_post` de Meta sin token (HTTP 400, código 100); las que Facebook se niega a incrustar (música con licencia) se detectan por el tamaño fijo de 400x225 del cuadro de aviso una vez que la publicación se estabiliza. Instagram: `instagram_oembed` de Meta sin token responde HTTP 400 con `error_subcode` 2207045 (contenido no encontrado) o 2207046 (contenido privado). TikTok: su oEmbed responde 200 incluso para un id inventado, así que no hay verificación previa en vivo; el propio reproductor avisa de un video inexistente con `postMessage` (`onPlayerError`, código 1001 `INVALID_VIDEO`).",
+      "Solo una respuesta definitiva es un veredicto. Un límite de solicitudes (HTTP 403, código 4), un error de red, un tiempo de espera o cualquier otro error del reproductor (por ejemplo TikTok 2001 `SERVER_ERROR`) nunca ocultan nada. Los veredictos se guardan en `localStorage` (`social-post-verdicts-v1`) por 24 horas; las lecturas van en `try/catch` y el patrón funciona sin almacenamiento. Las llamadas a Meta se espacian unos 1,2 segundos porque su límite se activó tras unas 90 llamadas en pocos minutos.",
+      "Usa solo `oembed_post` para Facebook, también para reels. `oembed_video` responde correctamente a cualquier URL, por lo que nunca puede detectar una publicación eliminada.",
+      "La cuenta de la publicación debe ser pública. Instagram reporta todas las publicaciones de una cuenta privada o restringida como \"contenido privado\", y el patrón las descarta todas. Revisa la privacidad de la cuenta antes de adoptarlo en un sitio.",
+      "`knownGone` / `knownUnavailableEmbeds` opcional: una lista inicial propia del sitio con URL ya confirmadas como no disponibles (p. ej. `src/data/unavailable-social-posts.ts`) que se descartan sin llamada de red. Actualízala sondeando en lotes pequeños; nunca confíes en un 400 visto durante un límite de solicitudes.",
+      "La prueba de tamaño 400x225 (solo Facebook) es una heurística: un video horizontal 16:9 real se incrusta con el mismo tamaño y se descartaría. Revisa una muestra de elementos descartados al adoptarla con video horizontal. No se encontró un equivalente para Instagram ni TikTok.",
+      "CSP: registrado en `tools/csp-registry.mjs` como `SocialPostEmbed`: script `connect.facebook.net`, conexión `graph.facebook.com`, marco `www.facebook.com`, `web.facebook.com`, `www.instagram.com` y `www.tiktok.com`; `gen-csp-headers.mjs` lo detecta cuando un patrón que lo usa se renderiza.",
+      "Componentes: `template/src/components/patterns/SocialPostEmbed.tsx`; utilidades: `template/src/lib/social-post.ts` (análisis de URL, caché de veredictos) y `template/src/lib/social-post-checks.ts` (verificaciones por plataforma). Reemplaza `FacebookPostEmbed` y `facebook-post-status` (TPL-060)."
+    ]
+  }
+}

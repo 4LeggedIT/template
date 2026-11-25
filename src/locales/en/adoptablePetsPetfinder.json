@@ -1,0 +1,27 @@
+{
+  "hero": {
+    "title": "Adoptable Pets — Petfinder",
+    "description": "Petfinder's own live pet-scroller widget, embedded via organization ID."
+  },
+  "breadcrumb": {
+    "parent": "Adoptable Pets",
+    "current": "Petfinder"
+  },
+  "example": {
+    "title": "Example"
+  },
+  "disclosure": "Animal Friends of the Valleys (Wildomar, CA) is a real rescue whose public listings are used below to demonstrate this adapter with real-world data. This template and 4leggedIT are not affiliated with Animal Friends of the Valleys.",
+  "footerCta": {
+    "label": "Apply to Adopt"
+  },
+  "standard": {
+    "title": "Standard",
+    "items": [
+      "Use `mode=\"petfinder\"` (or the standalone `PetfinderScrollerEmbed`) to render Petfinder's own `pet-scroller` widget for one or more `organizationIds`.",
+      "`organizationIds` are Petfinder's own org ID(s) (e.g. `CA542`) — found in the org's Petfinder profile URL slug.",
+      "The \"Or view all pets on...\" cross-link line is the no-JS-safe fallback — always provide `adoptAPetUrl`/`getbuddyUrl`/`pawPlacerUrl` for whichever sibling platforms the org is actually on, so content stays reachable if the widget script fails or JS is unavailable.",
+      "Standard helper line is part of the adapter (`Or view all pets on Petfinder`) — cross-links to `adoptAPetUrl`/`getbuddyUrl`/`pawPlacerUrl` render alongside it automatically when those props are set.",
+      "Component: `template/src/components/patterns/PetfinderScrollerEmbed.tsx`, wired into `AdoptablePetsSection.tsx` as mode `\"petfinder\"`."
+    ]
+  }
+}

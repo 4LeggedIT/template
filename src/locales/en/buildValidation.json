@@ -1,0 +1,36 @@
+{
+  "hero": {
+    "title": "Build and validation workflow",
+    "description": "Use these commands as the baseline validation flow when changing shared patterns or build tooling."
+  },
+  "breadcrumb": "Build & Validation",
+  "sections": {
+    "coreCommands": {
+      "title": "Core commands",
+      "items": [
+        "`npm run build` → internal link check + SSR/prerender build",
+        "`npm run preview` → standard Vite preview",
+        "`npm run preview:nojs` → serve prerendered output for no-JS QA",
+        "`npm run preview:nojs:build` → rebuild then no-JS preview",
+        "`npm test` → `vitest run`"
+      ]
+    },
+    "dependencySecurity": {
+      "title": "Dependency security maintenance",
+      "items": [
+        "Run `npm audit` to identify lockfile-level dependency vulnerabilities.",
+        "Apply low-risk remediations with `npm audit fix`.",
+        "Re-run `npm run build` after lockfile updates before merging.",
+        "Treat this as required maintenance across all template-based repos."
+      ]
+    },
+    "whenToUseNoJs": {
+      "title": "When to use no-JS preview",
+      "items": [
+        "Form modal fallback changes (`FormEmbedModal`, helper links, `js-only` behavior)",
+        "FAQ/disclosure migrations",
+        "Header/menu behavior that depends on `details/summary` or CSS-only fallbacks"
+      ]
+    }
+  }
+}

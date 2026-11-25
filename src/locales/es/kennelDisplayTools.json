@@ -1,0 +1,36 @@
+{
+  "breadcrumb": "Patrón de Herramientas de Perrera y Exhibición",
+  "hero": {
+    "title": "Patrón de herramientas de perrera y exhibición",
+    "description": "Herramientas independientes de impresión y pantalla de kiosco, separadas del sitio público — no se incrustan en una página como otros patrones."
+  },
+  "tools": {
+    "adoptableSlideshow": {
+      "title": "Presentación de Mascotas Adoptables",
+      "description": "Presentación de pantalla completa y avance automático de mascotas adoptables con foto, biografía y un código QR hacia la URL de adopción — para una pantalla de recepción o kiosco. Incluye reproducir/pausar y un alternador de pantalla completa nativo."
+    },
+    "kennelBinder2Up": {
+      "title": "Tarjetas de Carpeta de Perrera (2 por página)",
+      "description": "Elija hasta dos perros del manifiesto e imprima una página tamaño carta con dos tarjetas de carpeta de perrera una junto a la otra, lista para una carpeta física en el refugio."
+    },
+    "kennelCards2Up": {
+      "title": "Tarjetas de Perrera (2 por página)",
+      "description": "Complete los datos de un perro manualmente o cárguelos desde el manifiesto, luego imprima dos tarjetas de perrera en una sola página tamaño carta con una línea de corte entre ellas."
+    }
+  },
+  "openLiveTool": "Abrir herramienta en vivo",
+  "standard": {
+    "title": "Estándar",
+    "items": [
+      "Estos tres componentes son páginas autónomas de pantalla completa con su propio encabezado y reglas `@media print` — a diferencia de todos los demás patrones de esta plantilla, no están pensados para incrustarse dentro de un diseño de página normal ni para previsualizarse en línea en una página de estándares.",
+      "Sus rutas (`/tools/*`) se montan deliberadamente fuera del envoltorio compartido `SiteLayout`/`AppShell`, de modo que no se renderiza ningún encabezado ni pie de página del sitio a su alrededor — de lo contrario, ese elemento de interfaz se imprimiría junto con la salida de la tarjeta o presentación.",
+      "Los tres reciben las mismas props principales: `pets` (`PetCardItem[]`), `orgName`, opcionalmente `orgLogoSrc`, y `adoptUrl` (codificada en un código QR dentro de la página).",
+      "La fuente de datos es independiente del origen — pase `PetCardItem[]` desde un manifiesto local, un arreglo seleccionado o cualquier adaptador que mapee a esa forma; estos componentes no tienen opinión sobre de dónde vienen las mascotas.",
+      "`AdoptableSlideshowSection` avanza automáticamente (`slideIntervalMs`, predeterminado 6000ms) y expone un alternador nativo de la API de Pantalla Completa — pensado para una pantalla de recepción o kiosco, no para incrustarse en el contenido de una página.",
+      "`KennelBinder2UpSection` y `KennelCards2UpSection` están diseñados para tamaño carta (Letter) en orientación vertical (`@page { size: letter portrait }`) y colocan exactamente 2 tarjetas por página impresa; use el diálogo de impresión nativo del navegador (`window.print()`, conectado al botón de impresión de cada página).",
+      "`KennelCards2UpSection` además permite que el personal complete a mano o cargue una foto para una tarjeta sin una entrada en el manifiesto (por ejemplo, para un ingreso el mismo día en un evento), a diferencia de `KennelBinder2UpSection`, que solo toma datos de `pets`.",
+      "Todas las etiquetas se pueden sobrescribir mediante la prop `labels` de cada componente, para personalización de i18n/sitio.",
+      "Componentes: `template/src/components/patterns/AdoptableSlideshowSection.tsx`, `KennelBinder2UpSection.tsx`, `KennelCards2UpSection.tsx`"
+    ]
+  }
+}

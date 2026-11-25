@@ -1,0 +1,82 @@
+{
+  "hero": {
+    "title": "Impact Stats pattern",
+    "description": "Publish lifetime rescue impact numbers as big-number tiles, with an optional bar chart once a site has two or more reporting periods to compare."
+  },
+  "breadcrumb": "Impact Stats Pattern",
+  "sections": {
+    "lifetime": {
+      "title": "Lifetime totals",
+      "description": "The always-on section — a flexible list of stat tiles. Each site supplies whichever categories actually apply to it (adopted, fostered, spayed/neutered, transferred, strays fed, or anything else); nothing is hard-coded."
+    },
+    "trend": {
+      "title": "Period-by-period trend",
+      "description": "Optional. Supply 2+ periods (monthly, quarterly, every 6 months, or yearly — the period label is freeform) and a bar chart renders automatically."
+    },
+    "singlePeriod": {
+      "title": "A single period",
+      "description": "With only one period, a bar chart couldn't show a trend, so the component falls back to a plain value list instead."
+    }
+  },
+  "chart": {
+    "caption": "Dogs adopted vs. fostered by year"
+  },
+  "granularity": {
+    "yearly": "Updated yearly"
+  },
+  "cta": {
+    "label": "Support Our Work"
+  },
+  "sampleData": {
+    "lifetime": {
+      "adopted": "Dogs Adopted",
+      "fostered": "Dogs Fostered",
+      "helped": "Animals Helped",
+      "spayNeuter": "Spay/Neuter Surgeries",
+      "spayNeuterNote": "Since 2024",
+      "transferred": "Transferred to Partner Rescues",
+      "straysFed": "Strays Fed",
+      "volunteers": "Volunteers",
+      "donations": "Donations Received",
+      "grants": "Grants Received"
+    },
+    "metrics": {
+      "adopted": "Adopted",
+      "fostered": "Fostered"
+    },
+    "introSentence": "Here's the impact our community has made so far.",
+    "timeframeNote": "Since 2024"
+  },
+  "standard": {
+    "title": "Standard",
+    "metricSet": {
+      "before": "The metric list is flexible, not fixed —",
+      "after": "is just an array of {id, value, label, icon?}. Pick whichever categories your rescue actually tracks."
+    },
+    "lifetimeAlwaysOn": "Lifetime tiles render whenever the lifetime stats list is non-empty. This is deliberate: research on real, reputable foster-based rescues shows they report simple lifetime totals far more often than period dashboards.",
+    "whenToShow": "Only display this section once you have at least one or two meaningful lifetime numbers you can stand behind — a very new rescue shouldn't feel pressure to publish zeros or incomplete data just to have the section present. The component already renders nothing at all until lifetimeStats (or periods) has real content, so there's no placeholder state to accidentally ship.",
+    "chartThreshold": "The bar chart only renders with 2+ periods — a single period renders as a plain value list instead, since one bar can't show a trend.",
+    "labelVocabulary": "For consistency across the fleet, prefer plain, concrete labels over abstract ones — e.g. \"Dogs Adopted\" rather than \"Adoptions,\" \"Dogs Fostered\" rather than \"Fosters.\" Recommended starting vocabulary: Dogs Adopted, Dogs Fostered, Animals Helped, Spay/Neuter Surgeries, Transferred to Partner Rescues, Strays Fed, Volunteers, Donations Received, Grants Received. Sites aren't required to use these exact strings, but reusing them where they fit keeps the network's public pages feeling like one cohesive program.",
+    "timeframeNote": {
+      "before": "An optional",
+      "after": "line (e.g. \"Since 2024\" or \"As of July 2026\") renders next to granularityLabel — small, plain text, not used for any date math. Useful for newer organizations to add context and credibility to their numbers."
+    },
+    "tileNote": {
+      "before": "Each tile also accepts its own optional",
+      "after": "field (see the Spay/Neuter Surgeries tile above) for a qualifier that belongs to just that one stat rather than the whole section — e.g. one tile tracking a shorter timeframe than the rest."
+    },
+    "introSentence": {
+      "before": "An optional one-sentence",
+      "after": "above the tiles (e.g. \"Here's the impact our community has made so far.\") softens the raw numbers with a little emotional framing — this is exactly what the existing description prop is for, not a separate slot."
+    },
+    "mobileGrid": "The tile grid is 2-across on mobile, stepping up to 3-across at the sm breakpoint and 6-across at lg — stacks cleanly regardless of how many stats a site supplies, including the example above.",
+    "chartImplementation": {
+      "before": "Chart implementation reuses the fleet's existing",
+      "mid": "dependency via the shared",
+      "after": "wrapper — no new dependency was added."
+    },
+    "component": {
+      "before": "Component:"
+    }
+  }
+}

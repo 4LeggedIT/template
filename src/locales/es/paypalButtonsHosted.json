@@ -1,0 +1,29 @@
+{
+  "breadcrumb": {
+    "parent": "Patrón de Botones de PayPal",
+    "current": "Botones Alojados"
+  },
+  "hero": {
+    "title": "Botones Alojados de PayPal",
+    "description": "El producto más nuevo paypal.com/sdk/js?components=hosted-buttons / paypal.HostedButtons. Necesita tanto un client-id como un ID de botón alojado del propio panel de PayPal de la organización — solo valores reales, sin un ID ficticio seguro para renderizado en vivo (vea el inconveniente abajo)."
+  },
+  "example": {
+    "title": "Ejemplo",
+    "docsLink": "Documentación oficial de PayPal para Botones Alojados",
+    "note": "Este ejemplo se deja intencionalmente sin configurar (sin `clientId`/`hostedButtonId`) en lugar de usar un ID ficticio: a diferencia del Botón de Donación heredado, el SDK de Botones Alojados hace una llamada de API en vivo del lado del cliente para obtener la configuración del botón, por lo que un ID falso aquí mostraría un error real y engañoso en lugar de documentación segura de marcador de posición."
+  },
+  "gotcha": {
+    "title": "Inconveniente conocido",
+    "text": "Un `hostedButtonId` incorrecto o inexistente aparece como una violación de la política CORS del navegador (sin encabezado Access-Control-Allow-Origin en la respuesta de `paypal.com/ncp/api/form-fields/<id>` de PayPal), no como un error claro de \"ID inválido\" — fácil de confundir con un problema de lista blanca de dominios. Verifique primero el ID con el fragmento literal exacto que proporciona el panel de PayPal, en un archivo HTML estático simple, antes de asumir un problema de CORS/lista blanca."
+  },
+  "standard": {
+    "title": "Estándar",
+    "items": [
+      "Renderice `PayPalHostedButton` con valores reales de `clientId`/`hostedButtonId` desde `DONATION_METHODS`/configuración de donación — nunca los codifique de nuevo en el sitio de la llamada.",
+      "El enlace auxiliar \"¿tiene problemas?\" usa `https://www.paypal.com/ncp/payment/<hostedButtonId>` — una forma de URL diferente a la del producto Botón de Donación, `paypal.com/donate?hosted_button_id=...`.",
+      "El componente ocupa el ancho completo de su elemento padre por defecto (`w-full`) — un widget de Botones Alojados de PayPal sin ancho explícito, dentro de un diseño `flex`/`items-center`, se colapsa a un ancho ajustado al contenido y su propio texto se envuelve una letra por línea. Limite el ancho con `className` en el sitio de la llamada en lugar de eliminar el `w-full` base.",
+      "Si falta el client-id o el hosted-button-id, el componente muestra un cuadro claramente etiquetado \"no configurado\" en lugar de un área en blanco o una llamada de API en vivo.",
+      "Componente: `template/src/components/patterns/PayPalHostedButton.tsx`"
+    ]
+  }
+}

@@ -1,0 +1,508 @@
+/**
+ * SHARED PATTERN: do not edit in a site repo.
+ * Source: github.com/4LeggedIT/internal-tools
+ *   4leggedit-websites/templates-sources/patterns/MediaGallerySection.tsx
+ * Change it there, then sync it to every site.
+ */
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { ChevronLeft, ChevronRight, ExternalLink, Expand, X } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { cn } from "@/lib/utils";
+import SocialFollowCta, { type SocialFollowCtaLink, type SocialFollowCtaProps } from "@/components/patterns/SocialFollowCta";
+import MediaCarouselTile, { type MediaCarouselTileItem } from "@/components/patterns/MediaCarouselTile";
+import ContentLink from "./ContentLink";
+import { DEFAULT_MONTHS, formatGalleryDate, galleryDateKey } from "./MediaGallerySection.helpers";
+
+export type MediaGalleryItem =
+  | {
+      id: string;
+      kind: "photo";
+      src: string;
+      alt: string;
+      caption?: string;
+      href?: string;
+      featured?: boolean;
+      category?: string;
+      /** CSS object-position value (e.g. "50% 20%") to override the default centered crop when the subject isn't centered in the source photo. */
+      objectPosition?: string;
+      /** Items sharing one groupId render as a single tile with an inline carousel instead of one tile each. Share one `category` across a group — filtering stays per-item. */
+      groupId?: string;
+      /** When the moment happened: "MM/YY" (e.g. "11/25") or year-only "YY" (e.g. "25" = 2025). Drives `sortByDate` and the printed date label. Items in one `groupId` share the first dated item's date. */
+      date?: string;
+    }
+  | {
+      id: string;
+      kind: "video";
+      src: string;
+      title: string;
+      description?: string;
+      poster?: string;
+      category?: string;
+      /** Items sharing one groupId render as a single tile with an inline carousel instead of one tile each. Share one `category` across a group — filtering stays per-item. */
+      groupId?: string;
+      /** When the moment happened: "MM/YY" (e.g. "11/25") or year-only "YY" (e.g. "25" = 2025). Drives `sortByDate` and the printed date label. Items in one `groupId` share the first dated item's date. */
+      date?: string;
+    };
+
+export type MediaGalleryNotice = {
+  title?: string;
+  text: string;
+};
+
+export type MediaGallerySocialLink = SocialFollowCtaLink;
+
+export type MediaGallerySocialCta = SocialFollowCtaProps;
+
+export type MediaGallerySectionProps = {
+  title?: string;
+  description?: string;
+  items: MediaGalleryItem[];
+  className?: string;
+  columns?: 2 | 3 | 4;
+  showFilters?: boolean;
+  enablePhotoLightbox?: boolean;
+  emptyMessage?: string;
+  /** Grid photo tile rendering. "cover" (default) crops to a fixed aspect ratio; "contain" shows the full uncropped image at its natural aspect ratio. Applies to the whole gallery, not per item. */
+  fit?: "cover" | "contain";
+  /** How a photo tile's caption (single photo or carousel group) is drawn. "muted" (default) is the small gray strip; "title" draws it as the bold title video tiles use, so photo and video tiles read alike in a mixed gallery. */
+  captionStyle?: "muted" | "title";
+  shuffleOnLoad?: boolean;
+  /** Sort newest first by each item's `date`. Year-only dates rank after every month of that year; undated items go last; ties keep authored order. Do not combine with `shuffleOnLoad`. */
+  sortByDate?: boolean;
+  maxPhotos?: number;
+  maxVideos?: number;
+  infoNotice?: MediaGalleryNotice;
+  socialCta?: MediaGallerySocialCta;
+  labels?: {
+    filterAll?: string;
+    browseHint?: string;
+    openOriginal?: string;
+    keyboardHint?: string;
+    videoFallback?: string;
+    /** Twelve month names, January first, used to print a `date` ("11/25" -> "November 2025"). Defaults to English. */
+    months?: string[];
+  };
+};
+
+const columnClassMap: Record<NonNullable<MediaGallerySectionProps["columns"]>, string> = {
+  2: "grid-cols-1 md:grid-cols-2",
+  3: "grid-cols-1 md:grid-cols-2 xl:grid-cols-3",
+  4: "grid-cols-1 md:grid-cols-2 xl:grid-cols-4",
+};
+
+const shuffleArray = <T,>(array: T[]) => {
+  const shuffled = [...array];
+  for (let index = shuffled.length - 1; index > 0; index -= 1) {
+    const nextIndex = Math.floor(Math.random() * (index + 1));
+    [shuffled[index], shuffled[nextIndex]] = [shuffled[nextIndex], shuffled[index]];
+  }
+  return shuffled;
+};
+
+
+const MediaGallerySection = ({
+  title,
+  description,
+  items,
+  className,
+  columns = 3,
+  showFilters = true,
+  enablePhotoLightbox = true,
+  emptyMessage = "Media items coming soon.",
+  fit = "cover",
+  captionStyle = "muted",
+  shuffleOnLoad = false,
+  sortByDate = false,
+  maxPhotos,
+  maxVideos,
+  infoNotice,
+  socialCta,
+  labels = {},
+}: MediaGallerySectionProps) => {
+  const {
+    filterAll = "All",
+    browseHint = "Browse photos and videos, and open any image for a closer look.",
+    openOriginal = "Open original media",
+    keyboardHint = "Use arrow keys or on-screen controls to browse the gallery.",
+    videoFallback = "Your browser does not support the video tag.",
+    months = DEFAULT_MONTHS,
+  } = labels;
+  const [orderedItems, setOrderedItems] = useState<MediaGalleryItem[]>(items);
+
+  useEffect(() => {
+    // Deliberately client-only shuffle, post-hydration: shuffling during render
+    // would desync the server-rendered and first client-rendered item order.
+    if (!shuffleOnLoad) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setOrderedItems(items);
+      return;
+    }
+    setOrderedItems(shuffleArray(items));
+  }, [items, shuffleOnLoad]);
+
+  const categories = useMemo(
+    () =>
+      [...new Set(orderedItems.map((item) => item.category).filter(Boolean))]
+        .map((category) => String(category))
+        .sort((left, right) => left.localeCompare(right)),
+    [orderedItems],
+  );
+  const [activeFilter, setActiveFilter] = useState<string>("all");
+  const [selectedPhotoId, setSelectedPhotoId] = useState<string | null>(null);
+
+  // Newest first. A grouped item takes the date of its group's first dated item, so a carousel
+  // sorts as one tile. Array.prototype.sort is stable: ties keep authored order, undated go last.
+  const datedItems = useMemo(() => {
+    if (!sortByDate) return orderedItems;
+    const groupKey = new Map<string, number>();
+    for (const item of orderedItems) {
+      const key = galleryDateKey(item.date);
+      if (item.groupId && key !== null && !groupKey.has(item.groupId)) groupKey.set(item.groupId, key);
+    }
+    const effectiveKey = (item: MediaGalleryItem) =>
+      (item.groupId ? groupKey.get(item.groupId) : undefined) ?? galleryDateKey(item.date);
+    return [...orderedItems].sort((left, right) => {
+      const a = effectiveKey(left);
+      const b = effectiveKey(right);
+      if (a === b) return 0;
+      if (a === null) return 1;
+      if (b === null) return -1;
+      return b - a;
+    });
+  }, [orderedItems, sortByDate]);
+
+  const visibleItems = useMemo(() => {
+    const filtered = activeFilter === "all"
+      ? datedItems
+      : datedItems.filter((item) => item.category === activeFilter);
+
+    if (typeof maxPhotos !== "number" && typeof maxVideos !== "number") return filtered;
+
+    let remainingPhotos = typeof maxPhotos === "number" ? Math.max(0, maxPhotos) : Number.POSITIVE_INFINITY;
+    let remainingVideos = typeof maxVideos === "number" ? Math.max(0, maxVideos) : Number.POSITIVE_INFINITY;
+
+    const limited: MediaGalleryItem[] = [];
+    for (const item of filtered) {
+      if (item.kind === "photo") {
+        if (remainingPhotos <= 0) continue;
+        remainingPhotos -= 1;
+      } else {
+        if (remainingVideos <= 0) continue;
+        remainingVideos -= 1;
+      }
+      limited.push(item);
+    }
+    return limited;
+  }, [activeFilter, datedItems, maxPhotos, maxVideos]);
+
+  const photoItems = useMemo(
+    () => visibleItems.filter((item): item is Extract<MediaGalleryItem, { kind: "photo" }> => item.kind === "photo"),
+    [visibleItems],
+  );
+
+  // Items sharing a `groupId` collapse into one tile (rendered via MediaCarouselTile); items
+  // without one stay their own tile, keyed by their own id — byte-identical to the pre-grouping
+  // behaviour. Order follows each tile's first appearance in `visibleItems`.
+  const tiles = useMemo(() => {
+    const tileByKey = new Map<string, MediaGalleryItem[]>();
+    const order: string[] = [];
+    for (const item of visibleItems) {
+      const key = item.groupId ?? item.id;
+      const existing = tileByKey.get(key);
+      if (existing) {
+        existing.push(item);
+      } else {
+        tileByKey.set(key, [item]);
+        order.push(key);
+      }
+    }
+    return order.map((key) => ({ key, items: tileByKey.get(key)! }));
+  }, [visibleItems]);
+
+  const toMediaCarouselTileItem = (item: MediaGalleryItem): MediaCarouselTileItem =>
+    item.kind === "photo"
+      ? { id: item.id, kind: "photo", src: item.src, label: item.alt, objectPosition: item.objectPosition }
+      : { id: item.id, kind: "video", src: item.src, label: item.title, poster: item.poster };
+  const activePhoto = selectedPhotoId
+    ? photoItems.find((photo) => photo.id === selectedPhotoId) ?? null
+    : null;
+  const activePhotoIndex = activePhoto ? photoItems.findIndex((photo) => photo.id === activePhoto.id) : -1;
+  const hasAdjacentPhotos = photoItems.length > 1;
+
+  const goToPreviousPhoto = useCallback(() => {
+    if (!hasAdjacentPhotos || activePhotoIndex < 0) return;
+    const nextIndex = activePhotoIndex === 0 ? photoItems.length - 1 : activePhotoIndex - 1;
+    setSelectedPhotoId(photoItems[nextIndex].id);
+  }, [activePhotoIndex, hasAdjacentPhotos, photoItems]);
+
+  const goToNextPhoto = useCallback(() => {
+    if (!hasAdjacentPhotos || activePhotoIndex < 0) return;
+    const nextIndex = activePhotoIndex === photoItems.length - 1 ? 0 : activePhotoIndex + 1;
+    setSelectedPhotoId(photoItems[nextIndex].id);
+  }, [activePhotoIndex, hasAdjacentPhotos, photoItems]);
+
+  useEffect(() => {
+    if (!activePhoto) return;
+
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setSelectedPhotoId(null);
+      } else if (event.key === "ArrowLeft") {
+        event.preventDefault();
+        goToPreviousPhoto();
+      } else if (event.key === "ArrowRight") {
+        event.preventDefault();
+        goToNextPhoto();
+      }
+    };
+
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [activePhoto, goToNextPhoto, goToPreviousPhoto]);
+
+  const dateLabel = (date: string | undefined) => (date ? formatGalleryDate(date, months) : null);
+
+  const renderCaption = (text: string, date?: string) =>
+    captionStyle === "title" ? (
+      <CardHeader className="pb-2">
+        <CardTitle className="text-base">{text}</CardTitle>
+        {dateLabel(date) ? <p className="text-sm text-muted-foreground">{dateLabel(date)}</p> : null}
+      </CardHeader>
+    ) : (
+      <div className="border-t border-border/70 px-4 py-3 text-sm text-muted-foreground">
+        {text}
+        {dateLabel(date) ? <span className="block text-xs">{dateLabel(date)}</span> : null}
+      </div>
+    );
+
+  const renderTile = (tile: { key: string; items: MediaGalleryItem[] }) => {
+    if (tile.items.length > 1) {
+      // A grouped tile is captioned by its first captioned photo (or titled video), so a carousel
+      // reads like a single tile: the picture(s) above, the title below.
+      const groupCaption = tile.items
+        .map((groupItem) => (groupItem.kind === "photo" ? groupItem.caption : groupItem.title))
+        .find((text) => Boolean(text));
+      return (
+        <Card key={tile.key} className="overflow-hidden border-border/80">
+          <CardContent className="p-0">
+            <MediaCarouselTile
+              media={tile.items.map(toMediaCarouselTileItem)}
+              fit={fit}
+              videoFallback={videoFallback}
+              onPhotoClick={enablePhotoLightbox ? (mediaItem) => setSelectedPhotoId(mediaItem.id) : undefined}
+            />
+            {groupCaption ? renderCaption(groupCaption, tile.items.find((groupItem) => groupItem.date)?.date) : null}
+          </CardContent>
+        </Card>
+      );
+    }
+
+    const item = tile.items[0];
+    return (
+      <Card key={item.id} className="overflow-hidden border-border/80">
+        {item.kind === "photo" ? (
+          <CardContent className="p-0">
+            <ContentLink
+              href={item.href ?? item.src}
+              external
+              imageLink
+              whenUnsafe="children"
+              className="group block"
+              onClick={(event) => {
+                if (!enablePhotoLightbox) return;
+                event.preventDefault();
+                setSelectedPhotoId(item.id);
+              }}
+            >
+              <div className={cn("relative overflow-hidden bg-muted", fit === "contain" ? "" : "aspect-4/3")}>
+                <img
+                  src={item.src}
+                  alt={item.alt}
+                  loading="lazy"
+                  decoding="async"
+                  style={fit === "cover" ? { objectPosition: item.objectPosition ?? "50% 50%" } : undefined}
+                  className={cn(
+                    "transition-transform duration-300 group-hover:scale-[1.03]",
+                    fit === "contain" ? "h-auto w-full" : "h-full w-full object-cover",
+                  )}
+                />
+                {enablePhotoLightbox ? (
+                  <div className="pointer-events-none absolute right-3 top-3 rounded-full bg-black/65 p-2 text-white opacity-0 transition-opacity duration-200 group-hover:opacity-100">
+                    <Expand className="h-4 w-4" />
+                  </div>
+                ) : null}
+              </div>
+            </ContentLink>
+            {item.caption ? renderCaption(item.caption, item.date) : null}
+          </CardContent>
+        ) : (
+          <>
+            <div className="aspect-video bg-black">
+              <video
+                src={item.src}
+                controls
+                preload="metadata"
+                playsInline
+                poster={item.poster}
+                className="h-full w-full object-cover"
+              >
+                {videoFallback}
+              </video>
+            </div>
+            <CardHeader className="pb-2">
+              <CardTitle className="text-base">{item.title}</CardTitle>
+              {dateLabel(item.date) ? <p className="text-sm text-muted-foreground">{dateLabel(item.date)}</p> : null}
+            </CardHeader>
+            {item.description ? (
+              <CardContent className="pt-0">
+                <p className="text-sm text-muted-foreground">{item.description}</p>
+              </CardContent>
+            ) : null}
+          </>
+        )}
+      </Card>
+    );
+  };
+
+  return (
+    <section className={cn("rounded-2xl border border-border bg-card/40 p-6", className)}>
+      {title || description ? (
+        <div className="mb-6">
+          {title ? <h3 className="text-xl font-semibold tracking-tight">{title}</h3> : null}
+          {description ? <p className="mt-2 text-sm text-muted-foreground">{description}</p> : null}
+        </div>
+      ) : null}
+
+      {infoNotice ? (
+        <Card className="mb-6 border-border/80 bg-muted/30">
+          <CardContent className="space-y-1 py-4">
+            {infoNotice.title ? <p className="text-sm font-medium">{infoNotice.title}</p> : null}
+            <p className="text-sm text-muted-foreground">{infoNotice.text}</p>
+          </CardContent>
+        </Card>
+      ) : null}
+
+      {showFilters && categories.length > 1 ? (
+        <div className="mb-6 flex flex-wrap gap-2">
+          <Button
+            type="button"
+            size="sm"
+            variant={activeFilter === "all" ? "default" : "outline"}
+            onClick={() => setActiveFilter("all")}
+          >
+            {filterAll}
+          </Button>
+          {categories.map((category) => (
+            <Button
+              key={category}
+              type="button"
+              size="sm"
+              variant={activeFilter === category ? "default" : "outline"}
+              onClick={() => setActiveFilter(category)}
+            >
+              {category}
+            </Button>
+          ))}
+        </div>
+      ) : null}
+
+      {visibleItems.length ? (
+        <>
+          <div className={cn("grid gap-4", columnClassMap[columns])}>
+            {tiles.map(renderTile)}
+          </div>
+          <p className="mt-4 text-xs text-muted-foreground">
+            {browseHint}
+          </p>
+        </>
+      ) : (
+        <Card className="border-dashed">
+          <CardContent className="py-6 text-sm text-muted-foreground">{emptyMessage}</CardContent>
+        </Card>
+      )}
+      {activePhoto ? (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 p-4"
+          role="dialog"
+          aria-modal="true"
+          aria-label="Media gallery lightbox"
+          onClick={() => setSelectedPhotoId(null)}
+        >
+          <button
+            type="button"
+            className="absolute right-4 top-4 rounded-full bg-white/10 p-2 text-white hover:bg-white/20"
+            onClick={(event) => {
+              event.stopPropagation();
+              setSelectedPhotoId(null);
+            }}
+            aria-label="Close media image"
+          >
+            <X className="h-6 w-6" />
+          </button>
+
+          {hasAdjacentPhotos ? (
+            <button
+              type="button"
+              className="absolute left-4 rounded-full bg-white/10 p-2 text-white hover:bg-white/20"
+              onClick={(event) => {
+                event.stopPropagation();
+                goToPreviousPhoto();
+              }}
+              aria-label="Show previous media image"
+            >
+              <ChevronLeft className="h-7 w-7" />
+            </button>
+          ) : null}
+
+          <div className="mx-auto w-full max-w-6xl" onClick={(event) => event.stopPropagation()}>
+            <img
+              src={activePhoto.src}
+              alt={activePhoto.alt}
+              className="mx-auto max-h-[78vh] w-auto max-w-full rounded-lg object-contain"
+            />
+            {activePhoto.caption ? (
+              <div className="mx-auto mt-4 max-w-3xl rounded-md bg-white/10 px-4 py-3 text-center text-sm text-white">
+                {activePhoto.caption}
+                {dateLabel(activePhoto.date) ? <span className="block text-xs text-white/80">{dateLabel(activePhoto.date)}</span> : null}
+              </div>
+            ) : null}
+            <div className="mt-3 text-center">
+              <Button asChild size="sm" variant="secondary">
+                <ContentLink href={activePhoto.href ?? activePhoto.src} external imageLink>
+                  {openOriginal}
+                  <ExternalLink className="ml-2 h-4 w-4" />
+                </ContentLink>
+              </Button>
+            </div>
+            {hasAdjacentPhotos ? (
+              <p className="mt-2 text-center text-xs text-white/80">
+                {keyboardHint}
+              </p>
+            ) : null}
+          </div>
+
+          {hasAdjacentPhotos ? (
+            <button
+              type="button"
+              className="absolute right-4 rounded-full bg-white/10 p-2 text-white hover:bg-white/20"
+              onClick={(event) => {
+                event.stopPropagation();
+                goToNextPhoto();
+              }}
+              aria-label="Show next media image"
+            >
+              <ChevronRight className="h-7 w-7" />
+            </button>
+          ) : null}
+        </div>
+      ) : null}
+
+      {socialCta?.links?.length ? (
+        <SocialFollowCta title={socialCta.title} description={socialCta.description} links={socialCta.links} />
+      ) : null}
+    </section>
+  );
+};
+
+export default MediaGallerySection;

@@ -1,0 +1,36 @@
+{
+  "breadcrumb": "Kennel & Display Tools Pattern",
+  "hero": {
+    "title": "Kennel & display tools pattern",
+    "description": "Standalone print and kiosk-display tools, separate from the public site — not embedded in a page like other patterns."
+  },
+  "tools": {
+    "adoptableSlideshow": {
+      "title": "Adoptable Pets Slideshow",
+      "description": "Full-screen, auto-advancing slideshow of adoptable pets with photo, bio, and a QR code to the adopt URL — for a lobby TV or kiosk display. Includes play/pause and a native fullscreen toggle."
+    },
+    "kennelBinder2Up": {
+      "title": "Kennel Binder Cards (2-Up)",
+      "description": "Pick up to two dogs from the manifest and print one letter page with two kennel binder cards side by side, ready for a physical binder at the shelter."
+    },
+    "kennelCards2Up": {
+      "title": "Kennel Cards (2-Up)",
+      "description": "Fill in a dog's details manually or load one from the manifest, then print two kennel cards on a single letter page with a cut line between them."
+    }
+  },
+  "openLiveTool": "Open live tool",
+  "standard": {
+    "title": "Standard",
+    "items": [
+      "These three components are self-contained, full-viewport pages with their own header and `@media print` rules — unlike every other pattern in this template, they are not meant to be embedded inside a normal page layout or previewed inline on a standards page.",
+      "Their routes (`/tools/*`) are deliberately mounted outside the shared `SiteLayout`/`AppShell` wrapper, so no site header or footer renders around them — that chrome would print alongside the card/slideshow output otherwise.",
+      "All three take the same core props: `pets` (`PetCardItem[]`), `orgName`, optional `orgLogoSrc`, and `adoptUrl` (encoded into an on-page QR code).",
+      "Data source is source-agnostic — pass in `PetCardItem[]` from a local manifest, curated array, or any adapter that maps to that shape; these components have no opinion on where the pets come from.",
+      "`AdoptableSlideshowSection` cycles automatically (`slideIntervalMs`, default 6000ms) and exposes a native Fullscreen API toggle — intended for a lobby TV or kiosk, not for embedding in page content.",
+      "`KennelBinder2UpSection` and `KennelCards2UpSection` both target US Letter portrait (`@page { size: letter portrait }`) and lay out exactly 2 cards per printed page; use the browser's native print dialog (`window.print()`, wired to each page's print button).",
+      "`KennelCards2UpSection` additionally lets staff hand-fill or photo-upload a card without a manifest entry (e.g. for a same-day intake at an event), unlike `KennelBinder2UpSection`, which only pulls from `pets`.",
+      "All labels are overridable via each component's `labels` prop for i18n/site customization.",
+      "Components: `template/src/components/patterns/AdoptableSlideshowSection.tsx`, `KennelBinder2UpSection.tsx`, `KennelCards2UpSection.tsx`"
+    ]
+  }
+}

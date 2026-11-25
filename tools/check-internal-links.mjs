@@ -1,0 +1,1286 @@
+// SHARED PATTERN: do not edit in a site repo.
+// Source: github.com/4LeggedIT/internal-tools
+//   4leggedit-websites/templates-sources/tools/check-internal-links.mjs
+// Change it there, then sync it to every site.
+import fs from "node:fs";
+import { execFile } from "node:child_process";
+import { promisify } from "node:util";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+import ts from "typescript";
+import { getAppRoutePaths } from "./app-routes.mjs";
+
+// ---------------------------------------------------------------------------
+// check-internal-links.mjs
+//
+// AST-based (TypeScript compiler API) internal/external link checker. This
+// replaces an earlier regex-based version that was structurally blind to the
+// dominant JSX linking idiom in this codebase: an attribute whose value is a
+// *dynamic identifier* rather than a string literal, e.g.
+//
+//   <a href={ctaHref}>          // ctaHref is a prop threaded from a parent
+//   <Link to={`/blog/${slug}`}> // built from a data-driven identifier
+//
+// See "Link resolution model" below for how these are traced.
+//
+// Per-site route-source-of-truth files
+// (app-routes.mjs, and any *-routes.mjs data-driven route helper) remain
+// site-specific and are NOT part of this sync.
+// ---------------------------------------------------------------------------
+
+const execFileAsync = promisify(execFile);
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const projectRoot = path.resolve(__dirname, "..");
+const srcRoot = path.join(projectRoot, "src");
+const publicRoot = path.join(projectRoot, "public");
+
+const args = new Set(process.argv.slice(2));
+const shouldCheckExternal = args.has("--external") || args.has("--all");
+const externalOnly = args.has("--external-only");
+const strictExternal = args.has("--strict-external");
+const printExternal = args.has("--print-external");
+const printInternal = args.has("--print-internal");
+const verbose = args.has("--verbose");
+
+const normalizeRoutePath = (routePath) => {
+  if (!routePath) return "";
+  if (routePath === "/") return "/";
+  return routePath.replace(/\/+$/, "");
+};
+
+const walk = (dir) => {
+  const entries = fs.readdirSync(dir, { withFileTypes: true });
+  const files = [];
+  for (const entry of entries) {
+    if (entry.name === "node_modules" || entry.name === "dist" || entry.name === "dist-ssr") continue;
+    const full = path.join(dir, entry.name);
+    if (entry.isDirectory()) files.push(...walk(full));
+    else files.push(full);
+  }
+  return files;
+};
+
+// ---------------------------------------------------------------------------
+// Data-driven route helpers (site-specific, optional). Any `./*-routes.mjs`
+// file next to this one other than app-routes.mjs is treated as a route
+// source -- e.g. news-entry-routes.mjs / blog-post-routes.mjs /
+// pack-journey-routes.mjs on the sites that have those content types. Each
+// must export at least one `getXxxRoutes(projectRoot)` function returning an
+// array of concrete route paths. This keeps the canonical checker working
+// unmodified across sites with different data-driven route sets.
+// ---------------------------------------------------------------------------
+const loadDataRouteHelpers = async () => {
+  let entries = [];
+  try {
+    entries = fs.readdirSync(__dirname).filter((f) => f.endsWith("-routes.mjs") && f !== "app-routes.mjs");
+  } catch {
+    entries = [];
+  }
+
+  const routes = [];
+  for (const entry of entries) {
+    try {
+      const mod = await import(path.join(__dirname, entry));
+      for (const [exportName, value] of Object.entries(mod)) {
+        if (typeof value === "function" && /^get.*Routes$/.test(exportName)) {
+          const result = await value(projectRoot);
+          if (Array.isArray(result)) routes.push(...result);
+        }
+      }
+    } catch (err) {
+      console.warn(`[links] Warning: failed to load route helper ${entry}: ${err.message}`);
+    }
+  }
+  return routes;
+};
+
+// ---------------------------------------------------------------------------
+// Link resolution model
+//
+// For every href/to JSX attribute (and every attribute passed into a
+// component whose corresponding prop is "link-carrying"), we compute a
+// Resolution:
+//
+//   { kind: "literal", value }
+//     A fully known string, either written directly or resolved through
+//     local consts / prop defaults / template-literal concatenation.
+//
+//   { kind: "dynamic", atoms }
+//     A mix of literal string chunks and unresolved expression slots (e.g.
+//     `/blog/${post.slug}`). Matched against the known route set
+//     segment-by-segment, treating an expression slot as a wildcard and a
+//     ":param"/"*" route segment as a wildcard too.
+//
+//   { kind: "own-prop", component, prop }
+//     A bare identifier that resolved to one of the *current* component's
+//     own declared props, with no local default. This is not a concrete
+//     reference by itself -- it marks (component, prop) as "link-carrying"
+//     so call sites elsewhere that pass a value into that prop get resolved
+//     in a later fixpoint round. Bounded indirection (own-prop chains
+//     through several wrapper components) is exactly how the
+//     `ctaHref`-style prop-threading idiom gets traced.
+//
+//   { kind: "unresolved", reason }
+//     Could not be determined statically (runtime/network data, a hook
+//     call, a member access we don't trace, etc). Reported in a distinct
+//     "could not statically resolve" bucket -- never mislabeled as broken
+//     or orphaned.
+// ---------------------------------------------------------------------------
+
+const EXPR = Symbol("expr"); // opaque, genuinely unresolvable expression slot
+const propRefKey = (component, prop) => `${component}.${prop}`;
+const makePropRef = (component, prop) => ({ __propref: true, component, prop, key: propRefKey(component, prop) });
+const isPropRef = (atom) => atom != null && typeof atom === "object" && atom.__propref === true;
+
+// component name -> Set<propKey> known to carry a link value (href/to string),
+// in *some* form -- directly or as one fragment of a larger template/concat.
+// Used to gate propValues collection, which substitutePropRefs() needs to
+// resolve fragment usages (e.g. `${postBasePath}/${post.slug}`) correctly.
+const linkCarryingProps = new Map();
+const markLinkCarrying = (componentName, propKey) => {
+  if (!componentName || !propKey) return;
+  if (!linkCarryingProps.has(componentName)) linkCarryingProps.set(componentName, new Set());
+  linkCarryingProps.get(componentName).add(propKey);
+};
+
+// component name -> Set<propKey> that were seen used as the *complete*
+// href/to/id value at least once (e.g. `href={ctaHref}`), as opposed to only
+// ever appearing as a fragment inside a template/concat (e.g. `postBasePath`
+// in `` `${postBasePath}/${post.slug}` ``). Only direct-carrying props are
+// safe to treat a call-site literal (`ctaHref="/donate"`) as a *complete*,
+// directly-checkable URL -- a fragment-only prop's call-site literal is just
+// a base path, and checking it as if it were the whole destination produces
+// false "unknown route" reports (the real check for those already happens
+// via the dynamic-atom/wildcard matching path once substituted in place).
+const directLinkCarryingProps = new Map();
+const markDirectLinkCarrying = (componentName, propKey) => {
+  if (!componentName || !propKey) return;
+  if (!directLinkCarryingProps.has(componentName)) directLinkCarryingProps.set(componentName, new Set());
+  directLinkCarryingProps.get(componentName).add(propKey);
+};
+
+// ---------------------------------------------------------------------------
+// Per-file parsing: component declarations, local literal consts, direct
+// href/to/id occurrences, and call-site attribute passes (deferred until the
+// link-carrying-prop fixpoint has settled).
+// ---------------------------------------------------------------------------
+
+const isCapitalized = (name) => /^[A-Z]/.test(name);
+
+const parseSourceFile = (file, content) => {
+  const scriptKind = file.endsWith(".tsx") ? ts.ScriptKind.TSX : ts.ScriptKind.TS;
+  return ts.createSourceFile(file, content, ts.ScriptTarget.Latest, true, scriptKind);
+};
+
+// Collect: componentInfo by function-body node identity, and file-scoped
+// literal consts (best-effort, flattened -- not true block scoping, but this
+// is a heuristic static-analysis tool, not a type checker).
+const collectFileScope = (sourceFile) => {
+  const localConsts = new Map(); // identifier name -> literal string value
+  const components = new Map(); // AST node (function body owner) -> ComponentInfo
+  const componentsByName = new Map(); // name -> ComponentInfo (first one wins; names are treated as unique across the pattern library)
+
+  const recordComponent = (name, node, params) => {
+    if (!isCapitalized(name)) return null;
+    const firstParam = params[0];
+    const info = {
+      name,
+      node,
+      propLocalNames: new Map(), // localName -> { propKey, defaultLiteral }
+      paramName: null, // set when the component takes a non-destructured props object
+    };
+    if (firstParam) {
+      if (ts.isObjectBindingPattern(firstParam.name)) {
+        for (const el of firstParam.name.elements) {
+          if (!ts.isBindingElement(el)) continue;
+          if (el.dotDotDotToken) continue; // rest props: not traceable
+          const localName = ts.isIdentifier(el.name) ? el.name.text : null;
+          if (!localName) continue;
+          const propKey = el.propertyName && ts.isIdentifier(el.propertyName) ? el.propertyName.text : localName;
+          let defaultLiteral = null;
+          if (el.initializer && ts.isStringLiteralLike(el.initializer)) defaultLiteral = el.initializer.text;
+          info.propLocalNames.set(localName, { propKey, defaultLiteral });
+        }
+      } else if (ts.isIdentifier(firstParam.name)) {
+        info.paramName = firstParam.name.text;
+      }
+    }
+    components.set(node, info);
+    if (!componentsByName.has(name)) componentsByName.set(name, info);
+    return info;
+  };
+
+  const visit = (node) => {
+    if (ts.isVariableDeclaration(node) && ts.isIdentifier(node.name) && node.initializer) {
+      // const X = "literal" | `literal` (no substitutions)
+      if (ts.isStringLiteralLike(node.initializer)) {
+        localConsts.set(node.name.text, node.initializer.text);
+      } else if (
+        (ts.isArrowFunction(node.initializer) || ts.isFunctionExpression(node.initializer)) &&
+        isCapitalized(node.name.text)
+      ) {
+        recordComponent(node.name.text, node.initializer.body ?? node.initializer, node.initializer.parameters);
+      }
+    }
+
+    if (ts.isFunctionDeclaration(node) && node.name && isCapitalized(node.name.text) && node.body) {
+      recordComponent(node.name.text, node.body, node.parameters);
+    }
+
+    ts.forEachChild(node, visit);
+  };
+
+  visit(sourceFile);
+  return { localConsts, components, componentsByName };
+};
+
+// Find which component (if any) a given node is lexically inside, by walking
+// up ancestors and checking against the components map's node keys.
+const findEnclosingComponent = (node, components) => {
+  let cur = node.parent;
+  while (cur) {
+    if (components.has(cur)) return components.get(cur);
+    cur = cur.parent;
+  }
+  return null;
+};
+
+// `isFragment` is true when this identifier is being resolved as one piece of
+// a larger template/concat expression (e.g. `postBasePath` inside
+// `` `${postBasePath}/${post.slug}` ``) rather than as the complete
+// href/to/id value on its own (e.g. `href={ctaHref}`). A fragment-only prop
+// still needs `markLinkCarrying` (so propValues/substitutePropRefs can supply
+// its call-site value when resolving the *enclosing* template), but must NOT
+// be marked direct-carrying -- a literal passed into a fragment-only prop
+// (`postBasePath="/examples/blog"`) is just a path prefix, not a complete,
+// independently-checkable URL.
+const resolveIdentifierValue = (name, localConsts, currentComponent, isFragment) => {
+  // The bare `undefined` keyword shows up constantly in `cond ? url : undefined`
+  // -- a legitimate "no link on this branch" value, not an unresolvable reference.
+  if (name === "undefined") return { kind: "none" };
+  if (localConsts.has(name)) return { kind: "literal", value: localConsts.get(name) };
+  if (currentComponent && currentComponent.propLocalNames.has(name)) {
+    const { propKey, defaultLiteral } = currentComponent.propLocalNames.get(name);
+    markLinkCarrying(currentComponent.name, propKey);
+    if (!isFragment) markDirectLinkCarrying(currentComponent.name, propKey);
+    if (defaultLiteral != null) return { kind: "literal", value: defaultLiteral };
+    return { kind: "own-prop", component: currentComponent.name, prop: propKey };
+  }
+  return { kind: "unresolved", reason: `identifier "${name}" not locally resolvable` };
+};
+
+// Resolve an arbitrary expression node to a Resolution (see model above).
+// `isFragment` (default false) propagates the "am I one piece of a larger
+// template/concat" context described above -- it flips to true only for
+// template-literal spans and `+`-concat operands, and is otherwise inherited
+// unchanged (parens/as-expr/ternary-branches/??-branches don't themselves
+// combine the value with surrounding text, so they don't change the context).
+const resolveExprNode = (node, localConsts, currentComponent, isFragment = false) => {
+  if (ts.isParenthesizedExpression(node)) {
+    return resolveExprNode(node.expression, localConsts, currentComponent, isFragment);
+  }
+  if (ts.isAsExpression(node) || ts.isSatisfiesExpression?.(node)) {
+    return resolveExprNode(node.expression, localConsts, currentComponent, isFragment);
+  }
+
+  if (ts.isStringLiteralLike(node) && !ts.isTemplateExpression(node)) {
+    return { kind: "literal", value: node.text };
+  }
+
+  if (ts.isNoSubstitutionTemplateLiteral(node)) {
+    return { kind: "literal", value: node.text };
+  }
+
+  if (ts.isTemplateExpression(node)) {
+    const atoms = [node.head.text];
+    for (const span of node.templateSpans) {
+      const inner = resolveExprNode(span.expression, localConsts, currentComponent, true);
+      pushAtoms(atoms, inner);
+      atoms.push(span.literal.text);
+    }
+    return collapseAtoms(atoms);
+  }
+
+  if (ts.isIdentifier(node)) return resolveIdentifierValue(node.text, localConsts, currentComponent, isFragment);
+
+  if (ts.isPropertyAccessExpression(node)) {
+    if (
+      currentComponent &&
+      currentComponent.paramName &&
+      ts.isIdentifier(node.expression) &&
+      node.expression.text === currentComponent.paramName
+    ) {
+      const propKey = node.name.text;
+      markLinkCarrying(currentComponent.name, propKey);
+      if (!isFragment) markDirectLinkCarrying(currentComponent.name, propKey);
+      return { kind: "own-prop", component: currentComponent.name, prop: propKey };
+    }
+    return { kind: "unresolved", reason: "member access not traced" };
+  }
+
+  if (ts.isConditionalExpression(node)) {
+    // Both branches are plausible reference targets -- expand both.
+    return {
+      kind: "branch",
+      branches: [
+        resolveExprNode(node.whenTrue, localConsts, currentComponent, isFragment),
+        resolveExprNode(node.whenFalse, localConsts, currentComponent, isFragment),
+      ],
+    };
+  }
+
+  if (ts.isBinaryExpression(node) && node.operatorToken.kind === ts.SyntaxKind.PlusToken) {
+    const left = resolveExprNode(node.left, localConsts, currentComponent, true);
+    const right = resolveExprNode(node.right, localConsts, currentComponent, true);
+    const atoms = [];
+    pushAtoms(atoms, left);
+    pushAtoms(atoms, right);
+    return collapseAtoms(atoms);
+  }
+
+  if (ts.isBinaryExpression(node) && node.operatorToken.kind === ts.SyntaxKind.QuestionQuestionToken) {
+    return {
+      kind: "branch",
+      branches: [
+        resolveExprNode(node.left, localConsts, currentComponent, isFragment),
+        resolveExprNode(node.right, localConsts, currentComponent, isFragment),
+      ],
+    };
+  }
+
+  return { kind: "unresolved", reason: `unsupported expression (${ts.SyntaxKind[node.kind]})` };
+};
+
+// Flatten a Resolution into an atom list (string | EXPR) for template/concat merging.
+function pushAtoms(atoms, resolution) {
+  if (resolution.kind === "literal") {
+    atoms.push(resolution.value);
+  } else if (resolution.kind === "dynamic") {
+    atoms.push(...resolution.atoms);
+  } else if (resolution.kind === "own-prop") {
+    // A prop of the *enclosing* component used as a sub-part of a larger
+    // template/concat expression (e.g. `${postBasePath}/${post.slug}` where
+    // postBasePath is BlogSection's own prop, not a default-valued local).
+    // Kept as a resolvable placeholder rather than collapsed to an opaque
+    // EXPR immediately -- substitutePropRefs() fills it in once call sites
+    // elsewhere are known to supply a concrete value for this prop.
+    atoms.push(makePropRef(resolution.component, resolution.prop));
+  } else if (resolution.kind === "none") {
+    // Bare `undefined` embedded in a template/concat -- contributes nothing.
+  } else {
+    // unresolved / branch: treat as a single opaque wildcard slot for
+    // pattern-matching purposes. The underlying reason is not lost --
+    // top-level (non-embedded) occurrences of these kinds are reported
+    // directly in pass 3 without ever reaching this function; this path
+    // only fires when such a resolution is embedded inside a larger
+    // template/concat expression, where per-slot reasons aren't tracked.
+    atoms.push(EXPR);
+  }
+}
+
+function collapseAtoms(atoms) {
+  // Merge adjacent string atoms; EXPR and propref slots are atomic and never merge.
+  const merged = [];
+  for (const a of atoms) {
+    if (a === EXPR || isPropRef(a)) {
+      merged.push(a);
+    } else if (merged.length && merged[merged.length - 1] !== EXPR && !isPropRef(merged[merged.length - 1])) {
+      merged[merged.length - 1] += a;
+    } else {
+      merged.push(a);
+    }
+  }
+  if (!merged.some((a) => a === EXPR || isPropRef(a))) {
+    return { kind: "literal", value: merged.join("") };
+  }
+  return { kind: "dynamic", atoms: merged };
+}
+
+// Substitute any propref atoms in a dynamic atom list with the concrete
+// values known to be supplied at call sites elsewhere in the codebase
+// (propValues, built from resolved call-site attribute passes). Returns an
+// array of concrete atom-lists (string | EXPR only) -- one per combination
+// of candidate values, since a prop may be fed different literals at
+// different call sites. Bounded recursion supports chained indirection
+// (a propref's substituted value can itself contain further proprefs, e.g.
+// a wrapper component threading a prop through to another wrapper).
+function substitutePropRefs(atoms, propValues, depth = 0) {
+  const idx = atoms.findIndex(isPropRef);
+  if (idx === -1) return [atoms];
+  if (depth >= 5) return [atoms.map((a) => (isPropRef(a) ? EXPR : a))];
+
+  const ref = atoms[idx];
+  const candidates = propValues.get(ref.key) || [];
+  const replacementAtomLists = candidates.length
+    ? candidates.map((res) => {
+        if (res.kind === "literal") return [res.value];
+        if (res.kind === "dynamic") return res.atoms;
+        return [EXPR];
+      })
+    : [[EXPR]];
+
+  const results = [];
+  for (const replacement of replacementAtomLists) {
+    const spliced = [...atoms.slice(0, idx), ...replacement, ...atoms.slice(idx + 1)];
+    const collapsedRes = collapseAtoms(spliced);
+    const collapsedAtoms = collapsedRes.kind === "literal" ? [collapsedRes.value] : collapsedRes.atoms;
+    results.push(...substitutePropRefs(collapsedAtoms, propValues, depth + 1));
+  }
+  return results;
+}
+
+// Expand a (possibly branching) Resolution into a flat list of "terminal"
+// resolutions: literal / dynamic / own-prop / unresolved (no more "branch").
+const expandResolution = (resolution) => {
+  if (resolution.kind === "branch") {
+    return resolution.branches.flatMap(expandResolution);
+  }
+  return [resolution];
+};
+
+// ---------------------------------------------------------------------------
+// Route matching for "dynamic" resolutions: segment-wise comparison against
+// the known route set, treating an EXPR atom as a wildcard and a route
+// segment starting with ":" (or equal to "*") as a wildcard too.
+// ---------------------------------------------------------------------------
+
+// Split an atom list (string | EXPR) into path segments without ever
+// stringifying EXPR (a Symbol) or relying on a sentinel-text marker that
+// could collide with real content. A segment that contains any EXPR atom
+// (whether alone or mixed with literal text, e.g. "id-${x}") is treated as
+// a single opaque wildcard segment.
+const atomsToSegments = (atoms) => {
+  const segments = [];
+  let current = "";
+  let currentHasExpr = false;
+  const flush = () => {
+    segments.push(currentHasExpr ? EXPR : current);
+    current = "";
+    currentHasExpr = false;
+  };
+  for (const atom of atoms) {
+    if (atom === EXPR) {
+      currentHasExpr = true;
+      continue;
+    }
+    const parts = String(atom).split("/");
+    for (let i = 0; i < parts.length; i++) {
+      current += parts[i];
+      if (i < parts.length - 1) flush();
+    }
+  }
+  flush();
+  return segments;
+};
+
+// Human-readable rendering for reporting (EXPR -> "*"), never thrown at join().
+const segmentsToDisplayString = (segments) => segments.map((s) => (s === EXPR ? "*" : s)).join("/");
+
+const segMatches = (dynSeg, routeSeg) => {
+  if (dynSeg === EXPR) return true;
+  if (routeSeg.startsWith(":")) return true;
+  if (routeSeg === "*") return true;
+  return dynSeg === routeSeg;
+};
+
+// A route ending in a literal "*" segment (React Router's nested-router
+// prefix syntax, e.g. "/users/*" or "documents/*") matches ANY remaining
+// depth, not just one segment -- unlike a ":param" or mid-path "*", which
+// only stand in for exactly one segment. Handles both a route's own raw
+// declared segments and a set of target segments (which may themselves
+// contain EXPR wildcards, for dynamic template matching).
+const routeMatchesSegments = (routeSegs, targetSegs) => {
+  if (routeSegs.length && routeSegs[routeSegs.length - 1] === "*") {
+    const prefix = routeSegs.slice(0, -1);
+    if (targetSegs.length < prefix.length) return false;
+    return prefix.every((rSeg, i) => segMatches(targetSegs[i], rSeg));
+  }
+  if (routeSegs.length !== targetSegs.length) return false;
+  return routeSegs.every((rSeg, i) => segMatches(targetSegs[i], rSeg));
+};
+
+// Does any known route match this literal path (exact segments, no EXPR)?
+// Used as a fallback when a literal href isn't an exact Set member -- it may
+// still be a valid concrete instance of a ":param" or "/*"-prefix route
+// declared in the route source of truth.
+const literalPathMatchesKnownRoute = (pathname, routes) => {
+  const pathSegs = pathname.split("/");
+  for (const route of routes) {
+    if (routeMatchesSegments(route.split("/"), pathSegs)) return true;
+  }
+  return false;
+};
+
+const dynamicMatchesKnownRoute = (atoms, routes) => {
+  const dynSegs = atomsToSegments(atoms);
+  for (const route of routes) {
+    if (routeMatchesSegments(route.split("/"), dynSegs)) return true;
+  }
+  return false;
+};
+
+// ---------------------------------------------------------------------------
+// Main per-file AST walk: collects direct href/to/id occurrences and
+// call-site attribute passes.
+// ---------------------------------------------------------------------------
+
+const getJsxAttrName = (attr) => (ts.isJsxAttribute(attr) && ts.isIdentifier(attr.name) ? attr.name.text : null);
+
+const getJsxTagName = (openingLikeElement) => {
+  const tag = openingLikeElement.tagName;
+  if (ts.isIdentifier(tag)) return tag.text;
+  return null; // namespaced/property-access tag names (e.g. Foo.Bar) not traced as components
+};
+
+const lineOf = (sourceFile, node) => sourceFile.getLineAndCharacterOfPosition(node.getStart()).line + 1;
+
+const walkFile = (file, content, ctx) => {
+  const sourceFile = parseSourceFile(file, content);
+  const { localConsts, components } = collectFileScope(sourceFile);
+
+  const directOccurrences = []; // { file, line, attrName, resolution }
+  const callSitePasses = []; // { file, line, component, propName, node, currentComponent }
+  const detailBases = []; // literal eventDetailsBasePath values (see visit())
+  const idOccurrences = []; // literal ids declared via JSX id=, id={literal}, or `id: "..."` object props
+
+  const visit = (node) => {
+    if (ts.isPropertyAssignment(node) && ts.isIdentifier(node.name) && node.name.text === "id") {
+      if (ts.isStringLiteralLike(node.initializer)) idOccurrences.push(node.initializer.text);
+    }
+
+    if (ts.isJsxAttribute(node)) {
+      const attrName = getJsxAttrName(node);
+      // EventsNewsSection builds each card's href at runtime from this base
+      // (getDetailsHref() in EventsNewsSection.helpers.tsx), so the per-entry
+      // links are not statically traceable. A literal base on the call site is
+      // recorded here; the orphan pass treats "<base>/<one segment>" routes as
+      // referenced. Conservative: only direct children of a literal base.
+      if (attrName === "eventDetailsBasePath" && node.initializer && ts.isStringLiteralLike(node.initializer)) {
+        detailBases.push(node.initializer.text.replace(/\/+$/, ""));
+      }
+      if (attrName === "href" || attrName === "to" || attrName === "id") {
+        const currentComponent = findEnclosingComponent(node, components);
+        let exprNode = null;
+        if (node.initializer) {
+          if (ts.isStringLiteralLike(node.initializer)) {
+            if (attrName === "id") idOccurrences.push(node.initializer.text);
+            else directOccurrences.push({ file, line: lineOf(sourceFile, node), attrName, resolution: { kind: "literal", value: node.initializer.text } });
+          } else if (ts.isJsxExpression(node.initializer) && node.initializer.expression) {
+            exprNode = node.initializer.expression;
+          }
+        }
+        if (exprNode) {
+          if (attrName === "id") {
+            const res = resolveExprNode(exprNode, localConsts, currentComponent);
+            for (const r of expandResolution(res)) if (r.kind === "literal") idOccurrences.push(r.value);
+          } else {
+            const res = resolveExprNode(exprNode, localConsts, currentComponent);
+            directOccurrences.push({ file, line: lineOf(sourceFile, node), attrName, resolution: res });
+          }
+        }
+      }
+
+      // Call-site attribute pass: record every attribute on a capitalized
+      // (component) JSX tag so it can be matched against link-carrying props
+      // once those are known. A JsxAttribute's parent is the JsxAttributes
+      // list node, so the opening/self-closing element is one level further up.
+      const openingLike = node.parent && node.parent.parent;
+      if (openingLike && (ts.isJsxOpeningElement(openingLike) || ts.isJsxSelfClosingElement(openingLike))) {
+        const tagName = getJsxTagName(openingLike);
+        if (tagName && isCapitalized(tagName) && attrName && node.initializer) {
+          const currentComponent = findEnclosingComponent(node, components);
+          let exprNode = null;
+          if (ts.isStringLiteralLike(node.initializer)) {
+            callSitePasses.push({
+              file,
+              line: lineOf(sourceFile, node),
+              component: tagName,
+              propName: attrName,
+              resolution: { kind: "literal", value: node.initializer.text },
+            });
+          } else if (ts.isJsxExpression(node.initializer) && node.initializer.expression) {
+            exprNode = node.initializer.expression;
+            callSitePasses.push({
+              file,
+              line: lineOf(sourceFile, node),
+              component: tagName,
+              propName: attrName,
+              exprNode,
+              localConsts,
+              currentComponent,
+            });
+          }
+        }
+      }
+    }
+
+    ts.forEachChild(node, visit);
+  };
+
+  visit(sourceFile);
+  ctx.directOccurrences.push(...directOccurrences);
+  ctx.callSitePasses.push(...callSitePasses);
+  ctx.idOccurrences.push(...idOccurrences);
+  ctx.detailBases.push(...detailBases);
+};
+
+// ---------------------------------------------------------------------------
+// URL classification (unchanged semantics from the previous version)
+// ---------------------------------------------------------------------------
+
+const isExternal = (url) =>
+  /^(https?:)?\/\//i.test(url) ||
+  /^mailto:/i.test(url) ||
+  /^tel:/i.test(url) ||
+  /^sms:/i.test(url) ||
+  /^data:/i.test(url);
+
+const toAbsoluteExternalUrl = (url) => (/^\/\//.test(url) ? `https:${url}` : url);
+
+const isProbablyTemplateUrl = (url) => url.includes("${") || url.includes(" ");
+const isSvgNamespace = (url) => url === "http://www.w3.org/2000/svg" || url === "https://www.w3.org/2000/svg";
+
+const normalizePath = (url) => {
+  const [beforeHash] = url.split("#");
+  const [pathname] = beforeHash.split("?");
+  return normalizeRoutePath(pathname);
+};
+
+const getHash = (url) => {
+  const idx = url.indexOf("#");
+  return idx === -1 ? "" : url.slice(idx);
+};
+
+const likelyPublicAssetPath = (pathname) => {
+  const last = pathname.split("/").pop() || "";
+  return last.includes(".");
+};
+
+const publicAssetExists = (pathname) => {
+  if (!pathname.startsWith("/")) return false;
+  const onDisk = path.join(publicRoot, pathname.slice(1));
+  try {
+    return fs.statSync(onDisk).isFile();
+  } catch {
+    return false;
+  }
+};
+
+const validateMailto = (url) => {
+  const value = url.slice("mailto:".length).trim();
+  if (!value) return { ok: false, reason: "empty mailto" };
+  if (!value.includes("@")) return { ok: false, reason: "mailto missing @" };
+  return { ok: true, reason: null };
+};
+
+const validateTelLike = (url, scheme) => {
+  const value = url.slice(`${scheme}:`.length).trim();
+  if (!value) return { ok: false, reason: `empty ${scheme}` };
+  if (!/^[+\d][\d\s().-]*$/.test(value)) return { ok: false, reason: `${scheme} has invalid characters` };
+  return { ok: true, reason: null };
+};
+
+const checkExternalUrl = async (url) => {
+  const absolute = toAbsoluteExternalUrl(url);
+
+  if (isProbablyTemplateUrl(absolute)) return { kind: "skipped", status: null, finalUrl: null, reason: "template url" };
+  if (isSvgNamespace(absolute)) return { kind: "skipped", status: null, finalUrl: null, reason: "svg namespace" };
+  if (/^data:/i.test(absolute)) return { kind: "skipped", status: null, finalUrl: null, reason: "data url" };
+
+  if (/^mailto:/i.test(absolute)) {
+    const v = validateMailto(absolute);
+    return v.ok ? { kind: "ok", status: 0, finalUrl: null, reason: null } : { kind: "fail", status: 0, finalUrl: null, reason: v.reason };
+  }
+  if (/^tel:/i.test(absolute)) {
+    const v = validateTelLike(absolute, "tel");
+    return v.ok ? { kind: "ok", status: 0, finalUrl: null, reason: null } : { kind: "fail", status: 0, finalUrl: null, reason: v.reason };
+  }
+  if (/^sms:/i.test(absolute)) {
+    const v = validateTelLike(absolute, "sms");
+    return v.ok ? { kind: "ok", status: 0, finalUrl: null, reason: null } : { kind: "fail", status: 0, finalUrl: null, reason: v.reason };
+  }
+
+  let parsed;
+  try {
+    parsed = new URL(absolute);
+  } catch {
+    return { kind: "fail", status: null, finalUrl: null, reason: "invalid url" };
+  }
+
+  if (parsed.protocol !== "http:" && parsed.protocol !== "https:") {
+    return { kind: "skipped", status: null, finalUrl: null, reason: `unsupported protocol ${parsed.protocol}` };
+  }
+
+  const timeoutSec = Math.ceil(Number(process.env.LINK_CHECK_TIMEOUT_MS || 15000) / 1000);
+  const userAgent = process.env.LINK_CHECK_UA || "template-link-audit/1.0";
+
+  const curlArgsFor = (method, includeHeaders) => {
+    const curlArgs = [
+      "-sS",
+      "-o",
+      "/dev/null",
+      "-L",
+      "--max-time",
+      String(timeoutSec),
+      "-A",
+      userAgent,
+      "-w",
+      "%{http_code} %{url_effective}",
+    ];
+    if (includeHeaders) curlArgs.push("-I");
+    if (method === "GET") curlArgs.push("-r", "0-0");
+    curlArgs.push(absolute);
+    return curlArgs;
+  };
+
+  const runCurl = async (method) => {
+    const includeHeaders = method === "HEAD";
+    try {
+      const { stdout } = await execFileAsync("curl", curlArgsFor(method, includeHeaders), { cwd: projectRoot });
+      const trimmed = String(stdout || "").trim();
+      const [codeRaw, ...rest] = trimmed.split(/\s+/);
+      const code = Number(codeRaw);
+      const effective = rest.join(" ").trim() || null;
+      return { ok: Number.isFinite(code) && code > 0, status: code || 0, finalUrl: effective };
+    } catch {
+      return { ok: false, status: 0, finalUrl: null };
+    }
+  };
+
+  const head = await runCurl("HEAD");
+  if (head.ok && head.status >= 200 && head.status < 400) {
+    return { kind: "ok", status: head.status, finalUrl: head.finalUrl, reason: null };
+  }
+
+  const shouldTryGet = !head.ok || head.status === 405 || head.status === 403 || head.status === 400;
+  if (shouldTryGet) {
+    const get = await runCurl("GET");
+    if (get.ok && get.status >= 200 && get.status < 400) {
+      return { kind: "ok", status: get.status, finalUrl: get.finalUrl, reason: null };
+    }
+    if (get.status === 401 || get.status === 403 || get.status === 429) {
+      return { kind: "blocked", status: get.status, finalUrl: get.finalUrl, reason: "blocked by host" };
+    }
+    if (get.status === 404) return { kind: "fail", status: get.status, finalUrl: get.finalUrl, reason: "not found" };
+    if (get.status >= 500) return { kind: "fail", status: get.status, finalUrl: get.finalUrl, reason: "server error" };
+    if (!get.ok) return { kind: "fail", status: get.status, finalUrl: get.finalUrl, reason: "network error" };
+    return { kind: "blocked", status: get.status, finalUrl: get.finalUrl, reason: `unexpected status ${get.status}` };
+  }
+
+  if (head.status === 401 || head.status === 403 || head.status === 429) {
+    return { kind: "blocked", status: head.status, finalUrl: head.finalUrl, reason: "blocked by host" };
+  }
+  if (head.status === 404) return { kind: "fail", status: head.status, finalUrl: head.finalUrl, reason: "not found" };
+  if (head.status >= 500) return { kind: "fail", status: head.status, finalUrl: head.finalUrl, reason: "server error" };
+  if (!head.ok) return { kind: "fail", status: head.status, finalUrl: head.finalUrl, reason: "network error" };
+
+  return { kind: "blocked", status: head.status, finalUrl: head.finalUrl, reason: `unexpected status ${head.status}` };
+};
+
+// ---------------------------------------------------------------------------
+// Fleet media host: video is never in the repo, always at
+// https://media.4leggedit.com/<site>/<path>. This pass is text-based rather
+// than AST-based on purpose -- `src`/`videoSrc`/`poster` are not link props,
+// so the prop-threading resolver above never sees them (and never did: the
+// old `/videos/*.mp4` public paths were never validated either). Runs in the
+// DEFAULT mode so `npm run links:check` in CI is the gate.
+// ---------------------------------------------------------------------------
+
+const MEDIA_HOST = "https://media.4leggedit.com";
+const skipMediaHead = process.env.LINK_CHECK_SKIP_MEDIA === "1";
+
+// Drop block comments and whole-line `//` / JSDoc `*` lines so a comment
+// quoting the old "/videos/..." form or an example mediaUrl() call is not
+// mistaken for code. Trailing `//` comments are left alone because `https://`
+// would be cut in half.
+const stripComments = (content) =>
+  content.replace(/\/\*[\s\S]*?\*\//g, "").replace(/^[ \t]*(\/\/|\*).*$/gm, "");
+
+const collectMediaRefs = (fileContents) => {
+  const urls = new Map(); // url -> Set(file:line)
+  const issues = []; // { file, url, reason }
+  const add = (url, where) => {
+    const set = urls.get(url) || new Set();
+    set.add(where);
+    urls.set(url, set);
+  };
+  for (const [file, raw] of fileContents) {
+    // The helper's own definition file: declares mediaUrl(), no real refs.
+    if (path.basename(file) === "media-host.ts") continue;
+    const rel = path.relative(projectRoot, file);
+    const content = stripComments(raw);
+    const lines = content.split("\n");
+    lines.forEach((text, idx) => {
+      const line = idx + 1;
+      const where = `${rel}:${line}`;
+
+      for (const m of text.matchAll(/https:\/\/media\.4leggedit\.com\/[^"'`\s)]+/g)) add(m[0], where);
+
+      for (const m of text.matchAll(/(?<!function\s)\bmediaUrl\(([^)]*)\)/g)) {
+        const lit = /^\s*"([^"]+)"\s*,\s*"([^"]+)"\s*$/.exec(m[1]);
+        if (lit) add(`${MEDIA_HOST}/${lit[1]}/${lit[2].replace(/^\/+/, "")}`, where);
+        else issues.push({ file, url: `mediaUrl(${m[1].trim()})`, reason: "mediaUrl() must be called with two string literals (media pass resolves by text scan)" });
+      }
+
+      const videoImport = /\bfrom\s+["'][^"']+\.(mp4|mov|webm)["']/i.exec(text);
+      if (videoImport) issues.push({ file, url: videoImport[0], reason: "video imported from the repo; upload it to the media host and use mediaUrl()" });
+
+      const publicVideo = /["'`](\/videos\/[^"'`]*)/.exec(text);
+      if (publicVideo) issues.push({ file, url: publicVideo[1], reason: "video referenced from public/videos/; upload it to the media host and use mediaUrl()" });
+    });
+  }
+  return { urls, issues };
+};
+
+// HEAD the object and read the headers that matter for playback: a 200 (not
+// a redirect to a login/challenge page), a video content-type, and byte
+// ranges (seeking; iOS Safari refuses to play without them).
+const checkMediaUrl = async (url) => {
+  const timeoutSec = Math.ceil(Number(process.env.LINK_CHECK_TIMEOUT_MS || 15000) / 1000);
+  const userAgent = process.env.LINK_CHECK_UA || "template-link-audit/1.0";
+  let stdout;
+  try {
+    ({ stdout } = await execFileAsync(
+      "curl",
+      ["-sS", "-I", "-L", "--max-time", String(timeoutSec), "-A", userAgent, "-o", "/dev/null", "-D", "-", url],
+      { cwd: projectRoot },
+    ));
+  } catch (err) {
+    return { ok: false, reason: `network error (${String(err?.message || err).split("\n")[0]})` };
+  }
+  // With -L there is one header block per hop; the last one is the answer.
+  const blocks = String(stdout || "").split(/\r?\n\r?\n/).map((b) => b.trim()).filter(Boolean);
+  const last = blocks[blocks.length - 1] || "";
+  const statusMatch = /^HTTP\/[\d.]+\s+(\d{3})/.exec(last);
+  const status = statusMatch ? Number(statusMatch[1]) : 0;
+  const header = (name) => {
+    const m = new RegExp(`^${name}:\\s*(.+)$`, "im").exec(last);
+    return m ? m[1].trim() : "";
+  };
+  // Bot Fight Mode on the media host's zone answers datacenter IPs (GitHub
+  // runners included) with a 403 challenge. A public R2 custom domain never
+  // 403s for any other reason -- a missing key is a 404 -- so a 403 means
+  // "could not verify from here", not "broken". Reported as blocked (warning);
+  // the object was HEAD-verified by `npm run build` on the operator's machine
+  // before the commit. 404/5xx/network errors still fail.
+  if (status === 403) return { ok: false, blocked: true, reason: "403 from the edge (bot protection); verified locally, not from this network" };
+  if (status !== 200) return { ok: false, reason: `status ${status || "unknown"}` };
+  const contentType = header("content-type");
+  if (!/^video\//i.test(contentType)) return { ok: false, reason: `content-type "${contentType || "missing"}" is not video/*` };
+  if (!/bytes/i.test(header("accept-ranges"))) return { ok: false, reason: "no `accept-ranges: bytes` (seeking/iOS playback would fail)" };
+  return { ok: true, reason: null };
+};
+
+const runPool = async (items, concurrency, fn) => {
+  if (!items.length) return [];
+  const results = new Array(items.length);
+  let nextIndex = 0;
+  const workers = new Array(Math.min(concurrency, items.length)).fill(null).map(async () => {
+    while (true) {
+      const i = nextIndex++;
+      if (i >= items.length) return;
+      results[i] = await fn(items[i], i);
+    }
+  });
+  await Promise.all(workers);
+  return results;
+};
+
+// ---------------------------------------------------------------------------
+// Main
+// ---------------------------------------------------------------------------
+
+const main = async () => {
+  if (!fs.existsSync(srcRoot)) {
+    console.error(`[links] Missing ${path.relative(projectRoot, srcRoot)}`);
+    process.exit(2);
+  }
+
+  // Test/spec files exercise components in isolation with illustrative fixture
+  // props (e.g. `render(<CommunityPartnersSection ctaHref="/contact" />)`) --
+  // real for the component under test, but not a claim that "/contact" is a
+  // real route in *this* app. Excluded from routing validation; still real
+  // source files for every other purpose (kept in this repo's own test run).
+  const files = walk(srcRoot).filter((f) => /\.(ts|tsx)$/.test(f) && !/\.(test|spec)\.(ts|tsx)$/.test(f));
+
+  const routes = externalOnly
+    ? new Set()
+    : new Set([...(await getAppRoutePaths()).map(normalizeRoutePath), ...(await loadDataRouteHelpers())]);
+
+  // Routes that are placeholders, not real navigable pages (":param" JSX
+  // route declarations, "*" nested-router prefixes) are excluded from
+  // orphan-route reporting -- nothing is ever meant to link to them literally.
+  const isPlaceholderRoute = (route) => route.split("/").some((seg) => seg.startsWith(":") || seg === "*");
+
+  // ---- pass 1: parse every file, collect direct occurrences + call sites ----
+  const ctx = { directOccurrences: [], callSitePasses: [], idOccurrences: [], detailBases: [] };
+  const fileContents = new Map();
+  for (const file of files) {
+    const content = fs.readFileSync(file, "utf8");
+    fileContents.set(file, content);
+    try {
+      walkFile(file, content, ctx);
+    } catch (err) {
+      console.warn(`[links] Warning: failed to parse ${path.relative(projectRoot, file)}: ${err.message}`);
+    }
+  }
+
+  const idSet = new Set(ctx.idOccurrences);
+
+  // ---- pass 2: fixpoint-resolve call-site attribute passes against the
+  // growing linkCarryingProps map (handles multi-level prop threading) ----
+  const resolvedCallSiteOccurrences = []; // { file, line, resolution }
+  const seenCallSiteKeys = new Set();
+  const MAX_ROUNDS = 6;
+  for (let round = 0; round < MAX_ROUNDS; round++) {
+    const sizeBefore = [...linkCarryingProps.values()].reduce((n, s) => n + s.size, 0);
+
+    for (const pass of ctx.callSitePasses) {
+      const carrying = linkCarryingProps.get(pass.component);
+      if (!carrying || !carrying.has(pass.propName)) continue;
+
+      const key = `${pass.file}:${pass.line}:${pass.propName}`;
+      if (seenCallSiteKeys.has(key)) continue;
+
+      // isFragment: true -- this identifier is being resolved to find out what
+      // value flows INTO another component's prop (call-site forwarding), not
+      // to check whether it's used directly as *this* component's own href/to.
+      // Forwarding a prop onward (`<Child linkProp={postBasePath} />`) must
+      // never itself mark the forwarding component's own prop direct-carrying.
+      const resolution = pass.resolution ?? resolveExprNode(pass.exprNode, pass.localConsts, pass.currentComponent, true);
+      const terminal = expandResolution(resolution);
+      const stillPending = terminal.some((r) => r.kind === "own-prop");
+      if (stillPending && round < MAX_ROUNDS - 1) continue; // may resolve further next round
+
+      seenCallSiteKeys.add(key);
+      for (const r of terminal) {
+        resolvedCallSiteOccurrences.push({ file: pass.file, line: pass.line, resolution: r, component: pass.component, propName: pass.propName });
+      }
+    }
+
+    const sizeAfter = [...linkCarryingProps.values()].reduce((n, s) => n + s.size, 0);
+    if (sizeAfter === sizeBefore && round > 0) break;
+  }
+  // Anything never resolved after the final round (still "own-prop") is a
+  // component whose link-carrying prop was never observably fed a value --
+  // surfaced once, attributed to the call site, rather than silently dropped.
+  for (const pass of ctx.callSitePasses) {
+    const carrying = linkCarryingProps.get(pass.component);
+    if (!carrying || !carrying.has(pass.propName)) continue;
+    const key = `${pass.file}:${pass.line}:${pass.propName}`;
+    if (seenCallSiteKeys.has(key)) continue;
+    seenCallSiteKeys.add(key);
+    const resolution = pass.resolution ?? resolveExprNode(pass.exprNode, pass.localConsts, pass.currentComponent, true);
+    for (const r of expandResolution(resolution)) {
+      resolvedCallSiteOccurrences.push({ file: pass.file, line: pass.line, resolution: r, component: pass.component, propName: pass.propName });
+    }
+  }
+
+  // Index resolved call-site values by "Component.prop" so direct-occurrence
+  // template literals that embed a propref (e.g. BlogSection's own
+  // `postBasePath` prop inside `${postBasePath}/${post.slug}`) can be
+  // substituted with the concrete value(s) supplied at real call sites.
+  const propValues = new Map(); // "Component.prop" -> Resolution[]
+  for (const occ of resolvedCallSiteOccurrences) {
+    if (!occ.component || !occ.propName) continue;
+    const key = propRefKey(occ.component, occ.propName);
+    if (!propValues.has(key)) propValues.set(key, []);
+    propValues.get(key).push(occ.resolution);
+  }
+  // ---- pass 3: combine direct occurrences (href/to found in JSX, excluding
+  // bare "own-prop" ones which only exist to seed the fixpoint above) with
+  // resolved call-site occurrences, then classify each ----
+  //
+  // Only call-site occurrences for *directly*-carrying props are treated as
+  // complete, independently-checkable URLs here. A fragment-only prop's
+  // call-site literal (e.g. `postBasePath="/examples/blog"`) is excluded from
+  // this list -- checking it as if it were the whole destination would be
+  // wrong, since real rendering appends more (`/${post.slug}`) before it
+  // becomes a real link. That correct check already happens via the dynamic
+  // atom-substitution path below, once `propValues` (built from the
+  // unfiltered `resolvedCallSiteOccurrences` above) fills the propref slot
+  // back into the enclosing template's own direct occurrence.
+  const directCallSiteOccurrences = resolvedCallSiteOccurrences.filter((occ) =>
+    directLinkCarryingProps.get(occ.component)?.has(occ.propName),
+  );
+  const allOccurrences = [
+    ...ctx.directOccurrences
+      .filter((o) => o.resolution.kind !== "own-prop")
+      .flatMap((o) => expandResolution(o.resolution).map((r) => ({ file: o.file, line: o.line, resolution: r }))),
+    ...directCallSiteOccurrences,
+  ].filter((o) => o.resolution.kind !== "none");
+
+  const internalIssues = [];
+  const unresolvedRefs = []; // "could not statically resolve" bucket
+  const externalFailures = [];
+  const externalBlocked = [];
+  const externalSkipped = [];
+  const externalRefs = new Map();
+  const inboundRouteRefs = new Map();
+  const markRouteReferenced = (route) => inboundRouteRefs.set(route, (inboundRouteRefs.get(route) || 0) + 1);
+  const orphanRouteExclusions = new Set(["/oops", "/404"]);
+
+  const handleUrl = (file, line, url) => {
+    if (!url) return;
+
+    if (isExternal(url)) {
+      if (shouldCheckExternal || externalOnly) {
+        const abs = toAbsoluteExternalUrl(url);
+        const set = externalRefs.get(abs) || new Set();
+        set.add(file);
+        externalRefs.set(abs, set);
+      }
+      return;
+    }
+
+    if (url.startsWith("#")) {
+      if (externalOnly) return;
+      const id = url.slice(1);
+      if (id && !idSet.has(id)) internalIssues.push({ file, url, reason: `unknown hash target id="${id}"` });
+      return;
+    }
+
+    if (!url.startsWith("/")) return;
+    if (externalOnly) return;
+
+    const pathname = normalizePath(url);
+    const hash = getHash(url);
+
+    if (likelyPublicAssetPath(pathname)) {
+      if (!publicAssetExists(pathname)) {
+        internalIssues.push({ file, url, reason: `missing public asset "${pathname}"` });
+      }
+      return;
+    }
+
+    if (pathname && !routes.has(pathname)) {
+      // Not an exact match -- it may still be a concrete instance of a
+      // ":param" or "/*"-prefix route (e.g. "/users/questionnaire" against a
+      // declared "/users/*"), so fall back to segment-wise matching before
+      // calling it broken.
+      if (!literalPathMatchesKnownRoute(pathname, routes)) {
+        internalIssues.push({ file, url, reason: `unknown route "${pathname}"` });
+        return;
+      }
+      markRouteReferenced(pathname);
+      // Also credit the matching prefix/pattern route itself, since that's
+      // what's actually declared in the route source of truth.
+      for (const route of routes) {
+        if (routeMatchesSegments(route.split("/"), pathname.split("/"))) markRouteReferenced(route);
+      }
+    } else if (pathname && routes.has(pathname)) {
+      markRouteReferenced(pathname);
+    }
+
+    if (hash) {
+      const id = hash.slice(1);
+      if (id && !idSet.has(id)) internalIssues.push({ file, url, reason: `unknown hash target id="${id}"` });
+    }
+  };
+
+  for (const occ of allOccurrences) {
+    const { file, line, resolution } = occ;
+    if (resolution.kind === "literal") {
+      handleUrl(file, line, resolution.value);
+    } else if (resolution.kind === "dynamic") {
+      // Substitute any propref slots (own-props of the enclosing component
+      // threaded into this template/concat) with concrete values known from
+      // real call sites elsewhere, expanding to one variant per candidate.
+      const variants = substitutePropRefs(resolution.atoms, propValues);
+      for (const atoms of variants) {
+        const fullyLiteral = !atoms.some((a) => a === EXPR || isPropRef(a));
+        if (fullyLiteral) {
+          handleUrl(file, line, atoms.join(""));
+          continue;
+        }
+        if (dynamicMatchesKnownRoute(atoms, routes)) {
+          // Matches a known route family -- mark every concrete route
+          // sharing that shape as referenced, so blog/news/pack-journey-style
+          // `.map()`-driven cards clear orphan status.
+          const dynSegs = atomsToSegments(atoms);
+          for (const route of routes) {
+            if (routeMatchesSegments(route.split("/"), dynSegs)) markRouteReferenced(route);
+          }
+        } else {
+          const rendered = segmentsToDisplayString(atomsToSegments(atoms));
+          if (!isExternal(rendered)) {
+            unresolvedRefs.push({ file, line, url: rendered, reason: "dynamic path with no matching known route" });
+          }
+        }
+      }
+    } else if (resolution.kind === "unresolved") {
+      unresolvedRefs.push({ file, line, reason: resolution.reason });
+    }
+    // "own-prop" terminal (never fed a value anywhere) is intentionally
+    // omitted here -- surfaced separately below if truly dangling.
+  }
+
+  if (printExternal) {
+    const urls = [...externalRefs.keys()]
+      .filter((u) => !isProbablyTemplateUrl(u))
+      .filter((u) => !isSvgNamespace(u))
+      .filter((u) => !/^data:/i.test(u))
+      .sort();
+    process.stdout.write(`${urls.join("\n")}${urls.length ? "\n" : ""}`);
+    return;
+  }
+
+  if (printInternal) {
+    process.stdout.write(`${[...routes].sort().join("\n")}${routes.size ? "\n" : ""}`);
+    return;
+  }
+
+  // ---- media host pass -------------------------------------------
+  let mediaVerified = 0;
+  if (!externalOnly) {
+    const media = collectMediaRefs(fileContents);
+    internalIssues.push(...media.issues);
+    const mediaUrls = [...media.urls.keys()].sort();
+    if (mediaUrls.length && skipMediaHead) {
+      console.log(`[links] media host: ${mediaUrls.length} url(s) found, HEAD checks skipped (LINK_CHECK_SKIP_MEDIA=1)`);
+    } else if (mediaUrls.length) {
+      const concurrency = Number(process.env.LINK_CHECK_CONCURRENCY || 8);
+      const results = await runPool(mediaUrls, concurrency, async (url) => ({ url, ...(await checkMediaUrl(url)) }));
+      let mediaBlocked = 0;
+      for (const res of results) {
+        if (res.ok) {
+          mediaVerified += 1;
+          continue;
+        }
+        if (res.blocked) {
+          mediaBlocked += 1;
+          continue;
+        }
+        for (const where of media.urls.get(res.url)) {
+          const [relFile] = where.split(":");
+          internalIssues.push({ file: path.join(projectRoot, relFile), url: res.url, reason: `media host: ${res.reason}` });
+        }
+      }
+      const blockedNote = mediaBlocked ? `; ${mediaBlocked} blocked by the edge's bot protection (403) -- not verifiable from this network, verified locally before commit` : "";
+      console.log(`[links] media host: ${mediaVerified}/${mediaUrls.length} url(s) verified${blockedNote}`);
+    }
+  }
+
+  if ((shouldCheckExternal || externalOnly) && externalRefs.size) {
+    const urls = [...externalRefs.keys()].sort();
+    const concurrency = Number(process.env.LINK_CHECK_CONCURRENCY || 8);
+    console.log(`[links] Checking ${urls.length} external link(s)...`);
+
+    const results = await runPool(urls, concurrency, async (url) => ({ url, ...(await checkExternalUrl(url)) }));
+    for (const res of results) {
+      const filesForUrl = externalRefs.get(res.url);
+      const where = filesForUrl ? [...filesForUrl].map((f) => path.relative(projectRoot, f)) : ["unknown"];
+      const entry = { files: where, url: res.url, status: res.status, finalUrl: res.finalUrl, reason: res.reason };
+
+      if (res.kind === "ok") continue;
+      if (res.kind === "skipped") externalSkipped.push(entry);
+      else if (res.kind === "blocked") externalBlocked.push(entry);
+      else externalFailures.push(entry);
+    }
+  }
+
+  const blockedCountsAsFailure = strictExternal && externalBlocked.length > 0;
+  const anyFailures = internalIssues.length > 0 || externalFailures.length > 0 || blockedCountsAsFailure;
+
+  if (anyFailures) {
+    if (internalIssues.length) {
+      console.error(`[links] Found ${internalIssues.length} broken internal link(s):`);
+      for (const issue of internalIssues) {
+        console.error(`- ${path.relative(projectRoot, issue.file)}: "${issue.url}" (${issue.reason})`);
+      }
+    }
+
+    if (externalFailures.length) {
+      console.error(`[links] Found ${externalFailures.length} broken external link(s):`);
+      for (const issue of externalFailures) {
+        console.error(
+          `- ${issue.files.join(", ")}: "${issue.url}" (${issue.reason}${issue.status ? `, status ${issue.status}` : ""})`,
+        );
+      }
+    }
+
+    if (blockedCountsAsFailure) {
+      console.error(`[links] Found ${externalBlocked.length} external link(s) that blocked the audit (strict mode):`);
+      for (const issue of externalBlocked) {
+        console.error(
+          `- ${issue.files.join(", ")}: "${issue.url}" (${issue.reason}${issue.status ? `, status ${issue.status}` : ""})`,
+        );
+      }
+    } else if ((shouldCheckExternal || externalOnly) && externalBlocked.length) {
+      console.warn(`[links] ${externalBlocked.length} external link(s) blocked automated checking (not failing):`);
+      for (const issue of externalBlocked.slice(0, 10)) {
+        console.warn(
+          `- ${issue.files.join(", ")}: "${issue.url}" (${issue.reason}${issue.status ? `, status ${issue.status}` : ""})`,
+        );
+      }
+      if (externalBlocked.length > 10) console.warn(`- ...and ${externalBlocked.length - 10} more`);
+    }
+
+    if ((shouldCheckExternal || externalOnly) && externalSkipped.length) {
+      console.warn(`[links] ${externalSkipped.length} external url(s) skipped (template/data/svg namespace/etc).`);
+    }
+
+    process.exit(1);
+  }
+
+  if (!externalOnly) {
+    for (const base of new Set(ctx.detailBases)) {
+      if (!base.startsWith("/")) continue;
+      const prefix = base.split("/");
+      for (const route of routes) {
+        const segs = route.split("/");
+        if (segs.length === prefix.length + 1 && prefix.every((seg, i) => seg === segs[i]) && !isPlaceholderRoute(route)) {
+          markRouteReferenced(route);
+        }
+      }
+    }
+    const orphanRoutes = [...routes]
+      .filter((route) => !orphanRouteExclusions.has(route))
+      .filter((route) => !isPlaceholderRoute(route))
+      .filter((route) => (inboundRouteRefs.get(route) || 0) === 0)
+      .sort((a, b) => a.localeCompare(b));
+
+    if (orphanRoutes.length) {
+      console.warn(
+        `[links] Warning: ${orphanRoutes.length} route(s) have no inbound links (excluding /oops, /404, and dynamic-route placeholders):`,
+      );
+      for (const route of orphanRoutes) {
+        console.warn(`- ${route}`);
+      }
+    }
+
+    if (unresolvedRefs.length) {
+      console.warn(
+        `[links] Note: ${unresolvedRefs.length} link reference(s) could not be statically resolved (not counted as broken or orphaned).`,
+      );
+      if (verbose) {
+        for (const ref of unresolvedRefs) {
+          const where = `${path.relative(projectRoot, ref.file)}:${ref.line}`;
+          const what = ref.url ? ` "${ref.url}"` : "";
+          console.warn(`- ${where}:${what} (${ref.reason})`);
+        }
+      } else {
+        console.warn(`[links] Run \`links:check -- --verbose\` for the per-line list.`);
+      }
+    }
+
+    if (verbose && linkCarryingProps.size) {
+      console.log(`[links] Link-carrying props traced through component prop-threading:`);
+      for (const [component, props] of linkCarryingProps) {
+        console.log(`- ${component}: ${[...props].join(", ")}`);
+      }
+    }
+  }
+
+  if (shouldCheckExternal || externalOnly) {
+    const blockedNote = externalBlocked.length ? `; ${externalBlocked.length} blocked` : "";
+    const skippedNote = externalSkipped.length ? `; ${externalSkipped.length} skipped` : "";
+    console.log(`[links] OK (internal passed; external passed${blockedNote}${skippedNote})`);
+  } else {
+    console.log("[links] OK (no obvious broken internal links found)");
+  }
+};
+
+await main();

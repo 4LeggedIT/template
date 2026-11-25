@@ -1,0 +1,150 @@
+import { useTranslation } from "react-i18next";
+import StandardSnippet from "@/components/StandardSnippet";
+import PageHero from "@/components/patterns/PageHero";
+import SEOHead from "@/components/patterns/SEOHead";
+import TestimonialsSection, { type TestimonialItem } from "@/components/patterns/TestimonialsSection";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+
+const snippetExample = `import TestimonialsSection from "@/components/patterns/TestimonialsSection";
+
+<TestimonialsSection title="What Adopters Say" testimonials={testimonials} />
+
+// testimonials: TestimonialItem[]
+{
+  id: "adopter-1",
+  quote: "Molly is the best thing that ever happened to us.",
+  author: "Sam R.",
+  authorMeta: "Adopted Molly, 2026",
+  rating: 5,
+}`;
+
+const TestimonialsStandardPage = () => {
+  const { t } = useTranslation(["testimonials", "common"]);
+
+  const sampleTestimonials: TestimonialItem[] = [
+    {
+      id: "t-1",
+      quote: t("testimonials:items.t1.quote"),
+      author: t("testimonials:items.t1.author"),
+      authorTitle: t("testimonials:items.t1.authorTitle"),
+      authorMeta: t("testimonials:items.t1.authorMeta"),
+      emoji: "🐾",
+      rating: 5,
+    },
+    {
+      id: "t-2",
+      quote: t("testimonials:items.t2.quote"),
+      author: t("testimonials:items.t2.author"),
+      authorMeta: t("testimonials:items.t2.authorMeta"),
+      emoji: "❤️",
+      rating: 4,
+    },
+    {
+      id: "t-3",
+      quote: t("testimonials:items.t3.quote"),
+      author: t("testimonials:items.t3.author"),
+      authorMeta: t("testimonials:items.t3.authorMeta"),
+    },
+  ];
+
+  const longformSample: TestimonialItem[] = [
+    {
+      id: "t-longform",
+      quote: t("testimonials:items.longform.quote"),
+      pullQuote: t("testimonials:items.longform.pullQuote"),
+      author: t("testimonials:items.longform.author"),
+      authorTitle: t("testimonials:items.longform.authorTitle"),
+      authorMeta: t("testimonials:items.longform.authorMeta"),
+      rating: 5,
+    },
+  ];
+
+  return (
+    <>
+      <SEOHead
+        title="Testimonials Pattern"
+        canonicalPath="/standards/testimonials"
+        description="Standardized testimonials module for featured, grid and longform content, with optional author titles and star ratings."
+      />
+      <PageHero
+        eyebrow={t("common:nav.standards")}
+        title={t("testimonials:hero.title")}
+        description={t("testimonials:hero.description")}
+        breadcrumbs={[
+          { label: t("common:nav.home"), href: "/" },
+          { label: t("common:nav.standards") },
+          { label: t("testimonials:breadcrumb") },
+        ]}
+      />
+
+      <section className="container space-y-10 px-4 py-10">
+        <div className="space-y-3">
+          <h2 className="text-lg font-semibold">{t("testimonials:sections.featured.title")}</h2>
+          <p className="text-sm text-muted-foreground">{t("testimonials:sections.featured.description")}</p>
+          <TestimonialsSection
+            title={t("testimonials:sections.featured.sectionTitle")}
+            testimonials={sampleTestimonials}
+            layout="featured"
+            featuredStrategy="randomOnLoad"
+            labels={{ ratingLabel: t("testimonials:labels.ratingLabel") }}
+          />
+        </div>
+
+        <div className="space-y-3">
+          <h2 className="text-lg font-semibold">{t("testimonials:sections.grid.title")}</h2>
+          <p className="text-sm text-muted-foreground">{t("testimonials:sections.grid.description")}</p>
+          <TestimonialsSection
+            title={t("testimonials:sections.grid.sectionTitle")}
+            testimonials={sampleTestimonials}
+            layout="grid"
+            columns={3}
+            labels={{ ratingLabel: t("testimonials:labels.ratingLabel") }}
+          />
+        </div>
+
+        <div className="space-y-3">
+          <h2 className="text-lg font-semibold">{t("testimonials:sections.longform.title")}</h2>
+          <p className="text-sm text-muted-foreground">{t("testimonials:sections.longform.description")}</p>
+          <TestimonialsSection
+            title={t("testimonials:sections.longform.sectionTitle")}
+            testimonials={longformSample}
+            layout="longform"
+            labels={{ ratingLabel: t("testimonials:labels.ratingLabel") }}
+          />
+        </div>
+
+        <div className="space-y-3">
+          <h2 className="text-lg font-semibold">{t("testimonials:sections.longformCollapsible.title")}</h2>
+          <p className="text-sm text-muted-foreground">
+            {t("testimonials:sections.longformCollapsible.description")}
+          </p>
+          <TestimonialsSection
+            title={t("testimonials:sections.longformCollapsible.sectionTitle")}
+            testimonials={longformSample}
+            layout="longform"
+            collapsible
+            labels={{
+              ratingLabel: t("testimonials:labels.ratingLabel"),
+              readMoreLabel: t("testimonials:labels.readMoreLabel"),
+            }}
+          />
+        </div>
+
+        <StandardSnippet code={snippetExample} />
+
+        <Card>
+          <CardHeader>
+            <CardTitle>{t("testimonials:standard.title")}</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-2 break-words text-sm text-muted-foreground">
+            {(t("testimonials:standard.items", { returnObjects: true }) as string[]).map((item) => (
+              <p key={item}>- {item}</p>
+            ))}
+          </CardContent>
+        </Card>
+      </section>
+    </>
+  );
+};
+
+export default TestimonialsStandardPage;

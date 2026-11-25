@@ -1,0 +1,60 @@
+{
+  "hero": {
+    "title": "Placeholder markers pattern",
+    "description": "Two markers that keep unconfirmed copy honest: one for wording drafted on the owner's behalf, one for sections only the owner can supply. Both stay visible in production until someone confirms and removes them."
+  },
+  "breadcrumb": "Placeholder Markers Pattern",
+  "sections": {
+    "inline": {
+      "title": "Drafted wording (`Placeholder`)",
+      "description": "Wraps a sentence drafted so the page has something to hold. The dashed outline and badge show it has not been confirmed; hover the badge for the note."
+    },
+    "label": {
+      "title": "Localized badge (`label`)",
+      "description": "Pass `label` in the site's language. A Spanish-first site uses `borrador` instead of the English default `draft`."
+    },
+    "section": {
+      "title": "Content only the owner can supply (`PlaceholderSection`)",
+      "description": "Renders the section anyway: a visitor-safe “coming soon” line, then the request addressed to the owner. Used for a story, a team, credentials — things that cannot be drafted."
+    }
+  },
+  "examples": {
+    "inline": {
+      "before": "The lending library is open on Saturday mornings.",
+      "drafted": "Borrowers may keep an item for two weeks, and renew it once if nobody is waiting.",
+      "note": "Drafted from a rough note — the lending terms are not confirmed"
+    },
+    "label": {
+      "drafted": "Volunteers meet at the north gate before each shift.",
+      "note": "Drafted by us — the meeting point is not confirmed"
+    },
+    "section": {
+      "title": "How the workshop runs",
+      "publicText": "Workshop details are coming soon.",
+      "ask": "Only you can fill this in: how long does a session run, how many people fit, and what should someone bring? A voice note is fine — we will write it up.",
+      "why": "The section stays on the page so the gap is visible until it is filled."
+    }
+  },
+  "whenToUse": {
+    "title": "When to use which",
+    "items": [
+      "`Placeholder`: a statement about how the business or organization operates that we wrote and the owner has not confirmed.",
+      "`PlaceholderSection`: content only the owner can provide — their story, team, credentials, day-to-day details. Never invent it; mark the gap instead.",
+      "Neither: a fact that is simply missing (use “details coming soon” text), interface labels, button text, error-page copy, or anything taken from the owner's own flyers, messages or social posts — that material is already theirs.",
+      "Build the section anyway. An omitted section is invisible, and invisible gaps become permanent."
+    ]
+  },
+  "standard": {
+    "title": "Standard",
+    "items": [
+      "Import both from `@/components/patterns/` — never hand-roll a lookalike marker on a site.",
+      "`Placeholder` renders inline (a `span`). Put it inside a paragraph or heading; never wrap block elements in it.",
+      "Use `note` to say exactly what is unconfirmed, so a reviewer can confirm quickly.",
+      "Pass `label` in the site's language (e.g. `borrador`, `Nos falta tu parte`).",
+      "Markers are never hidden in production — no build flag, no CSS, no “strip” helper. Shipping the wording unmarked means deleting the wrapper.",
+      "Both use shared theme tokens only (`muted`, `muted-foreground`, `background`, `accent`, `accent-foreground`, `foreground`). A theme's `accent-foreground` must be readable on `accent`.",
+      "Wire `npm run drafts` (`tools/list-drafts.mjs`) on any site that uses the markers; it lists every outstanding one, and is how you check nothing is left after removing a wrapper. Remove imports left unused. A documentation page that renders markers on purpose opts out with a `drafts:ignore-file` comment.",
+      "Components: `template/src/components/patterns/Placeholder.tsx`, `template/src/components/patterns/PlaceholderSection.tsx`"
+    ]
+  }
+}

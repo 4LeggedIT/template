@@ -1,0 +1,96 @@
+import { useTranslation } from "react-i18next";
+import CuratedLinksSection, { type CuratedLinkItem } from "@/components/patterns/CuratedLinksSection";
+import StandardSnippet from "@/components/StandardSnippet";
+import PageHero from "@/components/patterns/PageHero";
+import SEOHead from "@/components/patterns/SEOHead";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+
+const snippetExample = `import CuratedLinksSection from "@/components/patterns/CuratedLinksSection";
+
+<CuratedLinksSection title="Worth Reading" items={curatedLinks} showFilters />
+
+// curatedLinks: CuratedLinkItem[]
+{
+  id: "loose-leash-walking",
+  title: "Loose-Leash Walking Basics",
+  href: "https://example.com/loose-leash-walking", // http(s) only; links straight to the original
+  sourceName: "Example Dog Training", // credit shown on the card
+  summary: "One line we write about why it helps.",
+  topic: "Training",
+}`;
+
+const CuratedLinksStandardPage = () => {
+  const { t } = useTranslation(["curatedLinks", "common"]);
+
+  const sampleItems: CuratedLinkItem[] = [
+    {
+      id: "first",
+      title: t("curatedLinks:example.items.first.title"),
+      summary: t("curatedLinks:example.items.first.summary"),
+      sourceName: t("curatedLinks:example.items.first.sourceName"),
+      topic: t("curatedLinks:example.items.first.topic"),
+      timeNeeded: t("curatedLinks:example.items.first.timeNeeded"),
+      href: "https://example.org/first-post",
+    },
+    {
+      id: "second",
+      title: t("curatedLinks:example.items.second.title"),
+      summary: t("curatedLinks:example.items.second.summary"),
+      sourceName: t("curatedLinks:example.items.second.sourceName"),
+      topic: t("curatedLinks:example.items.second.topic"),
+      timeNeeded: t("curatedLinks:example.items.second.timeNeeded"),
+      href: "https://example.org/second-post",
+    },
+  ];
+
+  return (
+    <>
+      <SEOHead
+        title="Curated Links Pattern"
+        canonicalPath="/standards/curated-links"
+        description="Standardized pattern for linking out to other people's work, credited and uncopied, as a section of cards."
+      />
+      <PageHero
+        eyebrow={t("common:nav.standards")}
+        title={t("curatedLinks:hero.title")}
+        description={t("curatedLinks:hero.description")}
+        breadcrumbs={[
+          { label: t("common:nav.home"), href: "/" },
+          { label: t("common:nav.standards") },
+          { label: t("curatedLinks:breadcrumb") },
+        ]}
+      />
+
+      <section className="container space-y-10 px-4 py-10">
+        <div className="space-y-3">
+          <h2 className="text-lg font-semibold">{t("curatedLinks:example.title")}</h2>
+          <CuratedLinksSection
+            title={t("curatedLinks:example.sectionTitle")}
+            description={t("curatedLinks:example.sectionDescription")}
+            items={sampleItems}
+            labels={{
+              opensInNewTab: t("curatedLinks:example.opensInNewTab"),
+              allLabel: t("curatedLinks:example.allLabel"),
+              sourcePrefix: t("curatedLinks:example.sourcePrefix"),
+            }}
+          />
+        </div>
+
+        <StandardSnippet code={snippetExample} />
+
+        <Card>
+          <CardHeader>
+            <CardTitle>{t("curatedLinks:standard.title")}</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-2 break-words text-sm text-muted-foreground">
+            {(t("curatedLinks:standard.items", { returnObjects: true }) as string[]).map((item) => (
+              <p key={item}>- {item}</p>
+            ))}
+          </CardContent>
+        </Card>
+      </section>
+    </>
+  );
+};
+
+export default CuratedLinksStandardPage;

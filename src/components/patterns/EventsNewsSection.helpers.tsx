@@ -1,0 +1,1051 @@
+/**
+ * SHARED PATTERN: do not edit in a site repo.
+ * Source: github.com/4LeggedIT/internal-tools
+ *   4leggedit-websites/templates-sources/patterns/EventsNewsSection.helpers.tsx
+ * Change it there, then sync it to every site.
+ *
+ * Non-component helpers for EventsNewsSection.tsx, kept in their own module so that file exports only
+ * components (react-refresh/only-export-components).
+ */
+import { CalendarDays, Newspaper } from "lucide-react";
+import { Link } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import type { EventBannerItem } from "@/components/patterns/EventBanner";
+import { cn } from "@/lib/utils";
+import { isInternalPath, safeContentUrl } from "@/lib/safe-url";
+import { buildRrule, getNextOccurrence, getOccurrenceDates, getOccurrenceOnDate, resolveOccurrence, resolveOccurrenceStartIso } from "@/lib/event-recurrence";
+import { type ReactNode } from "react";
+import type { EventsNewsHighlightItem, EventsNewsArticleType, EventsNewsCalloutTone, EventsNewsParagraphBlock, EventsNewsListBlock, EventsNewsQuoteBlock, EventsNewsContentBlock, EventsNewsImage, EventsNewsImageOverride, EventsNewsVideoEmbed, EventsNewsEventEntry, EventsNewsArticleEntry, EventsNewsEntry, EventsNewsRenderableEventEntry, EventsNewsRenderableEntry, EventsNewsAdjacentEntry } from "./EventsNewsSection";
+
+const pad2 = (value: number) => String(value).padStart(2, "0");
+
+const toUtcDateTimeForGoogle = (date: Date) => {
+  const y = date.getUTCFullYear();
+  const m = pad2(date.getUTCMonth() + 1);
+  const d = pad2(date.getUTCDate());
+  const hh = pad2(date.getUTCHours());
+  const mm = pad2(date.getUTCMinutes());
+  const ss = pad2(date.getUTCSeconds());
+  return `${y}${m}${d}T${hh}${mm}${ss}Z`;
+};
+
+const toUtcDateForGoogle = (date: Date) => {
+  const y = date.getUTCFullYear();
+  const m = pad2(date.getUTCMonth() + 1);
+  const d = pad2(date.getUTCDate());
+  return `${y}${m}${d}`;
+};
+
+const parseYmdUtc = (value: string) => {
+  const ms = Date.parse(`${value}T00:00:00Z`);
+  return Number.isFinite(ms) ? new Date(ms) : null;
+};
+
+const addDaysUtc = (date: Date, days: number) => {
+  const next = new Date(date.getTime());
+  next.setUTCDate(next.getUTCDate() + days);
+  return next;
+};
+
+const formatYmdUtc = (date: Date) => {
+  const y = date.getUTCFullYear();
+  const m = pad2(date.getUTCMonth() + 1);
+  const d = pad2(date.getUTCDate());
+  return `${y}-${m}-${d}`;
+};
+
+const toUtcDayMs = (date: Date) => Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate());
+
+/**
+ * Resolves the single thumbnail (imageSrc/imageAlt) a card, highlight, or detail-page hero
+ * should use: the entry's own `imageSrc` when set, otherwise its first `images[]` entry.
+ * Every render site that needs exactly one thumbnail (never a gallery) must go through this —
+ * reading `.imageSrc` directly silently drops entries/overrides authored with only `images[]`.
+ */
+export const resolveThumbnailImage = <T extends { imageSrc?: string; imageAlt?: string; images?: EventsNewsImage[] }>(
+  source: T,
+): { imageSrc?: string; imageAlt?: string } => ({
+  imageSrc: source.imageSrc ?? source.images?.[0]?.src,
+  imageAlt: source.imageAlt ?? source.images?.[0]?.alt,
+});
+
+/**
+ * Resolves the image fields to render for a given occurrence date: the matching `imageOverrides`
+ * entry when one exists for that date, otherwise the source's own default imageSrc/imageAlt/images.
+ * Shared so site-local detail-page mappings can apply the same override lookup as the card list.
+ *
+ * An override that sets only `images` (no `imageSrc`) resolves its thumbnail from its own
+ * `images[0]`, never from the source's unrelated default `imageSrc` — otherwise the card-list
+ * thumbnail (which only ever reads `imageSrc`, see `resolveThumbnailImage`) would silently show
+ * every other occurrence's image on the one date that was supposed to look different.
+ */
+export const resolveEventsNewsDateImage = <
+  T extends { imageSrc?: string; imageAlt?: string; images?: EventsNewsImage[]; imageOverrides?: EventsNewsImageOverride[] },
+>(
+  source: T,
+  dateYmd: string,
+): { imageSrc?: string; imageAlt?: string; images?: EventsNewsImage[] } => {
+  const override = source.imageOverrides?.find((entry) => entry.date === dateYmd);
+  const overrideThumb = override ? resolveThumbnailImage(override) : undefined;
+  const sourceThumb = resolveThumbnailImage(source);
+  return {
+    imageSrc: overrideThumb?.imageSrc ?? sourceThumb.imageSrc,
+    imageAlt: overrideThumb?.imageAlt ?? sourceThumb.imageAlt,
+    images: override?.images ?? source.images,
+  };
+};
+
+// Appends the occurrence date as a `?date=` query param to a local detail-page href, so each
+// expanded occurrence of a recurring event deep-links to itself instead of every occurrence
+// (past, ongoing, upcoming) sharing one URL that always resolves to the live occurrence.
+const withOccurrenceDateParam = (href: string | undefined, dateYmd: string): string | undefined => {
+  if (!href || !isInternalPath(href)) return href;
+  const separator = href.includes("?") ? "&" : "?";
+  return `${href}${separator}date=${dateYmd}`;
+};
+
+/**
+ * Resolves a recurring event entry to one concrete occurrence: `requestedDateYmd` when it's a
+ * real generated occurrence of the recurrence, otherwise the live occurrence relative to `now`.
+ * Returns the entry unchanged when it isn't recurring (or the requested/live lookup fails).
+ *
+ * Centralizes the occurrence-math every site's detail page used to reimplement independently
+ * (as `getEffectiveEvent()`, `resolveEntry()`, `toDetailEntry()`, ...) — sites still own building
+ * their own dateLabel/recurrence-summary sentence from `describeRecurrence()` (bilingual concerns
+ * differ per site), applied only to the single entry passed to `<EventsNewsDetail>` — never to
+ * the array passed to `getAdjacentEntries()`, or every occurrence's Previous/Next label would show
+ * this one entry's frozen date instead of its own.
+ */
+export const resolveEventOccurrence = <T extends EventsNewsEventEntry>(
+  entry: T,
+  now: Date,
+  requestedDateYmd?: string,
+): T => {
+  if (!entry.recurrence) return entry;
+
+  const seedStartIso = entry.startAtIso ?? `${entry.startAt}T12:00:00Z`;
+  const seedEndIso = entry.endAtIso ?? `${entry.endAt ?? entry.startAt}T23:59:59Z`;
+
+  const requestedOccurrence = requestedDateYmd
+    ? getOccurrenceOnDate(entry.recurrence, seedStartIso, seedEndIso, entry.startAt, requestedDateYmd)
+    : null;
+  const occurrence = requestedOccurrence ?? getNextOccurrence(entry.recurrence, seedStartIso, seedEndIso, now.getTime());
+  if (!occurrence) return entry;
+
+  // Local calendar dates come from the occurrence's own Ymd fields — never sliced off the ISO
+  // string (see EventOccurrence in event-recurrence.ts).
+  const startAt = occurrence.startDateYmd;
+  return {
+    ...entry,
+    ...resolveEventsNewsDateImage(entry, startAt),
+    startAt,
+    endAt: entry.endAt ? occurrence.endDateYmd : entry.endAt,
+    startAtIso: entry.startAtIso ? occurrence.startAtIso : undefined,
+    endAtIso: entry.endAtIso ? occurrence.endAtIso : undefined,
+  };
+};
+
+const expandEventEntry = (
+  entry: EventsNewsEventEntry,
+  rangeStart: Date,
+  rangeEnd: Date,
+): EventsNewsRenderableEventEntry[] => {
+  const recurrence = entry.recurrence;
+  if (!recurrence) return [entry];
+
+  const occurrenceDates = getOccurrenceDates(recurrence, entry.startAt, rangeStart, rangeEnd);
+  if (!occurrenceDates.length) return [];
+
+  const seedStartDate = parseYmdUtc(entry.startAt);
+  const seedEndDate = parseYmdUtc(entry.endAt ?? entry.startAt);
+  const daySpan =
+    seedStartDate && seedEndDate
+      ? Math.max(0, Math.round((toUtcDayMs(seedEndDate) - toUtcDayMs(seedStartDate)) / (24 * 60 * 60 * 1000)))
+      : 0;
+
+  return occurrenceDates.map((occurrenceDate) => {
+    const startAt = formatYmdUtc(occurrenceDate);
+    const endAtDate = addDaysUtc(occurrenceDate, daySpan);
+    const endAt = entry.endAt || daySpan > 0 ? formatYmdUtc(endAtDate) : undefined;
+
+    const timedOccurrence =
+      entry.startAtIso && entry.endAtIso
+        ? resolveOccurrence(entry.startAtIso, entry.endAtIso, occurrenceDate, recurrence.timeZone)
+        : null;
+    const startAtIso =
+      timedOccurrence?.startAtIso ??
+      (entry.startAtIso
+        ? resolveOccurrenceStartIso(entry.startAtIso, occurrenceDate, recurrence.timeZone) ?? undefined
+        : undefined);
+    const endAtIso = entry.endAtIso ? timedOccurrence?.endAtIso ?? startAtIso : undefined;
+
+    return {
+      ...entry,
+      ...resolveEventsNewsDateImage(entry, startAt),
+      id: `${entry.id}__${startAt}`,
+      sourceEventId: entry.id,
+      recurrenceInstance: true,
+      startAt,
+      endAt,
+      startAtIso,
+      endAtIso,
+      href: withOccurrenceDateParam(entry.href, startAt),
+    };
+  });
+};
+
+export const getRenderableEntries = (entries: EventsNewsEntry[]): EventsNewsRenderableEntry[] => {
+  const todayUtc = new Date();
+  const rangeStart = addDaysUtc(new Date(Date.UTC(todayUtc.getUTCFullYear(), todayUtc.getUTCMonth(), todayUtc.getUTCDate())), -365);
+  const rangeEnd = addDaysUtc(new Date(Date.UTC(todayUtc.getUTCFullYear(), todayUtc.getUTCMonth(), todayUtc.getUTCDate())), 365);
+
+  return entries.flatMap((entry): EventsNewsRenderableEntry[] => {
+    if (entry.kind === "news") return [entry];
+    return expandEventEntry(entry, rangeStart, rangeEnd);
+  });
+};
+
+export const getSortMs = (entry: EventsNewsRenderableEntry) => {
+  if (entry.kind === "news") {
+    const ms = Date.parse(`${entry.publishedAt}T12:00:00Z`);
+    return Number.isFinite(ms) ? ms : 0;
+  }
+
+  const timed = entry.startAtIso ? Date.parse(entry.startAtIso) : NaN;
+  if (Number.isFinite(timed)) return timed;
+  const dateOnly = Date.parse(`${entry.startAt}T12:00:00Z`);
+  return Number.isFinite(dateOnly) ? dateOnly : 0;
+};
+
+const getEventEndMs = (entry: EventsNewsRenderableEventEntry) => {
+  const explicitEnd = entry.endAtIso ? Date.parse(entry.endAtIso) : NaN;
+  if (Number.isFinite(explicitEnd)) return explicitEnd;
+  const endDate = Date.parse(`${entry.endAt ?? entry.startAt}T23:59:59Z`);
+  return Number.isFinite(endDate) ? endDate : null;
+};
+
+export const getEventStatus = (
+  entry: EventsNewsRenderableEventEntry,
+  now: number = Date.now(),
+): "upcoming" | "ongoing" | "past" => {
+  const startMs = getEventStartMs(entry);
+  const endMs = getEventEndMs(entry);
+  if (startMs <= now && (endMs === null || endMs >= now)) return "ongoing";
+  if (startMs > now) return "upcoming";
+  return "past";
+};
+
+export const getArticleType = (entry: EventsNewsArticleEntry): EventsNewsArticleType => {
+  if (entry.articleType) return entry.articleType;
+  if (entry.href?.startsWith("/")) return "local";
+  return "external";
+};
+
+const normalizeSlugToken = (value: string) =>
+  value
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z0-9_-]+/g, "-")
+    .replace(/-{2,}/g, "-")
+    .replace(/^-+|-+$/g, "");
+
+const toDetailsPath = (id: string, basePath: string) => {
+  const trimmedBase = basePath.trim();
+  if (!trimmedBase) return null;
+  const normalizedBase = trimmedBase === "/" ? "" : trimmedBase.replace(/\/+$/, "");
+  const slug = normalizeSlugToken(id);
+  if (!slug) return null;
+  return `${normalizedBase}/${slug}`;
+};
+
+const toEventDetailsHref = (entry: EventsNewsRenderableEventEntry, basePath: string) => {
+  const path = toDetailsPath(entry.sourceEventId ?? entry.id, basePath);
+  if (!path) return null;
+  // A recurrence-instance entry's path is built fresh from its series id, bypassing the
+  // `?date=` param expandEventEntry() stamps onto an explicit `entry.href` — stamp it here too,
+  // so sites that rely on `eventDetailsBasePath` (rather than authoring a per-entry href) still
+  // get one addressable URL per occurrence instead of every occurrence sharing the series' URL.
+  return entry.recurrenceInstance ? withOccurrenceDateParam(path, entry.startAt) ?? path : path;
+};
+
+const hasLocalEventDetailContent = (entry: EventsNewsRenderableEventEntry) =>
+  Boolean(
+    entry.body?.trim() ||
+      entry.contentBlocks?.length ||
+      entry.highlights?.length ||
+      entry.imageSrc ||
+      entry.imageAlt ||
+      entry.images?.length,
+  );
+
+export const getDetailsHref = (entry: EventsNewsRenderableEntry, eventDetailsBasePath?: string) => {
+  const href = entry.href?.trim();
+  if (href) return href;
+  if (!eventDetailsBasePath) return null;
+  if (entry.kind === "event") {
+    if (!hasLocalEventDetailContent(entry)) return null;
+    return toEventDetailsHref(entry, eventDetailsBasePath);
+  }
+  // Local news articles always have a prerendered /news/{id} detail page
+  // (see news-entry-routes.mjs), so unlike events they don't need a content gate.
+  return toDetailsPath(entry.id, eventDetailsBasePath);
+};
+
+export const toAbsoluteShareUrl = (href: string) => {
+  if (/^https?:\/\//i.test(href)) return href;
+  if (href.startsWith("/") && typeof window !== "undefined") {
+    return new URL(href, window.location.origin).toString();
+  }
+  return href;
+};
+
+// Calendar-only dates (all-day events, and any date-only value with no time-of-day) are anchored
+// to UTC midnight by `parseYmdUtc` — they represent a day, not a moment. Formatting must stay
+// pinned to "UTC" here too, unconditionally, regardless of the `timeZone` a caller passes for
+// *timed* labels below: formatting a UTC-midnight Date in any other zone would shift it onto the
+// adjacent calendar day depending on the rendering runtime's offset, which is the same class of
+// bug this file's `monthGroupFormatter` already avoids the same way.
+const utcDateFormatter = new Intl.DateTimeFormat(undefined, {
+  year: "numeric",
+  month: "long",
+  day: "numeric",
+  timeZone: "UTC",
+});
+
+// For real timestamps (`startAtIso`/`endAtIso`, or any other value that parses to an actual
+// moment in time): built fresh per call so an optional `timeZone` (the event's own IANA zone) can
+// be threaded through from `EventsNewsSectionProps`/`EventsNewsDetailProps`. Left unset, these
+// fall back to `Intl.DateTimeFormat`'s own default — the rendering runtime's local zone, which is
+// the legacy behavior and differs between the prerender build server and a visitor's browser.
+const zonedDateFormatter = (timeZone?: string) =>
+  new Intl.DateTimeFormat(undefined, {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+    ...(timeZone ? { timeZone } : {}),
+  });
+
+const zonedDateTimeFormatter = (timeZone?: string) =>
+  new Intl.DateTimeFormat(undefined, {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+    hour: "numeric",
+    minute: "2-digit",
+    ...(timeZone ? { timeZone } : {}),
+  });
+
+const zonedTimeFormatter = (timeZone?: string) =>
+  new Intl.DateTimeFormat(undefined, {
+    hour: "numeric",
+    minute: "2-digit",
+    ...(timeZone ? { timeZone } : {}),
+  });
+
+// Appends the end date/time when the entry has one, so a fallback (no explicit `dateLabel`
+// authored) event never silently drops its end.
+// Same-day end renders as a time-only suffix ("...7:00 PM – 9:00 PM"); a multi-day span
+// renders the end as a full date. Purely additive: an entry with no end behaves exactly as before.
+//
+// `timeZone` (optional, e.g. "America/Los_Angeles") pins every *timed* label to the event's own
+// zone instead of the rendering runtime's. Unset
+// preserves the prior (buggy) runtime-default behavior; all-day/date-only labels are unaffected,
+// since they're always UTC-anchored regardless of this argument.
+export const formatFallbackDateLabel = (entry: EventsNewsRenderableEntry, timeZone?: string) => {
+  if (entry.kind === "event") {
+    if (entry.allDay) {
+      const startYmd = parseYmdUtc(entry.startAt);
+      if (startYmd) {
+        const startLabel = utcDateFormatter.format(startYmd);
+        const endYmd = entry.endAt && entry.endAt !== entry.startAt ? parseYmdUtc(entry.endAt) : null;
+        return endYmd ? `${startLabel} – ${utcDateFormatter.format(endYmd)}` : startLabel;
+      }
+    }
+
+    const timedMs = entry.startAtIso ? Date.parse(entry.startAtIso) : NaN;
+    if (Number.isFinite(timedMs)) {
+      const startDate = new Date(timedMs);
+      const startLabel = zonedDateTimeFormatter(timeZone).format(startDate);
+      const endMs = entry.endAtIso ? Date.parse(entry.endAtIso) : NaN;
+      if (Number.isFinite(endMs) && endMs > timedMs) {
+        const endDate = new Date(endMs);
+        const sameDay = zonedDateFormatter(timeZone).format(startDate) === zonedDateFormatter(timeZone).format(endDate);
+        return sameDay
+          ? `${startLabel} – ${zonedTimeFormatter(timeZone).format(endDate)}`
+          : `${startLabel} – ${zonedDateTimeFormatter(timeZone).format(endDate)}`;
+      }
+      return startLabel;
+    }
+
+    const ymd = parseYmdUtc(entry.startAt);
+    if (ymd) return utcDateFormatter.format(ymd);
+
+    const parsedMs = Date.parse(entry.startAt);
+    if (Number.isFinite(parsedMs)) return zonedDateTimeFormatter(timeZone).format(new Date(parsedMs));
+
+    return entry.startAt;
+  }
+
+  const ymd = parseYmdUtc(entry.publishedAt);
+  if (ymd) return utcDateFormatter.format(ymd);
+
+  const parsedMs = Date.parse(entry.publishedAt);
+  if (Number.isFinite(parsedMs)) return utcDateFormatter.format(new Date(parsedMs));
+
+  return entry.publishedAt;
+};
+
+const getEventStartMs = (entry: EventsNewsRenderableEventEntry) => {
+  const timed = entry.startAtIso ? Date.parse(entry.startAtIso) : NaN;
+  if (Number.isFinite(timed)) return timed;
+  const dateOnly = Date.parse(`${entry.startAt}T12:00:00Z`);
+  return Number.isFinite(dateOnly) ? dateOnly : 0;
+};
+
+const getEventSeriesKey = (entry: EventsNewsRenderableEventEntry) => entry.sourceEventId ?? entry.id;
+
+const isRecurringEventEntry = (entry: EventsNewsRenderableEventEntry) =>
+  Boolean(entry.recurrence || entry.recurrenceInstance || entry.sourceEventId);
+
+export const byNewestFirst = (left: EventsNewsRenderableEntry, right: EventsNewsRenderableEntry) =>
+  getSortMs(right) - getSortMs(left);
+
+export type EventsNewsMonthGroup = {
+  key: string;
+  label: string;
+  entries: EventsNewsRenderableEntry[];
+};
+
+const monthGroupFormatter = new Intl.DateTimeFormat(undefined, {
+  month: "long",
+  year: "numeric",
+  timeZone: "UTC",
+});
+
+// Buckets an already newest-first-sorted entry list into calendar-month groups (also
+// newest-first), preserving each group's relative entry order. Grouping key is UTC-based to
+// match the rest of this module's date handling (see `parseYmdUtc`/`addDaysUtc`).
+export const groupEntriesByMonth = (entries: EventsNewsRenderableEntry[]): EventsNewsMonthGroup[] => {
+  const groups = new Map<string, EventsNewsMonthGroup>();
+
+  for (const entry of entries) {
+    const date = new Date(getSortMs(entry));
+    const key = `${date.getUTCFullYear()}-${String(date.getUTCMonth()).padStart(2, "0")}`;
+    const existing = groups.get(key);
+    if (existing) {
+      existing.entries.push(entry);
+      continue;
+    }
+    groups.set(key, { key, label: monthGroupFormatter.format(date), entries: [entry] });
+  }
+
+  return [...groups.values()].sort((a, b) => (a.key < b.key ? 1 : a.key > b.key ? -1 : 0));
+};
+
+// How many leading (most recent) month groups to render expanded by default, so at least
+// `minVisibleItems` entries are showing on first paint — mirrors `maxLatest`'s old role without
+// splitting a busy month across the fold. Always expands at least one group when any exist.
+export const getDefaultExpandedGroupCount = (groups: EventsNewsMonthGroup[], minVisibleItems: number) => {
+  let visible = 0;
+  for (let index = 0; index < groups.length; index++) {
+    if (visible >= minVisibleItems) return index;
+    visible += groups[index].entries.length;
+  }
+  return groups.length;
+};
+
+export const matchesSearchQuery = (entry: EventsNewsRenderableEntry, lowerCaseQuery: string) => {
+  const haystack = [
+    entry.title,
+    entry.kind === "event" ? entry.calendarTitle : undefined,
+    entry.summary,
+    entry.body,
+    entry.dateLabel,
+    entry.kind === "event" ? entry.locationLabel : undefined,
+  ]
+    .filter((value): value is string => Boolean(value))
+    .join(" ")
+    .toLowerCase();
+  return haystack.includes(lowerCaseQuery);
+};
+
+const bySoonestFirst = (left: EventsNewsRenderableEventEntry, right: EventsNewsRenderableEventEntry) =>
+  getEventStartMs(left) - getEventStartMs(right);
+
+export const toEventDisplayBuckets = (entries: EventsNewsRenderableEntry[], now: number = Date.now()) => {
+  const eventEntries = entries.filter((entry): entry is EventsNewsRenderableEventEntry => entry.kind === "event");
+  const groupedEvents = new Map<string, EventsNewsRenderableEventEntry[]>();
+
+  for (const entry of eventEntries) {
+    const key = getEventSeriesKey(entry);
+    const existing = groupedEvents.get(key);
+    if (existing) {
+      existing.push(entry);
+      continue;
+    }
+    groupedEvents.set(key, [entry]);
+  }
+
+  const activeEvents: EventsNewsRenderableEventEntry[] = [];
+  const archivedEvents: EventsNewsRenderableEventEntry[] = [];
+
+  for (const group of groupedEvents.values()) {
+    const recurringSeries = group.some((entry) => isRecurringEventEntry(entry));
+
+    if (recurringSeries) {
+      const next = group
+        .filter((entry) => getEventStatus(entry, now) !== "past")
+        .sort(bySoonestFirst)[0];
+      if (next) activeEvents.push(next);
+
+      archivedEvents.push(...group.filter((entry) => getEventStatus(entry, now) === "past"));
+      continue;
+    }
+
+    for (const entry of group) {
+      if (getEventStatus(entry, now) === "past") archivedEvents.push(entry);
+      else activeEvents.push(entry);
+    }
+  }
+
+  return {
+    activeEvents: activeEvents.sort(byNewestFirst),
+    archivedEvents: archivedEvents.sort(byNewestFirst),
+  };
+};
+
+/**
+ * Chronological Previous/Next neighbors for a detail page, e.g. `EventsNewsDetail`'s
+ * `previous`/`next` props. Timeline is every entry with a resolvable detail link (active
+ * events, archived/past event occurrences, and news), oldest first — `currentId` matches
+ * either the exact (possibly recurrence-expanded) entry id or its `sourceEventId`.
+ *
+ * A recurring series expands into one timeline entry per occurrence, all sharing the same
+ * `sourceEventId` — matching on `currentId` alone would always land on whichever occurrence
+ * happens to sort first, not the one actually being viewed. Pass `currentOccurrenceStartAt`
+ * (the viewed entry's own, already-resolved `startAt` — see `resolveEventOccurrence()`) to
+ * disambiguate; omit it only for non-recurring entries, where there's exactly one occurrence.
+ *
+ * `timeZone` (optional) is forwarded to `formatFallbackDateLabel()` for each neighbor's computed
+ * `dateLabel` — pass the same value given to `EventsNewsSection`/`EventsNewsDetail` on this page.
+ */
+export const getAdjacentEntries = (
+  entries: EventsNewsEntry[],
+  currentId: string,
+  eventDetailsBasePath?: string,
+  currentOccurrenceStartAt?: string,
+  timeZone?: string,
+): { previous: EventsNewsAdjacentEntry | null; next: EventsNewsAdjacentEntry | null } => {
+  const renderableEntries = getRenderableEntries(entries);
+  const { activeEvents, archivedEvents } = toEventDisplayBuckets(renderableEntries);
+  const sortedNews = renderableEntries.filter(
+    (entry): entry is EventsNewsArticleEntry => entry.kind === "news",
+  );
+
+  const timeline = [...activeEvents, ...archivedEvents, ...sortedNews]
+    .filter((entry) => Boolean(getDetailsHref(entry, eventDetailsBasePath)))
+    .sort((left, right) => getSortMs(left) - getSortMs(right));
+
+  const matchesCurrent = (entry: EventsNewsRenderableEntry) => {
+    const idMatches = entry.id === currentId || (entry.kind === "event" && entry.sourceEventId === currentId);
+    if (!idMatches) return false;
+    if (currentOccurrenceStartAt && entry.kind === "event") return entry.startAt === currentOccurrenceStartAt;
+    return true;
+  };
+
+  const currentIndex = timeline.findIndex(matchesCurrent);
+  if (currentIndex === -1) return { previous: null, next: null };
+
+  const toAdjacent = (entry: EventsNewsRenderableEntry | undefined): EventsNewsAdjacentEntry | null => {
+    if (!entry) return null;
+    const href = getDetailsHref(entry, eventDetailsBasePath);
+    if (!href) return null;
+    return {
+      id: entry.id,
+      title: entry.kind === "event" ? entry.calendarTitle ?? entry.title : entry.title,
+      dateLabel: entry.dateLabel ?? formatFallbackDateLabel(entry, timeZone),
+      href,
+    };
+  };
+
+  return {
+    previous: toAdjacent(timeline[currentIndex - 1]),
+    next: toAdjacent(timeline[currentIndex + 1]),
+  };
+};
+
+/**
+ * The text of an entry's detail-page `<title>` (before the site-name suffix): the same compound
+ * title the calendar invite and banner use (`calendarTitle ?? title`), made unique per page.
+ *
+ * Why: recurring and repeated events share one title ("Foster Pup Social - Grey Iron Brewing Co in
+ * Menifee", "Adoption Event") across many dated pages, and Bing flags identical titles (rule 113);
+ * `check-seo-meta.mjs` (M0-11) fails the build on them. News articles keep their title as is.
+ *
+ * - Dated occurrence: `<title> - <Mon D, YYYY>`.
+ * - Series page (has `recurrence`, and `dateLabel` carries the recurrence summary after " · ",
+ *   as the sites' `withRecurrenceSummaryLabel()` builds it): `<title> - <recurrence summary>`.
+ * - Nothing is appended when the title already contains that text.
+ *
+ * Pass the entry the page renders (the display entry, so `dateLabel` carries the summary) and the
+ * page language. Use it for both `<title>` and the page's SEO title; never add the date elsewhere.
+ *
+ * `siteName` (optional): a trailing " - <siteName>" / " | <siteName>" on the title (a `calendarTitle`
+ * written for a calendar invite often ends with the organization) is dropped, because the page's own
+ * `<title>` suffix adds the organization again ("... - Org | Org"; `check-seo-meta.mjs` flags it).
+ */
+export const getEntryPageTitle = (entry: EventsNewsEntry, locale = "en", siteName?: string): string => {
+  const rawBase = entry.kind === "event" ? entry.calendarTitle ?? entry.title : entry.title;
+  const escapedName = siteName?.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  const base = escapedName ? rawBase.replace(new RegExp(`\\s*[-|\u2013\u2014]\\s*${escapedName}\\s*$`, "i"), "").trim() || rawBase : rawBase;
+  if (entry.kind !== "event" || !entry.startAt) return base;
+
+  const recurrenceSummary = entry.recurrence ? entry.dateLabel?.split(" · ").slice(1).join(" · ").trim() : undefined;
+  const dateText =
+    recurrenceSummary ||
+    new Intl.DateTimeFormat(locale.startsWith("es") ? "es-ES" : "en-US", { dateStyle: "medium", timeZone: "UTC" }).format(
+      new Date(`${entry.startAt.slice(0, 10)}T12:00:00Z`),
+    );
+  return base.includes(dateText) ? base : `${base} - ${dateText}`;
+};
+
+/**
+ * Selects every entry flagged `highlightOnHome`, newest first, and maps each to the generic
+ * shape `HomeHighlightSection` renders. Returns `[]` when nothing is flagged — callers must not
+ * fall back to "most recent entry"; see the "no auto-pin" governance rule. Uncapped: pass the
+ * result straight to `HomeHighlightSection` (it caps at `MAX_HOME_HIGHLIGHT_ITEMS`), or merge
+ * with another source module's `get*HighlightItems()` output (sort by `sortMs` descending, then
+ * slice) before passing in, when combining more than one content type on the homepage.
+ */
+export const getEventsNewsHighlightItems = (
+  entries: EventsNewsEntry[],
+  eventDetailsBasePath?: string,
+  labels?: { eventBadge?: string; newsBadge?: string },
+): EventsNewsHighlightItem[] =>
+  entries
+    .filter((candidate) => candidate.highlightOnHome)
+    .sort(byNewestFirst)
+    .map((entry) => {
+      const thumb = resolveThumbnailImage(entry);
+      return {
+        id: entry.id,
+        title: entry.title,
+        summary: entry.summary,
+        href: getDetailsHref(entry, eventDetailsBasePath) ?? undefined,
+        imageSrc: thumb.imageSrc,
+        imageAlt: thumb.imageAlt,
+        badgeLabel: entry.kind === "news" ? labels?.newsBadge ?? "News" : labels?.eventBadge ?? "Event",
+        badgeIcon:
+          entry.kind === "news" ? <Newspaper className="h-3.5 w-3.5" /> : <CalendarDays className="h-3.5 w-3.5" />,
+        sortMs: getSortMs(entry),
+      };
+    });
+
+const getBannerUpcomingEvents = (entries: EventsNewsRenderableEntry[], now: number = Date.now()) => {
+  const eventEntries = entries
+    .filter((entry): entry is EventsNewsRenderableEventEntry => entry.kind === "event")
+    // Keep an event until it ends, not until it starts, so an in-progress multi-day event stays.
+    .filter((entry) => (getEventEndMs(entry) ?? getEventStartMs(entry)) > now);
+
+  const recurringBySeries = new Map<string, EventsNewsRenderableEventEntry[]>();
+  const singleEvents: EventsNewsRenderableEventEntry[] = [];
+
+  for (const entry of eventEntries) {
+    if (!isRecurringEventEntry(entry)) {
+      singleEvents.push(entry);
+      continue;
+    }
+
+    const key = getEventSeriesKey(entry);
+    const existing = recurringBySeries.get(key);
+    if (existing) {
+      existing.push(entry);
+      continue;
+    }
+    recurringBySeries.set(key, [entry]);
+  }
+
+  const recurringNext = [...recurringBySeries.values()]
+    .map((group) => group.sort(bySoonestFirst)[0])
+    .filter((entry): entry is EventsNewsRenderableEventEntry => Boolean(entry));
+
+  return [...singleEvents, ...recurringNext].sort(bySoonestFirst);
+};
+
+export const toBannerEvents = (
+  entries: EventsNewsRenderableEntry[],
+  defaultCtaHref?: string,
+  eventDetailsBasePath?: string,
+  detailsLabel = "Details",
+  now: number = Date.now(),
+): EventBannerItem[] => {
+  return getBannerUpcomingEvents(entries, now)
+    .map((entry) => {
+      const detailsHref = getDetailsHref(entry, eventDetailsBasePath) ?? defaultCtaHref;
+      return {
+        id: `event-banner-${entry.id}`,
+        title: entry.calendarTitle ?? entry.title,
+        startsAtIso: entry.startAtIso ?? `${entry.startAt}T12:00:00Z`,
+        endsAtIso: entry.endAtIso ?? (entry.endAt ? `${entry.endAt}T23:59:59Z` : undefined),
+        allDay: entry.allDay ?? !entry.startAtIso,
+        locationLabel: entry.locationLabel,
+        ctaHref: detailsHref,
+        ctaLabel: detailsHref ? detailsLabel : undefined,
+      };
+    });
+};
+
+/**
+ * Selects every event entry flagged `homeAnnouncement.enabled` and maps it to the shape
+ * `EventBanner` renders — the curated counterpart to `toBannerEvents`'s automatic "every
+ * upcoming event" selection above (that one powers `showFutureEventsBanner` inside this
+ * component; this one is for a site's own homepage, rendered separately from this section).
+ * Callers pass already-localized entries. `ctaHrefBase` builds `${ctaHrefBase}/${entry.id}`
+ * when the entry itself has no explicit `href`.
+ */
+export const getHomeAnnouncementBannerItems = (
+  entries: EventsNewsEventEntry[],
+  options?: { ctaHrefBase?: string; ctaLabel?: string },
+): EventBannerItem[] =>
+  entries
+    .filter((entry) => entry.homeAnnouncement?.enabled)
+    .map((entry) => ({
+      id: entry.id,
+      title: entry.calendarTitle ?? entry.title,
+      startsAtIso: entry.startAtIso,
+      endsAtIso: entry.endAtIso,
+      allDay: entry.allDay,
+      expiresAtIso: entry.homeAnnouncement?.expiresAtIso,
+      recurrence: entry.recurrence,
+      locationLabel: entry.locationLabel,
+      ctaHref: entry.href ?? (options?.ctaHrefBase ? `${options.ctaHrefBase}/${entry.id}` : undefined),
+      ctaLabel: options?.ctaLabel,
+    }));
+
+export const getMapsUrl = (entry: EventsNewsRenderableEventEntry) => {
+  if (entry.mapsUrl) return entry.mapsUrl;
+  const query = entry.locationAddress ?? entry.locationLabel;
+  if (!query) return null;
+  return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}`;
+};
+
+/**
+ * Optional, purely additive richer-calendar-link behavior — every
+ * field defaults to today's exact output when omitted, so existing call sites are unaffected.
+ * `timeZone` emits a `ctz` param (e.g. "America/Los_Angeles"). `includeHighlights` appends
+ * `entry.highlights` as a bulleted list to the calendar description. `moreInfoUrl` (a site's own
+ * absolute detail-page URL — this component has no siteUrl/config knowledge, so it must be passed
+ * in) appends a "more info" line.
+ */
+export type GoogleCalendarUrlOptions = {
+  timeZone?: string;
+  includeHighlights?: boolean;
+  highlightsLabel?: string;
+  moreInfoUrl?: string;
+  moreInfoLabel?: string;
+};
+
+export const getGoogleCalendarUrl = (
+  entry: EventsNewsRenderableEventEntry,
+  options?: GoogleCalendarUrlOptions,
+) => {
+  // Calendar description renders body only, never summary — summary is a card-view teaser,
+  // frequently a near-duplicate of body's opening line (or, on sites that migrated from a single
+  // undifferentiated content field, byte-identical to it), which read as a doubled paragraph once
+  // both landed in the same calendar invite.
+  const detailsParts = [entry.body].filter((value): value is string => Boolean(value));
+  if (options?.includeHighlights && entry.highlights?.length) {
+    detailsParts.push(
+      [options.highlightsLabel ?? "Highlights", ...entry.highlights.map((item) => `- ${item}`)].join("\n"),
+    );
+  }
+  if (options?.moreInfoUrl) {
+    detailsParts.push(`${options.moreInfoLabel ?? "More info"}:\n${options.moreInfoUrl}`);
+  }
+  const details = detailsParts.join("\n\n");
+
+  let dates: string | null = null;
+  if (entry.allDay) {
+    const start = parseYmdUtc(entry.startAt);
+    const endInclusive = parseYmdUtc(entry.endAt ?? entry.startAt);
+    if (!start || !endInclusive) return null;
+    const endExclusive = addDaysUtc(endInclusive, 1);
+    dates = `${toUtcDateForGoogle(start)}/${toUtcDateForGoogle(endExclusive)}`;
+  } else if (entry.startAtIso) {
+    const startMs = Date.parse(entry.startAtIso);
+    const endMs = Date.parse(entry.endAtIso ?? entry.startAtIso);
+    if (Number.isFinite(startMs) && Number.isFinite(endMs) && endMs >= startMs) {
+      dates = `${toUtcDateTimeForGoogle(new Date(startMs))}/${toUtcDateTimeForGoogle(new Date(endMs))}`;
+    }
+  }
+
+  if (!dates) {
+    const start = parseYmdUtc(entry.startAt);
+    const endInclusive = parseYmdUtc(entry.endAt ?? entry.startAt);
+    if (!start || !endInclusive) return null;
+    const endExclusive = addDaysUtc(endInclusive, 1);
+    dates = `${toUtcDateForGoogle(start)}/${toUtcDateForGoogle(endExclusive)}`;
+  }
+
+  const calLocation = entry.locationAddress ?? entry.locationLabel;
+  const rrule = entry.recurrence ? buildRrule(entry.recurrence) : null;
+
+  const params = new URLSearchParams({
+    action: "TEMPLATE",
+    text: entry.calendarTitle ?? entry.title,
+    dates,
+    ...(details ? { details } : {}),
+    ...(calLocation ? { location: calLocation } : {}),
+    ...(rrule ? { recur: rrule } : {}),
+    ...(options?.timeZone ? { ctz: options.timeZone } : {}),
+    sf: "true",
+    output: "xml",
+  });
+
+  return `https://calendar.google.com/calendar/render?${params.toString()}`;
+};
+
+// Lightweight body grammar: "- " list items and "> " quote lines (grouped across
+// consecutive matching lines), everything else is a plain paragraph — one block per
+// non-blank line, blank lines just separate blocks. Deliberately narrower than
+// BlogPostDetail.tsx's grammar (no headings/codeblocks/emphasis-paragraphs): news/event
+// bodies are short-form, and EventsNewsContentBlock has no renderer for those types.
+type EventsNewsBodyBlock = EventsNewsParagraphBlock | EventsNewsListBlock | EventsNewsQuoteBlock;
+
+const parseNewsBody = (body: string): EventsNewsBodyBlock[] => {
+  const blocks: EventsNewsBodyBlock[] = [];
+  let currentList: string[] = [];
+  let currentQuote: string[] = [];
+
+  const flushList = () => {
+    if (currentList.length > 0) {
+      blocks.push({ type: "list", items: [...currentList] });
+      currentList = [];
+    }
+  };
+  const flushQuote = () => {
+    if (currentQuote.length > 0) {
+      blocks.push({ type: "quote", quote: currentQuote.join(" ") });
+      currentQuote = [];
+    }
+  };
+
+  for (const rawLine of body.split("\n")) {
+    const line = rawLine.trim();
+    if (line.startsWith("- ")) {
+      flushQuote();
+      currentList.push(line.slice(2).trim());
+    } else if (line.startsWith("> ")) {
+      flushList();
+      currentQuote.push(line.slice(2).trim());
+    } else if (line !== "") {
+      flushList();
+      flushQuote();
+      blocks.push({ type: "paragraph", text: line });
+    } else {
+      flushList();
+      flushQuote();
+    }
+  }
+  flushList();
+  flushQuote();
+
+  return blocks;
+};
+
+export const getEntryContentBlocks = (entry: EventsNewsRenderableEntry, highlightsTitle: string): EventsNewsContentBlock[] => {
+  if (entry.contentBlocks?.length) return entry.contentBlocks;
+
+  const bodyBlocks: EventsNewsBodyBlock[] = entry.body ? parseNewsBody(entry.body) : [];
+
+  const highlightBlocks: EventsNewsListBlock[] =
+    entry.highlights?.length
+      ? [{ type: "list", items: entry.highlights, title: highlightsTitle }]
+      : [];
+
+  return [...bodyBlocks, ...highlightBlocks];
+};
+
+export const getFacebookVideoEmbedSrc = (url: string) =>
+  `https://www.facebook.com/plugins/video.php?${new URLSearchParams({ href: url, show_text: "false" }).toString()}`;
+
+export const renderHostedVideo = (
+  src: string,
+  posterSrc: string | undefined,
+  title: string,
+  aspectRatio: "landscape" | "portrait" = "landscape",
+) => {
+  const isPortrait = aspectRatio === "portrait";
+  return (
+    <div
+      className={cn(
+        "mx-auto overflow-hidden rounded-xl border border-border bg-black",
+        isPortrait ? "aspect-9/16 max-w-[360px]" : "aspect-video max-w-full",
+      )}
+    >
+      <video controls playsInline preload="metadata" poster={posterSrc} title={title} className="h-full w-full object-contain">
+        <source src={src} type="video/mp4" />
+      </video>
+    </div>
+  );
+};
+
+export const renderVideoEmbed = (embed: EventsNewsVideoEmbed, fallbackTitle: string) => {
+  const isPortrait = embed.aspectRatio === "portrait" || (!embed.aspectRatio && embed.url.includes("/reel/"));
+  return (
+    <div
+      className={cn(
+        "mx-auto overflow-hidden rounded-xl border border-border bg-black",
+        isPortrait ? "aspect-9/16 max-w-[360px]" : "aspect-video max-w-full",
+      )}
+    >
+      <iframe
+        // safe-url-ok: fixed https://www.facebook.com/plugins/video.php prefix, url is a query param
+        src={getFacebookVideoEmbedSrc(embed.url)}
+        title={embed.title ?? fallbackTitle}
+        className="h-full w-full border-0"
+        loading="lazy"
+        allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
+        allowFullScreen
+      />
+    </div>
+  );
+};
+
+const calloutToneClass: Record<EventsNewsCalloutTone, string> = {
+  info: "border-primary/30 bg-primary/5",
+  success: "border-emerald-500/30 bg-emerald-500/10",
+  warning: "border-amber-500/30 bg-amber-500/10",
+};
+
+const isExternalContentHref = (href: string, external?: boolean) =>
+  typeof external === "boolean" ? external : !href.startsWith("/");
+
+// Inline "`code`", "[text](url)" (internal hrefs render as an in-app <Link>, everything
+// else as an external <a>), and "**bold**" — the same three constructs BlogPostDetail.tsx
+// supports. Exported so EventsNewsDetail's plain `body` rendering shares it (that page used its
+// own https-only link regex, so a relative "[text](/donate)" in a body printed as raw markdown).
+const newsInlineMarkdownRegex = /(`[^`]+`)|(\[([^\]]+)\]\(([^)]+)\))|(\*\*([^*]+)\*\*)/g;
+
+export const renderNewsInlineText = (text: string): Array<string | ReactNode> => {
+  const parts: Array<string | ReactNode> = [];
+  const regex = new RegExp(newsInlineMarkdownRegex.source, "g");
+  let lastIndex = 0;
+  let match: RegExpExecArray | null;
+  let keyIndex = 0;
+
+  while ((match = regex.exec(text)) !== null) {
+    if (match.index > lastIndex) parts.push(text.slice(lastIndex, match.index));
+
+    if (match[1]) {
+      parts.push(
+        <code key={`code-${keyIndex++}`} className="rounded bg-secondary/80 px-1 py-0.5 font-mono text-[0.9em]">
+          {match[1].slice(1, -1)}
+        </code>,
+      );
+    } else if (match[2]) {
+      const href = safeContentUrl(match[4]);
+      parts.push(
+        !href ? (
+          match[3]
+        ) : isExternalContentHref(href) ? (
+          <a
+            key={`link-${keyIndex++}`}
+            href={href}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="font-medium text-primary underline underline-offset-4 hover:text-primary/80"
+          >
+            {match[3]}
+          </a>
+        ) : (
+          <Link
+            key={`link-${keyIndex++}`}
+            to={href}
+            className="font-medium text-primary underline underline-offset-4 hover:text-primary/80"
+          >
+            {match[3]}
+          </Link>
+        ),
+      );
+    } else if (match[5]) {
+      parts.push(
+        <strong key={`bold-${keyIndex++}`} className="font-semibold text-foreground">
+          {match[6]}
+        </strong>,
+      );
+    }
+
+    lastIndex = match.index + match[0].length;
+  }
+
+  if (lastIndex < text.length) parts.push(text.slice(lastIndex));
+  return parts.length > 0 ? parts : [text];
+};
+
+export const renderContentBlock = (entryId: string, block: EventsNewsContentBlock, index: number) => {
+  if (block.type === "paragraph") {
+    return (
+      <p key={`${entryId}-paragraph-${index}`} className="text-sm leading-relaxed text-muted-foreground">
+        {renderNewsInlineText(block.text)}
+      </p>
+    );
+  }
+
+  if (block.type === "list") {
+    const ListTag = block.ordered ? "ol" : "ul";
+    return (
+      <div key={`${entryId}-list-${index}`} className="space-y-2">
+        {block.title ? <p className="text-sm font-medium text-foreground">{block.title}</p> : null}
+        <ListTag className={cn("pl-5 text-sm text-muted-foreground space-y-1", block.ordered ? "list-decimal" : "list-disc")}>
+          {block.items.map((item) => (
+            <li key={`${entryId}-list-${index}-${item}`}>{renderNewsInlineText(item)}</li>
+          ))}
+        </ListTag>
+      </div>
+    );
+  }
+
+  if (block.type === "quote") {
+    return (
+      <blockquote key={`${entryId}-quote-${index}`} className="border-l-2 border-primary/40 pl-4 text-sm italic text-muted-foreground">
+        <p>{renderNewsInlineText(block.quote)}</p>
+        {block.cite ? <cite className="mt-2 block text-xs not-italic text-muted-foreground/90">- {block.cite}</cite> : null}
+      </blockquote>
+    );
+  }
+
+  if (block.type === "callout") {
+    const toneClass = calloutToneClass[block.tone ?? "info"];
+    return (
+      <div key={`${entryId}-callout-${index}`} className={cn("rounded-lg border p-3", toneClass)}>
+        {block.title ? <p className="text-sm font-medium text-foreground">{block.title}</p> : null}
+        <p className="text-sm text-muted-foreground">{block.text}</p>
+      </div>
+    );
+  }
+
+  return (
+    <div key={`${entryId}-ctas-${index}`} className="flex flex-wrap items-center gap-2">
+      {block.actions.map((action) => {
+        const href = safeContentUrl(action.href);
+        if (!href) return null;
+        const external = isExternalContentHref(href, action.external);
+        if (external) {
+          return (
+            <Button key={`${entryId}-${index}-${action.href}`} asChild size="sm" variant="outline">
+              <a href={href} target="_blank" rel="noopener noreferrer">
+                {action.label}
+              </a>
+            </Button>
+          );
+        }
+        return (
+          <Button key={`${entryId}-${index}-${action.href}`} asChild size="sm" variant="outline">
+            <Link to={href}>{action.label}</Link>
+          </Button>
+        );
+      })}
+    </div>
+  );
+};

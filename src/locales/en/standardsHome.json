@@ -1,0 +1,49 @@
+{
+  "hero": {
+    "title": "Template standards",
+    "description": "Operational standards and migration guidance for the template. Each pattern page below includes its own live example."
+  },
+  "status": {
+    "label": "Status:",
+    "text": "Standards are maintained in this hub. Changes should include a standards update and migration notes."
+  },
+  "sections": {
+    "adoptablePets": { "title": "Adoptable Pets Pattern", "description": "Unified adoptable pets shell with provider adapters and fallback behavior." },
+    "dogSpotlight": { "title": "Dog Spotlight Pattern", "description": "Homepage grid highlighting a hand-curated set of dogs, four across on desktop. Staff choose which dogs appear and in what order." },
+    "found": { "title": "Found Pattern", "description": "List-only found-dog notices module with status filtering. Any guidance a rescue offers the public is page-local content." },
+    "missing": { "title": "Missing Pattern", "description": "List-only missing-dog notices module with a flyer, last-seen line, safety line and optional text-a-sighting link. Source notes stay in the data file." },
+    "placement": { "title": "Placement Pattern", "description": "Placement listings with default three-month expiry and optional pet metadata." },
+    "eventsNews": { "title": "Events & News Pattern", "description": "Unified event/news feed with archive behavior, recurrence support, and banner guidance." },
+    "newsHighlight": { "title": "Home Highlight Pattern", "description": "Homepage card that surfaces a single editor-flagged event, news entry, or blog post via the shared HomeHighlightSection component." },
+    "blog": { "title": "Blog Pattern", "description": "Shared post list and post-detail pattern covering both tech guides and rescue-story content with real photos." },
+    "journeyTimeline": { "title": "Journey Timeline Pattern", "description": "Vertical rescue-to-today timeline for an individual dog's detail page, one card per stage." },
+    "memorialSection": { "title": "Memorial Pattern", "description": "\"In Loving Memory\" tribute for animals who couldn't be saved — one card template for group tributes and single-dog reflections alike." },
+    "successStories": { "title": "Success Stories Pattern", "description": "Narrative story-card module for adoption outcomes and happy tails." },
+    "testimonials": { "title": "Testimonials Pattern", "description": "Featured, grid and longform testimonial patterns for reusable social-proof sections, with optional star ratings." },
+    "flyerLibrary": { "title": "Flyer Library Pattern", "description": "Timeless, undated awareness flyer library with category filtering — distinct from dated events/news." },
+    "socialPostEmbed": { "title": "Social Post Embed Pattern", "description": "Shows a public Facebook, Instagram or TikTok post, reel or video as posted, loaded lazily, and reports when the post is deleted, private or cannot be embedded." },
+    "curatedLinks": { "title": "Curated Links Pattern", "description": "A credited section of cards that link straight out to other people's work, with nothing copied onto the site." },
+    "promoModal": { "title": "Promo Modal Pattern", "description": "A dismissible promo popup that opens on the home page for a time-limited offer — never a full events/news system, just one flyer image plus an optional headline, body and CTA." },
+    "mediaCarousel": { "title": "Media Carousel Pattern", "description": "Photo carousel whose per-tile name, description and link are each optional." },
+    "placeholder": { "title": "Placeholder Markers Pattern", "description": "Markers for drafted-but-unconfirmed copy and for sections only the owner can supply — visible in production until confirmed." },
+    "mediaCarouselTile": { "title": "Media Carousel Tile Pattern", "description": "Shared primitive for one-or-more media items in a single tile, with an inline carousel and count badge for several." },
+    "mediaGallery": { "title": "Media Gallery Pattern", "description": "Unified photo/video gallery with optional filtering and no-JS-safe rendering." },
+    "faqAccordion": { "title": "FAQ Accordion Pattern", "description": "Canonical FAQ content schema, i18n data pattern, and derived JSON-LD requirement." },
+    "faq": { "title": "FAQ Pattern", "description": "Native `<details>/<summary>` requirement for public FAQ/disclosure content." },
+    "formEmbedModal": { "title": "FormEmbedModal Standard", "description": "Provider-agnostic form modal pattern with helper and no-JS fallbacks." },
+    "paypalButtons": { "title": "PayPal Buttons Pattern", "description": "Two incompatible PayPal button products (Donate Button vs Hosted Buttons) — pick the mode matching the org's real button." },
+    "givebutter": { "title": "Givebutter Pattern", "description": "Givebutter campaign widget with a no-JS-safe link fallback and optional lazy loading." },
+    "zeffyDonate": { "title": "Zeffy Donate Pattern", "description": "Zeffy donation form embed with a no-JS-safe working fallback as the default state." },
+    "communityPartners": { "title": "Community Partners Pattern", "description": "Thanking rescue collaborators and local business supporters without implying favoritism." },
+    "supporterRecognition": { "title": "Supporter Recognition Pattern", "description": "A flat, unranked thank-you list for individual donors and supporters." },
+    "impactStats": { "title": "Impact Stats Pattern", "description": "Lifetime impact stat tiles plus an optional period-by-period bar chart for rescue-organization impact reporting." },
+    "spendBreakdown": { "title": "Spend Breakdown Pattern", "description": "Rolled-up spend category tiles for accountability reporting, composable with Impact Stats without being merged into it." },
+    "impactAccountability": { "title": "Impact & Accountability", "description": "Worked example composing Impact Stats and Spend Breakdown together on one page, plus links to each pattern on its own." },
+    "detailedImpact": { "title": "Detailed Impact Pattern", "description": "A dated, taggable impact record connecting real-world events to Impact Stats counters and per-category detail pages." },
+    "kennelDisplayTools": { "title": "Kennel & Display Tools Pattern", "description": "Standalone full-viewport print/kiosk tools: adoptable slideshow and 2-up kennel card/binder print sheets." },
+    "documents": { "title": "Documents Pattern", "description": "Print-ready adoption certificate, medical record, and generic document wrapper, plus the /documents index." },
+    "buildValidation": { "title": "Build & Validation", "description": "Build, preview, no-JS preview, and link-check commands." },
+    "ciBuild": { "title": "CI Build Workflow", "description": "Minimal GitHub Actions install/build guard and sync approach." },
+    "noJsFallbacks": { "title": "No-JS Fallbacks", "description": "Review checklist for `js-only`, `<noscript>`, and duplicate fallback cleanup." }
+  }
+}

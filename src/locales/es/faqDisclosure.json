@@ -1,0 +1,80 @@
+{
+  "hero": {
+    "title": "Patrón de preguntas frecuentes",
+    "description": "Use `<details>/<summary>` nativos para preguntas frecuentes y contenido público expandible por defecto."
+  },
+  "breadcrumb": "Patrón de Preguntas Frecuentes",
+  "sections": {
+    "flat": {
+      "title": "Ejemplo — modo plano",
+      "description": "Una sola tarjeta que contiene una lista plana de preguntas.",
+      "cardTitle": "Ejemplo de preguntas frecuentes",
+      "items": [
+        {
+          "question": "¿Por qué usar details/summary nativos?",
+          "answer": "Elimina la dependencia de JS/hidratación para el comportamiento básico de divulgación y mejora la resiliencia sin JS."
+        },
+        {
+          "question": "¿Qué se debe verificar después de la migración?",
+          "answer": "El comportamiento de expandir/contraer en navegadores con JS, la legibilidad sin JS y la consistencia del espaciado visual."
+        },
+        {
+          "question": "¿Cuándo es aceptable un acordeón personalizado?",
+          "answer": "Evítelo para contenido público de preguntas frecuentes/divulgación, salvo que exista una excepción documentada y revisada."
+        }
+      ]
+    },
+    "sectioned": {
+      "title": "Modo por secciones",
+      "description": "Una tarjeta con título por sección, para páginas de preguntas frecuentes más largas agrupadas por tema.",
+      "groups": [
+        {
+          "title": "General",
+          "items": [
+            {
+              "question": "¿Qué es esta organización?",
+              "answer": "Un grupo de rescate comunitario liderado por voluntarios, enfocado en alimentar, rescatar y reubicar animales callejeros."
+            },
+            {
+              "question": "¿Qué área atienden?",
+              "answer": "Atendemos principalmente a la comunidad local y sus alrededores. Contáctenos para recursos fuera del área."
+            }
+          ]
+        },
+        {
+          "title": "Adopción",
+          "items": [
+            {
+              "question": "¿Cómo adopto?",
+              "answer": "Envíe una solicitud en la página de Adopción. Nuestro equipo revisa las solicitudes y da seguimiento a posibles coincidencias."
+            },
+            {
+              "question": "¿Hay una cuota de adopción?",
+              "answer": "Sí. Las cuotas ayudan a cubrir vacunas, cirugía de esterilización y costos de atención médica."
+            }
+          ]
+        },
+        {
+          "title": "Voluntariado",
+          "items": [
+            {
+              "question": "¿Cómo puedo ser voluntario?",
+              "answer": "Visite nuestra página de Voluntariado o contáctenos directamente. No se requiere experiencia previa."
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "standard": {
+    "title": "Estándar",
+    "items": [
+      "Preferido para preguntas frecuentes, divulgaciones informativas y contenido de \"más información\".",
+      "Debe funcionar sin JavaScript ni hidratación — el contenido debe permanecer legible y expandible con JS desactivado.",
+      "Aplique el estilo directamente en el componente de página/patrón; no requiera un envoltorio de acordeón con JS.",
+      "Use un acordeón personalizado solo con una excepción documentada.",
+      "Verifique el soporte de teclado (Enter/Espacio en el resumen) y la visibilidad del foco.",
+      "Componente: `template/src/components/patterns/FaqAccordion.tsx`"
+    ]
+  }
+}

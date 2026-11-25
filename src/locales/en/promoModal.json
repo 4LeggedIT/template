@@ -1,0 +1,29 @@
+{
+  "hero": {
+    "title": "Promo Modal pattern",
+    "description": "A dismissible promo popup that opens on the home page after a short delay, for a time-limited offer or announcement — never a full events/news system, just one flyer image plus an optional headline, body and CTA."
+  },
+  "breadcrumb": "Promo Modal Pattern",
+  "sections": {
+    "example": {
+      "title": "Example",
+      "description": "Click \"Reopen example\" to preview the popup — in a real site it opens on its own shortly after the home page loads, showing the soonest-expiring eligible promo. Dismissing it (the × or clicking outside) remembers the choice in localStorage until the promo's own end date."
+    },
+    "reopen": "Reopen example"
+  },
+  "example": {
+    "imageAlt": "Back to School Special flyer — 20% off all services for new clients in September",
+    "headline": "Back to School Special: 20% off for new clients!",
+    "body": "Book any service during September and save 20% off all services.",
+    "ctaLabel": "Book Now"
+  },
+  "standard": {
+    "title": "Standard",
+    "oneAtATime": "Shows at most one promo at a time — the soonest-expiring eligible entry from the `promos` array, never a stack of popups.",
+    "dateWindow": "`startsAtIso`/`expiresAtIso` gate eligibility: not shown before its start date, never shown again once expired.",
+    "dismiss": "Dismissal persists per promo id in localStorage (`${storageKeyPrefix}_${id}`), the same convention EventBanner uses — keyed to the promo's own `expiresAtIso`, so a dismissed promo only comes back if it's re-dated or replaced.",
+    "homeOnly": "Home page only, by fleet convention — same rule as EventBanner. Never also render it on other pages.",
+    "plainStrings": "Plain-string props only, no i18n inside the component — a bilingual site resolves `LocalizedText` to a plain string per language before building the `promos` array, same as every other shared pattern.",
+    "component": "Component: `template/src/components/patterns/PromoModal.tsx`"
+  }
+}

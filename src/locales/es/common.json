@@ -1,0 +1,39 @@
+{
+  "nav": {
+    "home": "Inicio",
+    "standards": "Estándares",
+    "overview": "Resumen"
+  },
+  "groups": {
+    "petsAdoption": "Mascotas y Adopción",
+    "storiesJourneys": "Historias y Trayectos",
+    "contentEngagement": "Contenido y Participación",
+    "mediaLibraries": "Bibliotecas de Medios",
+    "formsPayments": "Formularios y Pagos",
+    "community": "Comunidad",
+    "tools": "Herramientas",
+    "workflow": "Flujo de Trabajo"
+  },
+  "footer": {
+    "ctaTitle": "¿Tiene curiosidad por saber cómo la tecnología puede ayudar a su rescate?",
+    "ctaDescription": "Este sitio es la referencia viva de la plataforma web compartida de 4leggedIT — soporte tecnológico gratuito para organizaciones de rescate.",
+    "ctaButton": "Visitar 4leggedIT",
+    "builtOn": "Creado sobre la plataforma {{brand}}",
+    "description": "Patrones estandarizados para sitios web de rescate de animales — este sitio es la referencia viva.",
+    "linkWebsite": "4leggedit.com",
+    "linkRepo": "github.com/4LeggedIT/template",
+    "copyright": "© {{year}} 4leggedIT.",
+    "linkTerms": "Términos de Servicio y Política de Privacidad",
+    "linkVdp": "Política de Divulgación de Vulnerabilidades",
+    "linkHallOfFame": "Salón de la Fama de Seguridad"
+  },
+  "language": {
+    "en": "EN",
+    "es": "ES",
+    "toggleLabel": "Idioma"
+  },
+  "snippet": {
+    "title": "Fragmento de código",
+    "description": "La importación, el componente con sus propiedades obligatorias y una entrada de datos de ejemplo. Cópielo y reemplace los valores de ejemplo."
+  }
+}

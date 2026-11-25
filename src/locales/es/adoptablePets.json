@@ -1,0 +1,31 @@
+{
+  "hero": {
+    "title": "Patrón de mascotas adoptables",
+    "description": "Un solo módulo para listados locales y adaptadores de proveedores (petfinder, adoptapet, getbuddy, pawplacer) — elija un modo por sitio, o combínelos con hybrid. Cada modo tiene su propia página dedicada con un ejemplo en vivo."
+  },
+  "breadcrumb": "Patrón de Mascotas Adoptables",
+  "modes": {
+    "local": { "title": "Local", "description": "Mascotas gestionadas directamente en el archivo de datos propio del sitio, sin necesidad de un proveedor externo." },
+    "petfinder": { "title": "Petfinder", "description": "El propio widget en vivo de desplazamiento de mascotas de Petfinder, incrustado mediante el ID de la organización." },
+    "adoptAPet": { "title": "Adopt-a-Pet", "description": "Enlaza a la página del refugio de la organización en Adopt-a-Pet, con tarjetas de vista previa de respaldo." },
+    "getbuddy": { "title": "GetBuddy", "description": "El iframe de listados incrustable de GetBuddy, vinculado a un ID de organización." },
+    "pawPlacer": { "title": "PawPlacer", "description": "El propio script de inserción en vivo de PawPlacer, vinculado a un ID de organización — tiene su propia página de patrón dedicada." },
+    "hybrid": { "title": "Híbrido", "description": "Listados locales mostrados junto con uno o más adaptadores de proveedor a la vez." }
+  },
+  "standard": {
+    "title": "Estándar",
+    "items": [
+      "Use `AdoptablePetsSection` como la única estructura pública de mascotas adoptables.",
+      "Modos admitidos: `local`, `petfinder`, `adoptapet`, `getbuddy`, `pawplacer` y `hybrid` — consulte la página dedicada de arriba para ver el ejemplo y las reglas propias de cada modo.",
+      "Mantenga la configuración del proveedor en las props del adaptador, no en lógica de inserción específica de la página.",
+      "Proporcione siempre alternativas de proveedor (enlaces/tarjetas) para que el contenido sea utilizable sin JS.",
+      "Mantenga el texto de alternativa del proveedor solo en el componente adaptador (sin duplicados a nivel de página).",
+      "La línea auxiliar estándar forma parte de los adaptadores de proveedor (`Or view all pets on ...`) — configure las props hermanas `petfinderUrl`/`adoptAPetUrl`/`getbuddyUrl`/`pawPlacerUrl` en el adaptador activo para que enlace de forma cruzada a cada plataforma en la que la organización realmente esté listada.",
+      "Mantenga las acciones de conversión a nivel de sección (`ctas` + `footerCta`) en lugar de botones de aplicar por tarjeta.",
+      "`headless=true` renderiza solo los listados/tarjetas locales, omitiendo las inserciones de proveedor y el título de la sección, para incrustarlo dentro de un layout personalizado.",
+      "`petVariant=\"placement\"` cambia el estilo/texto de la tarjeta para listados de colocación (en lugar de adopción); el valor predeterminado es `\"adoptable\"`.",
+      "`labels` sobrescribe el texto de la sección (texto de estado vacío, nombres de feed) para personalización de i18n/sitio.",
+      "Componente: `template/src/components/patterns/AdoptablePetsSection.tsx`"
+    ]
+  }
+}

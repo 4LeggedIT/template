@@ -1,0 +1,27 @@
+{
+  "hero": {
+    "title": "Patrón de PawPlacer",
+    "description": "Inserta los listados en vivo de mascotas de PawPlacer de una organización mediante su script de inserción — el equivalente de PawPlacer al scroller de Petfinder."
+  },
+  "breadcrumb": "Patrón de PawPlacer",
+  "example": {
+    "title": "Ejemplo",
+    "paragraphPart1": "es la única prop requerida — el propio script de PawPlacer renderiza los listados reales de esa organización dentro del",
+    "paragraphPart2": " montado. El widget es siempre el propio widget en vivo de PawPlacer, o nada — no existe un modo local de datos de respaldo. Las URLs hermanas ilustrativas a continuación demuestran la línea de enlace cruzado \"Or view all pets on...\" compartida por cada inserción de mascotas adoptables."
+  },
+  "filtered": {
+    "title": "Filtrado a una especie",
+    "paragraph": "Pase <code>species</code> para filtrar la inserción (refleja el propio argumento de opciones <code>{ species: 'dog' }</code> de PawPlacer)."
+  },
+  "standard": {
+    "title": "Estándar",
+    "items": {
+      "inject": "En el cliente, inserta de forma diferida (lazy) el script <code>embed/component</code> de PawPlacer (una vez por página, compartido entre múltiples instancias) y llama a su función global <code>embedPawPlacerComponent('pets', organizationId, targetId, options)</code>. El destino de montaje usa un id de DOM único generado (basado en <code>useId()</code>) para que varias instancias nunca colisionen.",
+      "listingsUrl": "`listingsUrl` toma como valor predeterminado <code>https://www.pawplacer.com/shelters/{organizationId}</code> — el equivalente de PawPlacer a una página de perfil de organización de Petfinder o una página de refugio de Adopt-a-Pet. Anúlelo solo si la página de listados real de la organización difiere de ese patrón.",
+      "crossLinks": "Los enlaces cruzados a <code>petfinderUrl</code> / <code>adoptAPetUrl</code> / <code>getbuddyUrl</code> se renderizan como \"Or view all pets on X, Y, or Z.\" — la misma estructura de oración ya utilizada por <code>PetfinderScrollerEmbed</code>, <code>AdoptAPetEmbed</code> y <code>GetBuddyEmbed</code>, que a su vez aceptan un <code>pawPlacerUrl</code>, de modo que cada inserción de mascotas adoptables puede enlazar de forma cruzada con cualquier otra.",
+      "wired": "Integrado en <code>AdoptablePetsSection</code> como el modo <code>\"pawplacer\"</code> (y como uno de los feeds mostrados en el modo <code>\"hybrid\"</code>), de la misma manera en que está integrado <code>getbuddy</code>.",
+      "component": "Componente: `template/src/components/patterns/PawPlacerEmbed.tsx`",
+      "notWired": "Aún no está integrado en ningún sitio real — se construyó como herramienta para toda la flota antes de contar con una cuenta de organización confirmada. El ID de organización usado arriba es ilustrativo, no una cuenta real."
+    }
+  }
+}

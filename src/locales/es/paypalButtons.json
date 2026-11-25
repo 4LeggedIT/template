@@ -1,0 +1,21 @@
+{
+  "breadcrumb": "Patrón de Botones de PayPal",
+  "hero": {
+    "title": "Patrón de botones de PayPal",
+    "description": "PayPal ofrece dos productos de botón independientes con IDs de botón alojado de forma similar pero SDKs mutuamente incompatibles. Un botón creado bajo un producto no muestra nada — o un error CORS engañoso — bajo el componente del otro. Elija el modo abajo que coincida con lo que el panel de PayPal le dio a la organización."
+  },
+  "modes": {
+    "donateButton": { "title": "Botón de Donación (legado)", "description": "El donate-sdk.js / PayPal.Donation.Button original de PayPal — solo necesita un ID de botón alojado y env, sin client-id." },
+    "hostedButtons": { "title": "Botones Alojados", "description": "El paypal.com/sdk/js?components=hosted-buttons / paypal.HostedButtons más nuevo de PayPal — necesita tanto un client-id como un ID de botón alojado." }
+  },
+  "standard": {
+    "title": "Estándar",
+    "items": [
+      "Nunca asuma a qué producto pertenece el ID de botón de una organización solo por la forma del ID — verifique qué fragmento de inserción le dio realmente el panel de PayPal.",
+      "Fragmento `donate-sdk.js` (el script src termina en `/donate/sdk/donate-sdk.js`) → PayPalDonateButton, vea su página dedicada.",
+      "Fragmento `paypal.com/sdk/js?...components=hosted-buttons` → PayPalHostedButton, vea su página dedicada.",
+      "Un ID de botón alojado incorrecto/inexistente bajo el SDK de Botones Alojados aparece como un error CORS (sin encabezado Access-Control-Allow-Origin en la respuesta del backend de PayPal), no como un error claro de \"ID inválido\" — fácil de confundir con un problema de lista blanca de dominios. Verifique el ID con el fragmento literal exacto que proporciona el panel de PayPal antes de perseguir la configuración de CORS.",
+      "Ambos componentes muestran un mensaje de respaldo no disruptivo (un cuadro claramente etiquetado \"no configurado\") cuando faltan las props requeridas, en lugar de un área en blanco."
+    ]
+  }
+}

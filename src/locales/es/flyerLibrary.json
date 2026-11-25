@@ -1,0 +1,41 @@
+{
+  "hero": {
+    "title": "Patrón de biblioteca de volantes",
+    "description": "Use FlyerLibrarySection para volantes de concientización atemporales que no tienen fecha de evento y no son un artículo de noticias."
+  },
+  "breadcrumb": "Patrón de Biblioteca de Volantes",
+  "flyers": {
+    "adoptionFridays": {
+      "alt": "Volante del Encuentro de Adopción de los Viernes — todos los viernes, 5-7 PM, 123 Main St",
+      "caption": "Gráfico de volante diseñado para un evento recurrente — mismos datos que el \"Encuentro de Adopción de los Viernes\" del ejemplo de Eventos y Noticias."
+    },
+    "basketRaffle": {
+      "alt": "Volante de la Rifa de Canastas Mensual — primer sábado de cada mes, Salón Comunitario",
+      "caption": "Gráfico de volante diseñado para una recaudación de fondos recurrente — mismos datos que la \"Rifa de Canastas Mensual\" del ejemplo de Eventos y Noticias."
+    }
+  },
+  "sections": {
+    "example": {
+      "title": "Ejemplo",
+      "description": "Gráficos de volantes reales, no fotos de stock — un volante debe leerse como un volante real, no como una imagen de relleno.",
+      "libraryTitle": "Biblioteca de volantes",
+      "libraryDescription": "Volantes imprimibles para eventos recurrentes del rescate."
+    }
+  },
+  "standard": {
+    "title": "Estándar",
+    "items": [
+      "Use `FlyerLibrarySection` para volantes de concientización/informativos sin fecha y que no son noticias (reclutamiento de acogida, reclutamiento de voluntarios, concientización sobre esterilización, educación de seguridad, promoción de eventos recurrentes, etc.).",
+      "Nunca combine contenido de volantes con los datos fechados de eventos/noticias de `EventsNewsSection` — un volante pertenece aquí precisamente porque no tiene fecha ni sede. Un volante que anuncia un evento *recurrente* (por ejemplo, \"todos los viernes\" o \"el primer sábado del mes\", como en los dos ejemplos anteriores) sigue calificando como atemporal — nunca se vuelve obsoleto como lo haría un volante de evento fechado y único.",
+      "Use un gráfico de volante diseñado (arte estilo póster) en lugar de una foto genérica/de stock — se lee como un volante real en lugar de una imagen de relleno, como se muestra en los dos ejemplos anteriores.",
+      "`category` es obligatorio en cada `FlyerLibraryItem` para que las píldoras de filtro sigan siendo útiles; un volante sin categoría, de lo contrario, quedaría inaccesible en una vista filtrada. Categorías admitidas: `foster`, `volunteer`, `spay-neuter`, `safety`, `general`.",
+      "Las imágenes principales de los volantes se muestran mediante un enlace + `img`, para que la navegación funcione sin JavaScript.",
+      "Las píldoras de filtro por categoría son opcionales y solo aparecen cuando hay más de una categoría presente en los datos; la caja de luz es una mejora progresiva opcional, no la vía de acceso principal, y admite controles anterior/siguiente además de flechas del teclado/Escape.",
+      "La descarga usa un enlace `<a download>` simple hacia `downloadHref ?? src`, no el diseño de impresión del Módulo de Material Imprimible — los volantes son imágenes prehechas, no documentos generados.",
+      "`categoryFilter` fija la cuadrícula a una sola categoría y oculta las píldoras por completo, incluso con datos de categorías mixtas — úselo para incrustar un adelanto filtrado en otra página (por ejemplo, un volante de acogida en la página de Acogida).",
+      "El texto de estado vacío es visible cuando no se proporcionan volantes.",
+      "Valores predeterminados: `columns=3`, `showFilters=true`, `enableLightbox=true`.",
+      "Componente: `template/src/components/patterns/FlyerLibrarySection.tsx`"
+    ]
+  }
+}

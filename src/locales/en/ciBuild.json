@@ -1,0 +1,34 @@
+{
+  "hero": {
+    "title": "CI build workflow guard",
+    "description": "Each repo should include a minimal GitHub Actions workflow that runs install + build to catch dependency/build drift early."
+  },
+  "breadcrumb": "CI Build Workflow",
+  "sections": {
+    "baseline": {
+      "title": "Baseline workflow",
+      "items": [
+        "`actions/checkout`",
+        "`actions/setup-node` (Node 22 + npm cache)",
+        "`npm clean-install --progress=false`",
+        "`npm run build`"
+      ]
+    },
+    "keepingInSync": {
+      "title": "Keeping repos in sync",
+      "items": [
+        "Source of truth: `template/.github/workflows/build.yml`",
+        "Sync script: `tools/scripts/repo-maintenance/sync-build-workflow.mjs`",
+        "Wrapper: `tools/scripts/repo-maintenance/sync-build-workflow.sh --check`"
+      ]
+    },
+    "securityMaintenance": {
+      "title": "Security maintenance expectation",
+      "items": [
+        "CI build guard catches breakage after lockfile security patches.",
+        "Run periodic dependency audit + patch passes across migrated repos.",
+        "Lockfile updates should be followed by repo-by-repo `npm run build` verification."
+      ]
+    }
+  }
+}

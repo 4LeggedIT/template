@@ -1,0 +1,58 @@
+{
+  "hero": {
+    "title": "Patrón de carrusel de medios",
+    "description": "Un carrusel de fotos en el que el nombre, la descripción y el enlace de cada tarjeta son opcionales."
+  },
+  "breadcrumb": "Patrón de Carrusel de Medios",
+  "items": {
+    "i1": {
+      "alt": "Un perro descansando sobre una manta",
+      "name": "Navy",
+      "description": "Estuvo tres semanas antes de encontrar su hogar."
+    },
+    "i2": {
+      "alt": "Un cachorro mirando a la cámara",
+      "name": "Bear",
+      "description": "Llegó con bajo peso y se fue sano y fuerte."
+    },
+    "i3": {
+      "alt": "Un perro corriendo por el césped",
+      "name": "Miley",
+      "description": "Adoptada junto a su hermano de camada."
+    },
+    "i4": {
+      "alt": "Un perro sentado junto a una voluntaria",
+      "name": "Squirtle",
+      "description": "Estuvo en dos hogares temporales y lo adoptó la segunda familia."
+    }
+  },
+  "sections": {
+    "bare": {
+      "title": "Solo fotos",
+      "description": "Sin nombre, descripción ni enlace. Así se muestra cuando una organización no puede nombrar a los animales de sus propias fotos: inventar un nombre no es una opción."
+    },
+    "linked": {
+      "title": "Con nombre, descripción y enlace",
+      "description": "Todos los campos opcionales definidos. Las dos primeras tarjetas apuntan al mismo ancla a propósito, porque una misma historia suele tener varias fotos."
+    }
+  },
+  "anchors": {
+    "one": "Ancla uno: las dos primeras tarjetas enlazan aquí.",
+    "two": "Ancla dos: las dos últimas tarjetas enlazan aquí."
+  },
+  "standard": {
+    "title": "Estándar",
+    "items": [
+      "Usa `MediaCarouselSection` en lugar de un carrusel de fotos local de la página.",
+      "`name`, `description` y `href` son opcionales e independientes: una tarjeta sin ninguno se muestra como una foto simple.",
+      "Varias tarjetas pueden compartir un mismo `href`; una historia suele tener más de una foto.",
+      "El encabezado pertenece a la página, no al módulo: así los niveles de encabezado se mantienen correctos.",
+      "Las fotos nunca se recortan: las tarjetas usan `aspect-[3/4]` con `object-contain`, de modo que siempre se ve la imagen completa.",
+      "`href` pasa por `safeContentUrl`; un esquema no permitido deja la tarjeta sin enlace en vez de descartarla.",
+      "Los destinos de ancla necesitan un `scroll-mt-*` acorde al encabezado fijo del sitio, o quedarán ocultos debajo.",
+      "Deja `autoPlayDelayMs` sin definir cuando las tarjetas sean enlaces: un carrusel que avanza solo mueve el enlace bajo el puntero.",
+      "Una tarjeta de video enlaza solo desde su pie; envolver `<video controls>` en un enlace navegaría al pulsar reproducir.",
+      "Componente: `template/src/components/patterns/MediaCarouselSection.tsx`"
+    ]
+  }
+}

@@ -1,0 +1,437 @@
+/**
+ * SHARED PATTERN: do not edit in a site repo.
+ * Source: github.com/4LeggedIT/internal-tools
+ *   4leggedit-websites/templates-sources/patterns/TestimonialsSection.tsx
+ * Change it there, then sync it to every site.
+ */
+import { Fragment, useEffect, useMemo, useState } from "react";
+import { ChevronDown, Quote } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { safeContentUrl } from "@/lib/safe-url";
+import type { ContentLocale } from "@/lib/localized-content";
+import { splitQuoteParagraphs } from "./TestimonialsSection.helpers";
+
+export type TestimonialItem = {
+  id: string;
+  quote: string;
+  author?: string;
+  authorMeta?: string;
+  /**
+   * The author's role or title, rendered between `author` and `authorMeta` by all three
+   * layouts — its own line in `longform`, inline in the compact `grid`/`featured` cards
+   * (e.g. "Founder and CEO" between "Jane Smith" and "Example Rescue").
+   *
+   * This is a description we wrote, not identity, so it is translated on bilingual sites —
+   * unlike `author`, which never is. It is also never the linked line: `authorHref` stays
+   * on `authorMeta`, because the link belongs to the organization, not to the job title.
+   *
+   * Optional and additive: omit it and the attribution renders exactly as it did before
+   * this field existed.
+   */
+  authorTitle?: string;
+  emoji?: string;
+  /**
+   * `featured` only: when `true`, this item is never the one the featured layout picks
+   * (neither `randomOnLoad` nor `first`/`featuredIndex`) — e.g. a review from someone with a
+   * connection to the business, kept on the reviews page but off the home page. `grid` and
+   * `longform` ignore it and always show the item. If every item sets it, the layout falls
+   * back to the full list rather than rendering nothing. Optional and additive.
+   */
+  excludeFromFeatured?: boolean;
+  /**
+   * Star rating out of 5, exactly as the reviewer gave it on the source platform.
+   * Optional and additive: omit it and no stars render, which is every testimonial
+   * in the fleet today. Never infer, average, or invent a value — only set this when
+   * the source review actually carried a rating.
+   *
+   * Deliberately NOT emitted as `Review`/`AggregateRating` JSON-LD: search engines
+   * disallow self-serving review markup on your own site, so this is a visual
+   * affordance only.
+   */
+  rating?: 1 | 2 | 3 | 4 | 5;
+  /**
+   * Author-written short stand-in for `quote`, used by the `grid` and `featured`
+   * layouts when the full quote is too long for a card. Falls back to `quote` when
+   * omitted, so adding this field never changes an existing call site's output.
+   * Deliberately NOT used by `longform`, which always renders the whole `quote` —
+   * and deliberately author-written rather than code-truncated, because slicing a
+   * string cuts mid-word, mangles non-English text, and hides content with no
+   * no-JS-safe way to reveal it.
+   */
+  excerpt?: string;
+  /**
+   * `longform` only. Sentences lifted VERBATIM from `quote`, rendered as a
+   * display-size pull quote above the body. Because it repeats body text it is
+   * rendered `aria-hidden` — never put unique information here.
+   */
+  pullQuote?: string;
+  /**
+   * `longform` only. Optional link on the attribution (e.g. the author's
+   * organization). Passed through `safeContentUrl`; a value with a scheme outside
+   * http/https/mailto/tel renders as plain text instead of a link.
+   */
+  authorHref?: string;
+  /**
+   * The language this person actually wrote in. Content metadata, not presentation:
+   * the module never renders it and never infers a default from it. A bilingual call
+   * site compares it against the active UI language to decide whether to pass
+   * `translationNote` — see `isTranslatedFrom` in `@/lib/localized-content`.
+   *
+   * Leave it unset on monolingual sites, where there is nothing to disclose.
+   */
+  sourceLocale?: ContentLocale;
+  /**
+   * Rendered in this testimonial's footer when the quote on screen is our translation
+   * rather than the author's own words. A reader seeing quotation marks attributed by
+   * name to a real person deserves to be told when the words in them are not the ones
+   * that person wrote.
+   *
+   * The call site passes the finished string because it is the only place that knows
+   * both the author's original language and the active UI language. Nothing here
+   * assumes English is the source — a Spanish-authored quote displayed in English is
+   * just as much a translation as the reverse, and supplies its own note. Omit it and
+   * nothing renders, so untranslated items in the same list are unaffected.
+   */
+  translationNote?: string;
+};
+
+export type TestimonialsLayout = "grid" | "featured" | "longform";
+
+type TestimonialsSectionProps = {
+  title?: string;
+  description?: string;
+  testimonials: TestimonialItem[];
+  layout?: TestimonialsLayout;
+  columns?: 1 | 2 | 3;
+  /** `featured` only. Ignored by `grid` and `longform`. */
+  featuredStrategy?: "first" | "randomOnLoad";
+  /** Which single item `featured`/`longform` render. Clamped into range. */
+  featuredIndex?: number;
+  /**
+   * `longform` only. Wraps the quote body in a native `<details>` disclosure,
+   * closed by default, so a reader sees only `pullQuote` until they choose to
+   * expand it. Purely presentational — the full quote still ships in the
+   * server-rendered HTML (crawlable, and works with JS disabled: expand/collapse
+   * is native browser behavior, not application state, so there is no
+   * no-JS-safe-reveal problem the way code-truncating a string would create).
+   *
+   * Has no effect without `pullQuote` — there would be nothing to show while
+   * collapsed, so the item falls back to the existing always-expanded
+   * rendering. Ignored by `grid`/`featured`. Default `false` (existing
+   * always-expanded behavior, unchanged for every current call site).
+   */
+  collapsible?: boolean;
+  className?: string;
+  labels?: {
+    /**
+     * Accessible name for a star rating. `{rating}` is substituted with the numeric
+     * value. The English default is for monolingual sites only — a translated site
+     * must pass this from its own `t()`.
+     */
+    ratingLabel?: string;
+    /**
+     * `longform` + `collapsible` only. Text on the always-visible `<summary>`
+     * toggle. The English default is for monolingual sites only — a translated
+     * site must pass this from its own `t()`.
+     */
+    readMoreLabel?: string;
+  };
+};
+
+const MAX_RATING = 5;
+
+const DEFAULT_RATING_LABEL = "Rated {rating} out of 5 stars";
+const DEFAULT_READ_MORE_LABEL = "Read the full letter";
+
+
+/**
+ * Footer disclosure for a translated quote. Renders nothing when the item carries no
+ * note, which is every untranslated testimonial and every monolingual site.
+ */
+const TranslationNote = ({ note, className }: { note?: string; className?: string }) =>
+  note ? (
+    <p role="note" className={cn("text-xs text-muted-foreground", className)}>
+      {note}
+    </p>
+  ) : null;
+
+/**
+ * Star rating for one testimonial. Renders nothing without a `rating`, which is the
+ * overwhelming majority of testimonials in the fleet.
+ *
+ * The glyphs are `aria-hidden` and the rating is announced once via the visually
+ * hidden label instead — a screen reader reading out five separate star characters
+ * (or, worse, "black star black star black star") is noise, not information.
+ */
+const StarRating = ({
+  rating,
+  label,
+  className,
+}: {
+  rating?: number;
+  label: string;
+  className?: string;
+}) => {
+  if (!rating) return null;
+  const filled = Math.max(1, Math.min(Math.round(rating), MAX_RATING));
+
+  return (
+    <p className={cn("flex items-center", className)}>
+      <span aria-hidden="true" className="text-base leading-none tracking-[0.15em] text-primary">
+        {"\u2605".repeat(filled)}
+        <span className="text-muted-foreground/40">{"\u2606".repeat(MAX_RATING - filled)}</span>
+      </span>
+      <span className="sr-only">{label.replace("{rating}", String(filled))}</span>
+    </p>
+  );
+};
+
+const TestimonialsSection = ({
+  title,
+  description,
+  testimonials,
+  layout = "featured",
+  columns = 1,
+  featuredStrategy = "randomOnLoad",
+  featuredIndex = 0,
+  collapsible = false,
+  className,
+  labels,
+}: TestimonialsSectionProps) => {
+  const ratingLabel = labels?.ratingLabel ?? DEFAULT_RATING_LABEL;
+  const readMoreLabel = labels?.readMoreLabel ?? DEFAULT_READ_MORE_LABEL;
+  const [clientFeaturedIndex, setClientFeaturedIndex] = useState(featuredIndex);
+
+  // `featured` picks from the non-excluded items (a pure function of props, so SSR and the
+  // first client render agree); the other layouts always see the full list.
+  const candidates = useMemo(() => {
+    if (layout !== "featured") return testimonials;
+    const eligible = testimonials.filter((item) => !item.excludeFromFeatured);
+    return eligible.length ? eligible : testimonials;
+  }, [layout, testimonials]);
+
+  useEffect(() => {
+    // Deliberately client-only randomization, post-hydration: picking Math.random()
+    // during render would desync the server-rendered and first client-rendered testimonial.
+    if (layout !== "featured" || featuredStrategy !== "randomOnLoad" || candidates.length <= 1) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setClientFeaturedIndex(featuredIndex);
+      return;
+    }
+
+    const randomIndex = Math.floor(Math.random() * candidates.length);
+    setClientFeaturedIndex(randomIndex);
+  }, [featuredIndex, featuredStrategy, layout, candidates.length]);
+
+  // `longform` and `grid` never read the randomized state at all — their selected
+  // item is a pure function of props, so the prerendered HTML, the first client
+  // render, and the JS-disabled render are provably the same node. `featured` keeps
+  // its existing post-hydration behavior unchanged.
+  const resolvedIndex = layout === "featured" ? clientFeaturedIndex : featuredIndex;
+
+  const featuredItem = useMemo(() => {
+    if (!candidates.length) return null;
+    const normalized = Math.max(0, Math.min(resolvedIndex, candidates.length - 1));
+    return candidates[normalized];
+  }, [resolvedIndex, candidates]);
+
+  const longformParagraphs = useMemo(
+    () => (layout === "longform" && featuredItem ? splitQuoteParagraphs(featuredItem.quote) : []),
+    [featuredItem, layout],
+  );
+
+  const longformAuthorHref = layout === "longform" ? safeContentUrl(featuredItem?.authorHref) : undefined;
+  const longformAuthorIsExternal = Boolean(longformAuthorHref && /^https?:/i.test(longformAuthorHref));
+
+  // Collapsing only makes sense when there's a pull quote to show in its place —
+  // otherwise a reader would land on a card with nothing readable until they
+  // find and click a toggle.
+  const isLongformCollapsible =
+    layout === "longform" && collapsible && Boolean(featuredItem?.pullQuote);
+
+  const gridColumnsClass = columns === 3 ? "md:grid-cols-2 lg:grid-cols-3" : columns === 2 ? "md:grid-cols-2" : "";
+
+  if (!testimonials.length) return null;
+
+  return (
+    <section className={cn("my-8 rounded-2xl border border-border bg-card/40 p-6", className)}>
+      {title || description ? (
+        <div className="mb-6">
+          {title ? <h3 className="text-xl font-semibold tracking-tight">{title}</h3> : null}
+          {description ? <p className="mt-2 text-sm text-muted-foreground">{description}</p> : null}
+        </div>
+      ) : null}
+
+      {layout === "longform" && featuredItem ? (
+        <figure className="mx-auto max-w-3xl">
+          <Card className="relative overflow-hidden border-border/80 shadow-xs">
+            <CardContent className="p-6 md:p-10 lg:p-12">
+              <Quote
+                aria-hidden="true"
+                className="pointer-events-none absolute -right-3 -top-3 h-24 w-24 text-primary/10 md:h-32 md:w-32"
+              />
+
+              {featuredItem.pullQuote ? (
+                // Verbatim repetition of sentences in the body below, so it is
+                // decorative to assistive tech — hiding it prevents hearing the
+                // same words twice.
+                <p
+                  aria-hidden="true"
+                  className="relative z-10 mb-8 max-w-[46ch] border-l-4 border-primary/40 pl-5 text-xl font-semibold leading-snug tracking-tight text-foreground md:text-2xl"
+                >
+                  {featuredItem.pullQuote}
+                </p>
+              ) : null}
+
+              {/* No literal quote characters and no `italic`: at letter length an
+                  italic face is a genuine legibility/dyslexia problem, and the
+                  <figure>/<blockquote> pairing already conveys "this is a quote". */}
+              {isLongformCollapsible ? (
+                <details className="group relative z-10 max-w-[68ch]">
+                  <summary className="mb-5 flex w-fit cursor-pointer list-none items-center gap-1.5 text-sm font-semibold text-primary underline underline-offset-4 hover:text-primary/80 [&::-webkit-details-marker]:hidden">
+                    <ChevronDown
+                      aria-hidden="true"
+                      className="h-4 w-4 shrink-0 transition-transform duration-200 group-open:rotate-180"
+                    />
+                    {readMoreLabel}
+                  </summary>
+                  <blockquote className="space-y-5 text-base leading-7 text-foreground md:text-lg md:leading-8">
+                    {longformParagraphs.map((paragraph, paragraphIndex) => (
+                      <p key={`${featuredItem.id}-p${paragraphIndex}`}>
+                        {paragraph.split("\n").map((line, lineIndex) => (
+                          <Fragment key={`${featuredItem.id}-p${paragraphIndex}-l${lineIndex}`}>
+                            {lineIndex > 0 ? <br /> : null}
+                            {line}
+                          </Fragment>
+                        ))}
+                      </p>
+                    ))}
+                  </blockquote>
+                </details>
+              ) : (
+                <blockquote className="relative z-10 max-w-[68ch] space-y-5 text-base leading-7 text-foreground md:text-lg md:leading-8">
+                  {longformParagraphs.map((paragraph, paragraphIndex) => (
+                    <p key={`${featuredItem.id}-p${paragraphIndex}`}>
+                      {paragraph.split("\n").map((line, lineIndex) => (
+                        <Fragment key={`${featuredItem.id}-p${paragraphIndex}-l${lineIndex}`}>
+                          {lineIndex > 0 ? <br /> : null}
+                          {line}
+                        </Fragment>
+                      ))}
+                    </p>
+                  ))}
+                </blockquote>
+              )}
+
+              {featuredItem.author ||
+              featuredItem.authorTitle ||
+              featuredItem.authorMeta ||
+              featuredItem.emoji ||
+              featuredItem.rating ? (
+                <figcaption className="relative z-10 mt-8 max-w-[68ch] border-t border-border pt-6">
+                  <StarRating rating={featuredItem.rating} label={ratingLabel} className="mb-3" />
+                  {featuredItem.author || featuredItem.emoji ? (
+                    <p className="text-base font-semibold text-foreground">
+                      {featuredItem.author}
+                      {featuredItem.emoji ? (
+                        <span aria-hidden="true" className={featuredItem.author ? "ml-2" : undefined}>
+                          {featuredItem.emoji}
+                        </span>
+                      ) : null}
+                    </p>
+                  ) : null}
+                  {featuredItem.authorTitle ? (
+                    <p className="mt-1 text-sm text-muted-foreground">{featuredItem.authorTitle}</p>
+                  ) : null}
+                  {featuredItem.authorMeta ? (
+                    <p className="mt-1 text-sm text-muted-foreground">
+                      {longformAuthorHref ? (
+                        <a
+                          href={longformAuthorHref}
+                          className="underline underline-offset-4 hover:text-primary"
+                          {...(longformAuthorIsExternal ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+                        >
+                          {featuredItem.authorMeta}
+                        </a>
+                      ) : (
+                        featuredItem.authorMeta
+                      )}
+                    </p>
+                  ) : null}
+                </figcaption>
+              ) : null}
+
+              <TranslationNote
+                note={featuredItem.translationNote}
+                className="relative z-10 mt-6 max-w-[68ch]"
+              />
+            </CardContent>
+          </Card>
+        </figure>
+      ) : layout === "featured" && featuredItem ? (
+        <div className="max-w-3xl">
+          <Card className="relative border-border/80 shadow-xs">
+            <CardContent className="p-8 md:p-10">
+              <Quote className="pointer-events-none absolute left-6 top-6 h-10 w-10 text-primary/20" />
+              <div className="relative z-10 space-y-5">
+                <p className="whitespace-pre-line pl-8 text-base italic leading-7 text-foreground md:text-lg">
+                  "{featuredItem.excerpt ?? featuredItem.quote}"
+                </p>
+                {featuredItem.author ||
+                featuredItem.authorTitle ||
+                featuredItem.authorMeta ||
+                featuredItem.emoji ||
+                featuredItem.rating ? (
+                  <div className="flex flex-wrap items-center gap-2 pl-8 text-sm text-muted-foreground">
+                    <StarRating rating={featuredItem.rating} label={ratingLabel} className="basis-full" />
+                    {featuredItem.author ? (
+                      <span className="font-semibold text-foreground">— {featuredItem.author}</span>
+                    ) : null}
+                    {featuredItem.authorTitle ? <span>{featuredItem.authorTitle}</span> : null}
+                    {featuredItem.authorMeta ? <span>{featuredItem.authorMeta}</span> : null}
+                    {featuredItem.emoji ? <span aria-hidden="true">{featuredItem.emoji}</span> : null}
+                  </div>
+                ) : null}
+                <TranslationNote note={featuredItem.translationNote} className="pl-8" />
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      ) : (
+        <div className={cn("grid gap-4", gridColumnsClass)}>
+          {testimonials.map((testimonial) => (
+            <Card key={testimonial.id} className="h-full border-border/80">
+              <CardHeader className="pb-2">
+                <Quote className="h-5 w-5 text-primary/50" />
+              </CardHeader>
+              <CardContent className="space-y-3">
+                <p className="whitespace-pre-line text-sm leading-6 text-foreground">
+                  "{testimonial.excerpt ?? testimonial.quote}"
+                </p>
+                {testimonial.author ||
+                testimonial.authorTitle ||
+                testimonial.authorMeta ||
+                testimonial.emoji ||
+                testimonial.rating ? (
+                  <div className="flex flex-wrap items-center gap-1 text-xs text-muted-foreground">
+                    <StarRating rating={testimonial.rating} label={ratingLabel} className="basis-full" />
+                    {testimonial.author ? (
+                      <p className="font-medium text-foreground">{testimonial.author}</p>
+                    ) : null}
+                    {testimonial.authorTitle ? <p>{testimonial.authorTitle}</p> : null}
+                    {testimonial.authorMeta ? <p>{testimonial.authorMeta}</p> : null}
+                    {testimonial.emoji ? <span aria-hidden="true">{testimonial.emoji}</span> : null}
+                  </div>
+                ) : null}
+                <TranslationNote note={testimonial.translationNote} />
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      )}
+    </section>
+  );
+};
+
+export default TestimonialsSection;

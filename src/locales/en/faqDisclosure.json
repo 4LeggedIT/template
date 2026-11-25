@@ -1,0 +1,80 @@
+{
+  "hero": {
+    "title": "FAQ pattern",
+    "description": "Use native `<details>/<summary>` for FAQ and expandable public content by default."
+  },
+  "breadcrumb": "FAQ Pattern",
+  "sections": {
+    "flat": {
+      "title": "Example — flat mode",
+      "description": "A single card holding one flat list of questions.",
+      "cardTitle": "FAQ example",
+      "items": [
+        {
+          "question": "Why use native details/summary?",
+          "answer": "It removes JS/hydration dependency for basic disclosure behavior and improves no-JS resilience."
+        },
+        {
+          "question": "What should be checked after migration?",
+          "answer": "Expand/collapse behavior in JS browsers, no-JS readability, and visual spacing consistency."
+        },
+        {
+          "question": "When is a custom accordion acceptable?",
+          "answer": "Avoid it for public FAQ/disclosure content unless there is a documented, reviewed exception."
+        }
+      ]
+    },
+    "sectioned": {
+      "title": "Sectioned mode",
+      "description": "One titled card per section, for longer FAQ pages grouped by topic.",
+      "groups": [
+        {
+          "title": "General",
+          "items": [
+            {
+              "question": "What is this organization?",
+              "answer": "A volunteer-led community rescue group focused on feeding, rescuing, and rehoming stray animals."
+            },
+            {
+              "question": "What area do you serve?",
+              "answer": "We primarily serve the local community and surrounding areas. Contact us for out-of-area resources."
+            }
+          ]
+        },
+        {
+          "title": "Adoption",
+          "items": [
+            {
+              "question": "How do I adopt?",
+              "answer": "Submit an application on the Adoption page. Our team reviews applications and follows up on potential matches."
+            },
+            {
+              "question": "Is there an adoption fee?",
+              "answer": "Yes. Fees help offset vaccinations, spay/neuter surgery, and medical care costs."
+            }
+          ]
+        },
+        {
+          "title": "Volunteering",
+          "items": [
+            {
+              "question": "How can I volunteer?",
+              "answer": "Visit our Volunteer page or contact us directly. No prior experience is required."
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "standard": {
+    "title": "Standard",
+    "items": [
+      "Preferred for FAQ, informational disclosures, and \"learn more\" content.",
+      "Must work without JavaScript or hydration — content stays readable and expandable with JS off.",
+      "Style directly in the page/pattern component; do not require a JS accordion wrapper.",
+      "Use a custom accordion only with a documented exception.",
+      "Verify keyboard support (Enter/Space on summary) and focus visibility.",
+      "Component: `template/src/components/patterns/FaqAccordion.tsx`"
+    ]
+  }
+}

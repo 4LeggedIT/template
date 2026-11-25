@@ -1,0 +1,61 @@
+{
+  "breadcrumb": "Patrón de Animales Encontrados",
+  "hero": {
+    "title": "Patrón de animales encontrados",
+    "description": "Use este módulo para listar perros encontrados: una cuadrícula de avisos con filtro por estado. Solo lista avisos; cualquier orientación que un rescate ofrezca al público es contenido propio de su página."
+  },
+  "example": {
+    "title": "Ejemplo",
+    "descriptionBefore": "Este es todo el módulo: una lista de perros encontrados. La orientación para el público (consejos para mantenerlos a salvo, cómo enviar un aviso, pasos de reunificación, botones de contacto, consejos de captura) no forma parte de él. Un sitio que la ofrece la escribe como contenido propio de su página alrededor de",
+    "descriptionAfter": "y le pasa solo los avisos, las etiquetas y el mensaje de lista vacía."
+  },
+  "listings": {
+    "notice1": {
+      "gender": "Macho",
+      "microchipStatus": "Desconocido",
+      "notes": "Perro amigable de color canela encontrado cerca del estacionamiento de un supermercado, con collar azul y sin placas.",
+      "mediaAlt": "Aviso de ejemplo de perro encontrado 1",
+      "mediaAlt2": "Aviso de ejemplo de perro encontrado 1, vista lateral",
+      "mediaAlt3": "Aviso de ejemplo de perro encontrado 1, collar"
+    },
+    "notice2": {
+      "gender": "Hembra",
+      "microchipStatus": "No detectado",
+      "notes": "Perro pequeño blanco y negro encontrado cerca de un sendero, con arnés rojo y sin dueño cerca.",
+      "mediaAlt": "Aviso de ejemplo de perro encontrado 2"
+    }
+  },
+  "section": {
+    "noticesTitle": "Avisos actuales de perros encontrados",
+    "emptyMessage": "No hay avisos activos de animales encontrados en este momento.",
+    "labels": {
+      "imageFallbackAltPrefix": "Aviso encontrado ",
+      "fieldGender": "Género:",
+      "fieldPosted": "Publicado:",
+      "fieldFoundDate": "Fecha en que se encontró:",
+      "fieldFoundLocation": "Lugar donde se encontró:",
+      "fieldCrossStreets": "Calles cercanas:",
+      "fieldMicrochip": "Microchip:",
+      "viewSourceLabel": "Ver publicación original",
+      "noticeTitle": "Perro Encontrado"
+    }
+  },
+  "standard": {
+    "title": "Estándar",
+    "items": [
+      "Use `FoundListingsSection` en todas las páginas de avisos de animales encontrados; solo lista perros encontrados.",
+      "Mantenga los datos de los avisos normalizados en objetos `FoundListing` (`pet`, `location`, `source`, `status`).",
+      "Use los controles de modo (`local`, `external`, `hybrid`) en lugar de lógica de filtrado local a la página.",
+      "No agregue al módulo contenido de orientación pública (advertencias de resguardo, listas de verificación de avisos, pasos de reunificación, botones para enviar un aviso, consejos de captura). Un sitio que ofrece esos servicios los escribe como contenido propio de su página alrededor de la lista (Rovers Return Dog Rescue es la referencia).",
+      "Los enlaces de fuente/medios deben abrirse en una pestaña nueva con atributos `rel` seguros.",
+      "Use estilos neutros predeterminados (sin marca de color específica del sitio en los estándares compartidos).",
+      "Use `statusFilter` junto con `showReunited`/`showArchived` (ambos predeterminados en `false`) para controlar la visibilidad del ciclo de vida de los avisos: los avisos activos se muestran de forma predeterminada; los reunificados/archivados son opcionales.",
+      "Las tarjetas se renderizan a partir de metadatos normalizados de `FoundListing` con un encabezado genérico (`labels.noticeTitle`, sin número de aviso); los enlaces de imagen y de fuente se abren de forma segura en una pestaña nueva.",
+      "La caducidad es obligatoria: cada aviso lleva un `foundAtISO` (fecha ISO) requerido (la fecha de la publicación de Facebook, que se muestra en la tarjeta como \"Publicado:\" y desde la cual cuenta la caducidad), y un aviso `open`/`hold` deja de mostrarse 30 días después (se oculta, nunca se borra; la entrada permanece en el archivo de datos). Un sitio cambia el plazo de toda su lista con `expireAfterDays` (un número entero positivo; no se puede desactivar), y un aviso individual puede reemplazarlo con `expiresAt` (fecha ISO, se oculta después de ese día). Los avisos `reunited`/`archived` mostrados mediante `showReunited`/`showArchived` no caducan.",
+      "Use `gender` en el perfil de la mascota: coincide con el nombre de campo usado en todos los demás patrones (`AdoptablePetsSection`, herramientas de exhibición de perreras).",
+      "Fuente: defina `source.url` (y `source.name`, por ejemplo \"Facebook\") con la publicación original cuando exista para que la tarjeta enlace a ella en una pestaña nueva; déjelo sin definir para no enlazar a ningún sitio.",
+      "Cada aviso puede llevar cualquier cantidad de imágenes en `media`: una se muestra como imagen simple, y dos o más forman un carrusel con flechas y un contador (`MediaCarouselTile`). Al hacer clic en una imagen se abre a tamaño completo en una pestaña nueva, y las imágenes nunca se recortan.",
+      "Componente: `template/src/components/patterns/FoundListingsSection.tsx`"
+    ]
+  }
+}

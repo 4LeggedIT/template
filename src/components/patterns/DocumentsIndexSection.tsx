@@ -1,0 +1,51 @@
+/**
+ * SHARED PATTERN: do not edit in a site repo.
+ * Source: github.com/4LeggedIT/internal-tools
+ *   4leggedit-websites/templates-sources/patterns/DocumentsIndexSection.tsx
+ * Change it there, then sync it to every site.
+ */
+import "@/styles/documents.css";
+import ContentLink from "./ContentLink";
+
+export type DocumentsIndexGroup = {
+  title: string;
+  items: { label: string; to: string }[];
+};
+
+type DocumentsIndexSectionProps = {
+  orgName: string;
+  logoSrc: string;
+  groups: DocumentsIndexGroup[];
+};
+
+const DocumentsIndexSection = ({ orgName, logoSrc, groups }: DocumentsIndexSectionProps) => (
+  <div className="doc-body">
+    <style>{"@page { size: letter portrait; margin: 0.38in 0.42in; }"}</style>
+    <div className="doc-page">
+      <header className="doc-header">
+        <img src={logoSrc} alt={orgName} className="doc-logo-lg" />
+        <div>
+          <div className="doc-org-name">{orgName}</div>
+        </div>
+        <div className="doc-title-block">
+          <div className="doc-title">Documents</div>
+        </div>
+      </header>
+
+      {groups.map((g) => (
+        <div key={g.title} className="doc-index-group">
+          <div className="doc-index-group-title">{g.title}</div>
+          <ul className="doc-index-list">
+            {g.items.map((item) => (
+              <li key={item.to} className="doc-index-item">
+                <ContentLink href={item.to} external={false} className="doc-index-link">{item.label}</ContentLink>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))}
+    </div>
+  </div>
+);
+
+export default DocumentsIndexSection;

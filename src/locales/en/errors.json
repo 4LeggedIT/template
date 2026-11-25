@@ -1,0 +1,17 @@
+{
+  "eyebrow": "Error Pattern",
+  "title": "Oops, something went wrong",
+  "description": "Use this page as the standardized non-404 error destination for recoverable issues and graceful fallbacks.",
+  "goHome": "Go Home",
+  "openStandards": "Open Standards",
+  "whenToUseTitle": "When to use this page",
+  "whenToUse1": "Temporary integration failures (API unavailable, form embed blocked, etc.)",
+  "whenToUse2": "Feature fallbacks where the page shell still loads correctly",
+  "whenToUse3": "User-safe recovery paths with a clear next action",
+  "notFound": {
+    "eyebrow": "Page not found",
+    "title": "We couldn't find that page",
+    "description": "The link may be outdated, or the page may have moved.",
+    "backHome": "Back home"
+  }
+}
