@@ -542,10 +542,25 @@ const walkFile = (file, content, ctx) => {
 
   const directOccurrences = []; // { file, line, attrName, resolution }
   const callSitePasses = []; // { file, line, component, propName, node, currentComponent }
+  const objectLinkLiterals = []; // "/route" values on link-named object properties
   const detailBases = []; // literal eventDetailsBasePath values (see visit())
   const idOccurrences = []; // literal ids declared via JSX id=, id={literal}, or `id: "..."` object props
 
   const visit = (node) => {
+    // Link-ish data-object properties ({ href: "/about" }, { to: "/x" }, ctaHref, ...)
+    // that a component later maps into <Link>/<a>. Recorded for orphan-route
+    // accounting ONLY (never validated as broken here): a literal "/route"
+    // value on a link-named property means something in src links to it.
+    if (
+      ts.isPropertyAssignment(node) &&
+      (ts.isIdentifier(node.name) || ts.isStringLiteralLike(node.name)) &&
+      /^(href|to|link|url|[a-z]\w*(Href|Link|To|Url))$/.test(node.name.text) &&
+      ts.isStringLiteralLike(node.initializer) &&
+      node.initializer.text.startsWith("/")
+    ) {
+      objectLinkLiterals.push(node.initializer.text);
+    }
+
     if (ts.isPropertyAssignment(node) && ts.isIdentifier(node.name) && node.name.text === "id") {
       if (ts.isStringLiteralLike(node.initializer)) idOccurrences.push(node.initializer.text);
     }
@@ -624,6 +639,7 @@ const walkFile = (file, content, ctx) => {
   ctx.callSitePasses.push(...callSitePasses);
   ctx.idOccurrences.push(...idOccurrences);
   ctx.detailBases.push(...detailBases);
+  ctx.objectLinkLiterals.push(...objectLinkLiterals);
 };
 
 // ---------------------------------------------------------------------------
@@ -915,7 +931,7 @@ const main = async () => {
   const isPlaceholderRoute = (route) => route.split("/").some((seg) => seg.startsWith(":") || seg === "*");
 
   // ---- pass 1: parse every file, collect direct occurrences + call sites ----
-  const ctx = { directOccurrences: [], callSitePasses: [], idOccurrences: [], detailBases: [] };
+  const ctx = { directOccurrences: [], callSitePasses: [], idOccurrences: [], detailBases: [], objectLinkLiterals: [] };
   const fileContents = new Map();
   for (const file of files) {
     const content = fs.readFileSync(file, "utf8");
@@ -1226,6 +1242,11 @@ const main = async () => {
   }
 
   if (!externalOnly) {
+    // `path` is deliberately not a link-named property: route manifests declare it for every route.
+    for (const lit of new Set(ctx.objectLinkLiterals)) {
+      const clean = lit.split(/[?#]/)[0].replace(/\/+$/, "") || "/";
+      if (routes.has(clean)) markRouteReferenced(clean);
+    }
     for (const base of new Set(ctx.detailBases)) {
       if (!base.startsWith("/")) continue;
       const prefix = base.split("/");
