@@ -543,6 +543,8 @@ const walkFile = (file, content, ctx) => {
   const directOccurrences = []; // { file, line, attrName, resolution }
   const callSitePasses = []; // { file, line, component, propName, node, currentComponent }
   const objectLinkLiterals = []; // "/route" values on link-named object properties
+  const localeRows = []; // { key, paths } rows of locale route tables
+  const stringLiterals = []; // every non-property-name string literal (matched against localeRows keys)
   const detailBases = []; // literal eventDetailsBasePath values (see visit())
   const idOccurrences = []; // literal ids declared via JSX id=, id={literal}, or `id: "..."` object props
 
@@ -559,6 +561,29 @@ const walkFile = (file, content, ctx) => {
       node.initializer.text.startsWith("/")
     ) {
       objectLinkLiterals.push(node.initializer.text);
+    }
+
+    // Locale route tables: `rowName: { es: "/x", en: "/en/x" }` rows (a 2+ language-code -> "/path"
+    // map), referenced elsewhere by the row's key as a string (`pathFor("rowName", locale)`,
+    // `{ door: "rowName" }`). Collected here; resolved in the orphan pass.
+    if (
+      ts.isPropertyAssignment(node) &&
+      ts.isIdentifier(node.name) &&
+      ts.isObjectLiteralExpression(node.initializer) &&
+      node.initializer.properties.length >= 2 &&
+      node.initializer.properties.every(
+        (pr) =>
+          ts.isPropertyAssignment(pr) &&
+          ts.isIdentifier(pr.name) &&
+          /^[a-z]{2}$/.test(pr.name.text) &&
+          ts.isStringLiteralLike(pr.initializer) &&
+          pr.initializer.text.startsWith("/"),
+      )
+    ) {
+      localeRows.push({ key: node.name.text, paths: node.initializer.properties.map((pr) => pr.initializer.text) });
+    }
+    if (ts.isStringLiteral(node) && !(ts.isPropertyAssignment(node.parent) && node.parent.name === node)) {
+      stringLiterals.push(node.text);
     }
 
     if (ts.isPropertyAssignment(node) && ts.isIdentifier(node.name) && node.name.text === "id") {
@@ -639,6 +664,8 @@ const walkFile = (file, content, ctx) => {
   ctx.callSitePasses.push(...callSitePasses);
   ctx.idOccurrences.push(...idOccurrences);
   ctx.detailBases.push(...detailBases);
+  ctx.localeRows.push(...localeRows);
+  for (const lit of stringLiterals) ctx.stringLiterals.add(lit);
   ctx.objectLinkLiterals.push(...objectLinkLiterals);
 };
 
@@ -931,7 +958,7 @@ const main = async () => {
   const isPlaceholderRoute = (route) => route.split("/").some((seg) => seg.startsWith(":") || seg === "*");
 
   // ---- pass 1: parse every file, collect direct occurrences + call sites ----
-  const ctx = { directOccurrences: [], callSitePasses: [], idOccurrences: [], detailBases: [], objectLinkLiterals: [] };
+  const ctx = { directOccurrences: [], callSitePasses: [], idOccurrences: [], detailBases: [], objectLinkLiterals: [], localeRows: [], stringLiterals: new Set() };
   const fileContents = new Map();
   for (const file of files) {
     const content = fs.readFileSync(file, "utf8");
@@ -1242,6 +1269,15 @@ const main = async () => {
   }
 
   if (!externalOnly) {
+    // A locale-table row whose key is used as a string somewhere else counts as referenced in
+    // every language (the row declaration itself is a property NAME, not a string literal).
+    for (const row of ctx.localeRows) {
+      if (!ctx.stringLiterals.has(row.key)) continue;
+      for (const pth of row.paths) {
+        const clean = pth.replace(/\/+$/, "") || "/";
+        if (routes.has(clean)) markRouteReferenced(clean);
+      }
+    }
     // `path` is deliberately not a link-named property: route manifests declare it for every route.
     for (const lit of new Set(ctx.objectLinkLiterals)) {
       const clean = lit.split(/[?#]/)[0].replace(/\/+$/, "") || "/";
@@ -1258,14 +1294,14 @@ const main = async () => {
       }
     }
     const orphanRoutes = [...routes]
-      .filter((route) => !orphanRouteExclusions.has(route))
+      .filter((route) => !orphanRouteExclusions.has(route) && !orphanRouteExclusions.has(route.replace(/^\/[a-z]{2}(?=\/)/, "")))
       .filter((route) => !isPlaceholderRoute(route))
       .filter((route) => (inboundRouteRefs.get(route) || 0) === 0)
       .sort((a, b) => a.localeCompare(b));
 
     if (orphanRoutes.length) {
       console.warn(
-        `[links] Warning: ${orphanRoutes.length} route(s) have no inbound links (excluding /oops, /404, and dynamic-route placeholders):`,
+        `[links] Warning: ${orphanRoutes.length} route(s) have no inbound links (excluding /oops, /404 (also under a /xx language prefix), and dynamic-route placeholders):`,
       );
       for (const route of orphanRoutes) {
         console.warn(`- ${route}`);
