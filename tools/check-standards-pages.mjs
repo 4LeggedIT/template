@@ -10,6 +10,12 @@ import { fileURLToPath } from "node:url";
 const projectRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const pagesDir = path.join(projectRoot, "src", "pages", "standards");
 
+// A site scaffolded from the template has no src/pages/standards; nothing to check.
+if (!fs.existsSync(pagesDir)) {
+  console.log("check-standards-pages: no src/pages/standards directory — skipping.");
+  process.exit(0);
+}
+
 const failures = [];
 const pages = fs.readdirSync(pagesDir).filter((name) => /(StandardPage|PatternPage)\.tsx$/.test(name));
 

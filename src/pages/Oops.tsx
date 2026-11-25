@@ -37,9 +37,6 @@ const Oops = () => {
             <Button asChild>
               <Link to="/">{t("goHome")}</Link>
             </Button>
-            <Button variant="outline" asChild>
-              <Link to="/standards">{t("openStandards")}</Link>
-            </Button>
           </>
         }
       />
