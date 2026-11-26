@@ -13,11 +13,11 @@ jobs:
       - name: Checkout (attempt 1)
         id: checkout_primary
         continue-on-error: true
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Checkout (attempt 2 on transient failure)
         if: steps.checkout_primary.outcome == 'failure'
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Verify checkout
         run: git rev-parse --is-inside-work-tree
