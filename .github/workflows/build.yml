@@ -48,6 +48,9 @@ jobs:
       - name: Links Check
         run: npm run links:check --silent
 
+      - name: Security Check (CSP registry, safe URLs, headers)
+        run: npm run security:check --silent
+
       - name: Build
         run: npm run build --silent
 
