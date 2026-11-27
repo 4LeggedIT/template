@@ -9,7 +9,7 @@ const letter: TestimonialItem = {
   pullQuote: "Opening paragraph.",
   author: "Sam",
   authorMeta: "Foster Family",
-  authorHref: "https://example.com",
+  authorHref: "https://example.org",
 };
 
 describe("splitQuoteParagraphs", () => {
@@ -51,7 +51,7 @@ describe("TestimonialsSection longform", () => {
 
   it("links the attribution meta and drops an unsafe scheme", () => {
     const { rerender } = render(<TestimonialsSection testimonials={[letter]} layout="longform" />);
-    expect(screen.getByRole("link", { name: "Foster Family" })).toHaveAttribute("href", "https://example.com");
+    expect(screen.getByRole("link", { name: "Foster Family" })).toHaveAttribute("href", "https://example.org");
 
     rerender(
       <TestimonialsSection

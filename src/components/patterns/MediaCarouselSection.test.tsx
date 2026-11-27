@@ -59,7 +59,7 @@ describe("MediaCarouselSection", () => {
   });
 
   it("opens an external link in a new tab with a safe rel", () => {
-    renderCarousel([photo({ href: "https://example.com/story" })]);
+    renderCarousel([photo({ href: "https://example.org/story" })]);
     const link = screen.getByRole("link");
     expect(link).toHaveAttribute("target", "_blank");
     expect(link).toHaveAttribute("rel", "noopener noreferrer");

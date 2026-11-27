@@ -31,7 +31,7 @@ describe("parseSocialPost", () => {
       "https://www.instagram.com/examplerescue/",
       "https://vm.tiktok.com/ZMabc123/",
       "https://www.tiktok.com/@example.rescue",
-      "https://example.com/p/abc",
+      "https://example.org/p/abc",
       "javascript:alert(1)",
       "not a url",
     ]) expect(parseSocialPost(url), url).toBeNull();

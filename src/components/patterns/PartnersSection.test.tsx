@@ -18,7 +18,7 @@ const partners: Partner[] = [
     name: "Grilled Cheese Co.",
     category: "businessPartners",
     description: "Free sandwiches for new fosters.",
-    url: "https://example.com",
+    url: "https://example.org",
   },
 ];
 
@@ -58,7 +58,7 @@ describe("PartnersSection", () => {
     );
 
     const link = screen.getByRole("link", { name: "See Site" });
-    expect(link).toHaveAttribute("href", "https://example.com");
+    expect(link).toHaveAttribute("href", "https://example.org");
     expect(screen.queryAllByRole("link", { name: "See Site" })).toHaveLength(1);
   });
 
@@ -69,15 +69,15 @@ describe("PartnersSection", () => {
         name: "Logo And Link Co.",
         category: "businessPartners",
         description: "Has both a logo and a url.",
-        logoSrc: "https://example.com/logo.png",
-        url: "https://example.com",
+        logoSrc: "https://example.org/logo.png",
+        url: "https://example.org",
       },
     ];
 
     render(<PartnersSection partners={withLogoAndUrl} sections={sections} />);
 
     const img = screen.getByAltText("Logo And Link Co.");
-    expect(img.closest("a")).toHaveAttribute("href", "https://example.com");
+    expect(img.closest("a")).toHaveAttribute("href", "https://example.org");
     expect(screen.queryByText("Visit Website")).not.toBeInTheDocument();
   });
 
@@ -88,7 +88,7 @@ describe("PartnersSection", () => {
         name: "Dark Logo Co.",
         category: "businessPartners",
         description: "Needs a dark backing for its light-colored mark.",
-        logoSrc: "https://example.com/logo.png",
+        logoSrc: "https://example.org/logo.png",
         logoBackgroundClassName: "bg-slate-900",
       },
     ];

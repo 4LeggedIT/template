@@ -19,7 +19,7 @@ describe("MemorialSection", () => {
         message: ["He was cared for, comforted, and loved."],
         badge: "Our founding rescue",
         closingLine: "Our fight continues.",
-        externalHref: { label: "Read Jane's Reflection", href: "https://example.com/post" },
+        externalHref: { label: "Read Jane's Reflection", href: "https://example.org/post" },
       },
     ];
 
@@ -31,7 +31,7 @@ describe("MemorialSection", () => {
     expect(screen.getByText("He was cared for, comforted, and loved.")).toBeInTheDocument();
     expect(screen.getByText("Our fight continues.")).toBeInTheDocument();
     const link = screen.getByRole("link", { name: "Read Jane's Reflection" });
-    expect(link).toHaveAttribute("href", "https://example.com/post");
+    expect(link).toHaveAttribute("href", "https://example.org/post");
     expect(link).toHaveAttribute("target", "_blank");
   });
 
