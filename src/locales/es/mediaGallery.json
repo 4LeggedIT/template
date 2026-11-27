@@ -1,0 +1,63 @@
+{
+  "hero": {
+    "title": "Patrón de galería de medios",
+    "description": "Use galerías divididas por defecto cuando las fotos y los videos deban aparecer en secciones distintas."
+  },
+  "breadcrumb": "Patrón de Galería de Medios",
+  "items": {
+    "photo1": { "alt": "Perro corriendo en el pasto", "caption": "Momentos destacados del evento de adopción de fin de semana.", "category": "Eventos" },
+    "photo2": { "alt": "Retrato de perro en primer plano", "caption": "Ingreso reciente tras revisión médica.", "category": "Ingreso" },
+    "video1": { "title": "Resumen del Día de Voluntariado", "description": "Breve resumen del más reciente día de voluntariado y enriquecimiento.", "category": "Eventos" },
+    "video2": { "title": "Actualización de Acogida", "description": "Actualización de progreso de una colocación temporal en acogida.", "category": "Acogida" },
+    "groupedPhoto1": { "alt": "Perro descansando en un porche durante una visita al hogar", "category": "Historia" },
+    "groupedPhoto2": { "alt": "Perro recibiendo un chequeo de salud de rutina", "category": "Historia" },
+    "groupedPhoto3": { "alt": "Perro jugando en un patio, mostrado en su propia casilla", "category": "Historia" }
+  },
+  "sections": {
+    "split": {
+      "title": "Fotos y videos por separado",
+      "description": "Las fotos y los videos tienen cada uno su propia sección.",
+      "photosTitle": "Fotos",
+      "infoNoticeTitle": "Nota sobre los medios",
+      "infoNoticeText": "Los medios mostrados aquí son ejemplos y pueden incluir perros no disponibles para adopción. Use este aviso opcional para contexto/descargos de responsabilidad.",
+      "socialCtaTitle": "Síguenos",
+      "socialCtaDescription": "Bloque opcional de llamada a la acción social para páginas de galería.",
+      "videosTitle": "Videos",
+      "videosDescription": "Los videos se muestran en su propia sección de galería."
+    },
+    "unified": {
+      "title": "Fotos y videos juntos",
+      "description": "Las fotos y los videos aparecen juntos en una sola sección.",
+      "sectionTitle": "Galería de medios (variante unificada)"
+    },
+    "contain": {
+      "title": "Fotos completas",
+      "description": "Las fotos nunca se recortan; cada recuadro muestra la imagen completa.",
+      "sectionTitle": "Galería de medios (fit=\"contain\")"
+    },
+    "grouped": {
+      "title": "Fotos agrupadas por historia",
+      "description": "Las fotos de una misma historia pueden compartir un recuadro con flechas y un contador. Una foto sin grupo tiene su propio recuadro.",
+      "sectionTitle": "Galería de medios (casillas agrupadas)"
+    }
+  },
+  "standard": {
+    "title": "Reglas de uso",
+    "items": [
+      "Use `SplitMediaGallerySection` cuando las fotos y los videos deban mostrarse en secciones separadas (recomendación predeterminada).",
+      "Use `MediaGallerySection` para secciones mixtas de fotos y videos cuando se desee una galería unificada.",
+      "Mantenga los elementos multimedia en arreglos normalizados y páselos como props.",
+      "Mantenga `showFilters` opcional y por defecto use grupos de categoría fáciles de entender.",
+      "La visibilidad principal de los medios no debe depender de JavaScript.",
+      "Use la caja de luz de fotos opcional solo como mejora, no como vía de acceso principal; la navegación (controles anterior/siguiente + flechas del teclado) es parte del comportamiento estándar.",
+      "Los comportamientos opcionales de la página (mezclar aleatoriamente, máximo de fotos/videos, aviso informativo, llamada a la acción social, fit) son props del módulo.",
+      "El texto de estado vacío es visible cuando no se proporcionan elementos multimedia (`items={\"{[]}\"}`).",
+      "Valores predeterminados: `columns=3`, `showFilters=true`, `enablePhotoLightbox=true`, `shuffleOnLoad=false`, `fit=\"cover\"`.",
+      "Los datos de la galería viven en `src/data/gallery.ts`; el texto del pie de foto se incorpora al `alt` en todo el sitio (solo alt, sin UI de pie de foto visible), aunque `caption` sigue siendo un campo compatible del tipo; las galerías con más de ~9 fotos deben usar `shuffleOnLoad` + `maxPhotos={9}`.",
+      "El `groupId` opcional en `MediaGalleryItem` agrupa elementos en una sola casilla con un carrusel interno (mediante el primitivo compartido `MediaCarouselTile`) en lugar de una casilla por elemento; asigne la misma `category` a cada elemento de un grupo, ya que el filtrado sigue siendo por elemento. La caja de luz sigue recorriendo todas las fotos del filtro activo, no solo las del grupo.",
+      "Componente: `template/src/components/patterns/MediaGallerySection.tsx`",
+      "Envoltorio: `template/src/components/patterns/SplitMediaGallerySection.tsx`",
+      "Primitivo de casillas agrupadas: `template/src/components/patterns/MediaCarouselTile.tsx`"
+    ]
+  }
+}

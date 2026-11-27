@@ -1,0 +1,335 @@
+#!/usr/bin/env node
+// SHARED PATTERN: do not edit in a site repo.
+// Source: github.com/4LeggedIT/internal-tools
+//   4leggedit-websites/templates-sources/tools/gen-csp-headers.mjs
+// Change it there, then sync it to every site.
+/**
+ * Generates a Content-Security-Policy-Report-Only header line from
+ * csp-registry.mjs and which patterns this specific site actually uses,
+ * then writes it into dist/_headers (Cloudflare Pages header config).
+ *
+ * Usage (called from tools/build.mjs, AFTER prerendering has written every
+ * route's dist/<route>/index.html — this needs the final HTML output to
+ * hash inline JSON-LD scripts, see collectJsonLdHashes below, so it must
+ * run last, not right after the Vite client build):
+ *
+ *   import { writeCspHeaders } from "./gen-csp-headers.mjs";
+ *   await writeCspHeaders(rootDir);
+ *
+ * Report-Only by default; pass { enforce: true } (sites set ENFORCE_CSP in
+ * tools/site-build-config.mjs) to emit the enforcing header instead.
+ * Report-Only, not enforcing: usage detection below is a text-scan
+ * heuristic, not a full module-reachability analysis, so it can
+ * under-report (miss a pattern used only via an unusual import shape).
+ * Report-Only means that's harmless — it only under-logs to the browser
+ * console, nothing ever gets blocked. Switching to enforcing mode is a
+ * deliberate later step, per site, not automatic here.
+ */
+import fs from "node:fs/promises";
+import path from "node:path";
+import crypto from "node:crypto";
+import { cspBaseline, patternCspRequirements } from "./csp-registry.mjs";
+
+// Fixed, non-pattern-driven directives. Every site gets these regardless of
+// which patterns it uses.
+const FIXED_DIRECTIVES = {
+  "default-src": ["'self'"],
+  "base-uri": ["'self'"],
+  "object-src": ["'none'"],
+  "frame-ancestors": ["'self'"],
+  "script-src": ["'self'"],
+  // 'unsafe-inline' covers React inline `style` attributes used throughout
+  // (e.g. dynamically-sized QR images) — tightening this to nonces/hashes
+  // is a separate future project, not part of this pass.
+  "style-src": ["'self'", "'unsafe-inline'"],
+  "font-src": ["'self'"],
+  "img-src": ["'self'", "data:"],
+  // Fleet video host: every site's <video src> points at the one R2
+  // bucket behind media.4leggedit.com, so this is fixed rather than
+  // pattern-driven. Without it media-src falls back to default-src 'self'
+  // and every cross-origin reel is refused.
+  "media-src": ["'self'", "https://media.4leggedit.com"],
+  "connect-src": ["'self'"],
+};
+
+const DIRECTIVE_KEY_MAP = {
+  scriptSrc: "script-src",
+  styleSrc: "style-src",
+  fontSrc: "font-src",
+  imgSrc: "img-src",
+  mediaSrc: "media-src",
+  connectSrc: "connect-src",
+  frameSrc: "frame-src",
+};
+
+const DIRECTIVE_ORDER = [
+  "default-src",
+  "base-uri",
+  "object-src",
+  "frame-ancestors",
+  "script-src",
+  "style-src",
+  "font-src",
+  "img-src",
+  "media-src",
+  "connect-src",
+  "frame-src",
+];
+
+const SCAN_EXCLUDE_DIRS = new Set(["patterns", "ui", "node_modules"]);
+
+async function collectSourceFiles(dir) {
+  let results = [];
+  let entries;
+  try {
+    entries = await fs.readdir(dir, { withFileTypes: true });
+  } catch {
+    return results;
+  }
+  for (const entry of entries) {
+    const full = path.join(dir, entry.name);
+    if (entry.isDirectory()) {
+      if (SCAN_EXCLUDE_DIRS.has(entry.name)) continue;
+      results = results.concat(await collectSourceFiles(full));
+    } else if (/\.(tsx|jsx|ts)$/.test(entry.name)) {
+      results.push(full);
+    }
+  }
+  return results;
+}
+
+// Scans for `<PatternName` JSX usage across a set of files, for a set of
+// candidate pattern names. Shared by both the top-level site scan and the
+// pattern-composition scan below.
+async function findJsxUsage(files, patternNames) {
+  const used = new Set();
+  for (const file of files) {
+    if (used.size === patternNames.length) break;
+    const content = await fs.readFile(file, "utf-8");
+    for (const name of patternNames) {
+      if (used.has(name)) continue;
+      if (content.includes(`<${name}`)) used.add(name);
+    }
+  }
+  return used;
+}
+
+// Some registered patterns compose OTHER registered patterns internally
+// (e.g. AdoptablePetsSection renders PetfinderScrollerEmbed/AdoptAPetEmbed/
+// GetBuddyEmbed/PawPlacerEmbed depending on its `mode` prop). A site's own
+// page code only ever writes <AdoptablePetsSection ...> — it never names
+// the inner embeds directly — so top-level usage-detection alone would
+// silently miss their CSP requirements. Build the composition graph by
+// scanning the patterns' own definitions (not the call site), then expand
+// any directly-used pattern to include everything it composes, transitively.
+async function buildCompositionMap(patternsDir, patternNames) {
+  const map = new Map();
+  for (const name of patternNames) {
+    const filePath = path.join(patternsDir, `${name}.tsx`);
+    let content;
+    try {
+      content = await fs.readFile(filePath, "utf-8");
+    } catch {
+      map.set(name, []);
+      continue;
+    }
+    const composes = patternNames.filter((other) => other !== name && content.includes(`<${other}`));
+    map.set(name, composes);
+  }
+  return map;
+}
+
+function expandTransitively(directlyUsed, compositionMap) {
+  const expanded = new Set(directlyUsed);
+  const queue = [...directlyUsed];
+  while (queue.length) {
+    const current = queue.pop();
+    for (const composed of compositionMap.get(current) ?? []) {
+      if (!expanded.has(composed)) {
+        expanded.add(composed);
+        queue.push(composed);
+      }
+    }
+  }
+  return expanded;
+}
+
+// A pattern is "used" by this site if any non-pattern, non-ui source file
+// renders it as JSX (<PatternName ...), OR if it's composed internally by
+// another pattern that's used. Excludes components/patterns/ and
+// components/ui/ themselves (definitions, not call sites) from the
+// top-level scan.
+async function findUsedPatterns(srcDir, patternNames) {
+  const patternsDir = path.join(srcDir, "components", "patterns");
+  // Walk EVERY pattern file, not just the registered ones: a pattern with no
+  // third-party origins of its own (e.g. JourneyTimeline) can still compose a
+  // registered one (SocialPostEmbed). Requirements belong to the pattern that
+  // loads the origin; composers never need their own registry entry.
+  let allNames = patternNames;
+  try {
+    const files = await fs.readdir(patternsDir);
+    allNames = [...new Set([...patternNames, ...files.filter((f) => f.endsWith(".tsx") && !/\.test\./.test(f)).map((f) => f.replace(/\.tsx$/, ""))])];
+  } catch {
+    /* no patterns dir: registered names only */
+  }
+  const siteFiles = await collectSourceFiles(srcDir);
+  const directlyUsed = await findJsxUsage(siteFiles, allNames);
+  const compositionMap = await buildCompositionMap(patternsDir, allNames);
+  const expanded = expandTransitively(directlyUsed, compositionMap);
+  return new Set([...expanded].filter((name) => patternNames.includes(name)));
+}
+
+// Chrome enforces script-src against <script type="application/ld+json">
+// even though it's not executable code (confirmed live). The content is static per prerendered page
+// (title/description vary per route), so 'unsafe-inline' or a single fixed
+// hash can't cover it — but since every route's exact output already exists
+// on disk after prerendering, we can hash each one for real instead of
+// guessing. Matches this fleet's "generate, don't hand-maintain" convention.
+const JSON_LD_SCRIPT_RE = /<script\b[^>]*\btype=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi;
+
+async function collectHtmlFiles(dir) {
+  let results = [];
+  let entries;
+  try {
+    entries = await fs.readdir(dir, { withFileTypes: true });
+  } catch {
+    return results;
+  }
+  for (const entry of entries) {
+    const full = path.join(dir, entry.name);
+    if (entry.isDirectory()) {
+      results = results.concat(await collectHtmlFiles(full));
+    } else if (entry.name.endsWith(".html")) {
+      results.push(full);
+    }
+  }
+  return results;
+}
+
+// CSP hash-source is computed over the exact bytes between the script tags,
+// no trimming — must match byte-for-byte what the browser hashes.
+async function collectJsonLdHashes(distDir) {
+  const hashes = new Set();
+  const htmlFiles = await collectHtmlFiles(distDir);
+  for (const file of htmlFiles) {
+    const content = await fs.readFile(file, "utf-8");
+    for (const match of content.matchAll(JSON_LD_SCRIPT_RE)) {
+      const digest = crypto.createHash("sha256").update(match[1], "utf8").digest("base64");
+      hashes.add(`'sha256-${digest}'`);
+    }
+  }
+  return hashes;
+}
+
+function mergeRequirement(target, requirement) {
+  for (const [key, values] of Object.entries(requirement)) {
+    const directive = DIRECTIVE_KEY_MAP[key];
+    if (!directive || !values?.length) continue;
+    if (!target[directive]) target[directive] = new Set();
+    for (const value of values) target[directive].add(value);
+  }
+}
+
+/**
+ * @param {string} rootDir - repo root (contains src/, dist/)
+ * @param {object} [options]
+ * @param {object} [options.extraRequirements] - site-specific, non-pattern
+ *   requirement (e.g. a site's own API host in connect-src), same shape as a
+ *   patternCspRequirements entry. Comes from tools/site-build-config.mjs's
+ *   optional EXTRA_CSP_REQUIREMENTS export.
+ * @param {boolean} [options.enforce] - emit Content-Security-Policy instead
+ *   of Content-Security-Policy-Report-Only. Comes from the optional
+ *   ENFORCE_CSP export of tools/site-build-config.mjs. Default false.
+ */
+export async function generateCspHeaderLine(rootDir, options = {}) {
+  const srcDir = path.join(rootDir, "src");
+  const patternNames = Object.keys(patternCspRequirements);
+  const used = await findUsedPatterns(srcDir, patternNames);
+
+  const merged = {};
+  for (const [directive, values] of Object.entries(FIXED_DIRECTIVES)) {
+    merged[directive] = new Set(values);
+  }
+  mergeRequirement(merged, cspBaseline);
+  for (const name of used) {
+    mergeRequirement(merged, patternCspRequirements[name]);
+  }
+  if (options.extraRequirements) {
+    mergeRequirement(merged, options.extraRequirements);
+  }
+
+  const buildHeaderLine = () => {
+    const parts = DIRECTIVE_ORDER
+      .filter((directive) => merged[directive]?.size)
+      .map((directive) => `${directive} ${[...merged[directive]].join(" ")}`);
+    const headerName = options.enforce
+      ? "Content-Security-Policy"
+      : "Content-Security-Policy-Report-Only";
+    return `${headerName}: ${parts.join("; ")};`;
+  };
+
+  // Cloudflare Pages hard-caps an individual _headers rule at 2,000
+  // characters — exceeding it doesn't truncate the header, it silently
+  // drops the ENTIRE rule (confirmed live: a
+  // site with 112 distinct prerendered pages produced a 6,638-character
+  // line and the whole CSP header vanished from production, worse than
+  // having no JSON-LD fix at all). Stay well under that with a fixed
+  // budget so this can never recur silently, on this site or a future one.
+  const HEADER_CHAR_BUDGET = 1900;
+  let danglingHashCount = 0;
+  const distDir = path.join(rootDir, "dist");
+  const jsonLdHashes = [...(await collectJsonLdHashes(distDir))].sort();
+  if (jsonLdHashes.length) {
+    merged["script-src"] = merged["script-src"] ?? new Set();
+    for (const hash of jsonLdHashes) {
+      merged["script-src"].add(hash);
+      if (buildHeaderLine().length > HEADER_CHAR_BUDGET) {
+        merged["script-src"].delete(hash);
+        danglingHashCount++;
+      }
+    }
+  }
+  if (danglingHashCount > 0) {
+    console.warn(
+      `[gen-csp-headers] WARNING: ${danglingHashCount} JSON-LD hash(es) dropped to stay under Cloudflare's 2,000-char _headers rule limit (budget: ${HEADER_CHAR_BUDGET}). The routes those hashes belonged to will still show a Report-Only JSON-LD script-src violation in the browser console — harmless under Report-Only, but means JSON-LD hash coverage on this site is incomplete. Consider it before switching this site to enforcing CSP.`
+    );
+  }
+
+  return {
+    headerLine: buildHeaderLine(),
+    danglingHashCount,
+    usedPatterns: [...used],
+  };
+}
+
+export async function writeCspHeaders(rootDir, options = {}) {
+  const { headerLine, usedPatterns } = await generateCspHeaderLine(rootDir, options);
+  const headersPath = path.join(rootDir, "dist/_headers");
+
+  let existing = "";
+  try {
+    existing = await fs.readFile(headersPath, "utf-8");
+  } catch {
+    existing = "";
+  }
+
+  const lines = existing.length ? existing.split("\n") : [];
+  const blockIndex = lines.findIndex((line) => line.trim() === "/*");
+
+  let updated;
+  if (blockIndex === -1) {
+    // No existing "/*" block (e.g. a repo whose _headers only has narrower
+    // path rules) — add one at the top, keep everything else untouched.
+    updated = [`/*`, `  ${headerLine}`, "", ...lines].join("\n");
+  } else {
+    lines.splice(blockIndex + 1, 0, `  ${headerLine}`);
+    updated = lines.join("\n");
+  }
+
+  await fs.mkdir(path.dirname(headersPath), { recursive: true });
+  await fs.writeFile(headersPath, updated, "utf-8");
+  console.log(
+    `[gen-csp-headers] wrote CSP (${options.enforce ? "ENFORCING" : "Report-Only"}) to dist/_headers — patterns matched: ${usedPatterns.join(", ") || "(none)"}`
+  );
+  return headerLine;
+}

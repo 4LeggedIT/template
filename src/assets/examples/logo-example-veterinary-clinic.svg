@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" role="img" aria-label="Example Veterinary Clinic logo">
+  <circle cx="100" cy="100" r="92" fill="#ffffff" stroke="#15803d" stroke-width="12"/>
+  <rect x="84" y="46" width="32" height="108" rx="8" fill="#15803d"/>
+  <rect x="46" y="84" width="108" height="32" rx="8" fill="#15803d"/>
+</svg>

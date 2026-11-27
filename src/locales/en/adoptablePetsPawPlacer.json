@@ -1,0 +1,28 @@
+{
+  "hero": {
+    "title": "Adoptable Pets — PawPlacer",
+    "description": "An organization's live PawPlacer pet listings, embedded via their script and an organization ID."
+  },
+  "breadcrumb": {
+    "parent": "Adoptable Pets",
+    "current": "PawPlacer"
+  },
+  "example": {
+    "title": "Example",
+    "description": "Pets shown from the rescue's PawPlacer page. If it can't load, a plain link to the full list stays on the page."
+  },
+  "disclosure": "This example uses a placeholder PawPlacer organization ID, so the widget below shows PawPlacer's \"not found\" message; replace it with your own organization's ID to see your animals. This template and 4leggedIT are not affiliated with PawPlacer.",
+  "footerCta": {
+    "label": "Apply to Adopt"
+  },
+  "standard": {
+    "title": "Usage rules",
+    "items": [
+      "On the client, lazily injects PawPlacer's `embed/component` script (once per page, shared across multiple instances) and calls their global `embedPawPlacerComponent('pets', organizationId, targetId, options)`. The mount target uses a generated unique DOM id (`useId()`-based) so multiple instances never collide.",
+      "`listingsUrl` defaults to `https://www.pawplacer.com/shelters/{organizationId}` — PawPlacer's equivalent of a Petfinder org profile page or an Adopt-a-Pet shelter page. Override only if the org's real listings page differs from that pattern.",
+      "Cross-links to `petfinderUrl` / `adoptAPetUrl` / `getbuddyUrl` render as \"Or view all pets on X, Y, or Z.\" — the same sentence structure already used by `PetfinderScrollerEmbed`, `AdoptAPetEmbed`, and `GetBuddyEmbed`, which all accept a `pawPlacerUrl` in return, so every adoptable-pets embed can cross-link to every other one.",
+      "Wired into `AdoptablePetsSection` as mode `\"pawplacer\"` (and as one of the feeds shown in `\"hybrid\"` mode), matching how `getbuddy` is wired.",
+      "Component: `template/src/components/patterns/PawPlacerEmbed.tsx`"
+    ]
+  }
+}

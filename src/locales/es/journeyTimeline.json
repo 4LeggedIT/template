@@ -1,0 +1,76 @@
+{
+  "hero": {
+    "title": "Patrón de Línea de Tiempo del Trayecto",
+    "description": "Una línea de tiempo vertical de etapas reales y fechadas (rescate, acogida, hoy) para la página de detalle propia de un perro — la página a la que enlaza el storyHref de una tarjeta de historia de éxito."
+  },
+  "breadcrumb": "Patrón de Línea de Tiempo del Trayecto",
+  "stages": {
+    "rescued": {
+      "label": "Rescatado",
+      "date": "17 de julio de 2026",
+      "description": "Encontrado en un refugio superpoblado como el residente que llevaba más tiempo esperando, sin solicitudes de adopción. La llamamos Juniper, porque todo gran viaje comienza con una oportunidad.",
+      "imageAlt": "Un voluntario saludando al perro el día del rescate"
+    },
+    "cleanBillOfHealth": {
+      "label": "Certificado de Buena Salud",
+      "date": "22 de julio de 2026",
+      "description": "Un examen de bienestar confirmó que está sana y lista para el siguiente paso — encontrar a su familia.",
+      "relatedLabel": "Lee el anuncio"
+    },
+    "today": {
+      "label": "Hoy",
+      "description": "Adaptándose a la vida en acogida y buscando el hogar definitivo adecuado.",
+      "imageAlt": "El perro descansando en casa hoy"
+    }
+  },
+  "sections": {
+    "example": {
+      "title": "La página propia de un perro",
+      "description": "Una introducción breve con nombre, estado y resumen, luego la historia hasta ahora como línea de tiempo y después un llamado a ayudar. La tarjeta del perro en la lista de historias de éxito enlaza aquí."
+    }
+  },
+  "example": {
+    "badge": "Buscando un Hogar Definitivo",
+    "name": "Juniper",
+    "summary": "Juniper era la residente del refugio que llevaba más tiempo esperando, sin solicitudes de adopción — ahora está sana, a salvo y buscando a su familia.",
+    "journeySoFar": "Su trayecto hasta ahora",
+    "ctaTitle": "¿Quieres ayudar a escribir el próximo capítulo?",
+    "applyFoster": "Solicitar Acogida",
+    "applyAdopt": "Solicitar Adopción"
+  },
+  "standard": {
+    "title": "Reglas de uso",
+    "stagesType": {
+      "after": "— un arreglo simple, propio del sitio. No hay ordenamiento ni filtrado incorporado ni un vocabulario fijo de etapas; las etiquetas son texto libre (por ejemplo, \"Rescatado\", \"En Acogida\", \"Hoy\")."
+    },
+    "optionalFields": {
+      "before": "Todos los campos excepto",
+      "mid1": "son opcionales — una etapa sin",
+      "mid2": "simplemente omite la línea de fecha, y una etapa sin",
+      "mid3": "se muestra solo con texto. Las primeras etapas de una historia real a menudo aún no tienen contenido multimedia."
+    },
+    "videoSrc": {
+      "before": "muestra un",
+      "after": "nativo en lugar de una imagen — para un video real del día del rescate, servido desde el host de medios del sitio (`mediaUrl()`). Prefiera esto sobre una incrustación de terceros, que puede bloquearse en publicaciones con audio con licencia (no original)."
+    },
+    "partnerLinks": {
+      "after": "acredita a organizaciones externas mencionadas en el texto de la etapa (la descripción es texto plano, así que no puede llevar enlaces incrustados). Siempre abre en una pestaña nueva."
+    },
+    "relatedLinks": {
+      "before": "enlaza a la historia detrás de la etapa — la noticia o entrada de blog que la anunció. Un href que empieza con",
+      "mid": "se renderiza como enlace del lado del cliente; cualquier otro abre en una pestaña nueva. Nunca uses",
+      "after": "para una ruta interna — siempre abre una pestaña nueva, así que el sitio se abriría a sí mismo en una segunda."
+    },
+    "emptyState": {
+      "before": "No muestra nada si",
+      "after": "está vacío — no hay estado vacío de reemplazo."
+    },
+    "pairsWith": {
+      "before": "Se combina con",
+      "mid": "la cuadrícula curada de ese componente es el \"muro\"; esta es la página de detalle a la que apunta el",
+      "after": "de cada tarjeta — vea el ejemplo compuesto arriba."
+    },
+    "rescueJourneys": "Cómo componer una página completa de historias de rescate (vista previa → lista → detalle): las páginas de lista/vista previa se construyen con `SuccessStoriesSection` (vea los ejemplos en vivo de separación por estado y vista previa con rotación automática en la página de ese patrón); la página de detalle propia de cada perro muestra este componente.",
+    "component": "Componente: `template/src/components/patterns/JourneyTimeline.tsx`"
+  }
+}

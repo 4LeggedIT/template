@@ -1,0 +1,72 @@
+import { useTranslation } from "react-i18next";
+import { Link } from "react-router-dom";
+import StandardSnippet from "@/components/StandardSnippet";
+import PageHero from "@/components/patterns/PageHero";
+import SEOHead from "@/components/patterns/SEOHead";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import CollapsibleSection from "@/components/standards/CollapsibleSection";
+
+const modePages = [
+  { key: "donateButton", href: "/standards/paypal-buttons/donate-button" },
+  { key: "hostedButtons", href: "/standards/paypal-buttons/hosted-buttons" },
+];
+
+const snippetExample = `import PayPalDonateButton from "@/components/patterns/PayPalDonateButton";
+import PayPalHostedButton from "@/components/patterns/PayPalHostedButton";
+
+// Pick the one that matches the button PayPal gave you:
+<PayPalDonateButton hostedButtonId="YOUR_HOSTED_BUTTON_ID" /> // classic donate button
+<PayPalHostedButton clientId="YOUR_PAYPAL_CLIENT_ID" hostedButtonId="YOUR_HOSTED_BUTTON_ID" /> // hosted button`;
+
+const PayPalButtonsStandardPage = () => {
+  const { t } = useTranslation(["paypalButtons", "common"]);
+
+  return (
+    <>
+      <SEOHead
+        title="PayPal Buttons Pattern"
+        canonicalPath="/standards/paypal-buttons"
+        description="PayPal has two incompatible button products/SDKs — pick the mode matching the org's real button, or the donate button will not work."
+      />
+      <PageHero
+        eyebrow={t("common:nav.standards")}
+        title={t("paypalButtons:hero.title")}
+        description={t("paypalButtons:hero.description")}
+        breadcrumbs={[
+          { label: t("common:nav.home"), href: "/" },
+          { label: t("common:nav.standards") },
+          { label: t("paypalButtons:breadcrumb") },
+        ]}
+      />
+
+      <section className="container space-y-10 px-4 py-10">
+        <div className="grid gap-4 md:grid-cols-2">
+          {modePages.map((page) => (
+            <Link key={page.href} to={page.href} className="group">
+              <Card className="h-full transition-colors group-hover:border-primary/50">
+                <CardHeader>
+                  <CardTitle className="text-lg">{t(`paypalButtons:modes.${page.key}.title`)}</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-sm text-muted-foreground">{t(`paypalButtons:modes.${page.key}.description`)}</p>
+                </CardContent>
+              </Card>
+            </Link>
+          ))}
+        </div>
+
+        <StandardSnippet code={snippetExample} />
+
+        <CollapsibleSection card title={t("paypalButtons:standard.title")}>
+          <div className="space-y-2 break-words text-sm text-muted-foreground">
+            {(t("paypalButtons:standard.items", { returnObjects: true }) as string[]).map((item) => (
+              <p key={item}>- {item}</p>
+            ))}
+          </div>
+        </CollapsibleSection>
+      </section>
+    </>
+  );
+};
+
+export default PayPalButtonsStandardPage;

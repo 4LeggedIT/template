@@ -1,0 +1,36 @@
+{
+  "hero": {
+    "title": "Mascotas Adoptables — listados locales",
+    "description": "El modo más simple: mascotas gestionadas directamente en el archivo de datos propio del sitio, sin necesidad de un proveedor externo."
+  },
+  "breadcrumb": {
+    "parent": "Mascotas Adoptables",
+    "current": "Local"
+  },
+  "example": {
+    "title": "Ejemplo",
+    "description": "Mascotas que se muestran directamente a partir de la información propia del sitio, sin un servicio de listados externo."
+  },
+  "localPets": {
+    "title": "Mascotas Adoptables"
+  },
+  "footerCta": {
+    "label": "Solicitar Adopción"
+  },
+  "standard": {
+    "title": "Reglas de uso",
+    "items": [
+      "Use `mode=\"local\"` cuando las mascotas se gestionan directamente en los datos propios del sitio (sin proveedor de listados externo).",
+      "Para listados locales, prefiera `birthDate` en lugar de texto de edad estático para que la edad se actualice automáticamente — la edad dinámica admite etiquetas de cachorro/perro joven en semanas, y luego pasa a meses/años. Use `ageLabel` solo cuando no se disponga de un `birthDate` preciso.",
+      "Los listados locales se ordenan alfabéticamente de forma predeterminada (`localSort=\"none\"` para conservar el orden de entrada).",
+      "Las imágenes de las tarjetas locales se muestran en foto completa de forma predeterminada (`object-contain`); use `localImageFit`/`imageFit` para anularlo.",
+      "Las tarjetas locales admiten alias opcionales (`nombre (aka alias)`) y galerías multi-foto (arreglo `images`).",
+      "Use `loadLocalAdoptablePets` + `mapLocalAdoptableManifest` para manifiestos JSON locales con la forma del scrape de Petfinder.",
+      "Use `gender` en los metadatos de mascotas locales.",
+      "`showExpiredListings`/`defaultExpiryMonths` reflejan el patrón de colocación: los listados locales vencidos se ocultan de forma predeterminada (ventana de 3 meses) a menos que `showExpiredListings=true`.",
+      "`externalRegistries` agrega enlaces de perfil de Petfinder/Adopt-a-Pet junto a las tarjetas locales sin cambiar el modo de proveedor.",
+      "Componente: `template/src/components/patterns/AdoptablePetsSection.tsx`",
+      "Datos: `template/src/data/adoptable-pets.ts`"
+    ]
+  }
+}

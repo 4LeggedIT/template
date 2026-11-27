@@ -1,0 +1,46 @@
+{
+  "hero": {
+    "title": "Estándares de la plantilla",
+    "description": "Estándares operativos y guía de migración para la plantilla. Cada página de patrón incluye su propio ejemplo en vivo."
+  },
+  "status": {
+    "label": "Estado:",
+    "text": "Los estándares se mantienen en este centro. Los cambios deben incluir una actualización de estándares y notas de migración."
+  },
+  "sections": {
+    "adoptablePets": { "title": "Patrón de Mascotas Adoptables", "description": "Estructura unificada de mascotas adoptables con adaptadores de proveedores y comportamiento de respaldo." },
+    "dogSpotlight": { "title": "Patrón de Perros Destacados", "description": "Cuadrícula de inicio que destaca un conjunto seleccionado de perros, cuatro por fila en escritorio." },
+    "found": { "title": "Patrón de Animales Encontrados", "description": "Módulo que solo lista avisos de perros encontrados, con filtrado de estado. Cualquier orientación que un rescate ofrezca al público es contenido propio de su página." },
+    "missing": { "title": "Patrón de Animales Perdidos", "description": "Módulo que solo lista avisos de perros perdidos, con volante, línea de última vez visto, línea de seguridad y enlace opcional para enviar un avistamiento por mensaje. Las notas de fuente quedan en el archivo de datos." },
+    "placement": { "title": "Patrón de Colocación", "description": "Listados de colocación con vencimiento predeterminado de tres meses y metadatos opcionales de mascotas." },
+    "eventsNews": { "title": "Patrón de Eventos y Noticias", "description": "Feed unificado de eventos y noticias con comportamiento de archivo, soporte de recurrencia y guía de banners." },
+    "newsHighlight": { "title": "Patrón de Destacado de Inicio", "description": "Tarjeta de inicio que muestra un solo evento, noticia o publicación de blog marcado por el editor, mediante el componente compartido HomeHighlightSection." },
+    "blog": { "title": "Patrón de Blog", "description": "Patrón compartido de lista de publicaciones y detalle de publicación que cubre tanto guías técnicas como contenido de historias de rescate con fotos reales." },
+    "journeyTimeline": { "title": "Patrón de Línea de Tiempo del Trayecto", "description": "Línea de tiempo vertical de rescate a la actualidad para la página de detalle de un perro, una tarjeta por etapa." },
+    "memorialSection": { "title": "Patrón de Memorial", "description": "Homenaje \"En Memoria\" para animales que no pudieron ser salvados — una sola plantilla de tarjeta tanto para homenajes grupales como para la reflexión de un solo perro." },
+    "successStories": { "title": "Patrón de Historias de Éxito", "description": "Módulo de tarjetas narrativas para resultados de adopción e historias felices." },
+    "testimonials": { "title": "Patrón de Testimonios", "description": "Patrones de testimonios destacados, en cuadrícula y de formato largo para secciones reutilizables de prueba social, con valoración por estrellas opcional." },
+    "flyerLibrary": { "title": "Patrón de Biblioteca de Volantes", "description": "Biblioteca de volantes de concientización atemporales, sin fecha, con filtrado por categoría — distinta de eventos/noticias con fecha." },
+    "flyerBuilder": { "title": "Patrón de Creador de Volantes", "description": "Permite crear un volante imprimible o una imagen con una foto, unos datos y un teléfono, en el navegador. No se sube nada." },
+    "socialPostEmbed": { "title": "Patrón de Publicación de Redes Sociales", "description": "Muestra una publicación, reel o video público de Facebook, Instagram o TikTok tal como se publicó, con carga diferida, y avisa cuando la publicación se eliminó, es privada o no se puede incrustar." },
+    "curatedLinks": { "title": "Patrón de Enlaces Curados", "description": "Una sección con crédito de tarjetas que enlazan directamente al trabajo de otras personas, sin copiar nada en el sitio." },
+    "promoModal": { "title": "Patrón de Ventana Emergente Promocional", "description": "Una ventana emergente promocional descartable que se abre en la página de inicio para una oferta por tiempo limitado — nunca un sistema completo de eventos/noticias, solo una imagen de volante con un titular, texto y CTA opcionales." },
+    "mediaCarousel": { "title": "Patrón de Carrusel de Medios", "description": "Carrusel de fotos con nombre, descripción y enlace opcionales en cada tarjeta." },
+    "placeholder": { "title": "Patrón de Marcadores Provisionales", "description": "Marcadores para texto redactado sin confirmar y para secciones que solo el dueño puede aportar — visibles en producción hasta confirmarse." },
+    "mediaCarouselTile": { "title": "Patrón de Casilla de Carrusel de Medios", "description": "Primitivo compartido para uno o más elementos multimedia en una sola casilla, con un carrusel interno e insignia de conteo para varios." },
+    "mediaGallery": { "title": "Patrón de Galería de Medios", "description": "Galería unificada de fotos y videos con filtrado opcional y renderizado seguro sin JS." },
+    "faq": { "title": "Patrón de Preguntas Frecuentes", "description": "Esquema de contenido y datos estructurados de preguntas frecuentes, más el requisito nativo `<details>/<summary>` sin JavaScript." },
+    "formEmbedModal": { "title": "Estándar de FormEmbedModal", "description": "Patrón de modal de formulario independiente del proveedor con ayuda y respaldo sin JS." },
+    "paypalButtons": { "title": "Patrón de Botones de PayPal", "description": "Dos productos de botón de PayPal incompatibles (Botón de Donación vs Botones Alojados) — elija el modo que coincida con el botón real de la organización." },
+    "givebutter": { "title": "Patrón de Givebutter", "description": "Widget de campaña de Givebutter con un enlace de respaldo seguro sin JS y carga diferida opcional." },
+    "zeffyDonate": { "title": "Patrón de Donación por Zeffy", "description": "Widget de formulario de donación de Zeffy con un respaldo funcional seguro sin JS como estado predeterminado." },
+    "partners": { "title": "Patrón de Socios", "description": "Agradecimiento a colaboradores de rescate y comercios locales sin implicar favoritismo." },
+    "recognition": { "title": "Patrón de Reconocimiento", "description": "Una lista plana y sin jerarquía para agradecer a donantes y colaboradores individuales." },
+    "impactStats": { "title": "Patrón de Estadísticas de Impacto", "description": "Recuadros de estadísticas de impacto de por vida más una gráfica de barras opcional por período para el reporte de impacto de la organización de rescate." },
+    "spendBreakdown": { "title": "Patrón de Desglose de Gastos", "description": "Recuadros de categorías de gastos agrupados para el reporte de rendición de cuentas, combinable con Estadísticas de Impacto sin fusionarse en él." },
+    "impactAccountability": { "title": "Impacto y Rendición de Cuentas", "description": "Ejemplo práctico que combina Estadísticas de Impacto y Desglose de Gastos en una sola página, además de enlaces a cada patrón por separado." },
+    "detailedImpact": { "title": "Patrón de Impacto Detallado", "description": "Un registro de impacto fechado y etiquetable que conecta eventos reales con los contadores de Estadísticas de Impacto y páginas de detalle por categoría." },
+    "kennelDisplayTools": { "title": "Patrón de Herramientas de Perrera y Exhibición", "description": "Herramientas independientes de pantalla completa para imprimir/kiosco: presentación de mascotas adoptables y hojas de impresión de tarjetas/carpetas de perrera de 2 por página." },
+    "documents": { "title": "Patrón de Documentos", "description": "Certificado de adopción, registro médico y envoltorio de documento genérico listos para imprimir, además del índice de /documents." }
+  }
+}

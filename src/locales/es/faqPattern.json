@@ -1,0 +1,43 @@
+{
+  "hero": {
+    "title": "Patrón de preguntas frecuentes",
+    "description": "Un solo componente de preguntas frecuentes y dos reglas que aplican a una página en vivo: cómo se estructura y publica el contenido, y cómo se comporta para lectores sin JavaScript."
+  },
+  "breadcrumb": "Patrón de Preguntas Frecuentes",
+  "sections": {
+    "flat": {
+      "title": "Una sola lista",
+      "description": "Una sola tarjeta con una lista de preguntas.",
+      "cardTitle": "Ejemplo de preguntas frecuentes"
+    },
+    "sectioned": {
+      "title": "Agrupadas por tema",
+      "description": "Preguntas agrupadas por tema, como adopción, hogar temporal y donaciones.",
+      "sectionTitle": "Preguntas Frecuentes"
+    }
+  },
+  "standard": {
+    "title": "Reglas de uso",
+    "data": {
+      "title": "Contenido y datos estructurados",
+      "items": [
+        "Importe `FaqAccordionItem`/`FaqAccordionSection` desde `@/components/patterns/FaqAccordion` — nunca declare localmente una forma equivalente.",
+        "Sitios i18n: el texto de las preguntas frecuentes vive en `src/locales/{lang}/faq.json`; `src/data/faq.tsx` exporta un adaptador `getFaqSections(t)` que lo resuelve a los tipos canónicos (admite enlaces `<Trans>` incrustados).",
+        "Sitios sin i18n: `src/data/faq.ts` exporta `faqSections: FaqAccordionSection[]` (o `faqItems: FaqAccordionItem[]` para una sola lista plana) directamente, como hace el propio `src/data/faq.ts` de esta página.",
+        "Los datos estructurados `FAQPage` deben calcularse a partir de las mismas secciones que renderiza la página, mediante `buildFaqJsonLd()` en `src/lib/faq-json-ld.ts` — nunca escritos a mano como un segundo arreglo mantenido por separado.",
+        "Nunca adjunte datos estructurados `FAQPage` a una página que no renderice realmente el contenido de preguntas y respuestas correspondiente."
+      ]
+    },
+    "behavior": {
+      "title": "Comportamiento y accesibilidad",
+      "items": [
+        "Preferido para preguntas frecuentes, divulgaciones informativas y contenido de \"más información\".",
+        "Debe funcionar sin JavaScript ni hidratación — el contenido debe permanecer legible y expandible con JS desactivado.",
+        "Aplique el estilo directamente en el componente de página/patrón; no requiera un envoltorio de acordeón con JS.",
+        "Use un acordeón personalizado solo con una excepción documentada.",
+        "Verifique el soporte de teclado (Enter/Espacio en el resumen) y la visibilidad del foco."
+      ]
+    },
+    "component": "Componente: `template/src/components/patterns/FaqAccordion.tsx`"
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "breadcrumb": "Patrón de Reconocimiento",
+  "hero": {
+    "title": "Patrón de reconocimiento",
+    "description": "Use RecognitionSection para agradecer públicamente a donantes y colaboradores individuales — una lista plana y sin jerarquía, distinta de las tarjetas de organizaciones de PartnersSection."
+  },
+  "categories": {
+    "supporters": {
+      "title": "Nuestros Colaboradores",
+      "description": "Personas cuya generosidad nos ayuda a brindar cuidado, amor y segundas oportunidades."
+    }
+  },
+  "example": {
+    "title": "Ejemplo",
+    "description": "Una lista de agradecimiento a personas que apoyan, en orden alfabético dentro de cada grupo, sin montos ni clasificación.",
+    "ctaTitle": "Conviértase en Colaborador",
+    "ctaDescription": "Su generosidad nos ayuda a brindar el cuidado que nuestros animales merecen.",
+    "ctaLabel": "Done Hoy",
+    "omissionNoteText": "¿No ve su nombre aquí? Es posible que se nos haya pasado.",
+    "omissionNoteLinkLabel": "Avísenos"
+  },
+  "standard": {
+    "title": "Reglas de uso",
+    "items": [
+      "Una lista plana y sin jerarquía — los colaboradores siempre se ordenan alfabéticamente por nombre dentro de una categoría, nunca por el monto de la donación ni por fecha. No existe un campo de nivel/rango; un muro de donantes por niveles es un diseño deliberadamente distinto y fuera del alcance de este patrón.",
+      "Los campos opcionales `omissionNoteText`/`omissionNoteLinkLabel`/`omissionNoteHref` muestran una línea discreta bajo la lista reconociendo que se pudo haber omitido un nombre, enlazando a la página `/contact` del sitio. Los tres deben estar definidos para que se muestre; omítalos los tres para no incluirla.",
+      "Sin logotipo, sin `url`, sin monto en dólares. A diferencia de las organizaciones de `PartnersSection` (que publican su propia marca), cada entrada aquí nombra a una persona privada real.",
+      "`note` es opcional — una línea breve bajo el nombre (por ejemplo, \"Colaborador mensual\", \"En memoria de Bella\"). Manténgala breve y factual; este no es un lugar para una etiqueta de nivel de donación.",
+      "Una categoría sin colaboradores coincidentes no renderiza nada — ni encabezado ni marcador de posición — misma regla que `PartnersSection`.",
+      "Este es un patrón complementario de `PartnersSection`, no una fusión — combine ambos en la misma página (por ejemplo, la página `/partners` de un sitio) cuando un sitio tenga tanto socios organizacionales como colaboradores individuales que agradecer.",
+      "Componente: `template/src/components/patterns/RecognitionSection.tsx`"
+    ]
+  }
+}

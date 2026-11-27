@@ -1,0 +1,85 @@
+{
+  "hero": {
+    "title": "Success stories pattern",
+    "description": "Narrative/story-first pattern for happy tails and adopted-pet outcomes — full context and CTA on a dedicated stories page, or a compact card grid for a home-page preview."
+  },
+  "breadcrumb": "Success Stories Pattern",
+  "stories": {
+    "remi": {
+      "storyTitle": "Remi's Journey",
+      "imageAlt": "Tan rescue dog resting comfortably after adoption",
+      "petType": "Dog",
+      "breed": "Mixed Breed",
+      "summary": "From abandoned stray to forever loved family member.",
+      "storyContext": "Remi arrived underweight and fearful, then stabilized in foster care before adoption.",
+      "storyContent1": "After intake, Remi received veterinary care, nutrition support, and confidence-building routines.",
+      "storyContent2": "Once matched with an adopter, the transition plan focused on structure, decompression, and ongoing support.",
+      "storyCtaLabel": "Read full happy tail",
+      "badgeLabel": "Forever Loved"
+    },
+    "nova": {
+      "imageAlt": "Smiling black rescue dog outdoors",
+      "petType": "Dog",
+      "breed": "Labrador Mix",
+      "summary": "Medical recovery followed by a successful family placement.",
+      "storyContext": "Nova needed post-op foster support and a low-stress home match.",
+      "badgeLabel": "Adopted"
+    },
+    "peaches": {
+      "imageAlt": "Small rescue dog with pink harness",
+      "petType": "Dog",
+      "breed": "Terrier Mix",
+      "summary": "Shy intake that became a confident companion at home.",
+      "storyContent": "Peaches needed a quieter placement and did well with slow introductions and consistency.",
+      "badgeLabel": "Happy Tail"
+    },
+    "buddy": {
+      "imageAlt": "Energetic tan and white dog mid-run in a grassy park",
+      "petType": "Dog",
+      "breed": "Terrier Mix",
+      "summary": "High-energy and people-focused — does best with an active family and a fenced yard.",
+      "badgeLabel": "Available Now",
+      "ctaLabel": "Apply to Adopt"
+    }
+  },
+  "sections": {
+    "example": {
+      "title": "Example",
+      "sectionTitle": "Recent happy tails"
+    },
+    "compact": {
+      "title": "Compact variant (home-page preview)",
+      "description": "The same stories as a small home-page preview: fewer cards, with the extra detail and buttons turned off."
+    },
+    "split": {
+      "title": "Splitting by status (e.g. available vs. adopted)",
+      "description": "Stories split by status, such as available and adopted, into two groups. An available dog's card can offer an “Apply to Adopt” button as well as the link to the full story.",
+      "availableTitle": "Available Now",
+      "adoptedTitle": "Happy Tails"
+    },
+    "carousel": {
+      "title": "Auto-rotating teaser (home-page carousel)",
+      "description": "A home-page teaser that rotates by itself. It pauses on hover or focus and stays still for visitors who prefer less motion."
+    },
+    "badgeDictionary": {
+      "title": "Idea: status-driven buttons",
+      "description": "An idea, not part of the standard: give each story a status label that also decides which buttons that dog's own page shows."
+    }
+  },
+  "standard": {
+    "title": "Usage rules",
+    "items": [
+      "Use `SuccessStoriesSection` for adoption outcomes and happy-tail story collections.",
+      "Store stories as normalized `SuccessStoryItem` objects and pass them through `stories`.",
+      "Use module toggles (`showSummary`, `showStoryContext`, `showStoryContent`, `showStoryCtas`) instead of page-local branching.",
+      "For home-page previews, use compact settings (`maxItems`, `columns`, and content toggles) rather than a separate card implementation — see the variant above.",
+      "Cards are no-JS readable; the portrait image and the optional story link (`storyHref`) both render as plain anchors — internal routes use `Link`, external URLs get `target=\"_blank\" rel=\"noreferrer\"`.",
+      "`contentWidth=\"contained\"` narrows the section to a centered column; default is `\"full\"` width.",
+      "`labels` overrides section copy (`adoptedLabel`, `readStoryLabel`, `adoptedPrefix`) for i18n/site customization.",
+      "`ctaLinks` (optional, on `SuccessStoryItem`) renders extra button(s) before the \"read story\" link — e.g. a badge-driven \"Apply to Adopt\"/\"Apply to Foster\" so an index card can offer the actual next step, not just a link through to the detail page. See Atlas's card in the \"splitting by status\" example above.",
+      "Composing a rescue-journeys page: pair this with `JourneyTimeline` (see that pattern's page) and a site-owned `status` field (e.g. `\"in_care\" | \"adopted\"`) on your own story type — call this component twice with two filtered arrays for an in-care/adopted split, and derive impact-stat counts from the same field. No component change needed; `status` lives on your site's own extended type. See the live \"splitting by status\" example above.",
+      "A home-page teaser that needs to auto-rotate once it outgrows one row: build it from `components/ui/carousel.tsx`'s `autoPlay` prop directly rather than adding a carousel mode here — keeps this component's grid simple and the rotation behavior reusable outside this pattern too. See the live \"auto-rotating teaser\" example above.",
+      "Component: `template/src/components/patterns/SuccessStoriesSection.tsx`"
+    ]
+  }
+}

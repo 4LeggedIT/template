@@ -1,0 +1,166 @@
+import { Route, Routes } from "react-router-dom";
+import SiteLayout from "@/components/patterns/SiteLayout";
+import HomePage from "@/pages/HomePage";
+import NotFound from "@/pages/NotFound";
+import Oops from "@/pages/Oops";
+import AdoptablePetsStandardPage from "@/pages/standards/AdoptablePetsStandardPage";
+import AdoptablePetsLocalStandardPage from "@/pages/standards/AdoptablePetsLocalStandardPage";
+import AdoptablePetsPetfinderStandardPage from "@/pages/standards/AdoptablePetsPetfinderStandardPage";
+import AdoptablePetsAdoptAPetStandardPage from "@/pages/standards/AdoptablePetsAdoptAPetStandardPage";
+import AdoptablePetsGetBuddyStandardPage from "@/pages/standards/AdoptablePetsGetBuddyStandardPage";
+import AdoptablePetsHybridStandardPage from "@/pages/standards/AdoptablePetsHybridStandardPage";
+import EventsNewsStandardPage from "@/pages/standards/EventsNewsStandardPage";
+import NewsHighlightStandardPage from "@/pages/standards/NewsHighlightStandardPage";
+import DogSpotlightStandardPage from "@/pages/standards/DogSpotlightStandardPage";
+import JourneyTimelineStandardPage from "@/pages/standards/JourneyTimelineStandardPage";
+import MemorialSectionStandardPage from "@/pages/standards/MemorialSectionStandardPage";
+import PromoModalStandardPage from "@/pages/standards/PromoModalStandardPage";
+import CuratedLinksStandardPage from "@/pages/standards/CuratedLinksStandardPage";
+import SocialPostEmbedStandardPage from "@/pages/standards/SocialPostEmbedStandardPage";
+import AdoptablePetsPawPlacerStandardPage from "@/pages/standards/AdoptablePetsPawPlacerStandardPage";
+import FaqStandardPage from "@/pages/standards/FaqStandardPage";
+import FoundStandardPage from "@/pages/standards/FoundStandardPage";
+import MissingStandardPage from "@/pages/standards/MissingStandardPage";
+import FormEmbedModalStandardPage from "@/pages/standards/FormEmbedModalStandardPage";
+import FlyerLibraryStandardPage from "@/pages/standards/FlyerLibraryStandardPage";
+import FlyerBuilderStandardPage from "@/pages/standards/FlyerBuilderStandardPage";
+import PartnersStandardPage from "@/pages/standards/PartnersStandardPage";
+import RecognitionStandardPage from "@/pages/standards/RecognitionStandardPage";
+import ImpactStatsStandardPage from "@/pages/standards/ImpactStatsStandardPage";
+import SpendBreakdownStandardPage from "@/pages/standards/SpendBreakdownStandardPage";
+import ImpactAccountabilityStandardPage from "@/pages/standards/ImpactAccountabilityStandardPage";
+import DetailedImpactStandardPage from "@/pages/standards/DetailedImpactStandardPage";
+import MediaCarouselStandardPage from "@/pages/standards/MediaCarouselStandardPage";
+import MediaCarouselTileStandardPage from "@/pages/standards/MediaCarouselTileStandardPage";
+import PlaceholderStandardPage from "@/pages/standards/PlaceholderStandardPage";
+import MediaGalleryStandardPage from "@/pages/standards/MediaGalleryStandardPage";
+import PayPalButtonsStandardPage from "@/pages/standards/PayPalButtonsStandardPage";
+import PayPalButtonsDonateStandardPage from "@/pages/standards/PayPalButtonsDonateStandardPage";
+import PayPalButtonsHostedStandardPage from "@/pages/standards/PayPalButtonsHostedStandardPage";
+import PlacementHelpStandardPage from "@/pages/standards/PlacementHelpStandardPage";
+import SuccessStoriesStandardPage from "@/pages/standards/SuccessStoriesStandardPage";
+import TemplateStandardsHomePage from "@/pages/standards/TemplateStandardsHomePage";
+import TestimonialsStandardPage from "@/pages/standards/TestimonialsStandardPage";
+import ZeffyDonatePatternPage from "@/pages/standards/ZeffyDonatePatternPage";
+import GivebutterPatternPage from "@/pages/standards/GivebutterPatternPage";
+import KennelDisplayToolsStandardPage from "@/pages/standards/KennelDisplayToolsStandardPage";
+import DocumentsStandardPage from "@/pages/standards/DocumentsStandardPage";
+import BlogStandardPage from "@/pages/standards/BlogStandardPage";
+import EventsNewsExampleEventDetailPage from "@/pages/examples/EventsNewsExampleEventDetailPage";
+import BlogExamplePostPage from "@/pages/examples/BlogExamplePostPage";
+import NewsArticleExamplePage from "@/pages/news/NewsArticleExamplePage";
+import NewsVideoArticleExamplePage from "@/pages/news/NewsVideoArticleExamplePage";
+import NewsSocialEmbedArticleExamplePage from "@/pages/news/NewsSocialEmbedArticleExamplePage";
+import AdoptableSlideshowPage from "@/pages/tools/AdoptableSlideshowPage";
+import KennelBinder2UpPage from "@/pages/tools/KennelBinder2UpPage";
+import KennelCards2UpPage from "@/pages/tools/KennelCards2UpPage";
+import DocumentsIndexPage from "@/pages/tools/DocumentsIndexPage";
+import AdoptionCertificatePage from "@/pages/tools/AdoptionCertificatePage";
+import PetMedicalRecordPage from "@/pages/tools/PetMedicalRecordPage";
+import BusinessCardSimplePage from "@/pages/tools/BusinessCardSimplePage";
+import BusinessCardGenericPage from "@/pages/tools/BusinessCardGenericPage";
+import BusinessCardTeamPage from "@/pages/tools/BusinessCardTeamPage";
+import PrintableImagePage from "@/pages/tools/PrintableImagePage";
+
+const AppRoutes = () => {
+  return (
+    <Routes>
+      <Route element={<SiteLayout />}>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/oops" element={<Oops />} />
+        <Route
+          path="/examples/events-news/events/event-adoption-fridays"
+          element={<EventsNewsExampleEventDetailPage eventSlug="event-adoption-fridays" />}
+        />
+        <Route
+          path="/examples/events-news/events/event-biweekly-supply-drive"
+          element={<EventsNewsExampleEventDetailPage eventSlug="event-biweekly-supply-drive" />}
+        />
+        <Route
+          path="/examples/events-news/events/event-second-weekend-fair"
+          element={<EventsNewsExampleEventDetailPage eventSlug="event-second-weekend-fair" />}
+        />
+        <Route
+          path="/examples/events-news/events/event-monthly-5th-orientation"
+          element={<EventsNewsExampleEventDetailPage eventSlug="event-monthly-5th-orientation" />}
+        />
+        <Route
+          path="/examples/events-news/events/event-community-fundraiser"
+          element={<EventsNewsExampleEventDetailPage eventSlug="event-community-fundraiser" />}
+        />
+        <Route
+          path="/examples/events-news/events/event-basket-raffle-monthly"
+          element={<EventsNewsExampleEventDetailPage eventSlug="event-basket-raffle-monthly" />}
+        />
+        <Route
+          path="/examples/events-news/events/news-field-rescue-spotlight"
+          element={<EventsNewsExampleEventDetailPage eventSlug="news-field-rescue-spotlight" />}
+        />
+        <Route
+          path="/examples/events-news/events/news-volunteer-recruitment"
+          element={<EventsNewsExampleEventDetailPage eventSlug="news-volunteer-recruitment" />}
+        />
+        <Route path="/news/example-article" element={<NewsArticleExamplePage />} />
+        <Route path="/news/example-video-article" element={<NewsVideoArticleExamplePage />} />
+        <Route path="/news/example-social-embed-article" element={<NewsSocialEmbedArticleExamplePage />} />
+        <Route path="/examples/blog/:slug" element={<BlogExamplePostPage />} />
+        <Route path="/standards" element={<TemplateStandardsHomePage />} />
+        <Route path="/standards/adoptable-pets" element={<AdoptablePetsStandardPage />} />
+        <Route path="/standards/adoptable-pets/local" element={<AdoptablePetsLocalStandardPage />} />
+        <Route path="/standards/adoptable-pets/petfinder" element={<AdoptablePetsPetfinderStandardPage />} />
+        <Route path="/standards/adoptable-pets/adopt-a-pet" element={<AdoptablePetsAdoptAPetStandardPage />} />
+        <Route path="/standards/adoptable-pets/getbuddy" element={<AdoptablePetsGetBuddyStandardPage />} />
+        <Route path="/standards/adoptable-pets/hybrid" element={<AdoptablePetsHybridStandardPage />} />
+        <Route path="/standards/events-news" element={<EventsNewsStandardPage />} />
+        <Route path="/standards/news-highlight" element={<NewsHighlightStandardPage />} />
+        <Route path="/standards/dog-spotlight" element={<DogSpotlightStandardPage />} />
+        <Route path="/standards/journey-timeline" element={<JourneyTimelineStandardPage />} />
+        <Route path="/standards/memorial-section" element={<MemorialSectionStandardPage />} />
+        <Route path="/standards/promo-modal" element={<PromoModalStandardPage />} />
+        <Route path="/standards/curated-links" element={<CuratedLinksStandardPage />} />
+        <Route path="/standards/social-post-embed" element={<SocialPostEmbedStandardPage />} />
+        <Route path="/standards/adoptable-pets/pawplacer" element={<AdoptablePetsPawPlacerStandardPage />} />
+        <Route path="/standards/faq" element={<FaqStandardPage />} />
+        <Route path="/standards/found" element={<FoundStandardPage />} />
+        <Route path="/standards/missing" element={<MissingStandardPage />} />
+        <Route path="/standards/form-embed-modal" element={<FormEmbedModalStandardPage />} />
+        <Route path="/standards/flyer-library" element={<FlyerLibraryStandardPage />} />
+        <Route path="/standards/flyer-builder" element={<FlyerBuilderStandardPage />} />
+        <Route path="/standards/partners" element={<PartnersStandardPage />} />
+        <Route path="/standards/recognition" element={<RecognitionStandardPage />} />
+        <Route path="/standards/impact-stats" element={<ImpactStatsStandardPage />} />
+        <Route path="/standards/spend-breakdown" element={<SpendBreakdownStandardPage />} />
+        <Route path="/standards/impact-accountability" element={<ImpactAccountabilityStandardPage />} />
+        <Route path="/standards/detailed-impact" element={<DetailedImpactStandardPage />} />
+        <Route path="/standards/media-carousel" element={<MediaCarouselStandardPage />} />
+        <Route path="/standards/media-carousel-tile" element={<MediaCarouselTileStandardPage />} />
+        <Route path="/standards/placeholder" element={<PlaceholderStandardPage />} />
+        <Route path="/standards/media-gallery" element={<MediaGalleryStandardPage />} />
+        <Route path="/standards/paypal-buttons" element={<PayPalButtonsStandardPage />} />
+        <Route path="/standards/paypal-buttons/donate-button" element={<PayPalButtonsDonateStandardPage />} />
+        <Route path="/standards/paypal-buttons/hosted-buttons" element={<PayPalButtonsHostedStandardPage />} />
+        <Route path="/standards/zeffy-donate" element={<ZeffyDonatePatternPage />} />
+        <Route path="/standards/givebutter" element={<GivebutterPatternPage />} />
+        <Route path="/standards/placement-help" element={<PlacementHelpStandardPage />} />
+        <Route path="/standards/success-stories" element={<SuccessStoriesStandardPage />} />
+        <Route path="/standards/testimonials" element={<TestimonialsStandardPage />} />
+        <Route path="/standards/kennel-display-tools" element={<KennelDisplayToolsStandardPage />} />
+        <Route path="/standards/documents" element={<DocumentsStandardPage />} />
+        <Route path="/standards/blog" element={<BlogStandardPage />} />
+        <Route path="*" element={<NotFound />} />
+      </Route>
+      <Route path="/tools/adoptable-slideshow" element={<AdoptableSlideshowPage />} />
+      <Route path="/tools/kennel-binder-2up" element={<KennelBinder2UpPage />} />
+      <Route path="/tools/kennel-cards-2up" element={<KennelCards2UpPage />} />
+      <Route path="/tools/documents-index" element={<DocumentsIndexPage />} />
+      <Route path="/tools/adoption-certificate" element={<AdoptionCertificatePage />} />
+      <Route path="/tools/pet-medical-record" element={<PetMedicalRecordPage />} />
+      <Route path="/tools/business-card-simple" element={<BusinessCardSimplePage />} />
+      <Route path="/tools/business-card-generic" element={<BusinessCardGenericPage />} />
+      <Route path="/tools/business-card-team" element={<BusinessCardTeamPage />} />
+      <Route path="/tools/printable-image" element={<PrintableImagePage />} />
+    </Routes>
+  );
+};
+
+export default AppRoutes;

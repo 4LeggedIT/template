@@ -1,0 +1,61 @@
+export type NavDropdownItem = {
+  label: string;
+  href: string;
+  /** i18next key under common.json's `nav` namespace, for items with translatable labels (currently just "Overview"). */
+  labelKey?: string;
+  /** Optional section header this item is grouped under in the dropdown — an i18next key under common.json's `groups` namespace. Items without a group render at the top, ungrouped. */
+  group?: string;
+};
+
+export type NavItem = {
+  label: string;
+  /** i18next key under common.json's `nav` namespace; `label` is the English fallback. Pattern names inside the dropdown are technical/proper nouns and intentionally have no labelKey. */
+  labelKey?: string;
+  href?: string;
+  dropdown?: NavDropdownItem[];
+};
+
+export const templateNavItems: NavItem[] = [
+  { label: "Home", labelKey: "nav.home", href: "/" },
+  {
+    label: "Standards",
+    labelKey: "nav.standards",
+    dropdown: [
+      { label: "Overview", labelKey: "nav.overview", href: "/standards" },
+      { label: "Adoptable Pets", href: "/standards/adoptable-pets", group: "petsAdoption" },
+      { label: "Dog Spotlight", href: "/standards/dog-spotlight", group: "petsAdoption" },
+      { label: "Found", href: "/standards/found", group: "petsAdoption" },
+      { label: "Missing", href: "/standards/missing", group: "petsAdoption" },
+      { label: "Placement", href: "/standards/placement-help", group: "petsAdoption" },
+      { label: "Journey Timeline", href: "/standards/journey-timeline", group: "storiesJourneys" },
+      { label: "Memorial", href: "/standards/memorial-section", group: "storiesJourneys" },
+      { label: "Success Stories", href: "/standards/success-stories", group: "storiesJourneys" },
+      { label: "Testimonials", href: "/standards/testimonials", group: "storiesJourneys" },
+      { label: "Events & News", href: "/standards/events-news", group: "contentEngagement" },
+      { label: "Home Highlight", href: "/standards/news-highlight", group: "contentEngagement" },
+      { label: "Blog", href: "/standards/blog", group: "contentEngagement" },
+      { label: "FAQ", href: "/standards/faq", group: "contentEngagement" },
+      { label: "Placeholder Markers", href: "/standards/placeholder", group: "contentEngagement" },
+      { label: "Promo Modal", href: "/standards/promo-modal", group: "contentEngagement" },
+      { label: "Curated Links", href: "/standards/curated-links", group: "contentEngagement" },
+      { label: "Social Post Embed", href: "/standards/social-post-embed", group: "contentEngagement" },
+      { label: "Flyer Library", href: "/standards/flyer-library", group: "mediaLibraries" },
+      { label: "Flyer Builder", href: "/standards/flyer-builder", group: "mediaLibraries" },
+      { label: "Media Carousel", href: "/standards/media-carousel", group: "mediaLibraries" },
+      { label: "Media Carousel Tile", href: "/standards/media-carousel-tile", group: "mediaLibraries" },
+      { label: "Media Gallery", href: "/standards/media-gallery", group: "mediaLibraries" },
+      { label: "FormEmbedModal", href: "/standards/form-embed-modal", group: "formsPayments" },
+      { label: "PayPal Buttons", href: "/standards/paypal-buttons", group: "formsPayments" },
+      { label: "Zeffy Donate", href: "/standards/zeffy-donate", group: "formsPayments" },
+      { label: "Givebutter", href: "/standards/givebutter", group: "formsPayments" },
+      { label: "Partners", href: "/standards/partners", group: "community" },
+      { label: "Recognition", href: "/standards/recognition", group: "community" },
+      { label: "Impact Stats", href: "/standards/impact-stats", group: "community" },
+      { label: "Spend Breakdown", href: "/standards/spend-breakdown", group: "community" },
+      { label: "Impact & Accountability", href: "/standards/impact-accountability", group: "community" },
+      { label: "Detailed Impact", href: "/standards/detailed-impact", group: "community" },
+      { label: "Kennel & Display Tools", href: "/standards/kennel-display-tools", group: "tools" },
+      { label: "Documents", href: "/standards/documents", group: "tools" },
+    ],
+  },
+];

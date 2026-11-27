@@ -1,0 +1,58 @@
+{
+  "hero": {
+    "title": "Media carousel pattern",
+    "description": "A photo carousel where the name, description and link on each tile are all optional."
+  },
+  "breadcrumb": "Media Carousel Pattern",
+  "items": {
+    "i1": {
+      "alt": "A golden dog holding a flower in its mouth",
+      "name": "Juniper",
+      "description": "Stayed three weeks before finding her home."
+    },
+    "i2": {
+      "alt": "A border collie looking up at the camera",
+      "name": "Willow",
+      "description": "Came in underweight and left thriving."
+    },
+    "i3": {
+      "alt": "A terrier mix standing on a sidewalk",
+      "name": "Ranger",
+      "description": "Adopted alongside his littermate."
+    },
+    "i4": {
+      "alt": "A small white dog running through the grass",
+      "name": "Poppy",
+      "description": "Fostered twice, then adopted by the second family."
+    }
+  },
+  "sections": {
+    "bare": {
+      "title": "Photos only",
+      "description": "Photos only: no name, description or link. This is what a site shows when it can't name the animals in its photos."
+    },
+    "linked": {
+      "title": "Named, described and linked",
+      "description": "Each photo can carry a name, description and link. The first two point to the same place because one story often has more than one photo."
+    }
+  },
+  "anchors": {
+    "one": "Anchor target one -- the first two tiles link here.",
+    "two": "Anchor target two -- the last two tiles link here."
+  },
+  "standard": {
+    "title": "Usage rules",
+    "items": [
+      "Use `MediaCarouselSection` instead of a page-local photo carousel.",
+      "`name`, `description` and `href` are all optional and independent -- a tile with none of them renders as a bare photo.",
+      "Several tiles may share one `href`; one story often has more than one photo.",
+      "The page owns the heading, not the module -- this keeps heading levels correct and lets the carousel sit under whatever `<h2>` the page already has.",
+      "Photos are never cropped: tiles are `aspect-[3/4]` with `object-contain`, so the whole image is always visible.",
+      "`href` passes through `safeContentUrl`; a disallowed scheme renders the tile unlinked rather than dropping it.",
+      "Anchor targets need a `scroll-mt-*` matching the site's sticky header, or the target lands underneath it.",
+      "Leave `autoPlayDelayMs` unset once tiles are links -- an auto-advancing carousel slides the link out from under the pointer.",
+      "A video tile links from its caption only; wrapping `<video controls>` in an anchor would navigate on play.",
+      "Component: `template/src/components/patterns/MediaCarouselSection.tsx`"
+    ]
+  }
+}

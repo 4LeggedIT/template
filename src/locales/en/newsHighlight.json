@@ -1,0 +1,44 @@
+{
+  "hero": {
+    "title": "Home Highlight pattern",
+    "description": "Let an editor flag up to three events, news entries, or blog posts to surface together as homepage highlight cards."
+  },
+  "breadcrumb": "Home Highlight Pattern",
+  "example": {
+    "imageAlt": "Volunteers and a rescued dog at a community adoption event"
+  },
+  "sections": {
+    "withImage": {
+      "title": "Events and News, with a photo",
+      "description": "The highlighted item has a photo, so the card shows it."
+    },
+    "withoutImage": {
+      "title": "Events and News, without a photo",
+      "description": "The highlighted item has no photo, so the card shows text only, never a broken image."
+    },
+    "blog": {
+      "title": "Blog",
+      "description": "The same card, fed by a blog post marked to be featured."
+    },
+    "mixed": {
+      "title": "Mixed, up to three items",
+      "description": "Up to three highlighted items from News/Events and the blog, newest first. One shows as a large card; two or three show as a row of smaller ones."
+    }
+  },
+  "standard": {
+    "title": "Usage rules",
+    "items": [
+      "`HomeHighlightSection` is a generic renderer — it takes an already-selected `items: HomeHighlightItem[]`, not a raw entries array. Selection lives in the source module, not the component.",
+      "Set `highlightOnHome: true` on up to three entries in the site's `EventsNewsEntry[]` data (event or news) to surface them via `getEventsNewsHighlightItems(entries, eventDetailsBasePath?)`, exported from `EventsNewsSection.tsx` — returns every flagged entry, newest first.",
+      "For a Blog post, set `highlightOnHome: true` on the post in the site's `BlogPostEntry[]` data and select it via `getBlogHighlightItems(posts, postBasePath?)`, exported from `BlogSection.tsx` — the identical flag/fallback contract, just on the Blog module.",
+      "To mix content types (e.g. events/news plus blog) on one homepage, call both selectors, concatenate the results, sort by each item's `sortMs` descending, then slice to the first 3 before passing to `HomeHighlightSection`. `HomeHighlightSection` also defensively caps at `MAX_HOME_HIGHLIGHT_ITEMS` (3) itself.",
+      "One item renders the original horizontal featured card; two or three render as a responsive grid of compact cards instead — the component switches layout automatically based on `items.length`.",
+      "When nothing is flagged, a selector returns `[]` and `HomeHighlightSection` renders nothing at all — deliberately no fallback to \"most recent entry\" and no empty-state placeholder. An editor must explicitly flag each item they want surfaced; never auto-pin a site's first/only entry.",
+      "Renders `imageSrc`/`imageAlt` only when present; never a broken-image placeholder for items without one.",
+      "Distinct from `HomeEventBanner` (dismissible, time-bound event announcements) and from a full `EventsNewsSection`/`BlogSection` listing (shows everything) — this is a small set of curated highlights, not a listing.",
+      "No dedicated site-specific wrapper file is required; a site's `Index.tsx` (or equivalent home page) calls the relevant selector(s) and passes the result straight into `HomeHighlightSection`.",
+      "Shared fields: `highlightOnHome?: boolean` on `EventsNewsBaseEntry` (`EventsNewsSection.tsx`) and on `BlogPostEntry` (`BlogSection.tsx`).",
+      "Component: `template/src/components/patterns/HomeHighlightSection.tsx`"
+    ]
+  }
+}

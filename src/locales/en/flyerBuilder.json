@@ -1,0 +1,81 @@
+{
+  "hero": {
+    "title": "Flyer builder pattern",
+    "description": "Use FlyerBuilderSection to let a visitor make a printable flyer or an image from a photo, a few details and a phone number, all in the browser."
+  },
+  "breadcrumb": "Flyer Builder Pattern",
+  "sections": {
+    "example": {
+      "title": "Example",
+      "description": "The lost-dog flyer running live. Add a photo and a phone number to see the preview, then print it or download it. The flyer follows the site's language."
+    }
+  },
+  "standard": {
+    "title": "Usage rules",
+    "items": [
+      "Use `FlyerBuilderSection` when a visitor should make their own flyer (lost dog, found dog) from a photo, a few details and a phone number. For ready-made flyers the rescue publishes, use `FlyerLibrarySection`.",
+      "A flyer type is a `FlyerSpec` (data): fixed wording per language, palette, layout and fields. Start from `lostDogFlyerSpec` or `foundDogFlyerSpec` in `FlyerBuilderSection.specs.ts` and spread it to change wording. Import the `FlyerSpec` type from the pattern; never re-declare it.",
+      "The flyer carries no organization name, logo or phone number. The phone number is the visitor's own.",
+      "Everything runs in the browser. Nothing is uploaded, the photo's location data is dropped, and the pattern makes no network calls, so it needs no CSP registry entry.",
+      "The photo is never cropped: it is drawn whole, at its own proportions, inside the page margins.",
+      "Every visible string comes from the site through `labels` (`FlyerBuilderLabels`). Organization-specific lines, such as a guide's advice about names or rewards, live in the site's locale file, never in the pattern.",
+      "`headlineFontUrl` is the site's own same-origin woff2 for the heavy headline face. Leave it off to use the Impact / Arial Narrow fallback. Never point it at a CDN.",
+      "`noScript` shows blank printable PDFs (one per language) when JavaScript is off. The route stays prerendered.",
+      "Print and download names come from `FlyerSpec.fileNamePrefix` (default `<id>-flyer`).",
+      "The page around the tool (header, breadcrumb, language toggle, help links) belongs to the site. A new route starts `noindex` and in the sitemap exclusions until the client approves listing it.",
+      "Phone numbers are US (NANP) only. Street-address and reward text is flagged with an advisory note, never blocked.",
+      "Component: `template/src/components/patterns/FlyerBuilderSection.tsx` (helpers in `FlyerBuilderSection.helpers.ts`, starter specs in `FlyerBuilderSection.specs.ts`)."
+    ]
+  },
+  "tool": {
+    "fields": {
+      "photo": {
+        "label": "Photo",
+        "hint": "A clear photo works best."
+      },
+      "name": {
+        "label": "Name (optional)",
+        "note": "Example note: leave the name off posters."
+      },
+      "description": {
+        "label": "Description (optional)",
+        "example": "Example: Brown and white, medium size, green collar."
+      },
+      "phone": {
+        "label": "Your phone number",
+        "hint": "A US number where people can text or call you."
+      }
+    },
+    "photo": {
+      "choose": "Choose a photo",
+      "change": "Choose a different photo",
+      "privacy": "Your photo never leaves your device, and we remove its location data.",
+      "lowRes": "This photo is small and may look soft when printed.",
+      "errors": {
+        "notImage": "That file is not a photo. Please choose a JPG or PNG image.",
+        "tooBig": "That photo is too large. Please choose one under 30 MB.",
+        "unreadable": "We could not read that photo. Please try a JPG or PNG image."
+      }
+    },
+    "description": {
+      "counter": "{{count}} of {{max}} characters",
+      "clipped": "Your description is long, so some of it is cut off on the flyer. Please shorten it."
+    },
+    "phoneError": "Please enter a 10-digit US phone number, for example (555) 123-4567.",
+    "warnings": {
+      "address": "This looks like a street address. Consider using a park, cross streets or a neighborhood instead.",
+      "reward": "Example warning: do not put rewards on posters."
+    },
+    "previewTitle": "Preview",
+    "photoPlaceholder": "Your photo goes here",
+    "previewAlt": "Preview of your flyer. Phone number: {{phone}}.",
+    "previewAltName": "Preview of your flyer for {{name}}. Phone number: {{phone}}.",
+    "actions": {
+      "print": "Print flyer",
+      "download": "Download image",
+      "needMore": "Add a photo and a phone number to print or download.",
+      "working": "Preparing…",
+      "printError": "We could not open the print window. Download the image and print it instead."
+    }
+  }
+}

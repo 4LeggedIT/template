@@ -1,0 +1,34 @@
+{
+  "breadcrumb": "Recognition Pattern",
+  "hero": {
+    "title": "Recognition pattern",
+    "description": "Use RecognitionSection to publicly thank individual donors and supporters — a flat, unranked thank-you list, distinct from PartnersSection's organization-focused cards."
+  },
+  "categories": {
+    "supporters": {
+      "title": "Our Supporters",
+      "description": "Individuals whose generosity helps us provide care, love, and second chances."
+    }
+  },
+  "example": {
+    "title": "Example",
+    "description": "A thank-you list of individual supporters, alphabetical within each group, with no amounts and no ranking.",
+    "ctaTitle": "Become a Supporter",
+    "ctaDescription": "Your generosity helps us provide the care our animals deserve.",
+    "ctaLabel": "Donate Today",
+    "omissionNoteText": "Don't see your name here? We may have simply missed it.",
+    "omissionNoteLinkLabel": "Let us know"
+  },
+  "standard": {
+    "title": "Usage rules",
+    "items": [
+      "A flat, unranked thank-you list — supporters are always sorted alphabetically by name within a category, never by gift size or date. There is no tier/rank field; a giving-tier donor wall is a deliberately different, out-of-scope design.",
+      "Optional `omissionNoteText`/`omissionNoteLinkLabel`/`omissionNoteHref` render a quiet fine-print line beneath the list acknowledging a name may have been missed, linking to the site's `/contact` page. All three must be set for it to render; omit all three to leave it off entirely.",
+      "No logo, no `url`, no dollar amount. Unlike `PartnersSection`'s organizations (which self-publish their own brand), every entry here names a real private individual.",
+      "`note` is optional — a short line under the name (e.g. \"Monthly supporter,\" \"In memory of Bella\"). Keep it brief and factual; this is not a place for a giving-tier label.",
+      "A category with zero matching supporters renders nothing — no heading, no placeholder — same rule as `PartnersSection`.",
+      "This is a companion pattern to `PartnersSection`, not a merge — compose the two on the same page (e.g. a site's `/partners` page) when a site has both organizational partners and individual supporters to thank.",
+      "Component: `template/src/components/patterns/RecognitionSection.tsx`"
+    ]
+  }
+}

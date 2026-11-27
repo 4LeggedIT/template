@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" role="img" aria-label="Example Rescue Network 1 logo">
+  <rect width="200" height="200" rx="40" fill="#0f766e"/>
+  <g stroke="#ffffff" stroke-width="8" stroke-linecap="round"><line x1="100" y1="58" x2="56" y2="136"/><line x1="100" y1="58" x2="144" y2="136"/><line x1="56" y1="136" x2="144" y2="136"/></g>
+  <g fill="#ffffff"><circle cx="100" cy="58" r="22"/><circle cx="56" cy="136" r="22"/><circle cx="144" cy="136" r="22"/></g>
+</svg>

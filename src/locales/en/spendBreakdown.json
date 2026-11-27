@@ -1,0 +1,48 @@
+{
+  "hero": {
+    "title": "Spend Breakdown pattern",
+    "description": "Rolled-up spend category tiles for accountability reporting — a companion to Impact Stats, not a replacement for your filed Form 990. Composable with it, never merged into it."
+  },
+  "breadcrumb": "Spend Breakdown Pattern",
+  "sections": {
+    "standalone": {
+      "title": "Standalone",
+      "description": "Works on its own for a site with only expense data: spending by category, a total, and an optional link to the filed tax return."
+    }
+  },
+  "standard": {
+    "title": "Usage rules",
+    "notMerged": {
+      "before": "Deliberately a separate component from",
+      "after": "— compose the two on a page rather than merging them, so a site can show spend-only, impact-only, or both."
+    },
+    "idVsLabel": {
+      "before": "Category",
+      "mid": "is drawn from a recommended set for internal consistency, but",
+      "after": "is always freeform per site — the same id can read very differently across sites (e.g. \"rescueOperations\" as \"Rescue Supplies\" on one site and \"Field Operations\" on another)."
+    },
+    "categorySet": "Recommended starting categories: Animal Care, Rescue Operations, Marketing & Outreach, Administrative, Fundraising (optional, only if a site breaks it out separately from Administrative). Not an enforced enum — a site can add its own category id at any time without waiting for this list to change.",
+    "periodRequired": {
+      "before": "Unlike Impact Stats' optional timeframeNote, this pattern's",
+      "after": "is required — financial figures are always a snapshot of one filed period, never a \"current\" or lifetime total, and that must never be ambiguous."
+    },
+    "costPerOutcome": {
+      "before": "The optional",
+      "after": "highlight is always computed by the site's own page code from real, same-period totals on both sides — the component never guesses which spend category maps to which outcome."
+    },
+    "emptyState": "Renders nothing if categories is empty — no placeholder $0 total.",
+    "component": {
+      "before": "Component:"
+    }
+  },
+  "sampleData": {
+    "animalCare": "Animal Care",
+    "rescueOperations": "Rescue Operations",
+    "marketingOutreach": "Marketing & Outreach",
+    "administrative": "Administrative",
+    "fundraising": "Fundraising",
+    "periodLabel": "Fiscal Year 2026, as filed",
+    "totalLabel": "Total Expenses",
+    "sourceLabel": "View our filed tax return"
+  }
+}

@@ -1,0 +1,48 @@
+{
+  "hero": {
+    "title": "Patrón de Desglose de Gastos",
+    "description": "Recuadros de categorías de gastos agrupados para el reporte de rendición de cuentas — un complemento de Estadísticas de Impacto, no un reemplazo de su Formulario 990 presentado. Se puede combinar con él, pero nunca se fusiona en él."
+  },
+  "breadcrumb": "Patrón de Desglose de Gastos",
+  "sections": {
+    "standalone": {
+      "title": "Independiente",
+      "description": "Funciona por sí solo para un sitio que solo tiene datos de gastos: gasto por categoría, un total y un enlace opcional a la declaración de impuestos presentada."
+    }
+  },
+  "standard": {
+    "title": "Reglas de uso",
+    "notMerged": {
+      "before": "Es intencionalmente un componente separado de",
+      "after": "— combine los dos en una página en lugar de fusionarlos, para que un sitio pueda mostrar solo gastos, solo impacto, o ambos."
+    },
+    "idVsLabel": {
+      "before": "El",
+      "mid": "de la categoría proviene de un conjunto recomendado para mantener consistencia interna, pero la",
+      "after": "siempre es de forma libre por sitio — el mismo id puede leerse de forma muy distinta entre sitios (por ejemplo, \"rescueOperations\" como \"Suministros de Rescate\" en un sitio y \"Operaciones de Campo\" en otro)."
+    },
+    "categorySet": "Categorías iniciales recomendadas: Cuidado Animal, Operaciones de Rescate, Marketing y Difusión, Administrativo, Recaudación de Fondos (opcional, solo si un sitio la desglosa por separado de Administrativo). No es una enumeración forzada — un sitio puede agregar su propio id de categoría en cualquier momento sin esperar a que cambie esta lista.",
+    "periodRequired": {
+      "before": "A diferencia del timeframeNote opcional de Estadísticas de Impacto, el",
+      "after": "de este patrón es obligatorio — las cifras financieras siempre son una fotografía de un período presentado, nunca un total \"actual\" o de por vida, y eso nunca debe ser ambiguo."
+    },
+    "costPerOutcome": {
+      "before": "El indicador opcional",
+      "after": "siempre lo calcula el propio código de la página del sitio a partir de totales reales del mismo período en ambos lados — el componente nunca adivina qué categoría de gasto corresponde a qué resultado."
+    },
+    "emptyState": "No muestra nada si categories está vacío — sin un total de relleno de $0.",
+    "component": {
+      "before": "Componente:"
+    }
+  },
+  "sampleData": {
+    "animalCare": "Cuidado Animal",
+    "rescueOperations": "Operaciones de Rescate",
+    "marketingOutreach": "Marketing y Difusión",
+    "administrative": "Administrativo",
+    "fundraising": "Recaudación de Fondos",
+    "periodLabel": "Año Fiscal 2026, según lo presentado",
+    "totalLabel": "Total de Gastos",
+    "sourceLabel": "Ver nuestra declaración de impuestos presentada"
+  }
+}

@@ -1,0 +1,77 @@
+{
+  "hero": {
+    "title": "Patrón de Estadísticas de Impacto",
+    "description": "Publique las cifras de impacto de por vida del rescate como recuadros de números grandes, con una gráfica de barras opcional una vez que el sitio tenga dos o más períodos de reporte para comparar."
+  },
+  "breadcrumb": "Patrón de Estadísticas de Impacto",
+  "sections": {
+    "lifetime": {
+      "title": "Totales de por vida",
+      "description": "Totales desde que comenzó el rescate, en una fila de recuadros. Cada sitio muestra solo las categorías que lleva."
+    },
+    "trend": {
+      "title": "Tendencia por período",
+      "description": "Opcional. Con dos o más períodos (mensuales, trimestrales o anuales), una gráfica de barras muestra la tendencia."
+    },
+    "singlePeriod": {
+      "title": "Un solo período",
+      "description": "Con un solo período no hay tendencia que graficar, así que las cifras se muestran como una lista sencilla."
+    }
+  },
+  "chart": {
+    "caption": "Perros adoptados vs. en hogar temporal por año"
+  },
+  "granularity": {
+    "yearly": "Actualizado anualmente"
+  },
+  "cta": {
+    "label": "Apoye Nuestro Trabajo"
+  },
+  "sampleData": {
+    "lifetime": {
+      "adopted": "Perros Adoptados",
+      "fostered": "Perros en Hogar Temporal",
+      "helped": "Animales Ayudados",
+      "spayNeuter": "Cirugías de Esterilización/Castración",
+      "spayNeuterNote": "Desde 2024",
+      "transferred": "Transferidos a Rescates Aliados",
+      "straysFed": "Callejeros Alimentados",
+      "volunteers": "Voluntarios",
+      "donations": "Donaciones Recibidas",
+      "grants": "Subvenciones Recibidas"
+    },
+    "metrics": {
+      "adopted": "Adoptados",
+      "fostered": "En Hogar Temporal"
+    },
+    "introSentence": "Este es el impacto que nuestra comunidad ha logrado hasta ahora.",
+    "timeframeNote": "Desde 2024"
+  },
+  "standard": {
+    "title": "Reglas de uso",
+    "metricSet": {
+      "before": "La lista de métricas es flexible, no fija —",
+      "after": "es simplemente un arreglo de {id, value, label, icon?}. Elija las categorías que su rescate realmente registra."
+    },
+    "lifetimeAlwaysOn": "Los recuadros de por vida se muestran siempre que la lista de estadísticas de por vida no esté vacía.",
+    "whenToShow": "El componente no muestra nada hasta que `lifetimeStats` (o `periods`) tenga contenido real, así que no hay ningún estado de relleno.",
+    "chartThreshold": "La gráfica de barras solo se muestra con 2 o más períodos — un solo período se muestra como una simple lista de valores, ya que una sola barra no puede mostrar una tendencia.",
+    "labelVocabulary": "Para mantener la coherencia entre sitios, prefiera etiquetas simples y concretas en lugar de abstractas — por ejemplo, \"Perros Adoptados\" en vez de \"Adopciones\", \"Perros en Hogar Temporal\" en vez de \"Fosters\". Vocabulario recomendado como punto de partida: Perros Adoptados, Perros en Hogar Temporal, Animales Ayudados, Cirugías de Esterilización/Castración, Transferidos a Rescates Aliados, Callejeros Alimentados, Voluntarios, Donaciones Recibidas, Subvenciones Recibidas. Los sitios no están obligados a usar exactamente estas cadenas, pero reutilizarlas cuando corresponda mantiene la coherencia de las páginas públicas.",
+    "timeframeNote": {
+      "before": "Una",
+      "after": "opcional (por ejemplo, \"Desde 2024\" o \"Al 31 de julio de 2026\") se muestra junto a granularityLabel — texto simple, no se usa para ningún cálculo de fechas."
+    },
+    "tileNote": {
+      "before": "Cada recuadro también acepta su propio campo opcional",
+      "after": "(vea el recuadro de Cirugías de Esterilización/Castración arriba) para un calificativo que pertenece solo a esa estadística y no a toda la sección — por ejemplo, un recuadro con un período más corto que el resto."
+    },
+    "introSentence": {
+      "before": "Una",
+      "after": "opcional de una sola oración sobre los recuadros (por ejemplo, \"Este es el impacto que nuestra comunidad ha logrado hasta ahora.\") usa la prop description ya existente, no es un espacio aparte."
+    },
+    "mobileGrid": "La cuadrícula de recuadros es de 2 columnas en móvil, sube a 3 columnas en el punto de quiebre sm y a 6 columnas en lg — se apila correctamente sin importar cuántas estadísticas proporcione un sitio, incluyendo el ejemplo anterior.",
+    "component": {
+      "before": "Componente:"
+    }
+  }
+}

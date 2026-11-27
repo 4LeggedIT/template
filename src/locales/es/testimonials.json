@@ -1,0 +1,73 @@
+{
+  "hero": {
+    "title": "Patrón de testimonios",
+    "description": "Use el módulo compartido de testimonios para historias de adoptantes, familias de acogida y la comunidad."
+  },
+  "breadcrumb": "Patrón de Testimonios",
+  "items": {
+    "t1": {
+      "quote": "Ser familia de acogida con nuestro rescate ha sido una experiencia increíble. El apoyo, los suministros y la orientación hicieron que todo fuera manejable.",
+      "author": "Alex",
+      "authorTitle": "Familia de Acogida",
+      "authorMeta": "Example Rescue"
+    },
+    "t2": {
+      "quote": "El proceso de adopción fue claro y cuidadoso. Nos sentimos apoyados todo el tiempo y encontramos al perro adecuado para nuestro hogar.",
+      "author": "Jordan",
+      "authorMeta": "Adoptante"
+    },
+    "t3": {
+      "quote": "Nuestro equipo de voluntarios trabaja duro, pero estas historias nos mantienen motivados. Ver a los perros instalarse en hogares llenos de amor lo es todo.",
+      "author": "Equipo de Voluntarios",
+      "authorMeta": "Miembro de la Comunidad"
+    },
+    "longform": {
+      "quote": "Nunca habíamos sido hogar temporal y, sinceramente, casi no enviamos la solicitud. El formulario preguntaba cuánta experiencia teníamos y la respuesta era ninguna.\n\nAun así, alguien nos devolvió la llamada esa misma tarde.\n\nNos explicó cómo es realmente la primera semana y después nos hizo las preguntas que no se nos había ocurrido hacernos:\n\n\"¿Y si no se adapta?\"\n\"¿Y si a nuestro perro no le cae bien?\"\n\"¿Y si no podemos devolverlo?\"\n\nNadie fingió que sería fácil. Esa es la parte que no esperábamos, y es la razón por la que dijimos que sí.\n\nTres acogidas después, seguimos llamando con preguntas y alguien sigue contestando.",
+      "pullQuote": "Nadie fingió que sería fácil.",
+      "author": "Sam",
+      "authorTitle": "Familia de acogida",
+      "authorMeta": "Example Rescue"
+    }
+  },
+  "sections": {
+    "featured": {
+      "title": "Destacado (predeterminado)",
+      "description": "Un testimonio destacado, elegido al azar cada vez que se carga la página.",
+      "sectionTitle": "Testimonio destacado"
+    },
+    "grid": {
+      "title": "Cuadrícula",
+      "description": "Varios testimonios lado a lado.",
+      "sectionTitle": "Testimonios en cuadrícula"
+    },
+    "longform": {
+      "title": "Formato largo",
+      "description": "Un testimonio largo, del tamaño de una carta, en párrafos completos, con una cita destacada opcional.",
+      "sectionTitle": "Testimonio en formato largo"
+    },
+    "longformCollapsible": {
+      "title": "Formato largo, plegable",
+      "description": "Una carta larga puede plegarse tras un botón de “leer más” mientras la cita destacada sigue visible. El texto completo sigue en la página para los buscadores y funciona sin JavaScript.",
+      "sectionTitle": "Testimonio en formato largo plegable"
+    }
+  },
+  "standard": {
+    "title": "Reglas de uso",
+    "items": [
+      "Use `TestimonialsSection` en lugar de marcado de testimonios local a la página.",
+      "El comportamiento predeterminado muestra un testimonio aleatorio (`layout=\"featured\"`, `featuredStrategy=\"randomOnLoad\"`) para evitar el desorden visual — simplemente pase `testimonials` y deje que se apliquen los valores predeterminados.",
+      "Opte por `layout=\"grid\"` solo cuando una página quiera mostrar intencionalmente varios testimonios a la vez.",
+      "Un arreglo `testimonials` vacío no muestra nada.",
+      "Mantenga los testimonios en archivos de datos de la página/sitio, no dentro del componente.",
+      "El contenido de texto se renderiza en el servidor sin JS — conserve el renderizado SSR, los testimonios deben permanecer legibles sin JS.",
+      "Usa `layout=\"longform\"` para testimonios con extensión de carta: muestra párrafos reales y elige su único elemento con `featuredIndex`, nunca al azar.",
+      "Usa `authorTitle` para el cargo o rol de la persona: se muestra entre `author` y `authorMeta`, de modo que un aliado con nombre se lee como nombre / cargo / organización. `authorHref` permanece en `authorMeta`: el enlace pertenece a la organización, no al cargo.",
+      "Activa `collapsible` en `layout=\"longform\"` cuando una carta es demasiado larga para mostrarla completa de entrada: oculta el cuerpo detrás de un interruptor nativo `<details>` (cerrado por defecto) mientras la `pullQuote` permanece visible como resumen. Requiere `pullQuote`; sin ella el elemento vuelve al renderizado siempre expandido. Pasa `labels.readMoreLabel` para el texto del interruptor en sitios con i18n.",
+      "Componente: `template/src/components/patterns/TestimonialsSection.tsx`"
+    ]
+  },
+  "labels": {
+    "ratingLabel": "Valorado con {rating} de 5 estrellas",
+    "readMoreLabel": "Leer la carta completa"
+  }
+}

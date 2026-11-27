@@ -1,0 +1,77 @@
+{
+  "hero": {
+    "title": "Impact Stats pattern",
+    "description": "Publish lifetime rescue impact numbers as big-number tiles, with an optional bar chart once a site has two or more reporting periods to compare."
+  },
+  "breadcrumb": "Impact Stats Pattern",
+  "sections": {
+    "lifetime": {
+      "title": "Lifetime totals",
+      "description": "Totals since the rescue began, as a row of tiles. Each site shows only the categories it tracks."
+    },
+    "trend": {
+      "title": "Period-by-period trend",
+      "description": "Optional. With two or more periods (monthly, quarterly or yearly), a bar chart shows the trend."
+    },
+    "singlePeriod": {
+      "title": "A single period",
+      "description": "With one period there is no trend to chart, so the numbers show as a plain list."
+    }
+  },
+  "chart": {
+    "caption": "Dogs adopted vs. fostered by year"
+  },
+  "granularity": {
+    "yearly": "Updated yearly"
+  },
+  "cta": {
+    "label": "Support Our Work"
+  },
+  "sampleData": {
+    "lifetime": {
+      "adopted": "Dogs Adopted",
+      "fostered": "Dogs Fostered",
+      "helped": "Animals Helped",
+      "spayNeuter": "Spay/Neuter Surgeries",
+      "spayNeuterNote": "Since 2024",
+      "transferred": "Transferred to Partner Rescues",
+      "straysFed": "Strays Fed",
+      "volunteers": "Volunteers",
+      "donations": "Donations Received",
+      "grants": "Grants Received"
+    },
+    "metrics": {
+      "adopted": "Adopted",
+      "fostered": "Fostered"
+    },
+    "introSentence": "Here's the impact our community has made so far.",
+    "timeframeNote": "Since 2024"
+  },
+  "standard": {
+    "title": "Usage rules",
+    "metricSet": {
+      "before": "The metric list is flexible, not fixed —",
+      "after": "is just an array of {id, value, label, icon?}. Pick whichever categories your rescue actually tracks."
+    },
+    "lifetimeAlwaysOn": "Lifetime tiles render whenever the lifetime stats list is non-empty.",
+    "whenToShow": "The component renders nothing until `lifetimeStats` (or `periods`) has real content, so there is no placeholder state.",
+    "chartThreshold": "The bar chart only renders with 2+ periods — a single period renders as a plain value list instead, since one bar can't show a trend.",
+    "labelVocabulary": "For consistency across sites, prefer plain, concrete labels over abstract ones — e.g. \"Dogs Adopted\" rather than \"Adoptions,\" \"Dogs Fostered\" rather than \"Fosters.\" Recommended starting vocabulary: Dogs Adopted, Dogs Fostered, Animals Helped, Spay/Neuter Surgeries, Transferred to Partner Rescues, Strays Fed, Volunteers, Donations Received, Grants Received. Sites aren't required to use these exact strings, but reusing them where they fit keeps public pages consistent.",
+    "timeframeNote": {
+      "before": "An optional",
+      "after": "line (e.g. \"Since 2024\" or \"As of July 2026\") renders next to granularityLabel — small, plain text, not used for any date math."
+    },
+    "tileNote": {
+      "before": "Each tile also accepts its own optional",
+      "after": "field (see the Spay/Neuter Surgeries tile above) for a qualifier that belongs to just that one stat rather than the whole section — e.g. one tile tracking a shorter timeframe than the rest."
+    },
+    "introSentence": {
+      "before": "An optional one-sentence",
+      "after": "above the tiles (e.g. \"Here's the impact our community has made so far.\") uses the existing description prop, not a separate slot."
+    },
+    "mobileGrid": "The tile grid is 2-across on mobile, stepping up to 3-across at the sm breakpoint and 6-across at lg — stacks cleanly regardless of how many stats a site supplies, including the example above.",
+    "component": {
+      "before": "Component:"
+    }
+  }
+}

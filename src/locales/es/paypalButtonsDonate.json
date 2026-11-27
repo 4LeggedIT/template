@@ -1,0 +1,31 @@
+{
+  "breadcrumb": {
+    "parent": "Patrón de Botones de PayPal",
+    "current": "Botón de Donación"
+  },
+  "hero": {
+    "title": "Botón de Donación de PayPal",
+    "description": "El producto original donate-sdk.js / PayPal.Donation.Button. Use el componente compartido PayPalDonateButton junto con un enlace directo auxiliar para casos de fallo de la ventana emergente o del SDK."
+  },
+  "example": {
+    "title": "Ejemplo",
+    "description": "Un botón de donar con un pequeño enlace debajo que abre PayPal en una pestaña nueva.",
+    "helperLink": "¿Tiene problemas? Abra PayPal en una pestaña nueva",
+    "configNote": "Este ejemplo usa un ID de botón de muestra solo con fines de documentación.",
+    "docsLink": "Documentación oficial de PayPal para el Botón de Donación"
+  },
+  "standard": {
+    "title": "Reglas de uso",
+    "items": [
+      "Renderice `PayPalDonateButton` como la acción principal de donación.",
+      "Agregue debajo un pequeño enlace auxiliar que abra PayPal en una pestaña nueva — debe estar siempre visible con y sin JS, y debe seguir siendo un auxiliar, no un segundo botón de respaldo de tamaño completo.",
+      "Las páginas de producción deben proporcionar un ID de botón alojado válido (prop `hostedButtonId` o `VITE_PAYPAL_DONATE_HOSTED_BUTTON_ID`).",
+      "Las páginas de plantilla/ejemplo pueden usar un ID ficticio claramente etiquetado solo para fines de documentación visual.",
+      "`env=\"sandbox\"` cambia el SDK de PayPal al modo sandbox para pruebas; el valor predeterminado es `\"production\"`.",
+      "Los callbacks `onComplete`/`onError` están disponibles como conexiones de análisis/seguimiento alrededor del flujo de donación.",
+      "`imageSrc`/`imageAlt`/`imageTitle` sobrescriben el gráfico predeterminado del botón de PayPal si se necesita una imagen de botón de donación personalizada.",
+      "Si el SDK no carga o falta configuración, el componente muestra un mensaje de respaldo no disruptivo en lugar de un área en blanco.",
+      "Componente: `template/src/components/patterns/PayPalDonateButton.tsx`"
+    ]
+  }
+}

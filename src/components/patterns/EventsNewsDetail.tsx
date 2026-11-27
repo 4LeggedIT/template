@@ -1,0 +1,333 @@
+/**
+ * SHARED PATTERN: do not edit in a site repo.
+ * Source: github.com/4LeggedIT/internal-tools
+ *   4leggedit-websites/templates-sources/patterns/EventsNewsDetail.tsx
+ * Change it there, then sync it to every site.
+ */
+import { ArrowLeft, Calendar, ChevronLeft, ChevronRight, ExternalLink, MapPin, Ticket } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import EventActions from "@/components/patterns/EventActions";
+import FormEmbedModal from "@/components/patterns/FormEmbedModal";
+import { EventsNewsSocialEmbed, type EventsNewsAdjacentEntry, type EventsNewsEntry } from "@/components/patterns/EventsNewsSection";
+import { formatFallbackDateLabel, getEntryContentBlocks, getEventStatus, getGoogleCalendarUrl, getMapsUrl, renderContentBlock, renderHostedVideo, renderNewsInlineText, renderVideoEmbed } from "@/components/patterns/EventsNewsSection.helpers";
+import { cn } from "@/lib/utils";
+import ContentLink from "./ContentLink";
+
+export type EventsNewsDetailLabels = {
+  backToIndex?: string;
+  relatedNews?: string;
+  register?: string;
+  moreInfo?: string;
+  openInMaps?: string;
+  addToCalendar?: string;
+  whatsapp?: string;
+  facebook?: string;
+  x?: string;
+  email?: string;
+  copyMessage?: string;
+  share?: string;
+  copied?: string;
+  shared?: string;
+  shareSection?: string;
+  /** Share-row heading on a news entry's detail page. */
+  shareSectionNews?: string;
+  openInNewTab?: string;
+  highlightsTitle?: string;
+  detailsComingSoon?: string;
+  previousLabel?: string;
+  nextLabel?: string;
+};
+
+type EventsNewsDetailProps = {
+  entry: EventsNewsEntry;
+  backHref: string;
+  relatedHref?: string;
+  /**
+   * Canonical absolute URL of this entry (e.g. `${siteConfig.siteUrl}/news/<slug>`). Required, and it
+   * must be the same string on the server and the client: never read `window` for it. The share row
+   * renders only when this is non-empty, so `undefined` or `""` during prerender drops the row from the
+   * static HTML while the client adds it back, which throws a hydration mismatch (React #418).
+   */
+  shareUrl: string;
+  /** Overrides the maps URL computed from the entry — use when a site needs richer location resolution than `getMapsUrl` provides. */
+  mapsUrl?: string;
+  /** Overrides the calendar URL computed from the entry — use when a site needs richer calendar details (e.g. timezone, highlights, a more-info link) than `getGoogleCalendarUrl` provides. */
+  calendarUrl?: string;
+  /** Chronologically adjacent entries — compute via `getAdjacentEntries()` from `EventsNewsSection.tsx`. Omit or pass `null` to hide that side of the nav row. */
+  previous?: EventsNewsAdjacentEntry | null;
+  next?: EventsNewsAdjacentEntry | null;
+  /** IANA zone (e.g. "America/Los_Angeles") for the fallback `dateLabel` header when `entry.dateLabel` isn't set — passed straight through to `formatFallbackDateLabel()`. Pass the same value given to `EventsNewsSection`/`getAdjacentEntries` on this page. */
+  timeZone?: string;
+  className?: string;
+  labels?: EventsNewsDetailLabels;
+};
+
+const renderBody = (body?: string) => {
+  if (!body) return null;
+
+  return body
+    .split("\n\n")
+    .map((paragraph) => paragraph.trim())
+    .filter(Boolean)
+    .map((paragraph, idx) => {
+      const lines = paragraph
+        .split("\n")
+        .map((line) => line.trim())
+        .filter(Boolean);
+      const isList = lines.length > 1 && lines.every((line) => line.startsWith("- "));
+
+      if (isList) {
+        return (
+          <ul key={idx} className="list-disc space-y-1 pl-6 leading-relaxed text-muted-foreground">
+            {lines.map((line, lineIdx) => (
+              <li key={`${idx}-${lineIdx}`}>{renderNewsInlineText(line.replace(/^- /, ""))}</li>
+            ))}
+          </ul>
+        );
+      }
+
+      return (
+        <p key={idx} className="leading-relaxed text-muted-foreground">
+          {renderNewsInlineText(paragraph)}
+        </p>
+      );
+    });
+};
+
+const renderImages = (entry: EventsNewsEntry) => {
+  if (entry.images?.length) {
+    return (
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {entry.images.map((img, idx) => (
+          <ContentLink key={`${img.src}-${idx}`} href={img.src} external imageLink whenUnsafe="children" className="block">
+            <img
+              src={img.src}
+              alt={img.alt ?? entry.title}
+              className="max-h-[520px] w-full rounded-xl border border-border bg-background object-cover"
+              loading="lazy"
+            />
+          </ContentLink>
+        ))}
+      </div>
+    );
+  }
+
+  if (entry.imageSrc) {
+    return (
+      <ContentLink href={entry.imageSrc} external imageLink whenUnsafe="children" className="flex justify-center">
+        <img
+          src={entry.imageSrc}
+          alt={entry.imageAlt ?? entry.title}
+          className="max-h-[520px] max-w-full rounded-xl border border-border bg-background object-contain"
+          loading="lazy"
+        />
+      </ContentLink>
+    );
+  }
+
+  return null;
+};
+
+const EventsNewsDetail = ({
+  entry,
+  backHref,
+  relatedHref,
+  shareUrl,
+  mapsUrl: mapsUrlOverride,
+  calendarUrl: calendarUrlOverride,
+  previous,
+  next,
+  timeZone,
+  className,
+  labels = {},
+}: EventsNewsDetailProps) => {
+  const resolvedLabels: Required<EventsNewsDetailLabels> = {
+    backToIndex: labels.backToIndex ?? "Back",
+    relatedNews: labels.relatedNews ?? "Read related news",
+    register: labels.register ?? "Register",
+    moreInfo: labels.moreInfo ?? "More info",
+    openInMaps: labels.openInMaps ?? "Open in Maps",
+    addToCalendar: labels.addToCalendar ?? "Add to Calendar",
+    whatsapp: labels.whatsapp ?? "WhatsApp",
+    facebook: labels.facebook ?? "Facebook",
+    x: labels.x ?? "X",
+    email: labels.email ?? "Email",
+    copyMessage: labels.copyMessage ?? "Copy event",
+    share: labels.share ?? "Share",
+    copied: labels.copied ?? "Copied",
+    shared: labels.shared ?? "Shared",
+    shareSection: labels.shareSection ?? "Share this event",
+    shareSectionNews: labels.shareSectionNews ?? "Share this post",
+    openInNewTab: labels.openInNewTab ?? "Open in new tab",
+    highlightsTitle: labels.highlightsTitle ?? "Highlights",
+    detailsComingSoon: labels.detailsComingSoon ?? "Full details coming soon.",
+    previousLabel: labels.previousLabel ?? "Previous",
+    nextLabel: labels.nextLabel ?? "Next",
+  };
+
+  const isEvent = entry.kind === "event";
+  // Once an event is over, "Open in Maps"/"Add to Calendar"/share are no longer actionable —
+  // hide the whole action bar rather than showing controls for something that already happened.
+  const isPastEvent = isEvent && getEventStatus(entry) === "past";
+  const dateLabel = entry.dateLabel ?? formatFallbackDateLabel(entry, timeZone);
+  const mapsUrl = isEvent ? mapsUrlOverride ?? getMapsUrl(entry) : null;
+  const calendarUrl = isEvent ? calendarUrlOverride ?? getGoogleCalendarUrl(entry) : null;
+  const registrationUrl = isEvent ? entry.registrationUrl?.trim() : null;
+  // Signing up for an event that already happened makes no sense, so the button goes away with the rest.
+  const registration =
+    registrationUrl && !isPastEvent
+      ? { url: registrationUrl, label: entry.kind === "event" ? entry.registrationLabel : undefined, formTitle: `${entry.title} Registration` }
+      : undefined;
+  const moreInfoUrl = isEvent ? entry.moreInfoUrl?.trim() : null;
+  const contentBlocks = entry.contentBlocks?.length
+    ? getEntryContentBlocks(entry, resolvedLabels.highlightsTitle)
+    : null;
+
+  return (
+    <Card className={cn("overflow-hidden border-border/80", className)}>
+      {/* Direct children of this container take their vertical spacing ONLY from space-y-4. Do not add
+          mt-* to them: Tailwind 3 let space-y-* override such margins, Tailwind 4 adds them to it. */}
+      <CardContent className="space-y-4 p-6 md:p-8">
+        <div className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
+          <Calendar className="h-4 w-4" />
+          <span>{dateLabel}</span>
+          {isEvent && entry.locationLabel ? (
+            <span className="inline-flex items-center gap-1">
+              <MapPin className="h-4 w-4" />
+              {entry.locationLabel}
+            </span>
+          ) : null}
+        </div>
+
+        <h1 className="text-2xl font-bold text-foreground md:text-3xl">
+          {isEvent ? entry.calendarTitle ?? entry.title : entry.title}
+        </h1>
+
+        {relatedHref ? (
+          <ContentLink href={relatedHref} external={false} className="inline-flex items-center gap-2 text-sm font-semibold text-primary hover:underline">
+            {resolvedLabels.relatedNews}
+          </ContentLink>
+        ) : null}
+
+        {/* Registration normally renders as the primary button inside EventActions below; this
+            standalone button only covers an upcoming event rendered without a share URL. */}
+        {registration && !shareUrl ? (
+          <FormEmbedModal
+            formUrl={registration.url}
+            title={registration.formTitle ?? entry.title}
+            labels={{ openInNewTab: resolvedLabels.openInNewTab }}
+          >
+            <>
+              <Ticket className="h-4 w-4" />
+              {registration.label?.trim() || resolvedLabels.register}
+            </>
+          </FormEmbedModal>
+        ) : null}
+
+        {moreInfoUrl ? (
+          <ContentLink
+            href={moreInfoUrl}
+            external
+            className="inline-flex items-center gap-2 text-sm font-semibold text-primary hover:underline"
+          >
+            {resolvedLabels.moreInfo}
+            <ExternalLink className="h-3.5 w-3.5 opacity-70" />
+          </ContentLink>
+        ) : null}
+
+        {shareUrl && !isPastEvent ? (
+          <EventActions
+            url={shareUrl}
+            title={isEvent ? entry.calendarTitle ?? entry.title : entry.title}
+            text={entry.summary}
+            mapsUrl={mapsUrl ?? undefined}
+            calendarUrl={calendarUrl ?? undefined}
+            registration={registration}
+            eventDetails={{ date: dateLabel, location: isEvent ? entry.locationLabel : undefined }}
+            channels={["maps", "calendar", "whatsapp", "facebook", "copy-url", "copy-message"]}
+            labels={{
+              register: resolvedLabels.register,
+              openInNewTab: resolvedLabels.openInNewTab,
+              shareSection: isEvent ? resolvedLabels.shareSection : resolvedLabels.shareSectionNews,
+              openInMaps: resolvedLabels.openInMaps,
+              addToCalendar: resolvedLabels.addToCalendar,
+              whatsapp: resolvedLabels.whatsapp,
+              facebook: resolvedLabels.facebook,
+              x: resolvedLabels.x,
+              email: resolvedLabels.email,
+              copyMessage: resolvedLabels.copyMessage,
+              share: resolvedLabels.share,
+              copied: resolvedLabels.copied,
+              shared: resolvedLabels.shared,
+            }}
+          />
+        ) : null}
+
+        {contentBlocks ? (
+          <div className="space-y-4">{contentBlocks.map((block, idx) => renderContentBlock(entry.id, block, idx))}</div>
+        ) : (
+          <>
+            {entry.body ? renderBody(entry.body) : <p className="italic text-muted-foreground">{resolvedLabels.detailsComingSoon}</p>}
+            {entry.highlights?.length ? (
+              <div className="space-y-2">
+                <p className="text-sm font-medium text-foreground">{resolvedLabels.highlightsTitle}</p>
+                <ul className="list-disc space-y-1 pl-6 text-sm text-muted-foreground">
+                  {entry.highlights.map((item) => (
+                    <li key={item}>{item}</li>
+                  ))}
+                </ul>
+              </div>
+            ) : null}
+          </>
+        )}
+
+        {entry.videoSrc ? (
+          <div>{renderHostedVideo(entry.videoSrc, entry.imageSrc, entry.title, entry.videoAspectRatio)}</div>
+        ) : entry.videoEmbed ? (
+          <div>{renderVideoEmbed(entry.videoEmbed, entry.title)}</div>
+        ) : entry.socialEmbed ? (
+          <EventsNewsSocialEmbed embed={entry.socialEmbed} fallback={renderImages(entry)} />
+        ) : (
+          renderImages(entry)
+        )}
+
+        {previous || next ? (
+          <div className="grid grid-cols-1 gap-4 border-t border-border pt-6 sm:grid-cols-2">
+            {previous ? (
+              <ContentLink href={previous.href} external={false} className="group flex items-center gap-3 rounded-lg border border-border p-3 text-left transition-colors hover:border-primary/40">
+                <ChevronLeft className="h-4 w-4 shrink-0 text-muted-foreground transition-colors group-hover:text-primary" />
+                <span className="min-w-0">
+                  <span className="block text-xs text-muted-foreground">{resolvedLabels.previousLabel}</span>
+                  <span className="block truncate text-sm font-semibold text-foreground">{previous.dateLabel}</span>
+                  <span className="block truncate text-sm text-muted-foreground">{previous.title}</span>
+                </span>
+              </ContentLink>
+            ) : (
+              <div />
+            )}
+            {next ? (
+              <ContentLink href={next.href} external={false} className="group flex items-center justify-end gap-3 rounded-lg border border-border p-3 text-right transition-colors hover:border-primary/40 sm:col-start-2">
+                <span className="min-w-0">
+                  <span className="block text-xs text-muted-foreground">{resolvedLabels.nextLabel}</span>
+                  <span className="block truncate text-sm font-semibold text-foreground">{next.dateLabel}</span>
+                  <span className="block truncate text-sm text-muted-foreground">{next.title}</span>
+                </span>
+                <ChevronRight className="h-4 w-4 shrink-0 text-muted-foreground transition-colors group-hover:text-primary" />
+              </ContentLink>
+            ) : null}
+          </div>
+        ) : null}
+
+        <Button asChild variant="outline" size="sm">
+          <ContentLink href={backHref} external={false}>
+            <ArrowLeft className="h-4 w-4" />
+            {resolvedLabels.backToIndex}
+          </ContentLink>
+        </Button>
+      </CardContent>
+    </Card>
+  );
+};
+
+export default EventsNewsDetail;

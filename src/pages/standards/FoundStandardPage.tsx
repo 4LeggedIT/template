@@ -1,0 +1,151 @@
+import { useTranslation } from "react-i18next";
+import FoundListingsSection, { type FoundListing } from "@/components/patterns/FoundListingsSection";
+import StandardSnippet from "@/components/StandardSnippet";
+import PageHero from "@/components/patterns/PageHero";
+import SEOHead from "@/components/patterns/SEOHead";
+import { exampleImages } from "@/data/examples/images";
+import { buildExampleSnippet } from "@/lib/example-snippet";
+import CollapsibleSection from "@/components/standards/CollapsibleSection";
+
+// The demo notices are dated relative to today so they never age past the default 30-day expiry.
+const daysAgoISO = (days: number) => new Date(Date.now() - days * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
+const notice1Date = daysAgoISO(5);
+const notice2Date = daysAgoISO(2);
+
+const FoundStandardPage = () => {
+  const { t, i18n } = useTranslation(["found", "common"]);
+  const formatFoundDate = (iso: string) =>
+    new Intl.DateTimeFormat(i18n.language, { dateStyle: "long", timeZone: "UTC" }).format(new Date(`${iso}T12:00:00Z`));
+
+  const foundNotices: FoundListing[] = [
+    {
+      id: "SAMPLE-001",
+      source: {
+        type: "local",
+        name: "Facebook",
+        url: "https://www.facebook.com",
+      },
+      status: "open",
+      foundAtISO: notice1Date,
+      foundAt: formatFoundDate(notice1Date),
+      location: {
+        areaLabel: "Eastgate, Example City 90210",
+        crossStreets: "Juniper Ave and 3rd St",
+      },
+      pet: {
+        name: "Ranger",
+        species: "dog",
+        gender: t("found:listings.notice1.gender"),
+        microchipStatus: t("found:listings.notice1.microchipStatus"),
+      },
+      notes: t("found:listings.notice1.notes"),
+      media: [
+        {
+          id: "SAMPLE-001-image-1",
+          src: exampleImages.ranger,
+          alt: t("found:listings.notice1.mediaAlt"),
+          featured: true,
+        },
+        {
+          id: "SAMPLE-001-image-2",
+          src: exampleImages.foundFlyer,
+          alt: t("found:listings.notice1.mediaAlt2"),
+        },
+      ],
+    },
+    {
+      id: "SAMPLE-002",
+      source: {
+        type: "local",
+        name: "Template Intake Board",
+      },
+      status: "open",
+      foundAtISO: notice2Date,
+      foundAt: formatFoundDate(notice2Date),
+      location: {
+        areaLabel: "North Hills, Example City 90211",
+        crossStreets: "Olive Dr and Canyon Rd",
+      },
+      pet: {
+        name: "Poppy",
+        species: "dog",
+        gender: t("found:listings.notice2.gender"),
+        microchipStatus: t("found:listings.notice2.microchipStatus"),
+      },
+      notes: t("found:listings.notice2.notes"),
+      media: [
+        {
+          id: "SAMPLE-002-image-1",
+          src: exampleImages.poppy,
+          alt: t("found:listings.notice2.mediaAlt"),
+          featured: true,
+        },
+      ],
+    },
+  ];
+
+  const snippetExample = buildExampleSnippet({
+    component: "FoundListingsSection",
+    props: { mode: "hybrid", listings: foundNotices, noticesTitle: t("found:section.noticesTitle"), emptyMessage: t("found:section.emptyMessage") },
+  });
+
+  return (
+    <>
+      <SEOHead
+        title="Found Pattern"
+        canonicalPath="/standards/found"
+        description="Standardized list-only module for found-dog notices: a simple list of dogs people have found, with no detail pages or adoption flow."
+      />
+      <PageHero
+        eyebrow={t("common:nav.standards")}
+        title={t("found:hero.title")}
+        description={t("found:hero.description")}
+        breadcrumbs={[
+          { label: t("common:nav.home"), href: "/" },
+          { label: t("common:nav.standards") },
+          { label: t("found:breadcrumb") },
+        ]}
+      />
+
+      <section className="container space-y-10 px-4 py-10">
+        <div className="space-y-3">
+          <h2 className="text-lg font-semibold">{t("found:example.title")}</h2>
+          <p className="text-sm text-muted-foreground">
+            {t("found:example.descriptionBefore")} <code>FoundListingsSection</code>{" "}
+            {t("found:example.descriptionAfter")}
+          </p>
+          <FoundListingsSection
+            mode="hybrid"
+            listings={foundNotices}
+            noticesTitle={t("found:section.noticesTitle")}
+            emptyMessage={t("found:section.emptyMessage")}
+            labels={{
+              imageFallbackAltPrefix: t("found:section.labels.imageFallbackAltPrefix"),
+              noticeTitle: t("found:section.labels.noticeTitle"),
+              fieldPosted: t("found:section.labels.fieldPosted"),
+              fieldGender: t("found:section.labels.fieldGender"),
+              fieldFoundDate: t("found:section.labels.fieldFoundDate"),
+              fieldFoundLocation: t("found:section.labels.fieldFoundLocation"),
+              fieldCrossStreets: t("found:section.labels.fieldCrossStreets"),
+              fieldMicrochip: t("found:section.labels.fieldMicrochip"),
+              viewSourceLabel: t("found:section.labels.viewSourceLabel"),
+            }}
+            dateLocale={i18n.language}
+          />
+        </div>
+
+        <StandardSnippet code={snippetExample} />
+
+        <CollapsibleSection card title={t("found:standard.title")}>
+          <div className="space-y-2 break-words text-sm text-muted-foreground">
+            {(t("found:standard.items", { returnObjects: true }) as string[]).map((item) => (
+              <p key={item}>- {item}</p>
+            ))}
+          </div>
+        </CollapsibleSection>
+      </section>
+    </>
+  );
+};
+
+export default FoundStandardPage;

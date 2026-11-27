@@ -1,0 +1,94 @@
+{
+  "hero": {
+    "title": "Patrón de Eventos y Noticias",
+    "description": "Un solo módulo para contenido de eventos y noticias, con comportamiento de últimas entradas + archivo."
+  },
+  "breadcrumb": "Patrón de Eventos y Noticias",
+  "banner": {
+    "adoptionFridays": {
+      "title": "Encuentro de Adopción de los Viernes",
+      "location": "123 Main St, Example City, ST"
+    },
+    "basketRaffle": {
+      "title": "Rifa de Canastas Mensual",
+      "location": "Salón Comunitario, 456 Oak Ave, Example City, ST"
+    }
+  },
+  "sections": {
+    "listing": {
+      "title": "Página de Noticias y Eventos",
+      "description": "Primero lo más reciente, y lo más antiguo pasa a un archivo. El banner de próximos eventos no se muestra aquí; es exclusivo de la página de inicio.",
+      "moduleDescription": "Las entradas más recientes se muestran primero en orden calendario; las entradas más antiguas pasan al archivo.",
+      "socialCtaTitle": "Síguenos en Redes Sociales",
+      "socialCtaDescription": "Mantente al día con nuevos ingresos, eventos e historias de rescate."
+    },
+    "homeBanner": {
+      "title": "Banner de la página de inicio",
+      "description": "Un banner descartable que anuncia los próximos eventos, solo en la página de inicio. Un evento permanece en el banner hasta que termina, un evento de varios días muestra un rango de fechas y las fechas siguen la zona horaria definida una sola vez para todo el sitio."
+    },
+    "structuredContent": {
+      "title": "Tarjetas con todo el detalle",
+      "description": "Elementos que se muestran con todo el detalle (encabezados, listas, imágenes) en lugar de solo un resumen."
+    },
+    "imageLayout": {
+      "title": "Imágenes junto al texto",
+      "description": "Las imágenes van junto al texto y alternan de lado de una tarjeta a otra. Un elemento sin imagen muestra solo texto."
+    }
+  },
+  "standard": {
+    "title": "Reglas de uso",
+    "items": [
+      "Use `EventsNewsSection` con un contrato de entrada unificado `event | news`.",
+      "Conserve siempre el historial completo en los datos; muestre las últimas entradas + archivo.",
+      "Mantenga las entradas en orden calendario (más recientes primero para el feed combinado).",
+      "Muestre los enlaces exclusivos de eventos (`Open in Maps`, `Add to Google Calendar`, `Share event`) solo para eventos.",
+      "No duplique acciones de evento para elementos solo de noticias.",
+      "Toda implementación de noticias/eventos de un sitio debe exponer estas tres acciones de evento.",
+      "Las entradas de noticias pueden enlazar a URLs externas o a rutas de artículos locales (para artículos dentro del sitio).",
+      "Para páginas de detalle de eventos, use enrutamiento de índice + detalle (por ejemplo `/events` más `/events/my-event-slug`).",
+      "Use etiquetas de metadatos ligeras para el contexto de estado/tipo en las tarjetas.",
+      "`showFutureEventsBanner` es exclusivo de la página de inicio — actívelo solo en la instancia de `EventsNewsSection` montada en la página de inicio (vea el ejemplo \"Banner de la página de inicio\" arriba), nunca en una instancia de página índice o de archivo de Noticias/Eventos.",
+      "Use `eventDetailsBasePath` cuando los eventos deban enlazar automáticamente a rutas de detalle de evento locales.",
+      "Las tarjetas de banner de eventos recurrentes deben resolver a enlaces de detalle locales cuando `eventDetailsBasePath` está configurado.",
+      "Para páginas índice, use `cardMode=\"index\"` para que las tarjetas se mantengan solo de resumen (sin cuerpo/destacados/imágenes).",
+      "Los eventos recurrentes se admiten mediante `event.recurrence` (semanal, quincenal, mensual por día, mensual por enésima semana/día).",
+      "Mantenga separados `EnvironmentBanner` y el banner de eventos (nunca fusionados en un solo banner).",
+      "Si ambos se muestran en una página, el orden debe ser `EnvironmentBanner` primero, luego el banner de eventos.",
+      "Muestre el banner de eventos solo cuando haya eventos futuros activos; si no existe ninguno, no muestre la fila del banner de eventos.",
+      "Estándar de ubicación de banners: muestre ambos en el flujo de la página directamente debajo del encabezado; no los monte globalmente en el layout compartido.",
+      "Los controles opcionales de tarjeta destacada y archivo vienen incorporados (`showFeatured`, props de archivo).",
+      "`socialCta` es obligatorio (no opcional) — complételo desde `siteConfig.social.*` para que una fila de \"síguenos\" se muestre mediante `SocialFollowCta`; nunca cree una versión local de la página a mano.",
+      "Configure `entry.videoSrc` (un mp4 real en el host de medios del sitio, vía `mediaUrl()` de `lib/media-host.ts`) en cualquier entrada para mostrar un `<video>` nativo directamente en la página de detalle (y en la tarjeta en modo completo) en lugar de una imagen estática — tiene prioridad sobre `videoEmbed` cuando ambos están definidos. Combínelo con `entry.imageSrc`, que funciona como fotograma de póster, y opcionalmente `videoAspectRatio` (`\"landscape\"` por defecto, `\"portrait\"` para un clip vertical con forma de Reel). Las miniaturas de tarjeta (índice de noticias, destacado de inicio) siguen usando `imageSrc`/`imageAlt`. Prefiera esto en lugar de `videoEmbed` siempre que el clip de origen se pueda descargar — un archivo alojado propio siempre se reproduce, mientras que la incrustación de iframe de Facebook de abajo puede ser bloqueada por Rights Manager según la pista de audio de la publicación de origen.",
+      "Configure `entry.videoEmbed` (proveedor `\"facebook\"`, más `url`, opcionalmente `aspectRatio`, opcionalmente `title`) en una entrada de noticias `local` para incrustar el video/Reel de Facebook de origen en su lugar, cuando no haya un `videoSrc` alojado propio disponible. `aspectRatio` usa `\"portrait\"` por defecto para URLs `/reel/`, y `\"landscape\"` en los demás casos. Las miniaturas de tarjeta siguen usando `imageSrc`/`imageAlt` — mantenga ambos definidos para que la miniatura se vea bien aunque la incrustación prevalezca en la vista completa/detalle. Siempre verifique visualmente que una incrustación realmente se reproduzca antes de publicarla en una entrada real.",
+      "Configure `entry.socialEmbed` (`{ url, linkLabel? }`) en una noticia `local` para mostrar una publicación, foto, reel o video público de Facebook, Instagram o TikTok tal como se publicó, mediante el `SocialPostEmbed` compartido (el inserto oficial de la plataforma, con carga diferida y un enlace simple \"Ver publicación original\" debajo). La prioridad en la página de detalle y en la tarjeta completa es `videoSrc`, luego `videoEmbed`, luego `socialEmbed` y luego las imágenes. Si la publicación se elimina, pasa a privada o no se puede insertar, el inserto se omite y la entrada vuelve a sus imágenes, así que mantenga `imageSrc`/`imageAlt`. Las historias de Instagram y los enlaces cortos de TikTok no se pueden insertar y solo muestran el enlace simple. Ejemplo en vivo: `/news/example-social-embed-article`.",
+      "Flujo de trabajo de artículo local: cree una ruta de página local (por ejemplo `/news/my-article-slug`), agréguela a `AppRoutes.tsx`, y apunte el `href` de la entrada de noticias hacia ella. El descubrimiento de rutas en tiempo de compilación (`tools/app-routes.mjs`) lo detecta para el prerenderizado + mapa del sitio; para rutas dinámicas, enumere las URLs concretas mediante `PRERENDER_EXTRA_ROUTES`. Aplique la misma regla a las rutas de detalle de evento. Valide con `npm run build` y `npm run qa:smoke:nojs`.",
+      "`imageLayout` (`\"auto\" | \"none\" | \"top\" | \"side\" | \"alternating\"`, por defecto `\"auto\"`) controla la ubicación de la imagen en las tarjetas del listado, independientemente de `cardMode` — `\"auto\"` sigue el comportamiento de `cardMode`.",
+      "Para la navegación Anterior/Siguiente de una página de detalle, calcule ambos vecinos con `getAdjacentEntries(entries, currentId, eventDetailsBasePath, currentOccurrenceStartAt?)` (exportado desde `EventsNewsSection.tsx`) y pase el resultado directamente a las props `previous`/`next` de `EventsNewsDetail` — no reimplemente la lógica de adyacencia cronológica por sitio. Pase el 4.º parámetro (el `startAt` propio de la entrada ya resuelta) siempre que la entrada sea recurrente, o Anterior/Siguiente coincidirá con la ocurrencia de esa serie que quede primera al ordenar, en lugar de la que realmente se está viendo. Cualquiera de los dos lados no muestra nada cuando no hay un vecino (inicio o fin de la línea de tiempo).",
+      "Para la página de detalle de un evento recurrente, resuelva qué ocurrencia mostrar mediante `resolveEventOccurrence(entry, now, requestedDateYmd?)` (exportado desde `EventsNewsSection.tsx`) — no reimplemente esta lógica de resolución de ocurrencias por sitio. Lea un parámetro de consulta `?date=YYYY-MM-DD` desde `useSearchParams()` y páselo como `requestedDateYmd`; resuelve a esa ocurrencia específica cuando es una ocurrencia real generada, o recurre a la próxima ocurrencia en vivo mediante `getNextOccurrence()`. `expandEventEntry()`/`toEventDetailsHref()` ya agregan `?date=<ocurrencia>` al enlace de cada tarjeta de ocurrencia, por lo que cada ocurrencia en un listado/archivo es direccionable individualmente sin cableado adicional.",
+      "La fila de acciones de evento de `EventsNewsDetail` (`Open in Maps`/`Add to Calendar`/compartir) se oculta una vez que el evento ya pasó — condicionada a `getEventStatus(entry) !== \"past\"` (exportado desde `EventsNewsSection.tsx`); un evento \"en curso\" (ocurriendo en este momento) sigue mostrándola. Esas acciones no son relevantes para algo que ya terminó.",
+      "`registrationUrl` (con `registrationLabel` opcional, p. ej. `\"Get tickets\"`) se muestra como el único botón relleno de tamaño completo al inicio de `EventActions` (ícono de boleto, abre `FormEmbedModal` con su enlace alternativo \"Open in new tab\"), seguido de `Open in Maps`/`Add to Calendar`; los botones de compartir van en una segunda fila con el encabezado \"Share this event\" (`labels.shareSection`, `\"\"` lo oculta). Nunca mostrar el registro como un enlace de texto pequeño. Se oculta junto con el resto de la fila cuando el evento ya pasó. Zeffy funciona con su URL de inserción, `https://www.zeffy.com/embed/ticketing/<slug>`."
+    ],
+    "eventRoutesBefore": "Ejemplos de rutas de detalle de evento (para mapa del sitio + prerenderizado):",
+    "eventLinks": {
+      "adoptionFridays": "Encuentro de Adopción de los Viernes",
+      "biweeklySupplyDrive": "Colecta de Suministros Quincenal",
+      "weekendFair": "Feria de Acogida del Segundo Fin de Semana",
+      "volunteerOrientation": "Orientación de Voluntarios Mensual",
+      "communityFundraiser": "Recaudación de Fondos Comunitaria"
+    },
+    "and": "y",
+    "localArticleBefore": "Ejemplo de ruta de artículo local:",
+    "localArticleLink": "Ejemplo de Artículo de Noticias",
+    "component": "Componente: `template/src/components/patterns/EventsNewsSection.tsx`",
+    "localizationLib": "Biblioteca de localización: `template/src/lib/localized-content.ts`"
+  },
+  "localization": {
+    "title": "Localización (sitios bilingües)",
+    "items": [
+      "`EventsNewsSection`/`EventBanner` en sí mismos permanecen en `string` plano y de un solo idioma — no agregue campos localizados a los componentes compartidos.",
+      "Para el contenido real de eventos/noticias de un sitio bilingüe (con alternancia EN/ES), redacte cada campo traducible como `LocalizedText` (de `lib/localized-content.ts`): una cadena simple, o un registro en/es.",
+      "Mantenga un mapeador `resolve*Entry(entry, locale)` en los propios `data/events.ts`/`data/news-items.ts` del sitio que resuelva los campos `LocalizedText` a la forma `string` plana `EventsNewsEventEntry`/`EventsNewsArticleEntry` mediante `resolveText(value, locale)` — llámelo desde el componente de la página con `toContentLocale(i18n.resolvedLanguage)` antes de pasar `entries` a `EventsNewsSection`.",
+      "`EventBanner` acepta una prop opcional `locale` (string, por defecto `\"en-US\"`) para su visualización de fecha/hora con `Intl.DateTimeFormat`. En un sitio bilingüe, páselo `toIntlLocaleTag(toContentLocale(i18n.resolvedLanguage))` — de lo contrario, la fecha/hora del banner permanece formateada en inglés aunque el resto de la página esté en español."
+    ]
+  }
+}

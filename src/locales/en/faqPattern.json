@@ -1,0 +1,43 @@
+{
+  "hero": {
+    "title": "FAQ pattern",
+    "description": "One FAQ component, two rules that both apply to a live FAQ page: how the content is structured and published, and how it behaves for readers without JavaScript."
+  },
+  "breadcrumb": "FAQ Pattern",
+  "sections": {
+    "flat": {
+      "title": "One list",
+      "description": "A single card with one list of questions.",
+      "cardTitle": "FAQ example"
+    },
+    "sectioned": {
+      "title": "Grouped by topic",
+      "description": "Questions grouped by topic, such as adoption, fostering and donations.",
+      "sectionTitle": "FAQ"
+    }
+  },
+  "standard": {
+    "title": "Usage rules",
+    "data": {
+      "title": "Content and structured data",
+      "items": [
+        "Import `FaqAccordionItem`/`FaqAccordionSection` from `@/components/patterns/FaqAccordion` — never hand-declare an equivalent local shape.",
+        "i18n sites: FAQ text lives in `src/locales/{lang}/faq.json`; `src/data/faq.tsx` exports a `getFaqSections(t)` adapter that resolves it into canonical types (it supports embedded `<Trans>` links).",
+        "Non-i18n sites: `src/data/faq.ts` exports `faqSections: FaqAccordionSection[]` (or `faqItems: FaqAccordionItem[]` for a single flat list) directly, as this page's own `src/data/faq.ts` does.",
+        "`FAQPage` JSON-LD must be computed from the same sections the page renders, via `buildFaqJsonLd()` in `src/lib/faq-json-ld.ts` — never hand-typed as a second, separately-maintained array.",
+        "Never attach `FAQPage` JSON-LD to a page that doesn't actually render the corresponding Q&A content."
+      ]
+    },
+    "behavior": {
+      "title": "Behavior and accessibility",
+      "items": [
+        "Preferred for FAQ, informational disclosures, and \"learn more\" content.",
+        "Must work without JavaScript or hydration — content stays readable and expandable with JS off.",
+        "Style directly in the page/pattern component; do not require a JS accordion wrapper.",
+        "Use a custom accordion only with a documented exception.",
+        "Verify keyboard support (Enter/Space on summary) and focus visibility."
+      ]
+    },
+    "component": "Component: `template/src/components/patterns/FaqAccordion.tsx`"
+  }
+}

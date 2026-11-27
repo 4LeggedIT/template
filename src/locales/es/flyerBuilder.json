@@ -1,0 +1,81 @@
+{
+  "hero": {
+    "title": "Patrón de creador de volantes",
+    "description": "Usa FlyerBuilderSection para que una persona cree un volante imprimible o una imagen con una foto, unos datos y un teléfono, todo en el navegador."
+  },
+  "breadcrumb": "Patrón de Creador de Volantes",
+  "sections": {
+    "example": {
+      "title": "Ejemplo",
+      "description": "El volante de perro perdido funcionando en vivo. Añada una foto y un número de teléfono para ver la vista previa, y luego imprímalo o descárguelo. El volante sigue el idioma del sitio."
+    }
+  },
+  "standard": {
+    "title": "Reglas de uso",
+    "items": [
+      "Usa `FlyerBuilderSection` cuando una persona deba crear su propio volante (perro perdido, perro encontrado) con una foto, unos datos y un teléfono. Para volantes ya hechos que publica la organización, usa `FlyerLibrarySection`.",
+      "Un tipo de volante es un `FlyerSpec` (datos): texto fijo por idioma, paleta, diseño y campos. Parte de `lostDogFlyerSpec` o `foundDogFlyerSpec` en `FlyerBuilderSection.specs.ts` y extiéndelo para cambiar el texto. Importa el tipo `FlyerSpec` del patrón; nunca lo vuelvas a declarar.",
+      "El volante no lleva nombre, logotipo ni teléfono de la organización. El teléfono es el de la persona.",
+      "Todo ocurre en el navegador. No se sube nada, se descartan los datos de ubicación de la foto y el patrón no hace llamadas de red, así que no necesita entrada en el registro de CSP.",
+      "La foto nunca se recorta: se dibuja completa, con sus proporciones, dentro de los márgenes de la página.",
+      "Cada texto visible viene del sitio mediante `labels` (`FlyerBuilderLabels`). Las frases propias de la organización, como el consejo de una guía sobre nombres o recompensas, van en el archivo de idiomas del sitio, nunca en el patrón.",
+      "`headlineFontUrl` es el woff2 del propio sitio (mismo origen) para el titular grueso. Si se omite se usa Impact / Arial Narrow. Nunca apuntes a un CDN.",
+      "`noScript` muestra PDF en blanco para imprimir (uno por idioma) cuando JavaScript está desactivado. La ruta sigue prerenderizada.",
+      "Los nombres de impresión y descarga vienen de `FlyerSpec.fileNamePrefix` (por defecto `<id>-flyer`).",
+      "La página alrededor de la herramienta (encabezado, migas, selector de idioma, enlaces de ayuda) es del sitio. Una ruta nueva empieza con `noindex` y fuera del sitemap hasta que la organización apruebe listarla.",
+      "Solo teléfonos de EE. UU. (NANP). Las direcciones y las recompensas se señalan con un aviso, nunca se bloquean.",
+      "Componente: `template/src/components/patterns/FlyerBuilderSection.tsx` (auxiliares en `FlyerBuilderSection.helpers.ts`, tipos iniciales en `FlyerBuilderSection.specs.ts`)."
+    ]
+  },
+  "tool": {
+    "fields": {
+      "photo": {
+        "label": "Foto",
+        "hint": "Una foto clara funciona mejor."
+      },
+      "name": {
+        "label": "Nombre (opcional)",
+        "note": "Nota de ejemplo: no pongas el nombre en los carteles."
+      },
+      "description": {
+        "label": "Descripción (opcional)",
+        "example": "Ejemplo: Café y blanco, tamaño mediano, collar verde."
+      },
+      "phone": {
+        "label": "Tu número de teléfono",
+        "hint": "Un número de EE. UU. donde puedan escribirte o llamarte."
+      }
+    },
+    "photo": {
+      "choose": "Elegir una foto",
+      "change": "Elegir otra foto",
+      "privacy": "Tu foto nunca sale de tu dispositivo y le quitamos los datos de ubicación.",
+      "lowRes": "Esta foto es pequeña y puede verse borrosa al imprimir.",
+      "errors": {
+        "notImage": "Ese archivo no es una foto. Elige una imagen JPG o PNG.",
+        "tooBig": "Esa foto es demasiado grande. Elige una de menos de 30 MB.",
+        "unreadable": "No pudimos leer esa foto. Prueba con una imagen JPG o PNG."
+      }
+    },
+    "description": {
+      "counter": "{{count}} de {{max}} caracteres",
+      "clipped": "Tu descripción es larga y parte se corta en el volante. Acórtala."
+    },
+    "phoneError": "Ingresa un número de EE. UU. de 10 dígitos, por ejemplo (555) 123-4567.",
+    "warnings": {
+      "address": "Esto parece una dirección. Considera usar un parque, calles cruzadas o un vecindario.",
+      "reward": "Advertencia de ejemplo: no pongas recompensas en los carteles."
+    },
+    "previewTitle": "Vista previa",
+    "photoPlaceholder": "Tu foto va aquí",
+    "previewAlt": "Vista previa de tu volante. Teléfono: {{phone}}.",
+    "previewAltName": "Vista previa de tu volante para {{name}}. Teléfono: {{phone}}.",
+    "actions": {
+      "print": "Imprimir volante",
+      "download": "Descargar imagen",
+      "needMore": "Agrega una foto y un teléfono para imprimir o descargar.",
+      "working": "Preparando…",
+      "printError": "No pudimos abrir la ventana de impresión. Descarga la imagen e imprímela."
+    }
+  }
+}

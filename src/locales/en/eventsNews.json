@@ -1,0 +1,94 @@
+{
+  "hero": {
+    "title": "Events & News pattern",
+    "description": "One module for event and news content, with latest + archive behavior."
+  },
+  "breadcrumb": "Events & News Pattern",
+  "banner": {
+    "adoptionFridays": {
+      "title": "Friday Adoption Meet-and-Greet",
+      "location": "123 Main St, Example City, ST"
+    },
+    "basketRaffle": {
+      "title": "Monthly Basket Raffle",
+      "location": "Community Hall, 456 Oak Ave, Example City, ST"
+    }
+  },
+  "sections": {
+    "listing": {
+      "title": "News and Events page",
+      "description": "The latest items first, with older ones moved to an archive. The upcoming-events banner is not shown here; it belongs on the home page only.",
+      "moduleDescription": "Latest entries are shown first in calendar order; older entries move into archive.",
+      "socialCtaTitle": "Follow Us on Social Media",
+      "socialCtaDescription": "Stay up to date with new arrivals, events, and rescue stories."
+    },
+    "homeBanner": {
+      "title": "Home page banner",
+      "description": "A dismissible banner announcing upcoming events, on the home page only. An event stays in the banner until it ends, a multi-day event shows a date range, and dates follow the time zone set once for the whole site."
+    },
+    "structuredContent": {
+      "title": "Full-detail cards",
+      "description": "Items shown with full detail (headings, lists, images) instead of a summary only."
+    },
+    "imageLayout": {
+      "title": "Images beside the text",
+      "description": "Images sit beside the text, alternating sides from card to card. An item without an image shows text only."
+    }
+  },
+  "standard": {
+    "title": "Usage rules",
+    "items": [
+      "Use `EventsNewsSection` with a unified `event | news` entry contract.",
+      "Always keep full history in data; render latest entries + archive.",
+      "Keep entries in calendar order (newest first for combined feed).",
+      "Show event-only links (`Open in Maps`, `Add to Google Calendar`, `Share event`) only for events.",
+      "Do not duplicate event actions for news-only items.",
+      "Every site's news/events implementation must expose these three event actions.",
+      "News entries may link to external URLs or local article routes (for in-site articles).",
+      "For event detail pages, use index + detail routing (for example `/events` plus `/events/my-event-slug`).",
+      "Use lightweight metadata labels for status/type context on cards.",
+      "`showFutureEventsBanner` is home-page-only — enable it only on the `EventsNewsSection` instance mounted on the home page (see the \"Home page banner\" example above), never on a News/Events index or archive page instance.",
+      "Use `eventDetailsBasePath` when events should auto-link to local event detail routes.",
+      "Recurring event banner cards should resolve to local detail links when `eventDetailsBasePath` is configured.",
+      "For index pages, use `cardMode=\"index\"` so cards stay summary-only (no body/highlights/images).",
+      "Recurring events are supported via `event.recurrence` (weekly, biweekly, monthly by day, monthly nth-week weekday).",
+      "Keep `EnvironmentBanner` and event banner separated (never merged into one banner).",
+      "If both render on a page, order must be `EnvironmentBanner` first, then event banner.",
+      "Render event banner only when there are active future events; if none exist, do not render event banner row.",
+      "Banner placement standard: render both in page flow directly under the header; do not mount globally in shared layout.",
+      "Optional featured card and archive controls are built in (`showFeatured`, archive props).",
+      "`socialCta` is required (not opt-in) — populate it from `siteConfig.social.*` so a \"follow us\" row renders via `SocialFollowCta`; never hand-roll a page-local version.",
+      "Set `entry.videoSrc` (a real mp4 on the site's media host, via `mediaUrl()` from `lib/media-host.ts`) on any entry to render a native `<video>` inline on the detail page (and full-mode card) instead of a static image — takes priority over `videoEmbed` when both are set. Pair it with `entry.imageSrc`, which doubles as the poster frame, and optional `videoAspectRatio` (`\"landscape\"` default, `\"portrait\"` for a vertical Reel-shaped clip). Card thumbnails (news index, homepage highlight) still use `imageSrc`/`imageAlt`. Prefer this over `videoEmbed` whenever the source clip can be downloaded — a self-hosted file always plays, where the Facebook iframe embed below can be blocked by Rights Manager depending on the source post's audio track.",
+      "Set `entry.videoEmbed` (provider `\"facebook\"`, plus `url`, optional `aspectRatio`, optional `title`) on a `local` news entry to embed the source Facebook video/Reel inline instead, when a self-hosted `videoSrc` isn't available. `aspectRatio` defaults to `\"portrait\"` for `/reel/` URLs, `\"landscape\"` otherwise. Card thumbnails still use `imageSrc`/`imageAlt` — keep both set so the thumbnail looks right even though the embed wins on the full/detail view. Always visually verify an embed actually plays before shipping it on a real entry.",
+      "Set `entry.socialEmbed` (`{ url, linkLabel? }`) on a `local` news entry to show a public Facebook, Instagram or TikTok post, photo, reel or video as posted, through the shared `SocialPostEmbed` (the platform's official embed, loaded lazily, with a plain \"View original post\" link underneath). Priority on the detail page and full-mode card is `videoSrc`, then `videoEmbed`, then `socialEmbed`, then images. If the post is deleted, private or can't be embedded the embed is dropped and the entry falls back to its images, so keep `imageSrc`/`imageAlt` set. Instagram stories and TikTok short links can't be embedded and show only the plain link. Live example: `/news/example-social-embed-article`.",
+      "Local article workflow: create a local page route (e.g. `/news/my-article-slug`), add it to `AppRoutes.tsx`, and point the news entry's `href` at it. Build-time route discovery (`tools/app-routes.mjs`) picks it up for prerender + sitemap; for dynamic routes, enumerate concrete URLs via `PRERENDER_EXTRA_ROUTES`. Apply the same rule to event detail routes. Validate with `npm run build` and `npm run qa:smoke:nojs`.",
+      "`imageLayout` (`\"auto\" | \"none\" | \"top\" | \"side\" | \"alternating\"`, default `\"auto\"`) controls image placement on list cards independent of `cardMode` — `\"auto\"` follows `cardMode`.",
+      "For a detail page's Previous/Next navigation, compute both neighbors with `getAdjacentEntries(entries, currentId, eventDetailsBasePath, currentOccurrenceStartAt?)` (exported from `EventsNewsSection.tsx`) and pass the result straight to `EventsNewsDetail`'s `previous`/`next` props — do not reimplement chronological-adjacency logic per site. Pass the 4th param (the resolved entry's own `startAt`) whenever the entry is recurring, or Previous/Next matches whichever occurrence of that series sorts first instead of the one actually being viewed. Either side renders nothing when there's no neighbor (start/end of the timeline).",
+      "For a recurring event's detail page, resolve which occurrence to show via `resolveEventOccurrence(entry, now, requestedDateYmd?)` (exported from `EventsNewsSection.tsx`) — do not reimplement this occurrence-resolution math per site. Read a `?date=YYYY-MM-DD` query param from `useSearchParams()` and pass it through as `requestedDateYmd`; it resolves to that specific occurrence when it's a real generated one, otherwise falls back to the live next occurrence via `getNextOccurrence()`. `expandEventEntry()`/`toEventDetailsHref()` already stamp `?date=<occurrence>` onto every occurrence card's link, so each occurrence in a list/archive is individually addressable without further wiring.",
+      "`EventsNewsDetail`'s event-action row (`Open in Maps`/`Add to Calendar`/share) is hidden once the event has passed — gated on `getEventStatus(entry) !== \"past\"` (exported from `EventsNewsSection.tsx`); an \"ongoing\" event (happening right now) still shows it. Those actions aren't relevant for something already over.",
+      "`registrationUrl` (optional `registrationLabel`, e.g. `\"Get tickets\"`) renders as the one filled, full-size button at the start of `EventActions` (ticket icon, opens `FormEmbedModal` with its \"Open in new tab\" fallback), followed by `Open in Maps`/`Add to Calendar`; share buttons sit on a second row headed \"Share this event\" (`labels.shareSection`, `\"\"` hides it). Never render registration as a small text link. It is hidden with the rest of the row once the event is past. Zeffy ticketing works via its embed URL, `https://www.zeffy.com/embed/ticketing/<slug>`."
+    ],
+    "eventRoutesBefore": "Event detail route examples (for sitemap + prerender):",
+    "eventLinks": {
+      "adoptionFridays": "Friday Adoption Meet-and-Greet",
+      "biweeklySupplyDrive": "Biweekly Supply Drive",
+      "weekendFair": "Second Weekend Foster Fair",
+      "volunteerOrientation": "Monthly Volunteer Orientation",
+      "communityFundraiser": "Community Fundraiser"
+    },
+    "and": "and",
+    "localArticleBefore": "Local article route example:",
+    "localArticleLink": "News Article Example",
+    "component": "Component: `template/src/components/patterns/EventsNewsSection.tsx`",
+    "localizationLib": "Localization lib: `template/src/lib/localized-content.ts`"
+  },
+  "localization": {
+    "title": "Localization (bilingual sites)",
+    "items": [
+      "`EventsNewsSection`/`EventBanner` themselves stay plain-`string` and single-language — do not add localized fields to the shared components.",
+      "For a bilingual (EN/ES-toggle) site's real event/news content, author each translatable field as `LocalizedText` (from `lib/localized-content.ts`): a plain string, or an en/es record.",
+      "Keep a `resolve*Entry(entry, locale)` mapper in the site's own `data/events.ts`/`data/news-items.ts` that resolves `LocalizedText` fields down to the plain-`string` `EventsNewsEventEntry`/`EventsNewsArticleEntry` shape via `resolveText(value, locale)` — call it from the page component with `toContentLocale(i18n.resolvedLanguage)` before handing `entries` to `EventsNewsSection`.",
+      "`EventBanner` takes an optional `locale` prop (string, default `\"en-US\"`) for its `Intl.DateTimeFormat` date/time display. On a bilingual site, pass it `toIntlLocaleTag(toContentLocale(i18n.resolvedLanguage))` — otherwise the banner's date/time stays English-formatted even when the rest of the page is in Spanish."
+    ]
+  }
+}

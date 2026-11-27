@@ -1,0 +1,28 @@
+{
+  "hero": {
+    "title": "Mascotas Adoptables — PawPlacer",
+    "description": "Los listados en vivo de mascotas de PawPlacer de una organización, incrustados mediante su script y el ID de la organización."
+  },
+  "breadcrumb": {
+    "parent": "Mascotas Adoptables",
+    "current": "PawPlacer"
+  },
+  "example": {
+    "title": "Ejemplo",
+    "description": "Mascotas que se muestran desde la página de PawPlacer del rescate. Si no puede cargarse, en la página queda un enlace sencillo a la lista completa."
+  },
+  "disclosure": "Este ejemplo usa un ID de organización de PawPlacer de marcador de posición, por lo que el widget de abajo muestra el mensaje de \"no encontrado\" de PawPlacer; reemplácelo por el ID de su propia organización para ver sus animales. Esta plantilla y 4leggedIT no están afiliados con PawPlacer.",
+  "footerCta": {
+    "label": "Solicitar Adopción"
+  },
+  "standard": {
+    "title": "Reglas de uso",
+    "items": [
+      "En el cliente, inserta de forma diferida (lazy) el script `embed/component` de PawPlacer (una vez por página, compartido entre múltiples instancias) y llama a su función global `embedPawPlacerComponent('pets', organizationId, targetId, options)`. El destino de montaje usa un id de DOM único generado (basado en `useId()`) para que varias instancias nunca colisionen.",
+      "`listingsUrl` toma como valor predeterminado `https://www.pawplacer.com/shelters/{organizationId}` — el equivalente de PawPlacer a una página de perfil de organización de Petfinder o una página de refugio de Adopt-a-Pet. Anúlelo solo si la página de listados real de la organización difiere de ese patrón.",
+      "Los enlaces cruzados a `petfinderUrl` / `adoptAPetUrl` / `getbuddyUrl` se renderizan como \"Or view all pets on X, Y, or Z.\" — la misma estructura de oración ya utilizada por `PetfinderScrollerEmbed`, `AdoptAPetEmbed` y `GetBuddyEmbed`, que a su vez aceptan un `pawPlacerUrl`, de modo que cada inserción de mascotas adoptables puede enlazar de forma cruzada con cualquier otra.",
+      "Integrado en `AdoptablePetsSection` como el modo `\"pawplacer\"` (y como uno de los feeds mostrados en el modo `\"hybrid\"`), de la misma manera en que está integrado `getbuddy`.",
+      "Componente: `template/src/components/patterns/PawPlacerEmbed.tsx`"
+    ]
+  }
+}

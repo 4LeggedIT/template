@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" role="img" aria-label="Example Sandwich Co. logo">
+  <rect width="200" height="200" rx="40" fill="#c2410c"/>
+  <path d="M44 92 C44 62 72 48 100 48 C128 48 156 62 156 92 Z" fill="#fde68a"/>
+  <rect x="40" y="98" width="120" height="14" rx="7" fill="#65a30d"/>
+  <rect x="44" y="116" width="112" height="14" rx="7" fill="#fecaca"/>
+  <path d="M44 136 H156 C156 154 142 160 130 160 H70 C58 160 44 154 44 136 Z" fill="#fde68a"/>
+</svg>

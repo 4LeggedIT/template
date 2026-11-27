@@ -1,0 +1,25 @@
+{
+  "breadcrumb": "Zeffy Donate Pattern",
+  "hero": {
+    "title": "Zeffy donate pattern",
+    "description": "Use the shared Zeffy donation form embed, which renders a working fallback form by default and only switches to the live embed once Zeffy's script confirms it loaded."
+  },
+  "example": {
+    "title": "Example",
+    "description": "The rescue's donation form, shown on the page. A plain link to the form appears until it loads.",
+    "configNote": "This example uses sample details for documentation only."
+  },
+  "standard": {
+    "title": "Usage rules",
+    "items": [
+      "Render `ZeffyDonateEmbed` as the primary donate action.",
+      "Template/example pages use a clearly labeled dummy slug only, for visual documentation.",
+      "The component defaults to its own working fallback iframe (no JS required) and only switches to the primary embed after Zeffy's script confirms it loaded — this is the safe default, not an error-triggered fallback, so it stays no-JS-safe and hydration-safe.",
+      "A small helper link is always rendered below the embed, linking to the full-page Zeffy form in a new tab — built in, no separate wiring needed.",
+      "`onError` is available for analytics/tracking hooks around embed script load failures.",
+      "`height`/`title`/`showHelperLink`/`helperLinkLabel` are available to adjust presentation without forking the component.",
+      "Requires a `ZeffyDonateEmbed` entry in `tools/csp-registry.mjs` (scriptSrc + frameSrc for `https://www.zeffy.com`).",
+      "Component: `template/src/components/patterns/ZeffyDonateEmbed.tsx`"
+    ]
+  }
+}
